@@ -1,0 +1,986 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		10FC428DE039D15378156C75 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0FB7F40580CA9CAF95E0CB5 /* Pods.framework */; };
+		7807CF6F1CC7E06700D9DF9B /* CKFriendSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807CF6E1CC7E06700D9DF9B /* CKFriendSelectionController.m */; };
+		7807CF711CC8C28700D9DF9B /* checkwhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7807CF701CC8C28700D9DF9B /* checkwhite@2x.png */; };
+		7807CF741CCB5E7900D9DF9B /* CKGroupChatModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807CF731CCB5E7900D9DF9B /* CKGroupChatModel.m */; };
+		7807CF771CD09FEA00D9DF9B /* CKNewGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807CF761CD09FEA00D9DF9B /* CKNewGroupController.m */; };
+		7807CF7A1CD0A01E00D9DF9B /* CKGroupHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807CF791CD0A01E00D9DF9B /* CKGroupHeaderView.m */; };
+		7807CF7D1CD1D7EB00D9DF9B /* CKPictureCaptureManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807CF7C1CD1D7EB00D9DF9B /* CKPictureCaptureManager.m */; };
+		7812507D1CB6219000D3BFBB /* CKMessagesListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812507C1CB6219000D3BFBB /* CKMessagesListController.m */; };
+		781250801CB63E0B00D3BFBB /* CKMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812507F1CB63E0B00D3BFBB /* CKMessageCell.m */; };
+		781250821CB6645C00D3BFBB /* cellMask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 781250811CB6645C00D3BFBB /* cellMask@2x.png */; };
+		781250841CB66A5A00D3BFBB /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 781250831CB66A5A00D3BFBB /* CoreText.framework */; };
+		781250861CB6802A00D3BFBB /* secondaryCellMask@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 781250851CB6802A00D3BFBB /* secondaryCellMask@2x.png */; };
+		781250891CB6C73700D3BFBB /* CKDialogChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 781250881CB6C73700D3BFBB /* CKDialogChatController.m */; };
+		7812508C1CB6C74F00D3BFBB /* CKDialogChatModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812508B1CB6C74F00D3BFBB /* CKDialogChatModel.m */; };
+		7812508F1CB7607600D3BFBB /* CKMessageEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812508E1CB7607600D3BFBB /* CKMessageEditorView.m */; };
+		781250911CB7A7EB00D3BFBB /* cellMaskShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 781250901CB7A7EB00D3BFBB /* cellMaskShadow@2x.png */; };
+		781250931CB7A8EC00D3BFBB /* secondaryCellMaskShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 781250921CB7A8EC00D3BFBB /* secondaryCellMaskShadow@2x.png */; };
+		781250971CB7AFBE00D3BFBB /* bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 781250961CB7AFBE00D3BFBB /* bg@2x.png */; };
+		781250991CB7B07A00D3BFBB /* bgwhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 781250981CB7B07A00D3BFBB /* bgwhite@2x.png */; };
+		782A00001D0AB9DC00802097 /* CKRecordingAttachModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 782AFFFF1D0AB9DC00802097 /* CKRecordingAttachModel.m */; };
+		782A00031D0AB9EE00802097 /* CKAudioAttachModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 782A00021D0AB9EE00802097 /* CKAudioAttachModel.m */; };
+		782A00061D0AB9FA00802097 /* CKCloudAttachModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 782A00051D0AB9FA00802097 /* CKCloudAttachModel.m */; };
+		782A00091D0ABA0800802097 /* CKLocationAttachModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 782A00081D0ABA0800802097 /* CKLocationAttachModel.m */; };
+		782A000C1D0ABA1500802097 /* CKContactAttachModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 782A000B1D0ABA1500802097 /* CKContactAttachModel.m */; };
+		782A000F1D0ABFD500802097 /* CKAttachCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 782A000E1D0ABFD500802097 /* CKAttachCell.m */; };
+		782AFFE71D09562000802097 /* attachcamera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782AFFE01D09562000802097 /* attachcamera@2x.png */; };
+		782AFFE81D09562000802097 /* attachcloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782AFFE11D09562000802097 /* attachcloud@2x.png */; };
+		782AFFE91D09562000802097 /* attachcontact@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782AFFE21D09562000802097 /* attachcontact@2x.png */; };
+		782AFFEA1D09562000802097 /* attachhide@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782AFFE31D09562000802097 /* attachhide@2x.png */; };
+		782AFFEB1D09562000802097 /* attachlocation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782AFFE41D09562000802097 /* attachlocation@2x.png */; };
+		782AFFEC1D09562000802097 /* attachphotos@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782AFFE51D09562000802097 /* attachphotos@2x.png */; };
+		782AFFED1D09562000802097 /* attachrecording@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782AFFE61D09562000802097 /* attachrecording@2x.png */; };
+		782AFFEF1D09595A00802097 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 782AFFEE1D09595A00802097 /* Assets.xcassets */; };
+		782AFFF21D09782700802097 /* CKAttachButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 782AFFF11D09782600802097 /* CKAttachButton.m */; };
+		782AFFF51D09843D00802097 /* CKAttachMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 782AFFF41D09843D00802097 /* CKAttachMenu.m */; };
+		782AFFF71D099A4B00802097 /* attachaudio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 782AFFF61D099A4B00802097 /* attachaudio@2x.png */; };
+		782AFFFA1D0AB90300802097 /* CKAttachModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 782AFFF91D0AB90300802097 /* CKAttachModel.m */; };
+		782AFFFD1D0AB9C700802097 /* CKPictureAttachModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 782AFFFC1D0AB9C700802097 /* CKPictureAttachModel.m */; };
+		7831EDAA1C9000E900319191 /* CKWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDA91C9000E900319191 /* CKWelcomeViewController.m */; };
+		7831EDAE1C90018500319191 /* UIColor+hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDAD1C90018500319191 /* UIColor+hex.m */; };
+		7831EDB11C9021F600319191 /* terms.html in Resources */ = {isa = PBXBuildFile; fileRef = 7831EDB01C9021F600319191 /* terms.html */; };
+		7831EDB31C909E5100319191 /* click.db in Resources */ = {isa = PBXBuildFile; fileRef = 7831EDB21C909E5100319191 /* click.db */; };
+		7831EDBA1C90A24700319191 /* CKApplicationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDB91C90A24700319191 /* CKApplicationModel.m */; };
+		7831EDC51C90A5B900319191 /* CKMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDC41C90A5B900319191 /* CKMainViewController.m */; };
+		7831EDCB1C90A98000319191 /* CKLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDCA1C90A98000319191 /* CKLoginViewController.m */; };
+		7831EDCE1C90ABDD00319191 /* UILabel+utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDCD1C90ABDD00319191 /* UILabel+utility.m */; };
+		7831EDD21C90CFDC00319191 /* CKCountryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDD11C90CFDC00319191 /* CKCountryCell.m */; };
+		7831EDD51C90D32000319191 /* CKCountrySelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDD41C90D32000319191 /* CKCountrySelectionController.m */; };
+		7831EDD71C9143EF00319191 /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7831EDD61C9143EF00319191 /* libicucore.A.tbd */; };
+		7831EDDA1C91772000319191 /* CKTextEntryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDD91C91772000319191 /* CKTextEntryCell.m */; };
+		7831EDDC1C91CE3800319191 /* promo.html in Resources */ = {isa = PBXBuildFile; fileRef = 7831EDDB1C91CE3800319191 /* promo.html */; };
+		7831EDDF1C91CE5C00319191 /* CKPromoInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDDE1C91CE5C00319191 /* CKPromoInfoController.m */; };
+		7831EDE21C91EE6900319191 /* CKLoginCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831EDE11C91EE6900319191 /* CKLoginCodeViewController.m */; };
+		783BFAAD1CDBA6360067CEDE /* circlecross@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 783BFAAB1CDBA6360067CEDE /* circlecross@2x.png */; };
+		783BFAAE1CDBA6360067CEDE /* circleplus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 783BFAAC1CDBA6360067CEDE /* circleplus@2x.png */; };
+		784083981D49D65700D068F1 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 784083971D49D65700D068F1 /* libsqlite3.tbd */; };
+		784FE8561C8E7476006469D5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 784FE8521C8E7476006469D5 /* AppDelegate.m */; };
+		784FE8571C8E7476006469D5 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 784FE8541C8E7476006469D5 /* Info.plist */; };
+		784FE8581C8E7476006469D5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 784FE8551C8E7476006469D5 /* main.m */; };
+		785326D11D17D9F900D0D0FD /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 785326D01D17D9F900D0D0FD /* AssetsLibrary.framework */; };
+		785326D41D1810C300D0D0FD /* CKVideoAttachModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 785326D31D1810C300D0D0FD /* CKVideoAttachModel.m */; };
+		787DB8391CFCBBEF00395676 /* keyboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 787DB8381CFCBBEF00395676 /* keyboard@2x.png */; };
+		787DB83B1CFD412F00395676 /* mediabuttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 787DB83A1CFD412F00395676 /* mediabuttons@2x.png */; };
+		78B41EE91CB4B2E300417D3C /* CKDate+utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B41EE81CB4B2E300417D3C /* CKDate+utility.m */; };
+		78B41EEC1CB50BF800417D3C /* CKChatModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B41EEB1CB50BF800417D3C /* CKChatModel.m */; };
+		78B41EEF1CB61C3B00417D3C /* CKChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B41EEE1CB61C3B00417D3C /* CKChatController.m */; };
+		78B524B61C9B2D0300502AA4 /* CKHistoryRestoreController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524B51C9B2D0300502AA4 /* CKHistoryRestoreController.m */; };
+		78B524B91C9C54CD00502AA4 /* NSMutableAttributedString+utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524B81C9C54CD00502AA4 /* NSMutableAttributedString+utility.m */; };
+		78B524BC1C9DCE8C00502AA4 /* CKUserProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524BB1C9DCE8C00502AA4 /* CKUserProfileController.m */; };
+		78B524BF1C9DD29500502AA4 /* CKProfileHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524BE1C9DD29500502AA4 /* CKProfileHeaderView.m */; };
+		78B524C51C9FA41100502AA4 /* CKCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524C41C9FA41100502AA4 /* CKCache.m */; };
+		78B524C81C9FE35D00502AA4 /* CKChatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524C71C9FE35D00502AA4 /* CKChatsViewController.m */; };
+		78B524CB1C9FE3AE00502AA4 /* CKContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524CA1C9FE3AE00502AA4 /* CKContactsViewController.m */; };
+		78B524CE1C9FE3CD00502AA4 /* CKMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524CD1C9FE3CD00502AA4 /* CKMapViewController.m */; };
+		78B524D11C9FE3F500502AA4 /* CKBlogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524D01C9FE3F500502AA4 /* CKBlogViewController.m */; };
+		78B524D41C9FE40B00502AA4 /* CKSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524D31C9FE40B00502AA4 /* CKSettingsViewController.m */; };
+		78B524D81CA0239200502AA4 /* CKServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524D71CA0239200502AA4 /* CKServerConnection.m */; };
+		78BEA91D1CA44751004E85DB /* CKCitySelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA91C1CA44751004E85DB /* CKCitySelectionController.m */; };
+		78BEA9201CA45F5A004E85DB /* CKDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA91F1CA45F5A004E85DB /* CKDB.m */; };
+		78BEA9231CA50B43004E85DB /* CKDialogsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9221CA50B43004E85DB /* CKDialogsModel.m */; };
+		78BEA9261CA6A052004E85DB /* CKUserServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9251CA6A052004E85DB /* CKUserServerConnection.m */; };
+		78BEA92C1CA70150004E85DB /* CKMessageServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA92B1CA70150004E85DB /* CKMessageServerConnection.m */; };
+		78BEA92E1CA70F5F004E85DB /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78BEA92D1CA70F5F004E85DB /* Contacts.framework */; };
+		78BEA9311CAA3B88004E85DB /* CKFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9301CAA3B88004E85DB /* CKFriendCell.m */; };
+		78BEA9371CAA89C0004E85DB /* CKAddressBookCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9361CAA89C0004E85DB /* CKAddressBookCell.m */; };
+		78BEA93E1CAAA47D004E85DB /* CKHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9391CAAA47D004E85DB /* CKHTTPRequest.m */; };
+		78BEA93F1CAAA47D004E85DB /* NSDictionary+UrlEncodedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA93B1CAAA47D004E85DB /* NSDictionary+UrlEncodedString.m */; };
+		78BEA9401CAAA47D004E85DB /* NSString+URLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA93D1CAAA47D004E85DB /* NSString+URLParser.m */; };
+		78BEA9731CAADA49004E85DB /* CKFriendProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9721CAADA49004E85DB /* CKFriendProfileController.m */; };
+		78BEA9761CAAF9E0004E85DB /* CKFriendProfileHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9751CAAF9E0004E85DB /* CKFriendProfileHeaderCell.m */; };
+		78BEA9791CAAFFAC004E85DB /* profileCalendar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 78BEA9771CAAFFAC004E85DB /* profileCalendar@2x.png */; };
+		78BEA97A1CAAFFAC004E85DB /* profileOpenDialog@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 78BEA9781CAAFFAC004E85DB /* profileOpenDialog@2x.png */; };
+		78BEA97F1CAB90CA004E85DB /* CKFriendProfileDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA97E1CAB90CA004E85DB /* CKFriendProfileDetailCell.m */; };
+		78BEA9821CAB9942004E85DB /* CKFriendProfileLocationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9811CAB9942004E85DB /* CKFriendProfileLocationCell.m */; };
+		78BEA9851CABD833004E85DB /* CKFriendProfileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9841CABD833004E85DB /* CKFriendProfileCell.m */; };
+		78BEA98B1CADC9BB004E85DB /* CKGroupChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA98A1CADC9BB004E85DB /* CKGroupChatCell.m */; };
+		78BEA98E1CADC9DC004E85DB /* CKDialogChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA98D1CADC9DC004E85DB /* CKDialogChatCell.m */; };
+		78BEA9911CAE5DF0004E85DB /* CKAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9901CAE5DF0004E85DB /* CKAvatarView.m */; };
+		78BEA9941CAE5E04004E85DB /* CKUserAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BEA9931CAE5E04004E85DB /* CKUserAvatarView.m */; };
+		78BF5F6C1CB18F670026475B /* CKChatListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 78BF5F6B1CB18F670026475B /* CKChatListCell.m */; };
+		78D33D311D21766100B61F21 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D33D2F1D21766100B61F21 /* AVFoundation.framework */; };
+		78D33D321D21766100B61F21 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D33D301D21766100B61F21 /* AVKit.framework */; };
+		78D33D351D236BF400B61F21 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D33D341D236BF400B61F21 /* MapKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		7807CF6D1CC7E06700D9DF9B /* CKFriendSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKFriendSelectionController.h; sourceTree = "<group>"; };
+		7807CF6E1CC7E06700D9DF9B /* CKFriendSelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKFriendSelectionController.m; sourceTree = "<group>"; };
+		7807CF701CC8C28700D9DF9B /* checkwhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkwhite@2x.png"; sourceTree = "<group>"; };
+		7807CF721CCB5E7900D9DF9B /* CKGroupChatModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKGroupChatModel.h; sourceTree = "<group>"; };
+		7807CF731CCB5E7900D9DF9B /* CKGroupChatModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKGroupChatModel.m; sourceTree = "<group>"; };
+		7807CF751CD09FEA00D9DF9B /* CKNewGroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKNewGroupController.h; sourceTree = "<group>"; };
+		7807CF761CD09FEA00D9DF9B /* CKNewGroupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKNewGroupController.m; sourceTree = "<group>"; };
+		7807CF781CD0A01E00D9DF9B /* CKGroupHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKGroupHeaderView.h; sourceTree = "<group>"; };
+		7807CF791CD0A01E00D9DF9B /* CKGroupHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKGroupHeaderView.m; sourceTree = "<group>"; };
+		7807CF7B1CD1D7EB00D9DF9B /* CKPictureCaptureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKPictureCaptureManager.h; sourceTree = "<group>"; };
+		7807CF7C1CD1D7EB00D9DF9B /* CKPictureCaptureManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKPictureCaptureManager.m; sourceTree = "<group>"; };
+		7812507B1CB6219000D3BFBB /* CKMessagesListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMessagesListController.h; sourceTree = "<group>"; };
+		7812507C1CB6219000D3BFBB /* CKMessagesListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKMessagesListController.m; sourceTree = "<group>"; };
+		7812507E1CB63E0B00D3BFBB /* CKMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKMessageCell.h; path = Classes/Cells/CKMessageCell.h; sourceTree = "<group>"; };
+		7812507F1CB63E0B00D3BFBB /* CKMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKMessageCell.m; path = Classes/Cells/CKMessageCell.m; sourceTree = "<group>"; };
+		781250811CB6645C00D3BFBB /* cellMask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cellMask@2x.png"; path = "Classes/Cells/cellMask@2x.png"; sourceTree = "<group>"; };
+		781250831CB66A5A00D3BFBB /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		781250851CB6802A00D3BFBB /* secondaryCellMask@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "secondaryCellMask@2x.png"; path = "Classes/Cells/secondaryCellMask@2x.png"; sourceTree = "<group>"; };
+		781250871CB6C73700D3BFBB /* CKDialogChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDialogChatController.h; sourceTree = "<group>"; };
+		781250881CB6C73700D3BFBB /* CKDialogChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKDialogChatController.m; sourceTree = "<group>"; };
+		7812508A1CB6C74F00D3BFBB /* CKDialogChatModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDialogChatModel.h; sourceTree = "<group>"; };
+		7812508B1CB6C74F00D3BFBB /* CKDialogChatModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKDialogChatModel.m; sourceTree = "<group>"; };
+		7812508D1CB7607600D3BFBB /* CKMessageEditorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMessageEditorView.h; sourceTree = "<group>"; };
+		7812508E1CB7607600D3BFBB /* CKMessageEditorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKMessageEditorView.m; sourceTree = "<group>"; };
+		781250901CB7A7EB00D3BFBB /* cellMaskShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cellMaskShadow@2x.png"; path = "Classes/Cells/cellMaskShadow@2x.png"; sourceTree = "<group>"; };
+		781250921CB7A8EC00D3BFBB /* secondaryCellMaskShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "secondaryCellMaskShadow@2x.png"; path = "Classes/Cells/secondaryCellMaskShadow@2x.png"; sourceTree = "<group>"; };
+		781250961CB7AFBE00D3BFBB /* bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg@2x.png"; sourceTree = "<group>"; };
+		781250981CB7B07A00D3BFBB /* bgwhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bgwhite@2x.png"; sourceTree = "<group>"; };
+		782A00011D0AB9EE00802097 /* CKAudioAttachModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAudioAttachModel.h; sourceTree = "<group>"; };
+		782A00021D0AB9EE00802097 /* CKAudioAttachModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKAudioAttachModel.m; sourceTree = "<group>"; };
+		782A00041D0AB9FA00802097 /* CKCloudAttachModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCloudAttachModel.h; sourceTree = "<group>"; };
+		782A00051D0AB9FA00802097 /* CKCloudAttachModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCloudAttachModel.m; sourceTree = "<group>"; };
+		782A00071D0ABA0800802097 /* CKLocationAttachModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKLocationAttachModel.h; sourceTree = "<group>"; };
+		782A00081D0ABA0800802097 /* CKLocationAttachModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKLocationAttachModel.m; sourceTree = "<group>"; };
+		782A000A1D0ABA1500802097 /* CKContactAttachModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKContactAttachModel.h; sourceTree = "<group>"; };
+		782A000B1D0ABA1500802097 /* CKContactAttachModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContactAttachModel.m; sourceTree = "<group>"; };
+		782A000D1D0ABFD500802097 /* CKAttachCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKAttachCell.h; path = Classes/Cells/CKAttachCell.h; sourceTree = "<group>"; };
+		782A000E1D0ABFD500802097 /* CKAttachCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKAttachCell.m; path = Classes/Cells/CKAttachCell.m; sourceTree = "<group>"; };
+		782AFFE01D09562000802097 /* attachcamera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachcamera@2x.png"; sourceTree = "<group>"; };
+		782AFFE11D09562000802097 /* attachcloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachcloud@2x.png"; sourceTree = "<group>"; };
+		782AFFE21D09562000802097 /* attachcontact@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachcontact@2x.png"; sourceTree = "<group>"; };
+		782AFFE31D09562000802097 /* attachhide@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachhide@2x.png"; sourceTree = "<group>"; };
+		782AFFE41D09562000802097 /* attachlocation@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachlocation@2x.png"; sourceTree = "<group>"; };
+		782AFFE51D09562000802097 /* attachphotos@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachphotos@2x.png"; sourceTree = "<group>"; };
+		782AFFE61D09562000802097 /* attachrecording@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachrecording@2x.png"; sourceTree = "<group>"; };
+		782AFFEE1D09595A00802097 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		782AFFF01D09782600802097 /* CKAttachButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAttachButton.h; sourceTree = "<group>"; };
+		782AFFF11D09782600802097 /* CKAttachButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKAttachButton.m; sourceTree = "<group>"; };
+		782AFFF31D09843D00802097 /* CKAttachMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAttachMenu.h; sourceTree = "<group>"; };
+		782AFFF41D09843D00802097 /* CKAttachMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKAttachMenu.m; sourceTree = "<group>"; };
+		782AFFF61D099A4B00802097 /* attachaudio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "attachaudio@2x.png"; sourceTree = "<group>"; };
+		782AFFF81D0AB90300802097 /* CKAttachModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAttachModel.h; sourceTree = "<group>"; };
+		782AFFF91D0AB90300802097 /* CKAttachModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKAttachModel.m; sourceTree = "<group>"; };
+		782AFFFB1D0AB9C700802097 /* CKPictureAttachModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKPictureAttachModel.h; sourceTree = "<group>"; };
+		782AFFFC1D0AB9C700802097 /* CKPictureAttachModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKPictureAttachModel.m; sourceTree = "<group>"; };
+		782AFFFE1D0AB9DC00802097 /* CKRecordingAttachModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRecordingAttachModel.h; sourceTree = "<group>"; };
+		782AFFFF1D0AB9DC00802097 /* CKRecordingAttachModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKRecordingAttachModel.m; sourceTree = "<group>"; };
+		7831EDA81C9000E900319191 /* CKWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKWelcomeViewController.h; sourceTree = "<group>"; };
+		7831EDA91C9000E900319191 /* CKWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKWelcomeViewController.m; sourceTree = "<group>"; };
+		7831EDAC1C90018500319191 /* UIColor+hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+hex.h"; sourceTree = "<group>"; };
+		7831EDAD1C90018500319191 /* UIColor+hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+hex.m"; sourceTree = "<group>"; };
+		7831EDAF1C90038500319191 /* Click.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Click.pch; sourceTree = "<group>"; };
+		7831EDB01C9021F600319191 /* terms.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = terms.html; sourceTree = "<group>"; };
+		7831EDB21C909E5100319191 /* click.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = click.db; sourceTree = "<group>"; };
+		7831EDB81C90A24700319191 /* CKApplicationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKApplicationModel.h; sourceTree = "<group>"; };
+		7831EDB91C90A24700319191 /* CKApplicationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKApplicationModel.m; sourceTree = "<group>"; };
+		7831EDC31C90A5B900319191 /* CKMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMainViewController.h; sourceTree = "<group>"; };
+		7831EDC41C90A5B900319191 /* CKMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKMainViewController.m; sourceTree = "<group>"; };
+		7831EDC91C90A98000319191 /* CKLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKLoginViewController.h; sourceTree = "<group>"; };
+		7831EDCA1C90A98000319191 /* CKLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKLoginViewController.m; sourceTree = "<group>"; };
+		7831EDCC1C90ABDD00319191 /* UILabel+utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+utility.h"; sourceTree = "<group>"; };
+		7831EDCD1C90ABDD00319191 /* UILabel+utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+utility.m"; sourceTree = "<group>"; };
+		7831EDD01C90CFDC00319191 /* CKCountryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKCountryCell.h; path = Classes/Cells/CKCountryCell.h; sourceTree = "<group>"; };
+		7831EDD11C90CFDC00319191 /* CKCountryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKCountryCell.m; path = Classes/Cells/CKCountryCell.m; sourceTree = "<group>"; };
+		7831EDD31C90D32000319191 /* CKCountrySelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCountrySelectionController.h; sourceTree = "<group>"; };
+		7831EDD41C90D32000319191 /* CKCountrySelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCountrySelectionController.m; sourceTree = "<group>"; };
+		7831EDD61C9143EF00319191 /* libicucore.A.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.A.tbd; path = usr/lib/libicucore.A.tbd; sourceTree = SDKROOT; };
+		7831EDD81C91772000319191 /* CKTextEntryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKTextEntryCell.h; path = Classes/Cells/CKTextEntryCell.h; sourceTree = "<group>"; };
+		7831EDD91C91772000319191 /* CKTextEntryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKTextEntryCell.m; path = Classes/Cells/CKTextEntryCell.m; sourceTree = "<group>"; };
+		7831EDDB1C91CE3800319191 /* promo.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = promo.html; sourceTree = "<group>"; };
+		7831EDDD1C91CE5C00319191 /* CKPromoInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKPromoInfoController.h; sourceTree = "<group>"; };
+		7831EDDE1C91CE5C00319191 /* CKPromoInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKPromoInfoController.m; sourceTree = "<group>"; };
+		7831EDE01C91EE6900319191 /* CKLoginCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKLoginCodeViewController.h; sourceTree = "<group>"; };
+		7831EDE11C91EE6900319191 /* CKLoginCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKLoginCodeViewController.m; sourceTree = "<group>"; };
+		7831EDE61C9353CC00319191 /* CKVisualSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKVisualSettings.h; sourceTree = "<group>"; };
+		783BFAAB1CDBA6360067CEDE /* circlecross@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "circlecross@2x.png"; sourceTree = "<group>"; };
+		783BFAAC1CDBA6360067CEDE /* circleplus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "circleplus@2x.png"; sourceTree = "<group>"; };
+		784083971D49D65700D068F1 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		784FE8361C8DE7CA006469D5 /* click.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = click.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		784FE8511C8E7476006469D5 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		784FE8521C8E7476006469D5 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		784FE8541C8E7476006469D5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		784FE8551C8E7476006469D5 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		785326D01D17D9F900D0D0FD /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		785326D21D1810C300D0D0FD /* CKVideoAttachModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKVideoAttachModel.h; sourceTree = "<group>"; };
+		785326D31D1810C300D0D0FD /* CKVideoAttachModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKVideoAttachModel.m; sourceTree = "<group>"; };
+		787DB8381CFCBBEF00395676 /* keyboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "keyboard@2x.png"; sourceTree = "<group>"; };
+		787DB83A1CFD412F00395676 /* mediabuttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mediabuttons@2x.png"; sourceTree = "<group>"; };
+		78B41EE71CB4B2E300417D3C /* CKDate+utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKDate+utility.h"; sourceTree = "<group>"; };
+		78B41EE81CB4B2E300417D3C /* CKDate+utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CKDate+utility.m"; sourceTree = "<group>"; };
+		78B41EEA1CB50BF800417D3C /* CKChatModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKChatModel.h; sourceTree = "<group>"; };
+		78B41EEB1CB50BF800417D3C /* CKChatModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKChatModel.m; sourceTree = "<group>"; };
+		78B41EED1CB61C3B00417D3C /* CKChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKChatController.h; path = Classes/Controllers/CKChatController.h; sourceTree = SOURCE_ROOT; };
+		78B41EEE1CB61C3B00417D3C /* CKChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKChatController.m; path = Classes/Controllers/CKChatController.m; sourceTree = SOURCE_ROOT; };
+		78B524B41C9B2D0300502AA4 /* CKHistoryRestoreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHistoryRestoreController.h; sourceTree = "<group>"; };
+		78B524B51C9B2D0300502AA4 /* CKHistoryRestoreController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHistoryRestoreController.m; sourceTree = "<group>"; };
+		78B524B71C9C54CD00502AA4 /* NSMutableAttributedString+utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+utility.h"; sourceTree = "<group>"; };
+		78B524B81C9C54CD00502AA4 /* NSMutableAttributedString+utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+utility.m"; sourceTree = "<group>"; };
+		78B524BA1C9DCE8C00502AA4 /* CKUserProfileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKUserProfileController.h; sourceTree = "<group>"; };
+		78B524BB1C9DCE8C00502AA4 /* CKUserProfileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKUserProfileController.m; sourceTree = "<group>"; };
+		78B524BD1C9DD29500502AA4 /* CKProfileHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKProfileHeaderView.h; sourceTree = "<group>"; };
+		78B524BE1C9DD29500502AA4 /* CKProfileHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKProfileHeaderView.m; sourceTree = "<group>"; };
+		78B524C31C9FA41100502AA4 /* CKCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCache.h; sourceTree = "<group>"; };
+		78B524C41C9FA41100502AA4 /* CKCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCache.m; sourceTree = "<group>"; };
+		78B524C61C9FE35D00502AA4 /* CKChatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKChatsViewController.h; sourceTree = "<group>"; };
+		78B524C71C9FE35D00502AA4 /* CKChatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKChatsViewController.m; sourceTree = "<group>"; };
+		78B524C91C9FE3AE00502AA4 /* CKContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKContactsViewController.h; sourceTree = "<group>"; };
+		78B524CA1C9FE3AE00502AA4 /* CKContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContactsViewController.m; sourceTree = "<group>"; };
+		78B524CC1C9FE3CD00502AA4 /* CKMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMapViewController.h; sourceTree = "<group>"; };
+		78B524CD1C9FE3CD00502AA4 /* CKMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKMapViewController.m; sourceTree = "<group>"; };
+		78B524CF1C9FE3F500502AA4 /* CKBlogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKBlogViewController.h; sourceTree = "<group>"; };
+		78B524D01C9FE3F500502AA4 /* CKBlogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKBlogViewController.m; sourceTree = "<group>"; };
+		78B524D21C9FE40B00502AA4 /* CKSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKSettingsViewController.h; sourceTree = "<group>"; };
+		78B524D31C9FE40B00502AA4 /* CKSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKSettingsViewController.m; sourceTree = "<group>"; };
+		78B524D61CA0239200502AA4 /* CKServerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKServerConnection.h; sourceTree = "<group>"; };
+		78B524D71CA0239200502AA4 /* CKServerConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKServerConnection.m; sourceTree = "<group>"; };
+		78BEA91B1CA44751004E85DB /* CKCitySelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCitySelectionController.h; sourceTree = "<group>"; };
+		78BEA91C1CA44751004E85DB /* CKCitySelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCitySelectionController.m; sourceTree = "<group>"; };
+		78BEA91E1CA45F5A004E85DB /* CKDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDB.h; sourceTree = "<group>"; };
+		78BEA91F1CA45F5A004E85DB /* CKDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKDB.m; sourceTree = "<group>"; };
+		78BEA9211CA50B43004E85DB /* CKDialogsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKDialogsModel.h; sourceTree = "<group>"; };
+		78BEA9221CA50B43004E85DB /* CKDialogsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKDialogsModel.m; sourceTree = "<group>"; };
+		78BEA9241CA6A052004E85DB /* CKUserServerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKUserServerConnection.h; sourceTree = "<group>"; };
+		78BEA9251CA6A052004E85DB /* CKUserServerConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKUserServerConnection.m; sourceTree = "<group>"; };
+		78BEA92A1CA70150004E85DB /* CKMessageServerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMessageServerConnection.h; sourceTree = "<group>"; };
+		78BEA92B1CA70150004E85DB /* CKMessageServerConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKMessageServerConnection.m; sourceTree = "<group>"; };
+		78BEA92D1CA70F5F004E85DB /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
+		78BEA92F1CAA3B88004E85DB /* CKFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKFriendCell.h; path = Classes/Cells/CKFriendCell.h; sourceTree = "<group>"; };
+		78BEA9301CAA3B88004E85DB /* CKFriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKFriendCell.m; path = Classes/Cells/CKFriendCell.m; sourceTree = "<group>"; };
+		78BEA9351CAA89C0004E85DB /* CKAddressBookCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKAddressBookCell.h; path = Classes/Cells/CKAddressBookCell.h; sourceTree = "<group>"; };
+		78BEA9361CAA89C0004E85DB /* CKAddressBookCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKAddressBookCell.m; path = Classes/Cells/CKAddressBookCell.m; sourceTree = "<group>"; };
+		78BEA9381CAAA47D004E85DB /* CKHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHTTPRequest.h; sourceTree = "<group>"; };
+		78BEA9391CAAA47D004E85DB /* CKHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHTTPRequest.m; sourceTree = "<group>"; };
+		78BEA93A1CAAA47D004E85DB /* NSDictionary+UrlEncodedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+UrlEncodedString.h"; sourceTree = "<group>"; };
+		78BEA93B1CAAA47D004E85DB /* NSDictionary+UrlEncodedString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+UrlEncodedString.m"; sourceTree = "<group>"; };
+		78BEA93C1CAAA47D004E85DB /* NSString+URLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLParser.h"; sourceTree = "<group>"; };
+		78BEA93D1CAAA47D004E85DB /* NSString+URLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLParser.m"; sourceTree = "<group>"; };
+		78BEA9711CAADA49004E85DB /* CKFriendProfileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKFriendProfileController.h; sourceTree = "<group>"; };
+		78BEA9721CAADA49004E85DB /* CKFriendProfileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKFriendProfileController.m; sourceTree = "<group>"; };
+		78BEA9741CAAF9E0004E85DB /* CKFriendProfileHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKFriendProfileHeaderCell.h; path = Classes/Cells/CKFriendProfileHeaderCell.h; sourceTree = "<group>"; };
+		78BEA9751CAAF9E0004E85DB /* CKFriendProfileHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKFriendProfileHeaderCell.m; path = Classes/Cells/CKFriendProfileHeaderCell.m; sourceTree = "<group>"; };
+		78BEA9771CAAFFAC004E85DB /* profileCalendar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "profileCalendar@2x.png"; path = "Classes/Cells/profileCalendar@2x.png"; sourceTree = "<group>"; };
+		78BEA9781CAAFFAC004E85DB /* profileOpenDialog@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "profileOpenDialog@2x.png"; path = "Classes/Cells/profileOpenDialog@2x.png"; sourceTree = "<group>"; };
+		78BEA97D1CAB90CA004E85DB /* CKFriendProfileDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKFriendProfileDetailCell.h; path = Classes/Cells/CKFriendProfileDetailCell.h; sourceTree = "<group>"; };
+		78BEA97E1CAB90CA004E85DB /* CKFriendProfileDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKFriendProfileDetailCell.m; path = Classes/Cells/CKFriendProfileDetailCell.m; sourceTree = "<group>"; };
+		78BEA9801CAB9942004E85DB /* CKFriendProfileLocationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKFriendProfileLocationCell.h; path = Classes/Cells/CKFriendProfileLocationCell.h; sourceTree = "<group>"; };
+		78BEA9811CAB9942004E85DB /* CKFriendProfileLocationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKFriendProfileLocationCell.m; path = Classes/Cells/CKFriendProfileLocationCell.m; sourceTree = "<group>"; };
+		78BEA9831CABD833004E85DB /* CKFriendProfileCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKFriendProfileCell.h; path = Classes/Cells/CKFriendProfileCell.h; sourceTree = "<group>"; };
+		78BEA9841CABD833004E85DB /* CKFriendProfileCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKFriendProfileCell.m; path = Classes/Cells/CKFriendProfileCell.m; sourceTree = "<group>"; };
+		78BEA9891CADC9BB004E85DB /* CKGroupChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKGroupChatCell.h; path = Classes/Cells/CKGroupChatCell.h; sourceTree = "<group>"; };
+		78BEA98A1CADC9BB004E85DB /* CKGroupChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKGroupChatCell.m; path = Classes/Cells/CKGroupChatCell.m; sourceTree = "<group>"; };
+		78BEA98C1CADC9DC004E85DB /* CKDialogChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKDialogChatCell.h; path = Classes/Cells/CKDialogChatCell.h; sourceTree = "<group>"; };
+		78BEA98D1CADC9DC004E85DB /* CKDialogChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKDialogChatCell.m; path = Classes/Cells/CKDialogChatCell.m; sourceTree = "<group>"; };
+		78BEA98F1CAE5DF0004E85DB /* CKAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKAvatarView.h; sourceTree = "<group>"; };
+		78BEA9901CAE5DF0004E85DB /* CKAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKAvatarView.m; sourceTree = "<group>"; };
+		78BEA9921CAE5E04004E85DB /* CKUserAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKUserAvatarView.h; sourceTree = "<group>"; };
+		78BEA9931CAE5E04004E85DB /* CKUserAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKUserAvatarView.m; sourceTree = "<group>"; };
+		78BF5F6A1CB18F670026475B /* CKChatListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKChatListCell.h; path = Classes/Cells/CKChatListCell.h; sourceTree = "<group>"; };
+		78BF5F6B1CB18F670026475B /* CKChatListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKChatListCell.m; path = Classes/Cells/CKChatListCell.m; sourceTree = "<group>"; };
+		78D33D2F1D21766100B61F21 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		78D33D301D21766100B61F21 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		78D33D331D236B5E00B61F21 /* click.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = click.entitlements; sourceTree = "<group>"; };
+		78D33D341D236BF400B61F21 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		93DA247820187D61C667B833 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		A0FB7F40580CA9CAF95E0CB5 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC4251B9121ADDC62D1CBC67 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		784FE8331C8DE7CA006469D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				784083981D49D65700D068F1 /* libsqlite3.tbd in Frameworks */,
+				78D33D321D21766100B61F21 /* AVKit.framework in Frameworks */,
+				78D33D311D21766100B61F21 /* AVFoundation.framework in Frameworks */,
+				78D33D351D236BF400B61F21 /* MapKit.framework in Frameworks */,
+				785326D11D17D9F900D0D0FD /* AssetsLibrary.framework in Frameworks */,
+				781250841CB66A5A00D3BFBB /* CoreText.framework in Frameworks */,
+				78BEA92E1CA70F5F004E85DB /* Contacts.framework in Frameworks */,
+				7831EDD71C9143EF00319191 /* libicucore.A.tbd in Frameworks */,
+				10FC428DE039D15378156C75 /* Pods.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0FD8F8ADA85C4A7E18E55D94 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				93DA247820187D61C667B833 /* Pods.debug.xcconfig */,
+				FC4251B9121ADDC62D1CBC67 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		26A3A00136B7D779A1131F60 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				784083971D49D65700D068F1 /* libsqlite3.tbd */,
+				78D33D341D236BF400B61F21 /* MapKit.framework */,
+				78D33D2F1D21766100B61F21 /* AVFoundation.framework */,
+				78D33D301D21766100B61F21 /* AVKit.framework */,
+				785326D01D17D9F900D0D0FD /* AssetsLibrary.framework */,
+				781250831CB66A5A00D3BFBB /* CoreText.framework */,
+				78BEA92D1CA70F5F004E85DB /* Contacts.framework */,
+				7831EDD61C9143EF00319191 /* libicucore.A.tbd */,
+				A0FB7F40580CA9CAF95E0CB5 /* Pods.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7831EDA71C9000AD00319191 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				78BEA91B1CA44751004E85DB /* CKCitySelectionController.h */,
+				78BEA91C1CA44751004E85DB /* CKCitySelectionController.m */,
+				78B524B41C9B2D0300502AA4 /* CKHistoryRestoreController.h */,
+				78B524B51C9B2D0300502AA4 /* CKHistoryRestoreController.m */,
+				7831EDA81C9000E900319191 /* CKWelcomeViewController.h */,
+				7831EDA91C9000E900319191 /* CKWelcomeViewController.m */,
+				7831EDC91C90A98000319191 /* CKLoginViewController.h */,
+				7831EDCA1C90A98000319191 /* CKLoginViewController.m */,
+				7831EDD31C90D32000319191 /* CKCountrySelectionController.h */,
+				7831EDD41C90D32000319191 /* CKCountrySelectionController.m */,
+				7831EDDD1C91CE5C00319191 /* CKPromoInfoController.h */,
+				7831EDDE1C91CE5C00319191 /* CKPromoInfoController.m */,
+				7831EDE01C91EE6900319191 /* CKLoginCodeViewController.h */,
+				7831EDE11C91EE6900319191 /* CKLoginCodeViewController.m */,
+				78B524BA1C9DCE8C00502AA4 /* CKUserProfileController.h */,
+				78B524BB1C9DCE8C00502AA4 /* CKUserProfileController.m */,
+				78B524BD1C9DD29500502AA4 /* CKProfileHeaderView.h */,
+				78B524BE1C9DD29500502AA4 /* CKProfileHeaderView.m */,
+				78B524C61C9FE35D00502AA4 /* CKChatsViewController.h */,
+				78B524C71C9FE35D00502AA4 /* CKChatsViewController.m */,
+				78B524C91C9FE3AE00502AA4 /* CKContactsViewController.h */,
+				78B524CA1C9FE3AE00502AA4 /* CKContactsViewController.m */,
+				78B524CC1C9FE3CD00502AA4 /* CKMapViewController.h */,
+				78B524CD1C9FE3CD00502AA4 /* CKMapViewController.m */,
+				78B524CF1C9FE3F500502AA4 /* CKBlogViewController.h */,
+				78B524D01C9FE3F500502AA4 /* CKBlogViewController.m */,
+				78B524D21C9FE40B00502AA4 /* CKSettingsViewController.h */,
+				78B524D31C9FE40B00502AA4 /* CKSettingsViewController.m */,
+				78BEA9711CAADA49004E85DB /* CKFriendProfileController.h */,
+				78BEA9721CAADA49004E85DB /* CKFriendProfileController.m */,
+				781250871CB6C73700D3BFBB /* CKDialogChatController.h */,
+				781250881CB6C73700D3BFBB /* CKDialogChatController.m */,
+				7807CF6D1CC7E06700D9DF9B /* CKFriendSelectionController.h */,
+				7807CF6E1CC7E06700D9DF9B /* CKFriendSelectionController.m */,
+				7807CF751CD09FEA00D9DF9B /* CKNewGroupController.h */,
+				7807CF761CD09FEA00D9DF9B /* CKNewGroupController.m */,
+				7807CF781CD0A01E00D9DF9B /* CKGroupHeaderView.h */,
+				7807CF791CD0A01E00D9DF9B /* CKGroupHeaderView.m */,
+			);
+			name = Screens;
+			path = Classes/Screens;
+			sourceTree = "<group>";
+		};
+		7831EDAB1C90018500319191 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				78BEA98F1CAE5DF0004E85DB /* CKAvatarView.h */,
+				78BEA9901CAE5DF0004E85DB /* CKAvatarView.m */,
+				78BEA9921CAE5E04004E85DB /* CKUserAvatarView.h */,
+				78BEA9931CAE5E04004E85DB /* CKUserAvatarView.m */,
+				78BEA9381CAAA47D004E85DB /* CKHTTPRequest.h */,
+				78BEA9391CAAA47D004E85DB /* CKHTTPRequest.m */,
+				78BEA93A1CAAA47D004E85DB /* NSDictionary+UrlEncodedString.h */,
+				78BEA93B1CAAA47D004E85DB /* NSDictionary+UrlEncodedString.m */,
+				78BEA93C1CAAA47D004E85DB /* NSString+URLParser.h */,
+				78BEA93D1CAAA47D004E85DB /* NSString+URLParser.m */,
+				78BEA91E1CA45F5A004E85DB /* CKDB.h */,
+				78BEA91F1CA45F5A004E85DB /* CKDB.m */,
+				78B524C31C9FA41100502AA4 /* CKCache.h */,
+				78B524C41C9FA41100502AA4 /* CKCache.m */,
+				7831EDAC1C90018500319191 /* UIColor+hex.h */,
+				7831EDAD1C90018500319191 /* UIColor+hex.m */,
+				7831EDCC1C90ABDD00319191 /* UILabel+utility.h */,
+				7831EDCD1C90ABDD00319191 /* UILabel+utility.m */,
+				78B524B71C9C54CD00502AA4 /* NSMutableAttributedString+utility.h */,
+				78B524B81C9C54CD00502AA4 /* NSMutableAttributedString+utility.m */,
+				78B41EE71CB4B2E300417D3C /* CKDate+utility.h */,
+				78B41EE81CB4B2E300417D3C /* CKDate+utility.m */,
+				7812508D1CB7607600D3BFBB /* CKMessageEditorView.h */,
+				7812508E1CB7607600D3BFBB /* CKMessageEditorView.m */,
+				7807CF7B1CD1D7EB00D9DF9B /* CKPictureCaptureManager.h */,
+				7807CF7C1CD1D7EB00D9DF9B /* CKPictureCaptureManager.m */,
+				782AFFF01D09782600802097 /* CKAttachButton.h */,
+				782AFFF11D09782600802097 /* CKAttachButton.m */,
+			);
+			name = Utility;
+			path = Classes/Utility;
+			sourceTree = "<group>";
+		};
+		7831EDB71C90A24700319191 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7831EDB81C90A24700319191 /* CKApplicationModel.h */,
+				7831EDB91C90A24700319191 /* CKApplicationModel.m */,
+				78BEA9211CA50B43004E85DB /* CKDialogsModel.h */,
+				78BEA9221CA50B43004E85DB /* CKDialogsModel.m */,
+				78B41EEA1CB50BF800417D3C /* CKChatModel.h */,
+				78B41EEB1CB50BF800417D3C /* CKChatModel.m */,
+				7812508A1CB6C74F00D3BFBB /* CKDialogChatModel.h */,
+				7812508B1CB6C74F00D3BFBB /* CKDialogChatModel.m */,
+				7807CF721CCB5E7900D9DF9B /* CKGroupChatModel.h */,
+				7807CF731CCB5E7900D9DF9B /* CKGroupChatModel.m */,
+				782AFFF81D0AB90300802097 /* CKAttachModel.h */,
+				782AFFF91D0AB90300802097 /* CKAttachModel.m */,
+				785326D21D1810C300D0D0FD /* CKVideoAttachModel.h */,
+				785326D31D1810C300D0D0FD /* CKVideoAttachModel.m */,
+				782AFFFB1D0AB9C700802097 /* CKPictureAttachModel.h */,
+				782AFFFC1D0AB9C700802097 /* CKPictureAttachModel.m */,
+				782AFFFE1D0AB9DC00802097 /* CKRecordingAttachModel.h */,
+				782AFFFF1D0AB9DC00802097 /* CKRecordingAttachModel.m */,
+				782A00011D0AB9EE00802097 /* CKAudioAttachModel.h */,
+				782A00021D0AB9EE00802097 /* CKAudioAttachModel.m */,
+				782A00041D0AB9FA00802097 /* CKCloudAttachModel.h */,
+				782A00051D0AB9FA00802097 /* CKCloudAttachModel.m */,
+				782A00071D0ABA0800802097 /* CKLocationAttachModel.h */,
+				782A00081D0ABA0800802097 /* CKLocationAttachModel.m */,
+				782A000A1D0ABA1500802097 /* CKContactAttachModel.h */,
+				782A000B1D0ABA1500802097 /* CKContactAttachModel.m */,
+			);
+			name = Models;
+			path = Classes/Models;
+			sourceTree = "<group>";
+		};
+		7831EDC21C90A5B900319191 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				78B41EED1CB61C3B00417D3C /* CKChatController.h */,
+				78B41EEE1CB61C3B00417D3C /* CKChatController.m */,
+				7831EDC31C90A5B900319191 /* CKMainViewController.h */,
+				7831EDC41C90A5B900319191 /* CKMainViewController.m */,
+				7812507B1CB6219000D3BFBB /* CKMessagesListController.h */,
+				7812507C1CB6219000D3BFBB /* CKMessagesListController.m */,
+				782AFFF31D09843D00802097 /* CKAttachMenu.h */,
+				782AFFF41D09843D00802097 /* CKAttachMenu.m */,
+			);
+			name = Controllers;
+			path = Classes/Controllers;
+			sourceTree = "<group>";
+		};
+		7831EDCF1C90CFC300319191 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				781250921CB7A8EC00D3BFBB /* secondaryCellMaskShadow@2x.png */,
+				781250901CB7A7EB00D3BFBB /* cellMaskShadow@2x.png */,
+				781250851CB6802A00D3BFBB /* secondaryCellMask@2x.png */,
+				781250811CB6645C00D3BFBB /* cellMask@2x.png */,
+				78BEA9771CAAFFAC004E85DB /* profileCalendar@2x.png */,
+				78BEA9781CAAFFAC004E85DB /* profileOpenDialog@2x.png */,
+				78BEA92F1CAA3B88004E85DB /* CKFriendCell.h */,
+				78BEA9301CAA3B88004E85DB /* CKFriendCell.m */,
+				7831EDD01C90CFDC00319191 /* CKCountryCell.h */,
+				7831EDD11C90CFDC00319191 /* CKCountryCell.m */,
+				7831EDD81C91772000319191 /* CKTextEntryCell.h */,
+				7831EDD91C91772000319191 /* CKTextEntryCell.m */,
+				78BEA9351CAA89C0004E85DB /* CKAddressBookCell.h */,
+				78BEA9361CAA89C0004E85DB /* CKAddressBookCell.m */,
+				78BEA9741CAAF9E0004E85DB /* CKFriendProfileHeaderCell.h */,
+				78BEA9751CAAF9E0004E85DB /* CKFriendProfileHeaderCell.m */,
+				78BEA97D1CAB90CA004E85DB /* CKFriendProfileDetailCell.h */,
+				78BEA97E1CAB90CA004E85DB /* CKFriendProfileDetailCell.m */,
+				78BEA9801CAB9942004E85DB /* CKFriendProfileLocationCell.h */,
+				78BEA9811CAB9942004E85DB /* CKFriendProfileLocationCell.m */,
+				78BEA9831CABD833004E85DB /* CKFriendProfileCell.h */,
+				78BEA9841CABD833004E85DB /* CKFriendProfileCell.m */,
+				78BF5F6A1CB18F670026475B /* CKChatListCell.h */,
+				78BF5F6B1CB18F670026475B /* CKChatListCell.m */,
+				78BEA9891CADC9BB004E85DB /* CKGroupChatCell.h */,
+				78BEA98A1CADC9BB004E85DB /* CKGroupChatCell.m */,
+				78BEA98C1CADC9DC004E85DB /* CKDialogChatCell.h */,
+				78BEA98D1CADC9DC004E85DB /* CKDialogChatCell.m */,
+				7812507E1CB63E0B00D3BFBB /* CKMessageCell.h */,
+				7812507F1CB63E0B00D3BFBB /* CKMessageCell.m */,
+				782A000D1D0ABFD500802097 /* CKAttachCell.h */,
+				782A000E1D0ABFD500802097 /* CKAttachCell.m */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		784FE82D1C8DE7CA006469D5 = {
+			isa = PBXGroup;
+			children = (
+				78D33D331D236B5E00B61F21 /* click.entitlements */,
+				784FE8501C8E746A006469D5 /* Click */,
+				784FE8371C8DE7CA006469D5 /* Products */,
+				0FD8F8ADA85C4A7E18E55D94 /* Pods */,
+				26A3A00136B7D779A1131F60 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		784FE8371C8DE7CA006469D5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				784FE8361C8DE7CA006469D5 /* click.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		784FE8501C8E746A006469D5 /* Click */ = {
+			isa = PBXGroup;
+			children = (
+				78B524D51CA0237400502AA4 /* Network */,
+				7831EDCF1C90CFC300319191 /* Cells */,
+				7831EDC21C90A5B900319191 /* Controllers */,
+				7831EDB71C90A24700319191 /* Models */,
+				7831EDAB1C90018500319191 /* Utility */,
+				7831EDA71C9000AD00319191 /* Screens */,
+				784FE8591C8E7490006469D5 /* Resources */,
+				784FE8511C8E7476006469D5 /* AppDelegate.h */,
+				784FE8521C8E7476006469D5 /* AppDelegate.m */,
+				784FE8531C8E7476006469D5 /* Base.lproj */,
+				784FE8541C8E7476006469D5 /* Info.plist */,
+				784FE8551C8E7476006469D5 /* main.m */,
+				7831EDAF1C90038500319191 /* Click.pch */,
+				7831EDE61C9353CC00319191 /* CKVisualSettings.h */,
+			);
+			name = Click;
+			sourceTree = "<group>";
+		};
+		784FE8531C8E7476006469D5 /* Base.lproj */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Base.lproj;
+			sourceTree = "<group>";
+		};
+		784FE8591C8E7490006469D5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				782AFFF61D099A4B00802097 /* attachaudio@2x.png */,
+				782AFFEE1D09595A00802097 /* Assets.xcassets */,
+				782AFFE01D09562000802097 /* attachcamera@2x.png */,
+				782AFFE11D09562000802097 /* attachcloud@2x.png */,
+				782AFFE21D09562000802097 /* attachcontact@2x.png */,
+				782AFFE31D09562000802097 /* attachhide@2x.png */,
+				782AFFE41D09562000802097 /* attachlocation@2x.png */,
+				782AFFE51D09562000802097 /* attachphotos@2x.png */,
+				782AFFE61D09562000802097 /* attachrecording@2x.png */,
+				787DB83A1CFD412F00395676 /* mediabuttons@2x.png */,
+				787DB8381CFCBBEF00395676 /* keyboard@2x.png */,
+				783BFAAB1CDBA6360067CEDE /* circlecross@2x.png */,
+				783BFAAC1CDBA6360067CEDE /* circleplus@2x.png */,
+				7807CF701CC8C28700D9DF9B /* checkwhite@2x.png */,
+				781250981CB7B07A00D3BFBB /* bgwhite@2x.png */,
+				781250961CB7AFBE00D3BFBB /* bg@2x.png */,
+				7831EDDB1C91CE3800319191 /* promo.html */,
+				7831EDB21C909E5100319191 /* click.db */,
+				7831EDB01C9021F600319191 /* terms.html */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		78B524D51CA0237400502AA4 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				78BEA92A1CA70150004E85DB /* CKMessageServerConnection.h */,
+				78BEA92B1CA70150004E85DB /* CKMessageServerConnection.m */,
+				78B524D61CA0239200502AA4 /* CKServerConnection.h */,
+				78B524D71CA0239200502AA4 /* CKServerConnection.m */,
+				78BEA9241CA6A052004E85DB /* CKUserServerConnection.h */,
+				78BEA9251CA6A052004E85DB /* CKUserServerConnection.m */,
+			);
+			name = Network;
+			path = Classes/Network;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		784FE8351C8DE7CA006469D5 /* click */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 784FE84D1C8DE7CB006469D5 /* Build configuration list for PBXNativeTarget "click" */;
+			buildPhases = (
+				4140022B1257BF12F8FB24AC /* Check Pods Manifest.lock */,
+				784FE8321C8DE7CA006469D5 /* Sources */,
+				784FE8331C8DE7CA006469D5 /* Frameworks */,
+				784FE8341C8DE7CA006469D5 /* Resources */,
+				DCA9A4495524431B89F62767 /* Embed Pods Frameworks */,
+				A586D243634FDBAFBE62A0DA /* Copy Pods Resources */,
+				784083961D49D51300D068F1 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = click;
+			productName = click;
+			productReference = 784FE8361C8DE7CA006469D5 /* click.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		784FE82E1C8DE7CA006469D5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = CK;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Igor Tetyuev";
+				TargetAttributes = {
+					784FE8351C8DE7CA006469D5 = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = 635Y86FJPH;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 784FE8311C8DE7CA006469D5 /* Build configuration list for PBXProject "click" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 784FE82D1C8DE7CA006469D5;
+			productRefGroup = 784FE8371C8DE7CA006469D5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				784FE8351C8DE7CA006469D5 /* click */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		784FE8341C8DE7CA006469D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				781250861CB6802A00D3BFBB /* secondaryCellMask@2x.png in Resources */,
+				7807CF711CC8C28700D9DF9B /* checkwhite@2x.png in Resources */,
+				782AFFF71D099A4B00802097 /* attachaudio@2x.png in Resources */,
+				781250821CB6645C00D3BFBB /* cellMask@2x.png in Resources */,
+				781250911CB7A7EB00D3BFBB /* cellMaskShadow@2x.png in Resources */,
+				783BFAAE1CDBA6360067CEDE /* circleplus@2x.png in Resources */,
+				781250971CB7AFBE00D3BFBB /* bg@2x.png in Resources */,
+				781250991CB7B07A00D3BFBB /* bgwhite@2x.png in Resources */,
+				784FE8571C8E7476006469D5 /* Info.plist in Resources */,
+				7831EDDC1C91CE3800319191 /* promo.html in Resources */,
+				781250931CB7A8EC00D3BFBB /* secondaryCellMaskShadow@2x.png in Resources */,
+				783BFAAD1CDBA6360067CEDE /* circlecross@2x.png in Resources */,
+				782AFFEB1D09562000802097 /* attachlocation@2x.png in Resources */,
+				7831EDB31C909E5100319191 /* click.db in Resources */,
+				787DB8391CFCBBEF00395676 /* keyboard@2x.png in Resources */,
+				782AFFEA1D09562000802097 /* attachhide@2x.png in Resources */,
+				78BEA97A1CAAFFAC004E85DB /* profileOpenDialog@2x.png in Resources */,
+				782AFFE91D09562000802097 /* attachcontact@2x.png in Resources */,
+				787DB83B1CFD412F00395676 /* mediabuttons@2x.png in Resources */,
+				782AFFEC1D09562000802097 /* attachphotos@2x.png in Resources */,
+				7831EDB11C9021F600319191 /* terms.html in Resources */,
+				782AFFE71D09562000802097 /* attachcamera@2x.png in Resources */,
+				78BEA9791CAAFFAC004E85DB /* profileCalendar@2x.png in Resources */,
+				782AFFED1D09562000802097 /* attachrecording@2x.png in Resources */,
+				782AFFE81D09562000802097 /* attachcloud@2x.png in Resources */,
+				782AFFEF1D09595A00802097 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4140022B1257BF12F8FB24AC /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		784083961D49D51300D068F1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 8a2128a1f6f3129f47fa5545c61f6fe18bd43c02 500f849cecc535852496a00c33c09a661eb548b01384375d1fe2012662ee4840";
+		};
+		A586D243634FDBAFBE62A0DA /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DCA9A4495524431B89F62767 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		784FE8321C8DE7CA006469D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7831EDBA1C90A24700319191 /* CKApplicationModel.m in Sources */,
+				78BF5F6C1CB18F670026475B /* CKChatListCell.m in Sources */,
+				782A00031D0AB9EE00802097 /* CKAudioAttachModel.m in Sources */,
+				78BEA9731CAADA49004E85DB /* CKFriendProfileController.m in Sources */,
+				7807CF741CCB5E7900D9DF9B /* CKGroupChatModel.m in Sources */,
+				78BEA93E1CAAA47D004E85DB /* CKHTTPRequest.m in Sources */,
+				78BEA9761CAAF9E0004E85DB /* CKFriendProfileHeaderCell.m in Sources */,
+				782AFFFA1D0AB90300802097 /* CKAttachModel.m in Sources */,
+				7812508F1CB7607600D3BFBB /* CKMessageEditorView.m in Sources */,
+				78BEA9911CAE5DF0004E85DB /* CKAvatarView.m in Sources */,
+				78B524C81C9FE35D00502AA4 /* CKChatsViewController.m in Sources */,
+				781250891CB6C73700D3BFBB /* CKDialogChatController.m in Sources */,
+				78BEA97F1CAB90CA004E85DB /* CKFriendProfileDetailCell.m in Sources */,
+				78BEA9201CA45F5A004E85DB /* CKDB.m in Sources */,
+				7807CF771CD09FEA00D9DF9B /* CKNewGroupController.m in Sources */,
+				782A00001D0AB9DC00802097 /* CKRecordingAttachModel.m in Sources */,
+				7831EDCE1C90ABDD00319191 /* UILabel+utility.m in Sources */,
+				784FE8581C8E7476006469D5 /* main.m in Sources */,
+				78BEA93F1CAAA47D004E85DB /* NSDictionary+UrlEncodedString.m in Sources */,
+				7807CF6F1CC7E06700D9DF9B /* CKFriendSelectionController.m in Sources */,
+				78B524D81CA0239200502AA4 /* CKServerConnection.m in Sources */,
+				782AFFF21D09782700802097 /* CKAttachButton.m in Sources */,
+				78BEA98B1CADC9BB004E85DB /* CKGroupChatCell.m in Sources */,
+				78B524B61C9B2D0300502AA4 /* CKHistoryRestoreController.m in Sources */,
+				7831EDD51C90D32000319191 /* CKCountrySelectionController.m in Sources */,
+				78BEA98E1CADC9DC004E85DB /* CKDialogChatCell.m in Sources */,
+				782A000F1D0ABFD500802097 /* CKAttachCell.m in Sources */,
+				78BEA9851CABD833004E85DB /* CKFriendProfileCell.m in Sources */,
+				7831EDE21C91EE6900319191 /* CKLoginCodeViewController.m in Sources */,
+				78B524BC1C9DCE8C00502AA4 /* CKUserProfileController.m in Sources */,
+				7831EDAE1C90018500319191 /* UIColor+hex.m in Sources */,
+				78BEA92C1CA70150004E85DB /* CKMessageServerConnection.m in Sources */,
+				7831EDDF1C91CE5C00319191 /* CKPromoInfoController.m in Sources */,
+				7831EDC51C90A5B900319191 /* CKMainViewController.m in Sources */,
+				78B524CE1C9FE3CD00502AA4 /* CKMapViewController.m in Sources */,
+				7831EDCB1C90A98000319191 /* CKLoginViewController.m in Sources */,
+				782A000C1D0ABA1500802097 /* CKContactAttachModel.m in Sources */,
+				78BEA9371CAA89C0004E85DB /* CKAddressBookCell.m in Sources */,
+				782A00091D0ABA0800802097 /* CKLocationAttachModel.m in Sources */,
+				78B524B91C9C54CD00502AA4 /* NSMutableAttributedString+utility.m in Sources */,
+				78B41EEF1CB61C3B00417D3C /* CKChatController.m in Sources */,
+				7831EDDA1C91772000319191 /* CKTextEntryCell.m in Sources */,
+				78B41EEC1CB50BF800417D3C /* CKChatModel.m in Sources */,
+				78B524BF1C9DD29500502AA4 /* CKProfileHeaderView.m in Sources */,
+				7807CF7A1CD0A01E00D9DF9B /* CKGroupHeaderView.m in Sources */,
+				78B524C51C9FA41100502AA4 /* CKCache.m in Sources */,
+				78BEA9261CA6A052004E85DB /* CKUserServerConnection.m in Sources */,
+				78BEA9821CAB9942004E85DB /* CKFriendProfileLocationCell.m in Sources */,
+				781250801CB63E0B00D3BFBB /* CKMessageCell.m in Sources */,
+				78B524D41C9FE40B00502AA4 /* CKSettingsViewController.m in Sources */,
+				78BEA91D1CA44751004E85DB /* CKCitySelectionController.m in Sources */,
+				78BEA9231CA50B43004E85DB /* CKDialogsModel.m in Sources */,
+				784FE8561C8E7476006469D5 /* AppDelegate.m in Sources */,
+				78BEA9401CAAA47D004E85DB /* NSString+URLParser.m in Sources */,
+				78BEA9941CAE5E04004E85DB /* CKUserAvatarView.m in Sources */,
+				7812508C1CB6C74F00D3BFBB /* CKDialogChatModel.m in Sources */,
+				78B41EE91CB4B2E300417D3C /* CKDate+utility.m in Sources */,
+				78BEA9311CAA3B88004E85DB /* CKFriendCell.m in Sources */,
+				7812507D1CB6219000D3BFBB /* CKMessagesListController.m in Sources */,
+				7807CF7D1CD1D7EB00D9DF9B /* CKPictureCaptureManager.m in Sources */,
+				78B524D11C9FE3F500502AA4 /* CKBlogViewController.m in Sources */,
+				782A00061D0AB9FA00802097 /* CKCloudAttachModel.m in Sources */,
+				785326D41D1810C300D0D0FD /* CKVideoAttachModel.m in Sources */,
+				782AFFFD1D0AB9C700802097 /* CKPictureAttachModel.m in Sources */,
+				782AFFF51D09843D00802097 /* CKAttachMenu.m in Sources */,
+				78B524CB1C9FE3AE00502AA4 /* CKContactsViewController.m in Sources */,
+				7831EDAA1C9000E900319191 /* CKWelcomeViewController.m in Sources */,
+				7831EDD21C90CFDC00319191 /* CKCountryCell.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		784FE84B1C8DE7CB006469D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		784FE84C1C8DE7CB006469D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		784FE84E1C8DE7CB006469D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 93DA247820187D61C667B833 /* Pods.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = click.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Click.pch;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = me.messme.App;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		784FE84F1C8DE7CB006469D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FC4251B9121ADDC62D1CBC67 /* Pods.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = click.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Click.pch;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = me.messme.App;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		784FE8311C8DE7CA006469D5 /* Build configuration list for PBXProject "click" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				784FE84B1C8DE7CB006469D5 /* Debug */,
+				784FE84C1C8DE7CB006469D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		784FE84D1C8DE7CB006469D5 /* Build configuration list for PBXNativeTarget "click" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				784FE84E1C8DE7CB006469D5 /* Debug */,
+				784FE84F1C8DE7CB006469D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 784FE82E1C8DE7CA006469D5 /* Project object */;
+}

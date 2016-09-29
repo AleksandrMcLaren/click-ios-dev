@@ -1,0 +1,31 @@
+//
+//  Click.pch
+//  click
+//
+//  Created by Igor Tetyuev on 09.03.16.
+//  Copyright © 2016 Igor Tetyuev. All rights reserved.
+//
+
+
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
+#import "UIColor+hex.h"
+#import "UILabel+utility.h"
+#import "NSMutableAttributedString+utility.h"
+#import "CKApplicationModel.h"
+#import "AppDelegate.h"
+#import "CKVisualSettings.h"
+#import "CKDB.h"
+#import "CKDate+utility.h"
+#import "ReactiveCocoa.h"
+
+//define this constant if you want to use Masonry without the 'mas_' prefix
+#define MAS_SHORTHAND
+
+//define this constant if you want to enable auto-boxing for default syntax
+#define MAS_SHORTHAND_GLOBALS
+
+#import "Masonry.h"
+#endif

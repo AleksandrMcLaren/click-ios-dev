@@ -1,0 +1,261 @@
+diff --git a/iMKR/Sources/Data/MKRDatabaseCache.h b/iMKR/Sources/Data/MKRDatabaseCache.h
+index 9768a97..c77122b 100644
+--- a/iMKR/Sources/Data/MKRDatabaseCache.h
++++ b/iMKR/Sources/Data/MKRDatabaseCache.h
+@@ -11,6 +11,7 @@
+ 
+ typedef void (^MKRDatabaseCacheCompletion)(NSString *path, NSError *error);
+ typedef void (^MKRDatabaseSetCompletion)(MKRRemoteDatabaseSet *set, NSError *error);
++typedef void (^MKRDatabaseSetsCompletion)(NSDictionary *sets, NSError *error);
+ 
+ @interface MKRDatabaseCache : NSObject <NSCoding>
+ 
+@@ -18,6 +19,7 @@ typedef void (^MKRDatabaseSetCompletion)(MKRRemoteDatabaseSet *set, NSError *err
+ + (void)setToken:(NSString *)token;
+ + (void)setUrl:(NSString *)url;
+ + (void)downloadDatabaseSetForDate:(NSString *)date completion:(MKRDatabaseSetCompletion)onComplete;
+++ (void)downloadDatabaseSetsWithCompletion:(MKRDatabaseSetsCompletion)onComplete;
+ + (void)fetchDatabaseSetForDate:(NSString *)date completion:(MKRDatabaseSetCompletion)onComplete;
+ + (void)getDatabaseCacheForDate:(NSString *)date
+                      withBudget:(NSUInteger)budget
+@@ -27,8 +29,10 @@ typedef void (^MKRDatabaseSetCompletion)(MKRRemoteDatabaseSet *set, NSError *err
+ + (MKRRemoteDatabaseSet *)cachedSetForDate:(NSString *)date;
+ + (NSString *)cacheFilePathWithDate:(NSString *)date budget:(NSUInteger)budget;
+ - (BOOL)hasCachedDatabaseForDate:(NSString *)date budget:(NSUInteger)budget;
+-- (NSArray<NSString *> *)availableDates;
++- (NSArray<NSDate *> *)availableDates;
++- (NSArray<NSDate *> *)sortedAvailableDates;
+ 
+ @property (nonatomic, assign) BOOL isCachingEnabled;
++@property(nonatomic, strong) NSMutableDictionary *sets;
+ 
+ @end
+diff --git a/iMKR/Sources/Data/MKRDatabaseCache.m b/iMKR/Sources/Data/MKRDatabaseCache.m
+index c770722..2d6f4f8 100644
+--- a/iMKR/Sources/Data/MKRDatabaseCache.m
++++ b/iMKR/Sources/Data/MKRDatabaseCache.m
+@@ -16,7 +16,6 @@ @interface MKRDatabaseCache ()
+ 
+ @property(nonatomic, strong) NSString *token;
+ @property(nonatomic, strong) NSString *url;
+-@property(nonatomic, strong) NSMutableDictionary *sets;
+ 
+ @end
+ 
+@@ -117,7 +116,19 @@ - (BOOL)hasCachedDatabaseForDate:(NSString *)date budget:(NSUInteger)budget {
+ }
+ 
+ - (NSArray<NSString *> *)availableDates {
+-    return self.sets.allKeys;
++    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
++    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Europe/Moscow"]];
++    [dateFormatter setDateFormat:@"dd'.'MM'.'yyyy"];
++    return _.array(self.sets.allKeys).map(^(NSString *datestring) {
++        return [dateFormatter dateFromString:datestring];
++    }).unwrap;
++}
++
++- (NSArray<NSString *> *)sortedAvailableDates {
++    return _.array([self availableDates]).sort(^(NSDate *date1, NSDate *date2) {
++        return [date1 compare:date2];
++    })
++    .unwrap;
+ }
+ 
+ - (void)deleteObsoleteDatabasesWithNewSet:(MKRRemoteDatabaseSet *)set {
+@@ -193,6 +204,14 @@ + (void)downloadDatabaseSetForDate:(NSString *)date completion:(MKRDatabaseSetCo
+                   }];
+ }
+ 
+++ (void)downloadDatabaseSetsWithCompletion:(MKRDatabaseSetsCompletion)onComplete {
++    [MKRRemoteDatabaseDownloader downloadAllSetsUsingToken:[MKRDatabaseCache sharedInstance].token
++                                                   fromURL:[MKRDatabaseCache sharedInstance].url
++                                                onComplete:^(NSDictionary *result, NSError *e) {
++                                                    onComplete(result, e);
++                                                }];
++}
++
+ + (void)fetchDatabaseSetForDate:(NSString *)date completion:(MKRDatabaseSetCompletion)onComplete {
+     if ([[self sharedInstance] cachedSetForDate:date]) {
+         onComplete([[self sharedInstance] cachedSetForDate:date], nil);
+diff --git a/iMKR/Sources/Data/MKRRemoteDatabaseDownloader.h b/iMKR/Sources/Data/MKRRemoteDatabaseDownloader.h
+index ecb5887..578b3ad 100644
+--- a/iMKR/Sources/Data/MKRRemoteDatabaseDownloader.h
++++ b/iMKR/Sources/Data/MKRRemoteDatabaseDownloader.h
+@@ -11,9 +11,21 @@
+ 
+ typedef void (^MKRRemoteDatabaseDownloaderDataCallback)(NSData *, NSError *e);
+ typedef void (^MKRRemoteDatabaseSetDownloadCallback)(MKRRemoteDatabaseSet *, NSError *e);
++typedef void (^MKRRemoteDatabaseAvailableDatesDownloadCallback)(NSArray *, NSError *e);
++typedef void (^MKRRemoteDatabaseAllSetsDownloadCallback)(NSDictionary *, NSError *e);
+ 
+ @interface MKRRemoteDatabaseDownloader : NSObject
+ 
+++ (instancetype)sharedInstance;
++
+++ (void)downloadAvailableDatesUsingToken:(NSString *)token
++                   fromURL:(NSString *)url
++                onComplete:(MKRRemoteDatabaseAvailableDatesDownloadCallback)onComplete;
++
+++ (void)downloadAllSetsUsingToken:(NSString *)token
++                                 fromURL:(NSString *)url
++                              onComplete:(MKRRemoteDatabaseAllSetsDownloadCallback)onComplete;
++
+ + (void)downloadSetForDate:(NSString *)date
+                 usingToken:(NSString *)token
+                    fromURL:(NSString *)url
+diff --git a/iMKR/Sources/Data/MKRRemoteDatabaseDownloader.m b/iMKR/Sources/Data/MKRRemoteDatabaseDownloader.m
+index 163a2c1..b10cbc7 100644
+--- a/iMKR/Sources/Data/MKRRemoteDatabaseDownloader.m
++++ b/iMKR/Sources/Data/MKRRemoteDatabaseDownloader.m
+@@ -12,8 +12,110 @@
+ 
+ #define DATA_CHUNK_RECEIVED @"DATA_CHUNK_RECEIVED"
+ 
++@interface MKRRemoteDatabaseDownloader()
++
++@property (nonatomic, strong) NSMutableDictionary *downloadedSets;
++@property (nonatomic, strong) NSMutableArray *remainingDates;
++@property (nonatomic, strong) NSString *token;
++@property (nonatomic, strong) NSString *url;
++@property (nonatomic, strong) MKRRemoteDatabaseAllSetsDownloadCallback onComplete;
++
++@end
++
+ @implementation MKRRemoteDatabaseDownloader
+ 
+++ (instancetype)sharedInstance {
++    static MKRRemoteDatabaseDownloader *instance;
++    static dispatch_once_t onceToken;
++    
++    dispatch_once(&onceToken, ^{
++        instance = [MKRRemoteDatabaseDownloader new];
++    });
++    
++    return instance;
++}
++
+++ (void)downloadAvailableDatesUsingToken:(NSString *)token
++                                 fromURL:(NSString *)url
++                              onComplete:(MKRRemoteDatabaseAvailableDatesDownloadCallback)onComplete {
++    [self databaseRequestTo:[NSString stringWithFormat:@"%@/data/AvailableDates", url]
++                         token:token
++                    onComplete:^(NSData *data, NSError *error) {
++                        if (error) {
++                            onComplete(nil, error);
++                            return;
++                        }
++                        
++                        NSError *parsingError = nil;
++                        NSArray *dateStrings = _.array([NSJSONSerialization JSONObjectWithData:data
++                                                                               options:NSJSONReadingAllowFragments
++                                                                                 error:&parsingError]).map(^(NSString *value) {
++                            NSRange range = [value rangeOfString:@" "];
++                            if (range.location != NSNotFound) {
++                                return [value substringToIndex:range.location];
++                            }
++                            else {
++                                return value;
++                            }
++                        }).unwrap;
++                        
++                        if (dateStrings != nil) {
++                            onComplete(dateStrings, nil);
++                        } else {
++                            NSError *cantParseDatabaseSetError =
++                            [NSError errorWithDomain:@""
++                                                code:-1
++                                            userInfo:@{
++                                                       @"decription" : @"Can't parse date set"
++                                                       }];
++                            onComplete(nil, cantParseDatabaseSetError);
++                        }
++                    }];
++}
++
++- (void)downloadAllSets {
++    NSString *date = self.remainingDates.lastObject;
++    [self.remainingDates removeLastObject];
++    @weakify(self)
++    [MKRRemoteDatabaseDownloader downloadSetForDate:date
++                                         usingToken:self.token
++                                            fromURL:self.url
++                                         onComplete:^(MKRRemoteDatabaseSet *set, NSError *e) {
++                                             @strongify(self)
++                                             if (e) {
++                                                 self.onComplete(nil, e);
++                                                 return;
++                                             }
++                                             self.downloadedSets[date] = set;
++                                             if (self.remainingDates.count == 0) {
++                                                 self.onComplete(self.downloadedSets, nil);
++                                             }
++                                             else {
++                                                 [self downloadAllSets];
++                                             }
++                                         }];
++}
++
+++ (void)downloadAllSetsUsingToken:(NSString *)token
++                          fromURL:(NSString *)url
++                       onComplete:(MKRRemoteDatabaseAllSetsDownloadCallback)onComplete {
++    
++    [self downloadAvailableDatesUsingToken:token fromURL:url onComplete:^(NSArray *dates, NSError *e) {
++        if (e) {
++            onComplete(nil, e);
++            return;
++        }
++        MKRRemoteDatabaseDownloader *downloader = [MKRRemoteDatabaseDownloader sharedInstance];
++        downloader.downloadedSets = [NSMutableDictionary new];
++        downloader.remainingDates = dates.mutableCopy;
++        downloader.url = url;
++        downloader.token = token;
++        downloader.onComplete = onComplete;
++        [downloader downloadAllSets];
++    }];
++    
++}
++
+ + (void)downloadSetForDate:(NSString *)date
+                 usingToken:(NSString *)token
+                    fromURL:(NSString *)url
+diff --git a/iMKR/Sources/Main/MKRMainViewModel.m b/iMKR/Sources/Main/MKRMainViewModel.m
+index 02de5d8..bbd5a04 100644
+--- a/iMKR/Sources/Main/MKRMainViewModel.m
++++ b/iMKR/Sources/Main/MKRMainViewModel.m
+@@ -283,15 +283,17 @@ - (void)updateAppVersion {
+ }
+ 
+ - (void)loadFreshData {
+-    NSLog(@"%@", [MKRDataStore sharedInstance].lastSuccessDate);
+-    if (![MKRDataStore sharedInstance].lastSuccessDate) { // а нет нихрена, тупо качаем
+-        [[MKRDataStore sharedInstance] fetchDataForDate:nil];
+-        return;
+-    }
+     
+-    // качаем набор баз на выбранную дату
+-    [MKRDatabaseCache downloadDatabaseSetForDate:[MKRDataStore sharedInstance].lastSuccessDateString completion:^(MKRRemoteDatabaseSet *set, NSError *error) {
+-        // проверяем есть ли актуальная база на выбранную дату
++    [MKRDatabaseCache downloadDatabaseSetsWithCompletion:^(NSDictionary *sets, NSError *error) {
++        NSLog(@"%@", sets);
++        [MKRDatabaseCache sharedInstance].sets = sets.mutableCopy;
++        
++        NSLog(@"%@", [MKRDataStore sharedInstance].lastSuccessDate);
++        if (![MKRDataStore sharedInstance].lastSuccessDate) { // а нет нихрена, тупо качаем
++            [[MKRDataStore sharedInstance] fetchDataForDate:[[MKRDatabaseCache sharedInstance] sortedAvailableDates].lastObject];
++            return;
++        }
++        
+         if ([[MKRDatabaseCache sharedInstance] hasCachedDatabaseForDate:[MKRDataStore sharedInstance].lastSuccessDateString
+                                                                  budget:[MKRDataStore sharedInstance].currentBudget]) {
+             // если актуальная база есть (которая сразу будет загружена) есть то показываем диалог загрузки
+@@ -311,7 +313,9 @@ - (void)loadFreshData {
+             // качаем базу на выбранную дату
+             [[MKRDataStore sharedInstance] fetchDataForDate:[MKRDataStore sharedInstance].lastSuccessDate];
+         }
++        
+     }];
++    
+ }
+ 
+ - (void)restart {
