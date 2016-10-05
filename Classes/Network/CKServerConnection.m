@@ -53,7 +53,9 @@
 
 - (void)connect:(NSString *)entryPoint
 {
-    NSMutableString *connectionString = [NSMutableString stringWithFormat:@"ws://click.httpx.ru:8101/%@?", entryPoint];
+    //NSMutableString *connectionString = [NSMutableString stringWithFormat:@"ws://click.httpx.ru:8101/%@?", entryPoint];
+    NSMutableString *connectionString = [NSMutableString stringWithFormat:@"wss://chatclick.ru:8101/%@?", entryPoint];
+    
     if (self.phoneNumber)
     {
         [connectionString appendFormat:@"id=%@",self.phoneNumber];
