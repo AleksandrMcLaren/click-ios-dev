@@ -117,7 +117,7 @@
     NSData *jsondata = [NSJSONSerialization dataWithJSONObject:mdata options:0 error:nil];
     NSString *sendString = [[NSString alloc] initWithData:jsondata encoding:NSUTF8StringEncoding];
     
-    NSLog(@"sendData: %@", sendString);
+    NSLog(@"\n[Socket Request]\n%@", sendString);
 
     
     if(_connection.readyState == SR_CONNECTING) {
@@ -141,7 +141,7 @@
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message
 {
     NSDictionary* dict = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-    NSLog(@"[Socket Response] :: %@", dict);
+    NSLog(@"\n[Socket Response]\n%@", dict);
     if([[dict objectForKey:@"action"] isEqualToString:@"onopen"]) {
         [self processIncomingEvent:dict];
     }
