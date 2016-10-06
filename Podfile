@@ -1,8 +1,7 @@
 
 platform :ios, "8.0"
 
-inhibit_all_warnings!
-use_frameworks!
+target 'click' do
 
 pod 'FMDB', '~> 2.4'
 pod 'Underscore.m', '~> 0.2.1'
@@ -16,3 +15,6 @@ pod 'ReactiveCocoa', '~> 2.5'
 pod "MWPhotoBrowser"
 pod 'Fabric'
 pod 'Crashlytics'
+pod 'SAMKeychain'
+
+end
