@@ -7,6 +7,7 @@
 //
 
 #import "CKServerConnection.h"
+#import "SAMKeychain.h"
 
 @implementation CKServerConnection
 {
@@ -23,13 +24,7 @@
     if (self = [super init])
     {
         _callbacks = [NSMutableDictionary new];
-        _udid = [[NSUserDefaults standardUserDefaults] objectForKey:@"udid"];
-        if (!_udid)
-        {
-            _udid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-            [[NSUserDefaults standardUserDefaults] setObject:_udid forKey:@"udid"];
-        }
-
+        _udid = [CKServerConnection getUniqueDeviceIdentifierAsString];
     }
     return self;
 }
@@ -44,6 +39,18 @@
     });
     
     return instance;
+}
+
++(NSString *)getUniqueDeviceIdentifierAsString
+{
+    NSString *appName=[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey];
+    NSString *strApplicationUUID = [SAMKeychain passwordForService:appName account:@"incoding"];
+    if (strApplicationUUID == nil)
+    {
+        strApplicationUUID  = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        [SAMKeychain setPassword:strApplicationUUID forService:appName account:@"incoding"];
+    }
+    return strApplicationUUID;
 }
 
 - (void)connect
