@@ -3,6 +3,9 @@ platform :ios, "8.0"
 
 target 'click' do
 
+inhibit_all_warnings!
+use_frameworks!
+
 pod 'FMDB', '~> 2.4'
 pod 'Underscore.m', '~> 0.2.1'
 pod 'SDWebImage', '~> 3.7.1'
