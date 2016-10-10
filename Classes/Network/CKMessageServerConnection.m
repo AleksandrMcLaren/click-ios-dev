@@ -60,9 +60,8 @@
     return self;
 }
 
-- (void)connect
-{
-    [self connect:@"Message"];
+-(NSString*)entryPoint{
+    return @"Message";
 }
 
 + (instancetype)sharedInstance

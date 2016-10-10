@@ -16,6 +16,8 @@
 #import "CKPromoInfoController.h"
 #import "CKLoginCodeViewController.h"
 
+#define CONTROL_PADDING  15.0;
+
 @interface CKLoginViewController()<CKCountrySelectionControllerDelegate, UITextFieldDelegate>
 
 
@@ -30,7 +32,6 @@
     UITextField *_promoTextField;
     CGFloat _keyboardHeight;
     UIButton *_continueButton;
-
 }
 
 - (instancetype)init
@@ -56,6 +57,11 @@
 - (void)updateFrames
 {
     _tableView.contentOffset = CGPointMake(0, _keyboardHeight);
+
+    float padding = CONTROL_PADDING;
+    [_continueButton updateConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.view.bottom).offset(-padding-_keyboardHeight);
+    }];
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification
@@ -68,7 +74,6 @@
 
 - (void)keyboardFrameChanged:(NSNotification *)notification
 {
-    
     CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
     _keyboardHeight = keyboardHeight;
     
@@ -77,18 +82,14 @@
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
-    
-    //    CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
     _keyboardHeight = 0;
-    
     [self updateFrames];
 }
 
 -(CGFloat)keyboardHeightByKeyboardNotification:(NSNotification *)notification
 {
-    CGRect keyboardRect = [self.view.window convertRect:[[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue] toView:_tableView];
-    keyboardRect = CGRectIntersection(keyboardRect, _tableView.bounds);
-    return keyboardRect.size.height;
+    CGRect keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    return CGRectGetHeight(keyboardRect);
 }
 
 - (void) viewDidLoad
@@ -96,6 +97,7 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = CKClickLightGrayColor;
+    
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     UILabel *header = [UILabel labelWithText:@"Введите код страны\nи ваш номер телефона"
                                                    font:[UIFont systemFontOfSize:20.0]
@@ -130,8 +132,7 @@
     [self.view addSubview:_continueButton];
     [_continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
     
-    CGFloat padding = 15.0;
-    
+    float padding = CONTROL_PADDING;
     [_continueButton makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@44);
         make.bottom.equalTo(self.view.bottom).offset(-padding);

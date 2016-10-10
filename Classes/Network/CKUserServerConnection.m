@@ -22,9 +22,8 @@
     return instance;
 }
 
-- (void)connect
-{
-    [self connect:@"User"];
+-(NSString*)entryPoint{
+    return @"User";
 }
 
 - (void)registerUserWithPromo:(NSString *)promo callback:(CKServerConnectionExecuted)callback

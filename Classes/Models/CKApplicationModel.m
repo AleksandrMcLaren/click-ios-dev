@@ -260,22 +260,72 @@
     _userPhone = phone;
     [CKUserServerConnection sharedInstance].phoneNumber = phone;
     [CKMessageServerConnection sharedInstance].phoneNumber = phone;
-    [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSInteger status) {
-        if (status == 1000)
-        {
-            NSLog(@"new user");
-            _isNewUser = YES;
-        } else
-        {
-            NSLog(@"existing user");
+    
+    [[CKMessageServerConnection sharedInstance] connectWithCallback:^(NSDictionary *result) {
+        NSInteger status = [result[@"status"] integerValue];
+        
+        _isNewUser = YES;
+        
+        if (status == 2205) {
+            NSInteger res = [result[@"result"] integerValue];
+            
+            switch (res) {
+                    
+                    case 1:
+                    NSLog(@"1 - пользователь заблокирован");
+                    _isNewUser = NO;
+                    break;
+                    
+                    case 2:
+                    NSLog(@"2 - пользователь не активирован");
+                    
+                    _isNewUser = NO;
+                    break;
+                    
+                    case 3:
+                    NSLog(@"3 - пользователь есть но не совпадает uuid или deviceid, то есть новое устройство");
+                    _isNewUser = NO;
+                    break;
+                    
+                    case 4:
+                    NSLog(@"4 - пользователя в базе нет");
+                    _isNewUser = YES;
+                    break;
+                    
+                    case 5:
+                    NSLog(@"5 - не заполнен профиль, регистрация прошла не до конца");
+                    _isNewUser = NO;
+                    break;
+                default:
+                    break;
+            }
         }
+        
         [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo?promo:@"" callback:^(NSDictionary *result) {
             [[CKUserServerConnection sharedInstance] getActivationCode:^(NSDictionary *result) {
                 [self.mainController showAuthenticationScreen];
             }];
         }];
-
     }];
+    
+//    [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSInteger status) {
+
+        
+//        if (status == 1000)
+//        {
+//            NSLog(@"new user");
+//            _isNewUser = YES;
+//        } else
+//        {
+//            NSLog(@"existing user");
+//        }
+//        [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo?promo:@"" callback:^(NSDictionary *result) {
+//            [[CKUserServerConnection sharedInstance] getActivationCode:^(NSDictionary *result) {
+//                [self.mainController showAuthenticationScreen];
+//            }];
+//        }];
+
+//    }];
 }
 
 - (void)sendPhoneAuthenticationCode:(NSString *)code
@@ -303,7 +353,10 @@
                     }
                 }];
             }
+        }else{
+            //вывести ошибку про пароль
         }
+        
     }];
 }
 

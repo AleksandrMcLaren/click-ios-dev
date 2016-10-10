@@ -25,7 +25,7 @@ typedef void (^CKServerConnectionExecutedStatus)(NSInteger status);
 
 @property (nonatomic, readonly) BOOL isConnected;
 
-- (void)connect:(NSString *)entryPoint;
+- (void)connectWithCallback:(CKServerConnectionExecuted)callback;
 - (void)sendData:(NSDictionary *)data completion:(CKServerConnectionExecuted)completion;
 - (void)processIncomingEvent:(NSDictionary *)eventData;
 

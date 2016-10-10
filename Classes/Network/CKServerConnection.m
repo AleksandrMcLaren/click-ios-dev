@@ -9,6 +9,14 @@
 #import "CKServerConnection.h"
 #import "SAMKeychain.h"
 
+#define CONNECTION_OPEN_CALLBACK_IDENTIFIER @"CONNECTION_OPEN_CALLBACK_IDENTIFIER"
+
+@interface CKServerConnection()
+
+@property (nonatomic, strong, readonly) NSString* entryPoint;
+
+@end
+
 @implementation CKServerConnection
 {
     SRWebSocket *_connection;
@@ -55,12 +63,23 @@
 
 - (void)connect
 {
-    [self connect:@"User"];
+    [self connect:self.entryPoint callback:nil] ;
 }
 
-- (void)connect:(NSString *)entryPoint
+- (void)connectWithCallback:(CKServerConnectionExecuted)callback{
+    [self connect:self.entryPoint callback:callback];
+}
+
+-(NSString*)entryPoint{
+    return nil;
+}
+
+- (void)connect:(NSString *)entryPoint callback:(CKServerConnectionExecuted)callback
 {
     //NSMutableString *connectionString = [NSMutableString stringWithFormat:@"ws://click.httpx.ru:8101/%@?", entryPoint];
+    if (callback) {
+        _callbacks[CONNECTION_OPEN_CALLBACK_IDENTIFIER] = callback;
+    }
     NSMutableString *connectionString = [NSMutableString stringWithFormat:@"wss://chatclick.ru:8101/%@?", entryPoint];
     
     if (self.phoneNumber)
@@ -124,7 +143,7 @@
     NSData *jsondata = [NSJSONSerialization dataWithJSONObject:mdata options:0 error:nil];
     NSString *sendString = [[NSString alloc] initWithData:jsondata encoding:NSUTF8StringEncoding];
     
-    NSLog(@"\n[Socket Request]\n%@", sendString);
+    NSLog(@"\n[Socket Request]\n%@", data);
 
     
     if(_connection.readyState == SR_CONNECTING) {
@@ -151,6 +170,13 @@
     NSLog(@"\n[Socket Response]\n%@", dict);
     if([[dict objectForKey:@"action"] isEqualToString:@"onopen"]) {
         [self processIncomingEvent:dict];
+        CKServerConnectionExecuted callback = [_callbacks objectForKey:CONNECTION_OPEN_CALLBACK_IDENTIFIER];
+        if (callback){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                callback(dict);
+            });
+            [_callbacks removeObjectForKey:CONNECTION_OPEN_CALLBACK_IDENTIFIER];
+        }
     }
     if([[dict objectForKey:@"action"] isEqualToString:@"onmessage"]) {
         [self processIncomingEvent:dict];
