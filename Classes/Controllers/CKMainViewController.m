@@ -112,7 +112,7 @@
     NSString* message = [NSString stringWithFormat:@"Error result:%ld status:%ld", result, (long)status];
     if ([action isEqualToString:@"getUserState"]) {
         title = @"Настройка MessMe";
-        message = @"Убедитесь в правильности введенного номера телефона";
+        message = @"Убедитесь в правильности введенного номера телефона и повторите попытку";
     }
     [self showAlertWithTitle:title message:message completion:completion];
 }

@@ -15,6 +15,7 @@
 #import "CKTextEntryCell.h"
 #import "CKPromoInfoController.h"
 #import "CKLoginCodeViewController.h"
+#import "UIView+Shake.h"
 
 #define CONTROL_PADDING  15.0;
 
@@ -144,6 +145,11 @@
 {
     NSDictionary *countryData = [[CKApplicationModel sharedInstance] countryWithId:_countryId];
 
+    if (![self isPhoneValid]) {
+        [_phoneTextField shake];
+        return;
+    }
+    
     NSString *title = @"Проверка номера телефона";
     NSString *message = [NSString stringWithFormat:@"Это ваш правильный номер?\n\n+%@ %@\n\nSMS с вашим кодом доступа будет отправлено на этот номер", countryData[@"phonecode"],_phoneTextField.text];
     NSString *cancel = @"Изменить";
@@ -244,7 +250,7 @@
                     UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                                       style:UIBarButtonItemStyleDone
                                                                                      target:self
-                                                                                     action:@selector(dismissKeyboard)];
+                                                                                     action:@selector(textFieldShouldReturn:)];
                     
                     UIBarButtonItem *barButtonCencel = [[UIBarButtonItem alloc]initWithTitle:@"Cancel"
                                                                                        style:UIBarButtonItemStyleDone
@@ -321,8 +327,13 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [textField resignFirstResponder];
-    return NO;
+    if (_phoneTextField.isFirstResponder) {
+    
+    }
+    if (_promoTextField.isFirstResponder) {
+        
+    };
+    return YES;
 }
 
 
@@ -377,4 +388,16 @@
     return simpleNumber;
 }
 
+#pragma mark Methods
+
+-(BOOL) isPhoneValid {
+    NSString *phoneNumber = [[[[_phoneTextField.text stringByReplacingOccurrencesOfString:@"(" withString:@""]
+                              stringByReplacingOccurrencesOfString:@")" withString:@""]
+                             stringByReplacingOccurrencesOfString:@"-" withString:@""]
+                             stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *phoneRegex = @"[235689][0-9]{6}([0-9]{3})?";
+    NSPredicate *test = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", phoneRegex];
+    BOOL matches = [test evaluateWithObject:phoneNumber];
+    return matches;
+}
 @end
