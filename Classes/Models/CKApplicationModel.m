@@ -263,11 +263,14 @@
     
     [[CKMessageServerConnection sharedInstance] connectWithCallback:^(NSDictionary *result) {
         NSInteger status = [result[@"status"] integerValue];
+        NSInteger res = [result[@"result"] integerValue];
+        NSString* action = @"getUserState";
+        
         
         _isNewUser = YES;
         
         if (status == 2205) {
-            NSInteger res = [result[@"result"] integerValue];
+            
             
             switch (res) {
                     
@@ -299,13 +302,17 @@
                 default:
                     break;
             }
+            [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo?promo:@"" callback:^(NSDictionary *result) {
+                [[CKUserServerConnection sharedInstance] getActivationCode:^(NSDictionary *result) {
+                    [self.mainController showAuthenticationScreen];
+                }];
+            }];
+        }else{
+            //Выводим сообщение
+            [[[CKApplicationModel sharedInstance] mainController] showAlertWithAction:action result:res status:status completion:nil];
         }
         
-        [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo?promo:@"" callback:^(NSDictionary *result) {
-            [[CKUserServerConnection sharedInstance] getActivationCode:^(NSDictionary *result) {
-                [self.mainController showAuthenticationScreen];
-            }];
-        }];
+
     }];
     
 //    [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSInteger status) {

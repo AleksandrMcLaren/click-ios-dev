@@ -63,6 +63,8 @@
 - (void) showMainScreen;
 - (void) showRestoreHistory;
 - (void) showCreateProfile;
+- (void) showAlertWithTitle:(NSString*) title message:(NSString*) message completion:(void (^)(void))completion;
+- (void) showAlertWithAction:(NSString*) action result:(NSInteger) result status:(NSInteger) status completion:(void (^)(void))completion;
 - (id<CKDialogsControllerProtocol>) dialogsController;
 
 @end

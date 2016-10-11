@@ -56,7 +56,7 @@
 
 - (void)updateFrames
 {
-    _tableView.contentOffset = CGPointMake(0, _keyboardHeight);
+//    _tableView.contentOffset = CGPointMake(0, _keyboardHeight);
 
     float padding = CONTROL_PADDING;
     [_continueButton updateConstraints:^(MASConstraintMaker *make) {
@@ -66,7 +66,6 @@
 
 - (void)keyboardWillShow:(NSNotification *)notification
 {
-    
     CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
     _keyboardHeight = keyboardHeight;
     [self updateFrames];
@@ -179,6 +178,8 @@
     if (_promoTextField.isFirstResponder) [_promoTextField resignFirstResponder];
 }
 
+#pragma mark UITableViewDelegate
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (section == 0) return 0;
@@ -208,6 +209,8 @@
 {
     return [@[@2,@1][section] integerValue];
 }
+
+#pragma mark UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -239,8 +242,16 @@
 
                     UIToolbar *toolBar= [[UIToolbar alloc] initWithFrame:CGRectMake(0,0,320,44)];
                     UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
-                                                                                      style:UIBarButtonItemStyleDone target:self action:@selector(dismissKeyboard)];
-                    toolBar.items = @[barButtonDone];
+                                                                                      style:UIBarButtonItemStyleDone
+                                                                                     target:self
+                                                                                     action:@selector(dismissKeyboard)];
+                    
+                    UIBarButtonItem *barButtonCencel = [[UIBarButtonItem alloc]initWithTitle:@"Cancel"
+                                                                                       style:UIBarButtonItemStyleDone
+                                                                                      target:self
+                                                                                      action:@selector(dismissKeyboard)];
+                    [toolBar sizeToFit];
+                    toolBar.items = @[barButtonCencel, barButtonDone];
                     _phoneTextField.inputAccessoryView = toolBar;
                     
                 } else
@@ -305,6 +316,8 @@
 {
     [_tableView deselectRowAtIndexPath:[_tableView indexPathForSelectedRow] animated:YES];
 }
+
+#pragma mark UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {

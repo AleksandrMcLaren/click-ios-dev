@@ -231,8 +231,8 @@
         // do nothing
         NSLog(@"Connecting now");
     } else {
-        NSLog(@"Reconnect");
-        [self connect];
+        //NSLog(@"Reconnect");
+        //[self connect];
     }
 }
 

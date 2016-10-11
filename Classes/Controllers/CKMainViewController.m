@@ -106,4 +106,33 @@
     [self replaceCurrentController:nav];
 }
 
+-(void)showAlertWithAction:(NSString*) action result:(NSInteger) result status:(NSInteger) status completion:(void (^ __nullable)(void))completion{
+//TODO: создать отдельно конвертер собщения ошибки из входных параметров, пока локально
+    NSString* title = action;
+    NSString* message = [NSString stringWithFormat:@"Error result:%ld status:%ld", result, (long)status];
+    if ([action isEqualToString:@"getUserState"]) {
+        title = @"Настройка MessMe";
+        message = @"Убедитесь в правильности введенного номера телефона";
+    }
+    [self showAlertWithTitle:title message:message completion:completion];
+}
+
+-(void)showAlertWithTitle:(NSString*) title message:(NSString*) message completion:(void (^ __nullable)(void))completion{
+    UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:title
+                                 message:message
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* okButton = [UIAlertAction
+                                actionWithTitle:@"OK"
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action) {
+                                    //Handle your yes please button action here
+                                }];
+
+    [alert addAction:okButton];
+    
+    [_currentController presentViewController:alert animated:YES completion:completion];
+}
+
 @end
