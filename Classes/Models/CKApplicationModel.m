@@ -303,9 +303,7 @@
                     break;
             }
             [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo?promo:@"" callback:^(NSDictionary *result) {
-                [[CKUserServerConnection sharedInstance] getActivationCode:^(NSDictionary *result) {
-                    [self.mainController showAuthenticationScreen];
-                }];
+                [self.mainController showAuthenticationScreen];
             }];
         }else{
             //Выводим сообщение
@@ -367,9 +365,11 @@
     }];
 }
 
-- (void)requestAuthentication
+- (void)requestAuthentication;
 {
-    
+    [[CKUserServerConnection sharedInstance] getActivationCode:^(NSDictionary *result) {
+        
+    }];
 }
 
 - (NSArray *)phoneContacts

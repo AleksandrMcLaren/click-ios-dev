@@ -17,10 +17,11 @@
 #import "CKLoginCodeViewController.h"
 #import "UIView+Shake.h"
 
-#define CONTROL_PADDING  15.0;
+
 
 @interface CKLoginViewController()<CKCountrySelectionControllerDelegate, UITextFieldDelegate>
 
+@property (nonatomic, strong) NSMutableArray *animatableConstraints;
 
 @end
 
@@ -33,6 +34,7 @@
     UITextField *_promoTextField;
     CGFloat _keyboardHeight;
     UIButton *_continueButton;
+    
 }
 
 - (instancetype)init
@@ -46,8 +48,22 @@
 
         self.title = @"Настройка MessMe";
         _countryId = [[CKApplicationModel sharedInstance] countryId];
+        
+        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
+        tapRecognizer.numberOfTapsRequired = 1;
+        [self.view addGestureRecognizer:tapRecognizer];
     }
     return self;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    // do something before rotation
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    // do something after rotation
 }
 
 - (void)dealloc
@@ -55,42 +71,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)updateFrames
-{
-//    _tableView.contentOffset = CGPointMake(0, _keyboardHeight);
-
-    float padding = CONTROL_PADDING;
-    [_continueButton updateConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view.bottom).offset(-padding-_keyboardHeight);
-    }];
-}
-
-- (void)keyboardWillShow:(NSNotification *)notification
-{
-    CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
-    _keyboardHeight = keyboardHeight;
-    [self updateFrames];
-}
-
-- (void)keyboardFrameChanged:(NSNotification *)notification
-{
-    CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
-    _keyboardHeight = keyboardHeight;
-    
-    [self updateFrames];
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification
-{
-    _keyboardHeight = 0;
-    [self updateFrames];
-}
-
--(CGFloat)keyboardHeightByKeyboardNotification:(NSNotification *)notification
-{
-    CGRect keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    return CGRectGetHeight(keyboardRect);
-}
 
 - (void) viewDidLoad
 {
@@ -178,11 +158,6 @@
                      completion:nil];
 }
 
-- (void)dismissKeyboard
-{
-    if (_phoneTextField.isFirstResponder) [_phoneTextField resignFirstResponder];
-    if (_promoTextField.isFirstResponder) [_promoTextField resignFirstResponder];
-}
 
 #pragma mark UITableViewDelegate
 
@@ -245,20 +220,7 @@
                     _phoneTextField = cell.textField;
                     _phoneTextField.delegate = self;
                     _phoneTextField.keyboardType = UIKeyboardTypeNumberPad;
-
-                    UIToolbar *toolBar= [[UIToolbar alloc] initWithFrame:CGRectMake(0,0,320,44)];
-                    UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
-                                                                                      style:UIBarButtonItemStyleDone
-                                                                                     target:self
-                                                                                     action:@selector(textFieldShouldReturn:)];
-                    
-                    UIBarButtonItem *barButtonCencel = [[UIBarButtonItem alloc]initWithTitle:@"Cancel"
-                                                                                       style:UIBarButtonItemStyleDone
-                                                                                      target:self
-                                                                                      action:@selector(dismissKeyboard)];
-                    [toolBar sizeToFit];
-                    toolBar.items = @[barButtonCencel, barButtonDone];
-                    _phoneTextField.inputAccessoryView = toolBar;
+                    _phoneTextField.clearButtonMode = UITextFieldViewModeAlways;
                     
                 } else
                 {
@@ -356,10 +318,13 @@
 
 - (NSString*)formatPhoneNumber:(NSString*) simpleNumber deleteLastChar:(BOOL)deleteLastChar {
     if(simpleNumber.length==0) return @"";
-    // use regex to remove non-digits(including spaces) so we are left with just the numbers
-    NSError *error = NULL;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[\\s-\\(\\)]" options:NSRegularExpressionCaseInsensitive error:&error];
-    simpleNumber = [regex stringByReplacingMatchesInString:simpleNumber options:0 range:NSMakeRange(0, [simpleNumber length]) withTemplate:@""];
+    
+    NSCharacterSet *setToRemove =
+    [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+    NSCharacterSet *setToKeep = [setToRemove invertedSet];
+    
+    simpleNumber =  [[simpleNumber componentsSeparatedByCharactersInSet:setToKeep] componentsJoinedByString:@""];
+    
     
     // check if the number is to long
     if(simpleNumber.length>10) {
@@ -400,4 +365,52 @@
     BOOL matches = [test evaluateWithObject:phoneNumber];
     return matches;
 }
+
+#pragma mark Keyboard events
+
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
+    _keyboardHeight = keyboardHeight;
+    [self updateFrames];
+}
+
+
+- (void)keyboardFrameChanged:(NSNotification *)notification
+{
+    CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
+    _keyboardHeight = keyboardHeight;
+    
+    [self updateFrames];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    _keyboardHeight = 0;
+    [self updateFrames];
+}
+
+-(CGFloat)keyboardHeightByKeyboardNotification:(NSNotification *)notification
+{
+    CGRect keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    return CGRectGetHeight(keyboardRect);
+}
+
+- (void)dismissKeyboard
+{
+    if (_phoneTextField.isFirstResponder) [_phoneTextField resignFirstResponder];
+    if (_promoTextField.isFirstResponder) [_promoTextField resignFirstResponder];
+}
+
+- (void)updateFrames{
+    float padding = CONTROL_PADDING;
+    [_continueButton updateConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.view.bottom).offset(-padding-_keyboardHeight);
+    }];
+}
+
+- (void) viewTapped {
+    [self dismissKeyboard];
+}
+
 @end

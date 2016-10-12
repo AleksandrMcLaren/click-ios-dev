@@ -31,9 +31,9 @@
         }];
         
         [_textField makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.left).offset(61);
+            make.left.equalTo(self.left).offset(60);
             make.centerY.equalTo(self.centerY);
-            make.right.equalTo(self.right).offset(-70);
+            make.right.equalTo(self.right).offset(-12);
         }];
         
     }

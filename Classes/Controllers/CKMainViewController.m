@@ -57,8 +57,13 @@
 
 - (void) showAuthenticationScreen
 {
-    CKLoginCodeViewController *ctl = [CKLoginCodeViewController new];
-    [(UINavigationController *)_currentController pushViewController:ctl animated:YES];
+    if ([_currentController isKindOfClass:[UINavigationController class]])  {
+        UINavigationController* navigationController = (UINavigationController*)_currentController;
+        if (![navigationController.topViewController isKindOfClass:[CKLoginCodeViewController class]]) {
+            CKLoginCodeViewController *ctl = [CKLoginCodeViewController new];
+            [(UINavigationController *)_currentController pushViewController:ctl animated:YES];
+        }
+    }
 }
 
 - (id<CKDialogsControllerProtocol>)dialogsController

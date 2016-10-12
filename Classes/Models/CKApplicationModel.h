@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 #import "CKDialogsModel.h"
+#import "CKServerConnection.h"
 
 @class CKChatModel;
 
