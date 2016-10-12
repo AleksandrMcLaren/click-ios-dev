@@ -93,4 +93,10 @@
     }];
 }
 
+- (void) getUserListForGeoLocation:(CKServerConnectionExecuted)callback{
+    [self sendData:@{@"action": @"user.geolist", @"options":@{@"userlist":@[], @"status": @0, @"isfriend": @0, @"country": @0, @"city": @0, @"sex": @"", @"minage": @0, @"maxage": @0, @"mask": @"", @"lat": @0, @"lng": @0, @"radius": @0, @"count": @0}} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+
 @end
