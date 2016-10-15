@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <SocketRocket/SRWebSocket.h>
+#import "CKStatusCode.h"
 
 typedef void (^CKServerConnectionExecuted)(NSDictionary* result);
-typedef void (^CKServerConnectionExecutedStatus)(NSInteger status);
-typedef void (^CKServerConnectionExecutedStatus)(NSInteger status);
+typedef void (^CKServerConnectionExecutedStatus)(CKStatusCode status);
 
 @interface CKServerConnection : NSObject<SRWebSocketDelegate>
 

@@ -21,7 +21,7 @@
                       city:(NSUInteger)city
                   callback:(CKServerConnectionExecutedStatus)callback;
 - (void)checkUserWithCallback:(CKServerConnectionExecutedStatus)callback;
-- (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecutedStatus)callback;
+- (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecuted)callback;
 - (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecuted)callback;
 - (void)suicide:(CKServerConnectionExecutedStatus)callback;
 - (void)getRegionsInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback;

@@ -111,33 +111,14 @@
     [self replaceCurrentController:nav];
 }
 
--(void)showAlertWithAction:(NSString*) action result:(NSInteger) result status:(NSInteger) status completion:(void (^ __nullable)(void))completion{
-//TODO: создать отдельно конвертер собщения ошибки из входных параметров, пока локально
-    NSString* title = action;
-    NSString* message = [NSString stringWithFormat:@"Error result:%ld status:%ld", result, (long)status];
-    if ([action isEqualToString:@"getUserState"]) {
-        title = @"Настройка MessMe";
-        message = @"Убедитесь в правильности введенного номера телефона и повторите попытку";
-    }
-    [self showAlertWithTitle:title message:message completion:completion];
-}
+#pragma mark Alerts
 
--(void)showAlertWithTitle:(NSString*) title message:(NSString*) message completion:(void (^ __nullable)(void))completion{
-    UIAlertController * alert = [UIAlertController
-                                 alertControllerWithTitle:title
-                                 message:message
-                                 preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction* okButton = [UIAlertAction
-                                actionWithTitle:@"OK"
-                                style:UIAlertActionStyleDefault
-                                handler:^(UIAlertAction * action) {
-                                    //Handle your yes please button action here
-                                }];
+- (void) showAlertWithResult:(NSDictionary*)result completion:(void (^)(void))completion{
 
-    [alert addAction:okButton];
-    
+    UIAlertController* alert = [UIAlertController newWithSocketResult:result];
+  
     [_currentController presentViewController:alert animated:YES completion:completion];
+
 }
 
 @end

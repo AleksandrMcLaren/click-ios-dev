@@ -262,14 +262,12 @@
     [CKMessageServerConnection sharedInstance].phoneNumber = phone;
     
     [[CKMessageServerConnection sharedInstance] connectWithCallback:^(NSDictionary *result) {
-        NSInteger status = [result[@"status"] integerValue];
-        NSInteger res = [result[@"result"] integerValue];
-        NSString* action = @"getUserState";
-        
+        CKStatusCode status = [result socketMessageStatus];
+        NSInteger res = [result socketMessageResultInteger] ;
         
         _isNewUser = YES;
         
-        if (status == 2205) {
+        if (status == S_USER_NEW_DEVICE) {
             
             
             switch (res) {
@@ -306,62 +304,35 @@
                 [self.mainController showAuthenticationScreen];
             }];
         }else{
-            //Выводим сообщение
-            [[[CKApplicationModel sharedInstance] mainController] showAlertWithAction:action result:res status:status completion:nil];
+            [[[CKApplicationModel sharedInstance] mainController] showAlertWithResult:result completion:nil];
         }
-        
-
     }];
-    
-//    [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSInteger status) {
-
-        
-//        if (status == 1000)
-//        {
-//            NSLog(@"new user");
-//            _isNewUser = YES;
-//        } else
-//        {
-//            NSLog(@"existing user");
-//        }
-//        [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo?promo:@"" callback:^(NSDictionary *result) {
-//            [[CKUserServerConnection sharedInstance] getActivationCode:^(NSDictionary *result) {
-//                [self.mainController showAuthenticationScreen];
-//            }];
-//        }];
-
-//    }];
 }
 
 - (void)sendPhoneAuthenticationCode:(NSString *)code
 {
-    [[CKUserServerConnection sharedInstance] activateUserWithCode:code callback:^(NSInteger status) {
-        if (status == 1000)
-        {
-            self.token = [[CKUserServerConnection sharedInstance] token];
-            [CKMessageServerConnection sharedInstance].token = self.token;
-            if (_isNewUser)
-            {
-                [self.mainController showCreateProfile];
-            } else
-            {
-                [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary *result) {
-                    CKUserModel *profile = [CKUserModel modelWithDictionary:result[@"result"]];
-                    if (!profile)
-                    {
-                        // error
-                        NSLog(@"error!");
-                    } else
-                    {
-                        self.userProfile = profile;
-                        [self.mainController showRestoreHistory];
-                    }
-                }];
-            }
-        }else{
-            //вывести ошибку про пароль
-        }
+    [[CKUserServerConnection sharedInstance] activateUserWithCode:code callback:^(NSDictionary* result) {
         
+        self.token = [[CKUserServerConnection sharedInstance] token];
+        [CKMessageServerConnection sharedInstance].token = self.token;
+        if (_isNewUser)
+        {
+            [self.mainController showCreateProfile];
+        } else
+        {
+            [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary *result) {
+                CKUserModel *profile = [CKUserModel modelWithDictionary:result[@"result"]];
+                if (!profile)
+                {
+                    // error
+                    NSLog(@"error!");
+                } else
+                {
+                    self.userProfile = profile;
+                    [self.mainController showRestoreHistory];
+                }
+            }];
+        }
     }];
 }
 
@@ -405,7 +376,7 @@
             d[i.phoneNumber] = i;
         }
         _phoneContacts = d;
-        [[CKMessageServerConnection sharedInstance] addFriends:[self contactPhoneList] callback:^(NSInteger status) {
+        [[CKMessageServerConnection sharedInstance] addFriends:[self contactPhoneList] callback:^(CKStatusCode status) {
             [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithAllFriends] callback:^(NSDictionary *result) {
                 
                 NSMutableArray *friends = [NSMutableArray new];
@@ -458,7 +429,7 @@
                                                       birthdate:[CKApplicationModel date2str:self.userProfile.birthDate]
                                                             sex:self.userProfile.sex
                                                         country:self.userProfile.countryId
-                                                           city:self.userProfile.city callback:^(NSInteger status) {
+                                                           city:self.userProfile.city callback:^(CKStatusCode status) {
                                                                [self showMainScreen];
                                                            }];
 }

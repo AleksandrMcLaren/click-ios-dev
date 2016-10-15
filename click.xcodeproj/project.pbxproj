@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D1A36551DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */; };
+		3D1A36581DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36571DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m */; };
 		3D7884831DACCE8B00777E10 /* UIView+Shake.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7884821DACCE8B00777E10 /* UIView+Shake.m */; };
 		60673FF2F4F098A555D5E963 /* libPods-click.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC7724C494AFD4568ED92B4 /* libPods-click.a */; };
 		7807CF6F1CC7E06700D9DF9B /* CKFriendSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807CF6E1CC7E06700D9DF9B /* CKFriendSelectionController.m */; };
@@ -116,6 +118,11 @@
 /* Begin PBXFileReference section */
 		0EC7724C494AFD4568ED92B4 /* libPods-click.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-click.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		243A3A1CA18A192D40BBE62C /* Pods-click.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-click.release.xcconfig"; path = "Pods/Target Support Files/Pods-click/Pods-click.release.xcconfig"; sourceTree = "<group>"; };
+		3D1A36531DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+CKSocketMessage.h"; sourceTree = "<group>"; };
+		3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CKSocketMessage.m"; sourceTree = "<group>"; };
+		3D1A36561DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertController+CKSocketMessage.h"; sourceTree = "<group>"; };
+		3D1A36571DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertController+CKSocketMessage.m"; sourceTree = "<group>"; };
+		3D3BD6711DAF9BB500997A0E /* CKStatusCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKStatusCode.h; sourceTree = "<group>"; };
 		3D7884811DACCE8B00777E10 /* UIView+Shake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Shake.h"; sourceTree = "<group>"; };
 		3D7884821DACCE8B00777E10 /* UIView+Shake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Shake.m"; sourceTree = "<group>"; };
 		7807CF6D1CC7E06700D9DF9B /* CKFriendSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKFriendSelectionController.h; sourceTree = "<group>"; };
@@ -420,6 +427,10 @@
 				7807CF7C1CD1D7EB00D9DF9B /* CKPictureCaptureManager.m */,
 				782AFFF01D09782600802097 /* CKAttachButton.h */,
 				782AFFF11D09782600802097 /* CKAttachButton.m */,
+				3D1A36531DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.h */,
+				3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */,
+				3D1A36561DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.h */,
+				3D1A36571DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m */,
 			);
 			name = Utility;
 			path = Classes/Utility;
@@ -596,6 +607,7 @@
 				78B524D71CA0239200502AA4 /* CKServerConnection.m */,
 				78BEA9241CA6A052004E85DB /* CKUserServerConnection.h */,
 				78BEA9251CA6A052004E85DB /* CKUserServerConnection.m */,
+				3D3BD6711DAF9BB500997A0E /* CKStatusCode.h */,
 			);
 			name = Network;
 			path = Classes/Network;
@@ -633,7 +645,7 @@
 			attributes = {
 				CLASSPREFIX = CK;
 				LastUpgradeCheck = 0720;
-				ORGANIZATIONNAME = "Igor Tetyuev";
+				ORGANIZATIONNAME = Click;
 				TargetAttributes = {
 					784FE8351C8DE7CA006469D5 = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -792,6 +804,7 @@
 				784FE8581C8E7476006469D5 /* main.m in Sources */,
 				78BEA93F1CAAA47D004E85DB /* NSDictionary+UrlEncodedString.m in Sources */,
 				7807CF6F1CC7E06700D9DF9B /* CKFriendSelectionController.m in Sources */,
+				3D1A36551DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m in Sources */,
 				78B524D81CA0239200502AA4 /* CKServerConnection.m in Sources */,
 				782AFFF21D09782700802097 /* CKAttachButton.m in Sources */,
 				78BEA98B1CADC9BB004E85DB /* CKGroupChatCell.m in Sources */,
@@ -834,6 +847,7 @@
 				7812507D1CB6219000D3BFBB /* CKMessagesListController.m in Sources */,
 				7807CF7D1CD1D7EB00D9DF9B /* CKPictureCaptureManager.m in Sources */,
 				78B524D11C9FE3F500502AA4 /* CKBlogViewController.m in Sources */,
+				3D1A36581DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m in Sources */,
 				782A00061D0AB9FA00802097 /* CKCloudAttachModel.m in Sources */,
 				785326D41D1810C300D0D0FD /* CKVideoAttachModel.m in Sources */,
 				782AFFFD1D0AB9C700802097 /* CKPictureAttachModel.m in Sources */,

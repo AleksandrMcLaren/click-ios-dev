@@ -28,7 +28,8 @@
 
 - (void)registerUserWithPromo:(NSString *)promo callback:(CKServerConnectionExecuted)callback
 {
-    [self sendData:@{@"action":@"user.register", @"options":@{@"invite":promo}} completion:^(NSDictionary *result) {
+    [self sendData:@{CKSocketMessageFieldAction:@"user.register",
+                     CKSocketMessageFieldOptions:@{CKSocketMessageFieldInvite:promo}} completion:^(NSDictionary *result) {
         callback(result);
     }];
 }
@@ -43,7 +44,7 @@
 - (void)checkUserWithCallback:(CKServerConnectionExecutedStatus)callback
 {
     [self sendData:@{@"action":@"user.checkuser", @"options":@{@"userid":self.phoneNumber}} completion:^(NSDictionary *result) {
-        callback([result[@"status"] integerValue]);
+        callback( (CKStatusCode) result[@"status"] );
     }];
 }
 
@@ -54,22 +55,24 @@
     }];
 }
 
-- (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecutedStatus)callback
+- (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecuted)callback
 {
     [self sendData:@{@"action":@"user.activate", @"options":@{@"code":code}} completion:^(NSDictionary *result) {
-        if ([result[@"status"] integerValue] == 1000 && result[@"result"])
-        {
-            self.token = result[@"result"];
-            [self connect];
-        }
-        callback([result[@"status"] integerValue]);
+
+     if ([result[@"status"] integerValue] == 1000 && result[@"result"]){
+         self.token = result[@"result"];
+         [self connect];
+         callback(result);
+     }else{
+         [[[CKApplicationModel sharedInstance] mainController] showAlertWithResult:result completion:nil];
+     }
     }];
 }
 
 - (void)suicide:(CKServerConnectionExecutedStatus)callback
 {
     [self sendData:@{@"action":@"user.suicide"} completion:^(NSDictionary *result) {
-        callback([result[@"status"] integerValue]);
+        callback((CKStatusCode) result[@"status"]);
     }];
 }
 
@@ -89,7 +92,7 @@
 
 - (void)createUserWithName:(NSString *)name surname:(NSString *)surname login:(NSString *)login avatar:(UIImage *)avatar birthdate:(NSString *)birthdate sex:(NSString *)sex country:(NSUInteger)country city:(NSUInteger)city callback:(CKServerConnectionExecutedStatus)callback {
     [self sendData:@{@"action":@"user.create", @"options": @{@"name":name, @"login":login,@"surname":surname, @"birthdate":birthdate, @"sex":sex, @"avatar":avatar?[UIImagePNGRepresentation(avatar) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength]:@"", @"country":@(country), @"city":@(city)}} completion:^(NSDictionary *result) {
-        callback([result[@"status"] integerValue]);
+        callback((CKStatusCode) result[@"status"]);
     }];
 }
 

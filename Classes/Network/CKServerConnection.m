@@ -121,6 +121,16 @@
 
 }
 
+- (void)sendDataWithAlert:(NSDictionary *)data successfulCompletion:(CKServerConnectionExecuted)completion{
+    [self sendData:data completion:^(NSDictionary *result) {
+        if ([result socketMessageStatus] == S_OK){
+                completion(result);
+        }else{
+            [[[CKApplicationModel sharedInstance] mainController] showAlertWithResult:result completion:nil];
+        }
+    }];
+}
+
 - (void)sendData:(NSDictionary *)data completion:(CKServerConnectionExecuted)completion
 {
     if (!_connection)

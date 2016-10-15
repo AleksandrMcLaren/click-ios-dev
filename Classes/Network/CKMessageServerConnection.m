@@ -87,7 +87,7 @@
 - (void)addFriends:(NSArray *)friendPhoneList callback:(CKServerConnectionExecutedStatus)callback
 {
     [self sendData:@{@"action":@"user.addfriend", @"options":@{@"userlist":friendPhoneList}} completion:^(NSDictionary *result) {
-        callback([result[@"status"] integerValue]);
+        callback( (CKStatusCode) [result[@"status"] integerValue]);
     }];
 }
 

@@ -20,6 +20,9 @@
 #import "CKDB.h"
 #import "CKDate+utility.h"
 #import "ReactiveCocoa.h"
+#import "CKStatusCode.h"
+#import "NSDictionary+CKSocketMessage.h"
+#import "UIAlertController+CKSocketMessage.h"
 
 //define this constant if you want to use Masonry without the 'mas_' prefix
 #define MAS_SHORTHAND
@@ -36,5 +39,12 @@
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
 #define CONTROL_PADDING  16.0;
+
+#define CKSocketMessageFieldResult @"result"
+#define CKSocketMessageFieldStatus @"status"
+#define CKSocketMessageFieldMID @"mid"
+#define CKSocketMessageFieldAction @"action"
+#define CKSocketMessageFieldOptions @"options"
+#define CKSocketMessageFieldInvite @"invite"
 
 #endif
