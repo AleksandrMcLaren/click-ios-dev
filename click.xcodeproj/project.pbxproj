@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3D1A36551DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */; };
 		3D1A36581DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36571DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m */; };
+		3D1A365A1DB2220F000A8CB7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */; };
 		3D7884831DACCE8B00777E10 /* UIView+Shake.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7884821DACCE8B00777E10 /* UIView+Shake.m */; };
 		60673FF2F4F098A555D5E963 /* libPods-click.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC7724C494AFD4568ED92B4 /* libPods-click.a */; };
 		7807CF6F1CC7E06700D9DF9B /* CKFriendSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807CF6E1CC7E06700D9DF9B /* CKFriendSelectionController.m */; };
@@ -122,6 +123,7 @@
 		3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CKSocketMessage.m"; sourceTree = "<group>"; };
 		3D1A36561DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertController+CKSocketMessage.h"; sourceTree = "<group>"; };
 		3D1A36571DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertController+CKSocketMessage.m"; sourceTree = "<group>"; };
+		3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		3D3BD6711DAF9BB500997A0E /* CKStatusCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKStatusCode.h; sourceTree = "<group>"; };
 		3D7884811DACCE8B00777E10 /* UIView+Shake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Shake.h"; sourceTree = "<group>"; };
 		3D7884821DACCE8B00777E10 /* UIView+Shake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Shake.m"; sourceTree = "<group>"; };
@@ -389,6 +391,7 @@
 				7807CF761CD09FEA00D9DF9B /* CKNewGroupController.m */,
 				7807CF781CD0A01E00D9DF9B /* CKGroupHeaderView.h */,
 				7807CF791CD0A01E00D9DF9B /* CKGroupHeaderView.m */,
+				3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */,
 			);
 			name = Screens;
 			path = Classes/Screens;
@@ -690,6 +693,7 @@
 				781250861CB6802A00D3BFBB /* secondaryCellMask@2x.png in Resources */,
 				7807CF711CC8C28700D9DF9B /* checkwhite@2x.png in Resources */,
 				782AFFF71D099A4B00802097 /* attachaudio@2x.png in Resources */,
+				3D1A365A1DB2220F000A8CB7 /* Launch Screen.storyboard in Resources */,
 				781250821CB6645C00D3BFBB /* cellMask@2x.png in Resources */,
 				781250911CB7A7EB00D3BFBB /* cellMaskShadow@2x.png in Resources */,
 				783BFAAE1CDBA6360067CEDE /* circleplus@2x.png in Resources */,
