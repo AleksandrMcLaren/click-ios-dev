@@ -23,7 +23,7 @@
 #import "CKStatusCode.h"
 #import "NSDictionary+CKSocketMessage.h"
 #import "UIAlertController+CKSocketMessage.h"
-
+#import "NSString+NumEncoding.h"
 //define this constant if you want to use Masonry without the 'mas_' prefix
 #define MAS_SHORTHAND
 

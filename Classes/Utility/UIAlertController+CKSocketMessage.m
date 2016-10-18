@@ -32,6 +32,8 @@
             break;
     }
     
+//    user.info
+    
     UIAlertController * alert = [UIAlertController
                                  alertControllerWithTitle:title
                                  message:message

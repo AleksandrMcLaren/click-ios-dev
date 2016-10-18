@@ -20,9 +20,9 @@
                    country:(NSUInteger)country
                       city:(NSUInteger)city
                   callback:(CKServerConnectionExecutedStatus)callback;
-- (void)checkUserWithCallback:(CKServerConnectionExecutedStatus)callback;
+- (void)checkUserWithCallback:(CKServerConnectionExecuted)callback;
 - (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecuted)callback;
-- (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecuted)callback;
+- (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecutedModel)callback needDisplayAlert:(bool)needDisplayAlert;
 - (void)suicide:(CKServerConnectionExecutedStatus)callback;
 - (void)getRegionsInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback;
 - (void)getCitiesInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback;

@@ -12,6 +12,7 @@
 
 typedef void (^CKServerConnectionExecuted)(NSDictionary* result);
 typedef void (^CKServerConnectionExecutedStatus)(CKStatusCode status);
+typedef void (^CKServerConnectionExecutedModel)(id model);
 
 @interface CKServerConnection : NSObject<SRWebSocketDelegate>
 
@@ -27,6 +28,7 @@ typedef void (^CKServerConnectionExecutedStatus)(CKStatusCode status);
 
 - (void)connectWithCallback:(CKServerConnectionExecuted)callback;
 - (void)sendData:(NSDictionary *)data completion:(CKServerConnectionExecuted)completion;
+- (void)sendDataWithAlert:(NSDictionary *)data successfulCompletion:(CKServerConnectionExecuted)completion;
 - (void)processIncomingEvent:(NSDictionary *)eventData;
 
 @end

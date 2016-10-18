@@ -76,7 +76,6 @@
 
 - (void)connect:(NSString *)entryPoint callback:(CKServerConnectionExecuted)callback
 {
-    //NSMutableString *connectionString = [NSMutableString stringWithFormat:@"ws://click.httpx.ru:8101/%@?", entryPoint];
     if (callback) {
         _callbacks[CONNECTION_OPEN_CALLBACK_IDENTIFIER] = callback;
     }

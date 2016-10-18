@@ -198,18 +198,11 @@
     {
         [self.mainController showWelcomeScreen];
     } else {
-        [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary *result) {
-            CKUserModel *profile = [CKUserModel modelWithDictionary:result[@"result"]];
-            if (!profile)
-            {
-                // error
-                NSLog(@"error!");
-            } else
-            {
-                self.userProfile = profile;
-                [self showMainScreen];
-            }
-        }];
+        [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(id model) {
+            CKUserModel *profile = model;
+            self.userProfile = profile;
+            [self showMainScreen];
+        } needDisplayAlert:YES];
     }
 }
 
@@ -261,51 +254,34 @@
     [CKUserServerConnection sharedInstance].phoneNumber = phone;
     [CKMessageServerConnection sharedInstance].phoneNumber = phone;
     
-    [[CKMessageServerConnection sharedInstance] connectWithCallback:^(NSDictionary *result) {
-        CKStatusCode status = [result socketMessageStatus];
+    [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSDictionary *result) {
         NSInteger res = [result socketMessageResultInteger] ;
         
         _isNewUser = YES;
         
-        if (status == S_USER_NEW_DEVICE) {
-            
-            
-            switch (res) {
-                    
-                    case 1:
-                    NSLog(@"1 - пользователь заблокирован");
-                    _isNewUser = NO;
-                    break;
-                    
-                    case 2:
-                    NSLog(@"2 - пользователь не активирован");
-                    
-                    _isNewUser = NO;
-                    break;
-                    
-                    case 3:
-                    NSLog(@"3 - пользователь есть но не совпадает uuid или deviceid, то есть новое устройство");
-                    _isNewUser = NO;
-                    break;
-                    
-                    case 4:
-                    NSLog(@"4 - пользователя в базе нет");
-                    _isNewUser = YES;
-                    break;
-                    
-                    case 5:
-                    NSLog(@"5 - не заполнен профиль, регистрация прошла не до конца");
-                    _isNewUser = NO;
-                    break;
-                default:
-                    break;
-            }
-            [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo?promo:@"" callback:^(NSDictionary *result) {
-                [self.mainController showAuthenticationScreen];
-            }];
-        }else{
-            [[[CKApplicationModel sharedInstance] mainController] showAlertWithResult:result completion:nil];
+//        result == 1 || result == -1, тогда пользователя можно восстановить, иначе - пользователь новый, пользователь видит инфу
+        
+        switch (res) {
+                case 0:
+                NSLog(@"0 – Пользователя или нет или неактивирован");
+                _isNewUser = YES;
+                break;
+                
+                case 1:
+                NSLog(@"1 – все нормально,");
+                _isNewUser = NO;
+                break;
+                
+                case -1:
+                NSLog(@"-1 – есть, активирован но регистрация не завершена, нет профиля");
+                _isNewUser = NO;
+                break;
+            default:
+                break;
         }
+        [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo callback:^(NSDictionary *result) {
+            [self.mainController showAuthenticationScreen];
+        }];
     }];
 }
 
@@ -315,24 +291,26 @@
         
         self.token = [[CKUserServerConnection sharedInstance] token];
         [CKMessageServerConnection sharedInstance].token = self.token;
-        if (_isNewUser)
-        {
-            [self.mainController showCreateProfile];
-        } else
-        {
-            [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary *result) {
-                CKUserModel *profile = [CKUserModel modelWithDictionary:result[@"result"]];
-                if (!profile)
-                {
-                    // error
-                    NSLog(@"error!");
-                } else
-                {
-                    self.userProfile = profile;
-                    [self.mainController showRestoreHistory];
-                }
-            }];
-        }
+//        if (_isNewUser)
+//        {
+//            [self.mainController showCreateProfile];
+//        } else
+//        {
+//            [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(id model) {
+//                self.userProfile = (CKUserModel*)model;
+//                [self.mainController showRestoreHistory];
+//               
+//            }];
+//        }
+        [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(id model) {
+            self.userProfile = (CKUserModel*)model;
+            if (_isNewUser) {
+                [self.mainController showCreateProfile];
+            }else{
+                [self.mainController showRestoreHistory];
+                
+            }
+        } needDisplayAlert:NO];
     }];
 }
 
@@ -408,7 +386,8 @@
 
 - (void) abandonHistory
 {
-    [self showMainScreen];
+//    [self showMainScreen];
+    [[self mainController] showCreateProfile];
 }
 
 +(NSString*)date2str:(NSDate*)date {

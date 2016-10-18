@@ -15,6 +15,8 @@
 
 @interface CKDialogListEntryModel : NSObject
 
++ (instancetype)modelWithDictionary:(NSDictionary *)dict;
+
 @property (nonatomic, strong) NSString *userAvatarId;
 @property (nonatomic, assign) NSUInteger attachCount;
 @property (nonatomic, assign) NSUInteger onlineUsersCount;

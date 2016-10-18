@@ -29,22 +29,28 @@
 - (void)registerUserWithPromo:(NSString *)promo callback:(CKServerConnectionExecuted)callback
 {
     [self sendData:@{CKSocketMessageFieldAction:@"user.register",
-                     CKSocketMessageFieldOptions:@{CKSocketMessageFieldInvite:promo}} completion:^(NSDictionary *result) {
+                     CKSocketMessageFieldOptions:@{CKSocketMessageFieldInvite:promo?promo:@"" }} completion:^(NSDictionary *result) {
         callback(result);
     }];
 }
 
-- (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecuted)callback
+- (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecutedModel)callback needDisplayAlert:(bool)needDisplayAlert
 {
     [self sendData:@{@"action":@"user.info", @"options":@{@"locale":@"ru", @"userid":userid}} completion:^(NSDictionary *result) {
-        callback(result);
+//        [self connect];
+        CKUserModel *profile = [CKUserModel modelWithDictionary:result[@"result"]];
+        if (profile || !needDisplayAlert) {
+            callback(profile);
+        }else{
+            [[[CKApplicationModel sharedInstance] mainController] showAlertWithResult:result completion:nil];
+        }
     }];
 }
 
-- (void)checkUserWithCallback:(CKServerConnectionExecutedStatus)callback
+- (void)checkUserWithCallback:(CKServerConnectionExecuted)callback
 {
-    [self sendData:@{@"action":@"user.checkuser", @"options":@{@"userid":self.phoneNumber}} completion:^(NSDictionary *result) {
-        callback( (CKStatusCode) result[@"status"] );
+    [self sendDataWithAlert:@{@"action":@"user.checkuser", @"options":@{@"userid":self.phoneNumber}} successfulCompletion:^(NSDictionary *result) {
+        callback( result );
     }];
 }
 
@@ -57,15 +63,9 @@
 
 - (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecuted)callback
 {
-    [self sendData:@{@"action":@"user.activate", @"options":@{@"code":code}} completion:^(NSDictionary *result) {
-
-     if ([result[@"status"] integerValue] == 1000 && result[@"result"]){
-         self.token = result[@"result"];
-         [self connect];
+    [self sendDataWithAlert:@{@"action":@"user.activate", @"options":@{@"code":code}} successfulCompletion:^(NSDictionary *result) {
+        self.token = result[@"result"];
          callback(result);
-     }else{
-         [[[CKApplicationModel sharedInstance] mainController] showAlertWithResult:result completion:nil];
-     }
     }];
 }
 

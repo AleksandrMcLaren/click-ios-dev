@@ -119,6 +119,8 @@
         make.left.equalTo(self.view.left).offset(padding);
         make.right.equalTo(self.view.right).offset(-padding);
     }];
+    
+//    [UIActivityIndicatorView]
 }
 
 - (void)continue

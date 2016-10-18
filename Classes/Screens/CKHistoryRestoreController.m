@@ -10,6 +10,7 @@
 #import "CKApplicationModel.h"
 #import "UIColor+hex.h"
 #import "UILabel+utility.h"
+#import "CKMessageServerConnection.h"
 
 @implementation CKHistoryRestoreController
 {
@@ -84,7 +85,7 @@
     _abandonButton.clipsToBounds = YES;
     _abandonButton.layer.cornerRadius = 4;
     [self.view addSubview:_abandonButton];
-    [_abandonButton addTarget:self action:@selector(restore) forControlEvents:UIControlEventTouchUpInside];
+    [_abandonButton addTarget:self action:@selector(abandon) forControlEvents:UIControlEventTouchUpInside];
     
     [_clickSetupLabel makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.top).offset(25);
@@ -142,7 +143,31 @@
 
 - (void)restore
 {
-    [[CKApplicationModel sharedInstance] restoreHistory];
+    [[CKMessageServerConnection sharedInstance] getDialogListWithCallback:^(NSDictionary *result) {
+        NSMutableArray *dialogs = [NSMutableArray new];
+        for (NSDictionary *dictionary in result[@"result"])
+        {
+            CKDialogListEntryModel *model = [CKDialogListEntryModel modelWithDictionary:dictionary];
+            [dialogs addObject:model];
+        }
+        NSString* text;
+        if (dialogs.count) {
+            text = [NSString stringWithFormat:@"Поздаравляем!\nУспешно %@ %d %@",
+                    [NSString terminationForValue:(int)dialogs.count withWords: @[@"восстановлено", @"восстановлено", @"восстановлен"]],
+                    (int)dialogs.count,
+                    [NSString terminationForValue:(int)dialogs.count withWords: @[@"чатов", @"чата", @"чат"]]];
+        }else{
+            text = @"Нет доступных для восстановления чатов";
+        }
+        _restoreLabel.text =  text;
+        _restoreButton.hidden = YES;
+        [_abandonButton setTitle:@"Продолжить" forState:UIControlStateNormal];
+        [_abandonButton setTitleColor:[UIColor whiteColor]  forState:UIControlStateNormal];
+        _abandonButton.backgroundColor = CKClickBlueColor;
+        
+    }];
+    
+//    [[CKApplicationModel sharedInstance] restoreHistory];
 }
 
 - (void)abandon
