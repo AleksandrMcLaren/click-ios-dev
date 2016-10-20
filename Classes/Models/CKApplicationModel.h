@@ -42,6 +42,7 @@
 
 @property (nonatomic, readonly) NSString *commonName;
 @property (nonatomic, readonly) NSString *letterName;
+@property (nonatomic, strong, readonly) NSString* avatarURLString;
 
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict;
 

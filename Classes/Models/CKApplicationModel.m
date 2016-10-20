@@ -110,6 +110,10 @@
     return [self.id hash];
 }
 
+-(NSString*)avatarURLString{
+    return [NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, self.avatarName];
+}
+
 @end
 
 @implementation CKPhoneContact

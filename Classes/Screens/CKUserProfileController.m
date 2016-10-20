@@ -11,6 +11,8 @@
 #import "CKCountrySelectionController.h"
 #import "CKCountryCell.h"
 #import "CKCitySelectionController.h"
+#import <SDWebImage/UIButton+WebCache.h>
+#import "CKCache.h"
 
 @interface CKLoginInputCell : UITableViewCell
 
@@ -157,7 +159,15 @@
     header.firstName.text = self.profile.name;
     header.secondName.delegate = self;
     header.secondName.text = self.profile.surname;
-    [header.avatar setImage:self.profile.avatar forState:UIControlStateNormal];
+    self.profile.avatar = nil;
+    if (self.profile.avatar) {
+        [header.avatar setImage:self.profile.avatar forState:UIControlStateNormal];
+    }else{
+        [header.avatar sd_setImageWithURL:[NSURL URLWithString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                [[CKCache sharedInstance] putImage:image withURLString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString];
+                [[CKApplicationModel sharedInstance] userProfile].avatar = image;
+        }];
+    }
     if([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)])
     {
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;

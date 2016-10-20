@@ -11,6 +11,8 @@
 #import "UIColor+hex.h"
 #import "UILabel+utility.h"
 #import "CKMessageServerConnection.h"
+#import "CKCache.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @implementation CKHistoryRestoreController
 {
@@ -37,9 +39,35 @@
     _alreadyRegisteredLabel = [UILabel labelWithText:@"Вы уже зарегистрированы в Click" font:[UIFont systemFontOfSize: 15.0] textColor:[UIColor blackColor] textAlignment:NSTextAlignmentCenter];
     [self.view addSubview:_alreadyRegisteredLabel];
     
-    _avatar = [[UIImageView alloc] init];
-    _avatar.image = [[CKApplicationModel sharedInstance] userProfile].avatar;
     
+    _avatar = [[UIImageView alloc] init];
+//    _avatar.image = [[CKApplicationModel sharedInstance] userProfile].avatar;
+    [_avatar sd_setImageWithURL:[NSURL URLWithString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [[CKCache sharedInstance] putImage:image withURLString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString];
+        [[CKApplicationModel sharedInstance] userProfile].avatar = image;
+    }];
+    
+    //Работа через кеш
+//    int _iteration = 0;
+    
+//    NSData *avatarData = [[CKCache sharedInstance] dataWithURLString:[NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, [[CKApplicationModel sharedInstance] userProfile].avatarName]
+//                                                          completion:^(NSData *result, NSDictionary *userdata) {
+//                                                              if (_iteration != [userdata[@"iteration"] integerValue]) return;
+//                                                              if (!result)
+//                                                              {
+//                                                                  _avatar.hidden = YES;
+//                                                              } else
+//                                                              {
+//                                                                  _avatar.hidden = NO;
+//                                                                  UIImage *img = [UIImage imageWithData:result];
+//                                                                  _avatar.image = img;
+//                                                              }
+//                                                          } userData:@{@"iteration":@(_iteration)}];
+//    if (avatarData)
+//    {
+//        _avatar.image = [UIImage imageWithData:avatarData];
+//        _avatar.hidden = NO;
+//    }
     _avatar.layer.cornerRadius = 60.0;
     _avatar.layer.borderColor = [[UIColor whiteColor] CGColor];
     _avatar.layer.borderWidth = 3.0;
