@@ -19,7 +19,7 @@
 @property (nonatomic, strong) NSString *login;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *surname;
-@property (nonatomic, assign) NSString *sex;
+@property (nonatomic, strong) NSString *sex;
 @property (nonatomic, assign) NSInteger iso;
 @property (nonatomic, assign) NSInteger countryId;
 @property (nonatomic, strong) NSString *countryName;
