@@ -125,7 +125,11 @@
 
 @end
 
-@interface CKUserProfileController()<UIImagePickerControllerDelegate, UINavigationControllerDelegate, CKCountrySelectionControllerDelegate, UITextFieldDelegate, CKCitySelectionControllerDelegate>
+@interface CKUserProfileController()<UIImagePickerControllerDelegate, UINavigationControllerDelegate, CKCountrySelectionControllerDelegate, UITextFieldDelegate, CKCitySelectionControllerDelegate, UITableViewDataSource, UITableViewDelegate>{
+        UIButton* _continueButton;
+}
+
+@property (nonatomic, strong) UITableView* tableView;
 
 @end
 
@@ -133,10 +137,12 @@
 
 - (instancetype)init
 {
-    if (self = [super initWithStyle:UITableViewStylePlain])
+    if (self = [super init])
     {
+
+        
 //        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Отменить" style:UIBarButtonItemStylePlain target:self action:@selector(cancel)];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Готово" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Готово" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
         self.title = @"Профиль";
         self.profile = [[CKApplicationModel sharedInstance] userProfile];
     }
@@ -150,8 +156,13 @@
 
 - (void)viewDidLoad
 {
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    [self.view addSubview:self.tableView];
+    
     CKProfileHeaderView *header = [CKProfileHeaderView new];
-    header.frame = CGRectMake(0, 0, self.view.bounds.size.width, 112);
+    header.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 76+16);
     self.tableView.tableHeaderView = header;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tableView.separatorInset = UIEdgeInsetsZero;
@@ -159,7 +170,7 @@
     header.firstName.text = self.profile.name;
     header.secondName.delegate = self;
     header.secondName.text = self.profile.surname;
-    self.profile.avatar = nil;
+    
     if (self.profile.avatar) {
         [header.avatar setImage:self.profile.avatar forState:UIControlStateNormal];
     }else{
@@ -173,6 +184,32 @@
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
     [header.avatar addTarget:self action:@selector(takePhoto) forControlEvents:UIControlEventTouchUpInside];
+    
+    _continueButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_continueButton setTitle:@"Продолжить" forState:UIControlStateNormal];
+    [_continueButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _continueButton.titleLabel.font = CKButtonFont;
+    _continueButton.backgroundColor = CKClickBlueColor;
+    _continueButton.clipsToBounds = YES;
+    _continueButton.layer.cornerRadius = 4;
+    [self.view addSubview:_continueButton];
+    [_continueButton addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
+    
+    float padding = CONTROL_PADDING;
+    [_continueButton makeConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@44);
+        make.bottom.equalTo(self.view.bottom).offset(-padding);
+        make.left.equalTo(self.view.left).offset(padding);
+        make.right.equalTo(self.view.right).offset(-padding);
+    }];
+    
+    [self.tableView makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.top);
+        make.bottom.equalTo(_continueButton.top).offset(padding);
+        make.left.equalTo(self.view.left);
+        make.right.equalTo(self.view.right);
+    }];
+
 }
 
 - (void)takePhotoWithSource:(UIImagePickerControllerSourceType)source

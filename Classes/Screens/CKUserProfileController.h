@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CKUserProfileController : UITableViewController
+@interface CKUserProfileController : UIViewController
 
 @property (nonatomic, strong) CKUserModel *profile;
 

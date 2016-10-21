@@ -52,31 +52,33 @@
         _secondNameSeparatorView.backgroundColor = CKClickProfileGrayColor;
         [self addSubview:_secondNameSeparatorView];
         
+         float padding = CONTROL_PADDING;
+        
         [_avatar makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.left).offset(16);
-            make.top.equalTo(self.top).offset(9);
-            make.width.equalTo(75);
-            make.height.equalTo(75);
+            make.left.equalTo(self.left).offset(padding);
+            make.top.equalTo(self.top).offset(padding*.5);
+            make.width.equalTo(76);
+            make.height.equalTo(76);
         }];
         [_firstName makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(_avatar.right).offset(16);
-            make.top.equalTo(self.top).offset(16);
+            make.left.equalTo(_avatar.right).offset(padding);
+            make.top.equalTo(self.top).offset(padding);
             make.right.equalTo(self.right);
         }];
         [_nameSeparatorView makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_firstName.left);
-            make.top.equalTo(_firstName.bottom).offset(11);
+            make.top.equalTo(_firstName.bottom).offset(padding*.5);
             make.right.equalTo(self.right);
             make.height.equalTo(0.5);
         }];
         [_secondName makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(_avatar.right).offset(16);
-            make.top.equalTo(_nameSeparatorView).offset(11);
+            make.left.equalTo(_avatar.right).offset(padding);
+            make.top.equalTo(_nameSeparatorView).offset(padding*.5);
             make.right.equalTo(self.right);
         }];
         [_secondNameSeparatorView makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_secondName.left);
-            make.top.equalTo(_secondName.bottom).offset(11);
+            make.top.equalTo(_secondName.bottom).offset(padding*.5);
             make.right.equalTo(self.right);
             make.height.equalTo(0.5);
         }];

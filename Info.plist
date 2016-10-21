@@ -60,11 +60,11 @@
 	<key>NSContactsUsageDescription</key>
 	<string></string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>I need location</string>
+	<string>We need access to your location, so that we can do operations on it</string>
 	<key>NSLocationUsageDescription</key>
-	<string>I need location</string>
+	<string>We need access to your location, so that we can do operations on it</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>I need location</string>
+	<string>We need access to your location, so that we can do operations on it</string>
 	<key>UILaunchStoryboardName</key>
 	<string>Launch Screen</string>
 	<key>UIRequiredDeviceCapabilities</key>
