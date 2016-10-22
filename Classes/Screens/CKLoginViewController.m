@@ -80,19 +80,23 @@
     
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     UILabel *header = [UILabel labelWithText:@"Введите код страны\nи ваш номер телефона"
-                                                   font:[UIFont systemFontOfSize:20.0]
+                                                   font:[UIFont systemFontOfSize:16.0]
                                               textColor:[UIColor blackColor]
                                           textAlignment:NSTextAlignmentCenter];
     header.numberOfLines = 2;
-    header.frame = self.view.bounds;
+//    header.frame = self.view.bounds;
     header.backgroundColor = self.view.backgroundColor;
-    [header sizeToFit];
-    CGSize s = header.frame.size;
-    header.frame = CGRectMake(0, 0, s.width, s.height+10);
+    [header setFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CK_STANDART_CONTROL_HEIGHT)];
+    
+//    [header sizeToFit];
+//    CGSize s = header.frame.size;
+//    header.frame = CGRectMake(0, 0, s.width, s.height+10);
     _tableView.tableHeaderView = header;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.scrollEnabled = NO;
+//    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    
     [self.view addSubview:_tableView];
     [_tableView reloadData];
     [_tableView makeConstraints:^(MASConstraintMaker *make) {
@@ -112,9 +116,9 @@
     [self.view addSubview:_continueButton];
     [_continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
     
-    float padding = CONTROL_PADDING;
+    float padding = CK_STANDART_CONTROL_PADDING;
     [_continueButton makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@44);
+        make.height.equalTo(CK_STANDART_CONTROL_HEIGHT);
         make.bottom.equalTo(self.view.bottom).offset(-padding);
         make.left.equalTo(self.view.left).offset(padding);
         make.right.equalTo(self.view.right).offset(-padding);
@@ -166,7 +170,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (section == 0) return 0;
-    return 54;
+    return CK_STANDART_CONTROL_HEIGHT;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -179,7 +183,8 @@
     header.numberOfLines = 2;
     header.frame = self.view.bounds;
     header.backgroundColor = self.view.backgroundColor;
-    [header sizeToFit];
+//    [header sizeToFit];
+     [header setFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CK_STANDART_CONTROL_HEIGHT)];
     return header;
 }
 
@@ -405,7 +410,7 @@
 }
 
 - (void)updateFrames{
-    float padding = CONTROL_PADDING;
+    float padding = CK_STANDART_CONTROL_PADDING;
     [_continueButton updateConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.view.bottom).offset(-padding-_keyboardHeight);
     }];

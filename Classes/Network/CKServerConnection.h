@@ -12,7 +12,7 @@
 
 typedef void (^CKServerConnectionExecuted)(NSDictionary* result);
 typedef void (^CKServerConnectionExecutedStatus)(CKStatusCode status);
-typedef void (^CKServerConnectionExecutedModel)(id model);
+typedef void (^CKServerConnectionExecutedObject)(id model);
 
 @interface CKServerConnection : NSObject<SRWebSocketDelegate>
 

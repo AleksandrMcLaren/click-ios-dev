@@ -36,6 +36,9 @@
             make.right.equalTo(self.right).offset(-12);
         }];
         
+        self.preservesSuperviewLayoutMargins = false;
+        self.separatorInset = UIEdgeInsetsZero;
+        self.layoutMargins = UIEdgeInsetsZero;
     }
     return self;
 }

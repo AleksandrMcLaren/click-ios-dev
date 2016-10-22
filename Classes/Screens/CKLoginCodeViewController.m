@@ -10,6 +10,7 @@
 #import "CKApplicationModel.h"
 #import "UIColor+hex.h"
 #import "UILabel+utility.h"
+#import "UIView+Shake.h"
 
 @implementation CKLoginCodeViewController
 {
@@ -141,7 +142,7 @@
     [self.view addSubview:_continueButton];
     [_continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
     
-    float padding = CONTROL_PADDING;
+    float padding = CK_STANDART_CONTROL_PADDING;
 
     [_topLabel2 makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.top).offset(padding);
@@ -179,6 +180,10 @@
 
 - (void)continue
 {
+    if (!_codeEntry.text.length){
+        [_codeEntry shake];
+        return;
+    }
     [[CKApplicationModel sharedInstance] sendPhoneAuthenticationCode:_codeEntry.text];
 }
 
@@ -229,7 +234,7 @@
 }
 
 - (void)updateFrames{
-    float padding = CONTROL_PADDING;
+    float padding = CK_STANDART_CONTROL_PADDING;
     [_continueButton updateConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.view.bottom).offset(-padding-_keyboardHeight);
     }];

@@ -13,43 +13,118 @@
 #import "CKCitySelectionController.h"
 #import <SDWebImage/UIButton+WebCache.h>
 #import "CKCache.h"
+#import "UIView+Shake.h"
+
+typedef enum CKLoginState{
+    CKLoginStateVeryfying,
+    CKLoginStateExist,
+    CKLoginStateNotExist,
+    CKLoginStateNone
+}CKLoginState;
 
 @interface CKLoginInputCell : UITableViewCell
 
-@property (nonatomic, readonly) UITextField *login;
-
+@property (nonatomic, readonly, strong) UITextField *login;
+@property (nonatomic, readonly, assign) CKLoginState loginState;
 @end
 
 @implementation CKLoginInputCell
 {
     UILabel *_check;
+    UIImageView* _loginStateImageView;
+    UIActivityIndicatorView* _activityIndicator;
 }
 
 - (instancetype)init
 {
     if (self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([self class])])
     {
-        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        self.accessoryType = UITableViewCellAccessoryNone;
         _login = [UITextField new];
         _login.placeholder = @"Логин";
         _login.tag = 2;
         [self.contentView addSubview:_login];
         
-        _check = [UILabel labelWithText:@"Проверить" font:[UIFont systemFontOfSize:16.0] textColor:[UIColor grayColor] textAlignment:NSTextAlignmentRight];
-        [self.contentView addSubview:_check];
+//        _check = [UILabel labelWithText:@"Проверить" font:[UIFont systemFontOfSize:16.0] textColor:[UIColor grayColor] textAlignment:NSTextAlignmentRight];
+//        [self.contentView addSubview:_check];
+//        
+        _loginStateImageView = [UIImageView new];
+        _loginStateImageView.hidden = YES;
+        _loginStateImageView.contentMode = UIViewContentModeScaleToFill;
+        [self.contentView addSubview:_loginStateImageView];
+        
+        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activityIndicator.hidden = YES;
+        
+        [self.contentView addSubview:_activityIndicator];
+        
+        
+        float padding = CK_STANDART_CONTROL_PADDING;
         
         [_login makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.contentView.left).offset(16);
+            make.left.equalTo(self.contentView.left).offset(padding);
             make.centerY.equalTo(self.contentView.centerY);
-            make.right.equalTo(_check.left).offset(-16);
+//            make.right.equalTo(_check.left).offset(-padding);
+            
+            make.right.equalTo(_loginStateImageView).offset(-2*padding);
         }];
         
-        [_check makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(self.contentView.right);
+//        [_check makeConstraints:^(MASConstraintMaker *make) {
+//            make.right.equalTo(self.contentView.right);
+//            make.centerY.equalTo(self.contentView.centerY);
+//        }];
+        
+        [_loginStateImageView makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.contentView.centerY);
+            make.right.equalTo(self.contentView.right).offset(-padding);
+            make.height.equalTo(24);
+            make.width.equalTo(24);
         }];
+        
+        [_activityIndicator makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView.centerY);
+            make.right.equalTo(self.contentView.right).offset(-padding);
+        }];
+        
+        [self.contentView bringSubviewToFront:_activityIndicator];
+        
+        self.loginState = CKLoginStateNone;
     }
     return self;
+}
+
+-(void)setLoginState:(CKLoginState)loginState{
+    if (_loginState != loginState) {
+        _loginState = loginState;
+        switch (_loginState) {
+            case CKLoginStateVeryfying:
+                _loginStateImageView.hidden = YES;
+                _activityIndicator.hidden = NO;
+                 [_activityIndicator startAnimating];
+                break;
+            case CKLoginStateExist:
+                [_activityIndicator stopAnimating];
+                _loginStateImageView.image = [UIImage imageNamed:@"ic_cancel_red"];
+                _loginStateImageView.hidden = NO;
+                _activityIndicator.hidden = YES;
+                break;
+            case CKLoginStateNotExist:
+                [_activityIndicator stopAnimating];
+                _loginStateImageView.image = [UIImage imageNamed:@"ic_ok_green"];
+                _loginStateImageView.hidden = NO;
+                _activityIndicator.hidden = YES;
+                break;
+            case CKLoginStateNone:
+                [_activityIndicator stopAnimating];
+                _loginStateImageView.image = nil;
+                _loginStateImageView.hidden = YES;
+                _activityIndicator.hidden = YES;
+                break;
+                
+            default:
+                break;
+        }
+    }
 }
 
 @end
@@ -127,9 +202,13 @@
 
 @interface CKUserProfileController()<UIImagePickerControllerDelegate, UINavigationControllerDelegate, CKCountrySelectionControllerDelegate, UITextFieldDelegate, CKCitySelectionControllerDelegate, UITableViewDataSource, UITableViewDelegate>{
         UIButton* _continueButton;
+    NSString* _originalLogin;
+    NSTimer* _loginVerifyTimer;
+    CKLoginInputCell* _loginCell;
 }
 
 @property (nonatomic, strong) UITableView* tableView;
+@property (strong, nonatomic) RACCommand *executeSearch;
 
 @end
 
@@ -149,8 +228,22 @@
     return self;
 }
 
-- (void)cancel
+- (void)contune
 {
+    CKProfileHeaderView *header = (CKProfileHeaderView *)self.tableView.tableHeaderView;
+    
+    if (!header.firstName.text.length) {
+        [header.firstName shake];
+        return;
+    }
+    if (!header.secondName.text.length) {
+        [header.secondName shake];
+        return;
+    }
+    if (!_loginCell.login.text.length) {
+        [_loginCell.login shake];
+        return;
+    }
     [[CKApplicationModel sharedInstance] submitNewProfile];
 }
 
@@ -193,9 +286,9 @@
     _continueButton.clipsToBounds = YES;
     _continueButton.layer.cornerRadius = 4;
     [self.view addSubview:_continueButton];
-    [_continueButton addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
-    
-    float padding = CONTROL_PADDING;
+    [_continueButton addTarget:self action:@selector(contune) forControlEvents:UIControlEventTouchUpInside];
+ 
+    float padding = CK_STANDART_CONTROL_PADDING;
     [_continueButton makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@44);
         make.bottom.equalTo(self.view.bottom).offset(-padding);
@@ -210,6 +303,10 @@
         make.right.equalTo(self.view.right);
     }];
 
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
+    tapRecognizer.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapRecognizer];
+    
 }
 
 - (void)takePhotoWithSource:(UIImagePickerControllerSourceType)source
@@ -377,6 +474,15 @@
     return YES;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSString *newLogin = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    [self startVerifyLogin:newLogin];
+    
+    return YES;
+}
+
+
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     switch (textField.tag)
@@ -471,17 +577,19 @@
     {
         case 0:
         {
-            CKLoginInputCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CKLoginInputCell"];
-            if (!cell)
+            _loginCell = [tableView dequeueReusableCellWithIdentifier:@"CKLoginInputCell"];
+            if (!_loginCell)
             {
-                cell = [CKLoginInputCell new];
+                _loginCell = [CKLoginInputCell new];
             }
-            cell.separatorInset = UIEdgeInsetsZero;
-            cell.layoutMargins = UIEdgeInsetsZero;
-            cell.preservesSuperviewLayoutMargins = NO;
-            cell.login.delegate = self;
-            cell.login.text = self.profile.login;
-            return cell;
+            _loginCell.separatorInset = UIEdgeInsetsZero;
+            _loginCell.layoutMargins = UIEdgeInsetsZero;
+            _loginCell.preservesSuperviewLayoutMargins = NO;
+            _loginCell.login.delegate = self;
+            _loginCell.login.text = self.profile.login;
+//            _loginTextField = cell.login;
+            _loginCell.loginState = CKLoginStateNotExist;
+            return _loginCell;
             
         }
             break;
@@ -645,6 +753,52 @@
     self.profile.cityName = name;
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:NO];
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)dismissKeyboard
+{
+    CKProfileHeaderView *header = (CKProfileHeaderView *)self.tableView.tableHeaderView;
+    
+    if (header.firstName.isFirstResponder) [header.firstName resignFirstResponder];
+    if (header.secondName.isFirstResponder) [header.secondName resignFirstResponder];
+}
+
+- (void) viewTapped {
+    [self dismissKeyboard];
+}
+
+-(void) setProfile:(CKUserModel *)profile{
+    _profile = profile;
+    if (_profile.login.length) {
+        _originalLogin = _profile.login;
+    }
+}
+
+-(void) startVerifyLogin:(NSString*)login{
+    
+    _loginCell.loginState = CKLoginStateVeryfying;
+    
+    if (_loginVerifyTimer != nil) {
+        [_loginVerifyTimer invalidate];
+        _loginVerifyTimer = nil;
+    }
+    
+    // reschedule the search: in 1.0 second, call the searchForKeyword: method on the new textfield content
+    _loginVerifyTimer = [NSTimer scheduledTimerWithTimeInterval: 2.0
+                                                        target: self
+                                                      selector: @selector(searchForKeyword:)
+                                                      userInfo: login
+                                                       repeats: NO];
+};
+
+- (void) searchForKeyword:(NSTimer *)timer
+{
+    // retrieve the keyword from user info
+    NSString *login = (NSString*)timer.userInfo;
+    
+    [[CKApplicationModel sharedInstance] checkUserLogin:login withCallback:^(id model) {
+        _loginCell.loginState = [model boolValue] ? CKLoginStateNotExist : CKLoginStateNotExist;
+    }];
 }
 
 @end

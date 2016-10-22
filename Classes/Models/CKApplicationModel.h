@@ -10,6 +10,7 @@
 #import <MapKit/MapKit.h>
 #import "CKDialogsModel.h"
 #import "CKServerConnection.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 @class CKChatModel;
 
@@ -46,6 +47,8 @@
 
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict;
 
+@property (strong, nonatomic) RACCommand *executeSearch;
+
 @end
 
 @interface CKPhoneContact : NSObject
@@ -79,6 +82,7 @@
 - (void) didStarted;
 - (void) userDidAcceptTerms;
 - (void) sendUserPhone:(NSString *)phone promo:(NSString *)promo;
+- (void) checkUserLogin:(NSString *)login withCallback:(CKServerConnectionExecutedObject)callback;
 - (void) requestAuthentication;
 - (void) sendPhoneAuthenticationCode:(NSString *)code;
 - (void) restoreHistory;

@@ -17,6 +17,43 @@
 
 @implementation CKUserModel
 
+-(instancetype)init{
+    if (self = [super init]) {
+//        RACSignal *validLoginSignal =
+//        [RACObserve(self, self.login)
+//          map:^id(NSString *text) {
+//              return @(text.length > 5);
+//          }]
+//         ;
+//        
+//        [validLoginSignal subscribeNext:^(id x) {
+//            NSLog(@"search text is valid %@", x);
+//        }];
+//        
+//        self.executeSearch =
+//        [[RACCommand alloc] initWithEnabled:validLoginSignal
+//                                signalBlock:^RACSignal *(id input) {
+//                                    return  [self executeSearchSignal];
+//                                }];
+//        
+//        [validLoginSignal subscribeNext:^(id x) {
+//            NSLog(@"seacr:%@", self.login);
+//            [self.executeSearch execute: self.login];
+//        }];
+
+
+    }
+    return self;
+}
+
+- (RACSignal *)executeSearchSignal {
+    return [[[[RACSignal empty]
+              logAll]
+             delay:2.0]
+            logAll];
+}
+
+
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict
 {
     CKUserModel *model = [CKUserModel new];
@@ -113,6 +150,7 @@
 -(NSString*)avatarURLString{
     return [NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, self.avatarName];
 }
+
 
 @end
 
@@ -315,6 +353,12 @@
                 
             }
         } needDisplayAlert:NO];
+    }];
+}
+
+- (void)checkUserLogin:(NSString *)login withCallback:(CKServerConnectionExecutedObject)callback{
+    [[CKUserServerConnection sharedInstance] checkUserLogin:login withCallback:^(id result) {
+        callback(result);
     }];
 }
 

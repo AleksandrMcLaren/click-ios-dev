@@ -33,6 +33,8 @@
 #import "Masonry.h"
 
 #define CK_URL_AVATAR @"https://chatclick.ru:8102/avatar/"
+#define CK_STANDART_CONTROL_HEIGHT 44
+#define CK_STANDART_CONTROL_PADDING  16.0;
 
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
@@ -40,7 +42,7 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
-#define CONTROL_PADDING  16.0;
+
 
 #define CKSocketMessageFieldResult @"result"
 #define CKSocketMessageFieldStatus @"status"

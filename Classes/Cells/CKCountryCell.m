@@ -47,6 +47,9 @@
             make.centerY.equalTo(self.centerY);
             make.right.lessThanOrEqualTo(_countryCode.left).offset(-8);
         }];
+        self.preservesSuperviewLayoutMargins = false;
+        self.separatorInset = UIEdgeInsetsZero;
+        self.layoutMargins = UIEdgeInsetsZero;
         
     }
     return self;

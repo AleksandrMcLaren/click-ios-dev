@@ -52,7 +52,7 @@
         _secondNameSeparatorView.backgroundColor = CKClickProfileGrayColor;
         [self addSubview:_secondNameSeparatorView];
         
-         float padding = CONTROL_PADDING;
+        float padding = CK_STANDART_CONTROL_PADDING;
         
         [_avatar makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.left).offset(padding);
