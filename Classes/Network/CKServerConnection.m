@@ -193,14 +193,6 @@
     NSString *mid = [dict objectForKey:@"mid"];
     if (mid)
     {
-//        CKServerConnectionExecuted callback = [_callbacks objectForKey:mid];
-//        if (callback)
-//        {
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                callback(dict);
-//            });
-//        }
-//
         [self runCallBack:[_callbacks objectForKey:mid] withValue:dict];
         [_callbacks removeObjectForKey:mid];
     }
@@ -257,7 +249,7 @@
             NSLog(@"Есть не обработанные callbacks");
             for (id callBack in _callbacks.allValues) {
                 NSLog(@"%@ class", callBack );
-                [self runCallBack:callBack withValue:nil];
+                [self runCallBack:callBack withValue:@{CKSocketMessageFieldStatus:@(S_UNDEFINED)}];
             }
             [_callbacks removeAllObjects];
         }

@@ -37,8 +37,16 @@
 - (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecutedObject)callback needDisplayAlert:(bool)needDisplayAlert
 {
     [self sendData:@{@"action":@"user.info", @"options":@{@"locale":@"ru", @"userid":userid}} completion:^(NSDictionary *result) {
-//        [self connect];
-        CKUserModel *profile = [CKUserModel modelWithDictionary:result[@"result"]];
+        [self connect];
+        
+        CKUserModel *profile;
+        
+        if ([result socketMessageStatus] == S_OK) {
+            profile = [CKUserModel modelWithDictionary:result[@"result"]];
+        }else if ([result socketMessageStatus] == S_REQUEST_ERROR){
+            profile = [CKUserModel new];
+        }
+            
         if (profile || !needDisplayAlert) {
             callback(profile);
         }else{
@@ -91,14 +99,14 @@
 }
 
 - (void)createUserWithName:(NSString *)name surname:(NSString *)surname login:(NSString *)login avatar:(UIImage *)avatar birthdate:(NSString *)birthdate sex:(NSString *)sex country:(NSUInteger)country city:(NSUInteger)city callback:(CKServerConnectionExecutedStatus)callback {
-    [self sendData:@{@"action":@"user.create", @"options": @{@"name":name, @"login":login,@"surname":surname, @"birthdate":birthdate, @"sex":sex, @"avatar":avatar?[UIImagePNGRepresentation(avatar) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength]:@"", @"country":@(country), @"city":@(city)}} completion:^(NSDictionary *result) {
-        callback((CKStatusCode) result[@"status"]);
+    [self sendDataWithAlert:@{@"action":@"user.create", @"options": @{@"name":name, @"login":login,@"surname":surname, @"birthdate":birthdate, @"sex":sex, @"avatar":avatar?[UIImagePNGRepresentation(avatar) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength]:@"", @"country":@(country), @"city":@(city)}} successfulCompletion:^(NSDictionary *result) {
+            callback((CKStatusCode) result[@"status"]);
     }];
 }
 
 - (void)checkUserLogin:(NSString*) login withCallback:(CKServerConnectionExecutedObject)callback
 {
-    [self sendDataWithAlert:@{@"action":@"user.checklogin", @"options":@{@"login":login}} successfulCompletion:^(NSDictionary *result) {
+    [self sendData:@{@"action":@"user.checklogin", @"options":@{@"login":login}} completion:^(NSDictionary *result) {
         callback( @([result socketMessageStatus] == S_OK));
     }];
 }

@@ -12,8 +12,8 @@
 
 +(instancetype) newWithSocketResult:(NSDictionary*)result {
     CKStatusCode messageStatus = S_UNDEFINED;
-    NSString* title;
-    NSString* message;
+    NSString* title = @"Messme";
+    NSString* message = @"Sorry, uncknown error";
     
     if (result) {
         messageStatus = [result socketMessageStatus];
@@ -22,27 +22,18 @@
         
         title = messageAction;
         message = [NSString stringWithFormat:@"Error result:%@ status:%ld", messageResult, (long)messageStatus];
-    }else{
-        title = @"Messme";
-        message = @"Ошибка соединения с сервером, повыторите попытку позже";
     }
-    
-    
-//    if ([messageAction isEqualToString:@"getUserState"]) {
-//        title = @"Настройка MessMe";
-//        message = @"Убедитесь в правильности введенного номера телефона и повторите попытку";
-//    }
-//    
+
     switch(messageStatus) {
         case S_ACTIVATION_CODE_ERROR:
             title = @"Проверка кода доступа";
             message = @"Убедитесь в правильности введенного кода доступа и повторите попытку";
             break;
+        case S_UNDEFINED:
+            message = @"Ошибка соединения с сервером, повыторите попытку позже";
         default:
             break;
     }
-    
-//    user.info
     
     UIAlertController * alert = [UIAlertController
                                  alertControllerWithTitle:title

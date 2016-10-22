@@ -476,8 +476,11 @@ typedef enum CKLoginState{
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    NSString *newLogin = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    [self startVerifyLogin:newLogin];
+    if ([textField isEqual:_loginCell.login]) {
+        NSString *newLogin = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        [self startVerifyLogin:newLogin];
+        
+    }
     
     return YES;
 }
@@ -588,7 +591,7 @@ typedef enum CKLoginState{
             _loginCell.login.delegate = self;
             _loginCell.login.text = self.profile.login;
 //            _loginTextField = cell.login;
-            _loginCell.loginState = CKLoginStateNotExist;
+            _loginCell.loginState = self.profile.isCreated ?  CKLoginStateNotExist : CKLoginStateNone;
             return _loginCell;
             
         }
@@ -776,6 +779,10 @@ typedef enum CKLoginState{
 
 -(void) startVerifyLogin:(NSString*)login{
     
+    if (login.length < 5) {
+        _loginCell.loginState = CKLoginStateExist;
+        return;
+    }
     _loginCell.loginState = CKLoginStateVeryfying;
     
     if (_loginVerifyTimer != nil) {

@@ -19,28 +19,29 @@
 
 -(instancetype)init{
     if (self = [super init]) {
-//        RACSignal *validLoginSignal =
-//        [RACObserve(self, self.login)
-//          map:^id(NSString *text) {
-//              return @(text.length > 5);
-//          }]
-//         ;
-//        
-//        [validLoginSignal subscribeNext:^(id x) {
-//            NSLog(@"search text is valid %@", x);
-//        }];
-//        
-//        self.executeSearch =
-//        [[RACCommand alloc] initWithEnabled:validLoginSignal
-//                                signalBlock:^RACSignal *(id input) {
-//                                    return  [self executeSearchSignal];
-//                                }];
-//        
-//        [validLoginSignal subscribeNext:^(id x) {
-//            NSLog(@"seacr:%@", self.login);
-//            [self.executeSearch execute: self.login];
-//        }];
-
+        self.id = nil;
+        self.login = @"";
+        self.name = @"";
+        self.surname = @"";
+        self.sex = @"";
+        self.avatarName = nil;
+        self.iso = -1;
+        self.countryId = -1;
+        self.countryName = nil;
+        self.city = -1;
+        self.cityName = nil;
+        self.status = 0;
+        self.invite = nil;
+        self.location = kCLLocationCoordinate2DInvalid;
+        self.distance = 0;
+        self.geoStatus = 0;
+        self.isFriend = NO;
+        self.likes = 0;
+        self.isLiked = NO;
+        self.age = 0;
+        self.birthDate = nil;
+        self.registeredDate = nil;
+        self.statusDate = nil;
 
     }
     return self;
@@ -151,6 +152,9 @@
     return [NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, self.avatarName];
 }
 
+-(BOOL)isCreated{
+    return self.id != nil;
+}
 
 @end
 
@@ -333,20 +337,10 @@
         
         self.token = [[CKUserServerConnection sharedInstance] token];
         [CKMessageServerConnection sharedInstance].token = self.token;
-//        if (_isNewUser)
-//        {
-//            [self.mainController showCreateProfile];
-//        } else
-//        {
-//            [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(id model) {
-//                self.userProfile = (CKUserModel*)model;
-//                [self.mainController showRestoreHistory];
-//               
-//            }];
-//        }
+
         [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(id model) {
             self.userProfile = (CKUserModel*)model;
-            if (_isNewUser) {
+            if (_isNewUser || !self.userProfile.isCreated) {
                 [self.mainController showCreateProfile];
             }else{
                 [self.mainController showRestoreHistory];
@@ -438,22 +432,13 @@
     [[self mainController] showCreateProfile];
 }
 
-+(NSString*)date2str:(NSDate*)date {
-    if (!date) return @"Не указана";
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"dd.MM.yyyy"];
-    
-    NSString *stringFromDate = [formatter stringFromDate:date];
-    return stringFromDate;
-}
-
 - (void)submitNewProfile
 {
     [[CKUserServerConnection sharedInstance] createUserWithName:self.userProfile.name
                                                         surname:self.userProfile.surname
                                                           login:self.userProfile.login
                                                          avatar:self.userProfile.avatar
-                                                      birthdate:[CKApplicationModel date2str:self.userProfile.birthDate]
+                                                      birthdate:[NSDate date2str:self.userProfile.birthDate ]
                                                             sex:self.userProfile.sex
                                                         country:self.userProfile.countryId
                                                            city:self.userProfile.city callback:^(CKStatusCode status) {

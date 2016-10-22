@@ -38,12 +38,16 @@
 @property (nonatomic, assign) BOOL isLiked;
 @property (nonatomic, assign) NSInteger age;
 @property (nonatomic, strong) NSDate *birthDate;
+
 @property (nonatomic, strong) NSDate *registeredDate;
 @property (nonatomic, strong) NSDate *statusDate;
 
 @property (nonatomic, readonly) NSString *commonName;
 @property (nonatomic, readonly) NSString *letterName;
 @property (nonatomic, strong, readonly) NSString* avatarURLString;
+@property (nonatomic, assign, readonly) BOOL isCreated;
+
+
 
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict;
 
@@ -88,7 +92,6 @@
 - (void) restoreHistory;
 - (void) abandonHistory;
 - (void) submitNewProfile;
-
 
 // определять по местоположению пользователя
 @property (nonatomic, readonly) NSInteger countryId;
