@@ -11,12 +11,22 @@
 @implementation UIAlertController (CKSocketMessage)
 
 +(instancetype) newWithSocketResult:(NSDictionary*)result {
-    CKStatusCode messageStatus = [result socketMessageStatus];
-    id messageResult =  [result socketMessageResult];
-    NSString* messageAction =  [result socketMessageAction];
+    CKStatusCode messageStatus = S_UNDEFINED;
+    NSString* title;
+    NSString* message;
     
-    NSString* title = messageAction;
-    NSString* message = [NSString stringWithFormat:@"Error result:%@ status:%ld", messageResult, (long)messageStatus];
+    if (result) {
+        messageStatus = [result socketMessageStatus];
+        id messageResult =  [result socketMessageResult];
+        NSString* messageAction =  [result socketMessageAction];
+        
+        title = messageAction;
+        message = [NSString stringWithFormat:@"Error result:%@ status:%ld", messageResult, (long)messageStatus];
+    }else{
+        title = @"Messme";
+        message = @"Ошибка соединения с сервером, повыторите попытку позже";
+    }
+    
     
 //    if ([messageAction isEqualToString:@"getUserState"]) {
 //        title = @"Настройка MessMe";

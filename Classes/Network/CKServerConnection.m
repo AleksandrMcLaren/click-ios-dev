@@ -193,14 +193,26 @@
     NSString *mid = [dict objectForKey:@"mid"];
     if (mid)
     {
-        CKServerConnectionExecuted callback = [_callbacks objectForKey:mid];
-        if (callback)
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                callback(dict);
-            });
-        }
+//        CKServerConnectionExecuted callback = [_callbacks objectForKey:mid];
+//        if (callback)
+//        {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                callback(dict);
+//            });
+//        }
+//
+        [self runCallBack:[_callbacks objectForKey:mid] withValue:dict];
         [_callbacks removeObjectForKey:mid];
+    }
+}
+
+-(void)runCallBack:(id)callBack withValue:(id) value{
+    CKServerConnectionExecuted block = callBack;
+    if (block)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            block(value);
+        });
     }
 }
 
@@ -240,10 +252,19 @@
         // do nothing
         NSLog(@"Connecting now");
     } else {
-        //NSLog(@"Reconnect");
-        //[self connect];
+        NSLog(@"Reconnect");
+        if ((_callbacks.count) && (!_queue.count)) {
+            NSLog(@"Есть не обработанные callbacks");
+            for (id callBack in _callbacks.allValues) {
+                NSLog(@"%@ class", callBack );
+                [self runCallBack:callBack withValue:nil];
+            }
+            [_callbacks removeAllObjects];
+        }
+        [self connect];
     }
 }
+
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload
 {
