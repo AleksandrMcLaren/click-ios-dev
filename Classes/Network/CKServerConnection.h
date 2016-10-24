@@ -28,7 +28,9 @@ typedef void (^CKServerConnectionExecutedObject)(id model);
 
 - (void)connectWithCallback:(CKServerConnectionExecuted)callback;
 - (void)sendData:(NSDictionary *)data completion:(CKServerConnectionExecuted)completion;
-- (void)sendDataWithAlert:(NSDictionary *)data successfulCompletion:(CKServerConnectionExecuted)completion;
+//- (void)sendDataWithAlert:(NSDictionary *)data successfulCompletion:(CKServerConnectionExecuted)completion;
+//- (void)sendData:(NSDictionary *)data successfulCompletion:(CKServerConnectionExecuted)successfulCompletion
+//badResponseCompletion:(CKServerConnectionExecuted)badResponseCompletion;
 - (void)processIncomingEvent:(NSDictionary *)eventData;
 
 @end

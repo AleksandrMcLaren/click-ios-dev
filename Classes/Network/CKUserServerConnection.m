@@ -34,32 +34,20 @@
     }];
 }
 
-- (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecutedObject)callback needDisplayAlert:(bool)needDisplayAlert
+- (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecuted)callback
 {
     [self sendData:@{@"action":@"user.info", @"options":@{@"locale":@"ru", @"userid":userid}} completion:^(NSDictionary *result) {
         [self connect];
-        
-        CKUserModel *profile;
-        
-        if ([result socketMessageStatus] == S_OK) {
-            profile = [CKUserModel modelWithDictionary:result[@"result"]];
-        }else if ([result socketMessageStatus] == S_REQUEST_ERROR){
-            profile = [CKUserModel new];
-        }
-            
-        if (profile || !needDisplayAlert) {
-            callback(profile);
-        }else{
-            [[[CKApplicationModel sharedInstance] mainController] showAlertWithResult:result completion:nil];
-        }
+
+        callback(result);
     }];
 }
 
 - (void)checkUserWithCallback:(CKServerConnectionExecuted)callback
 {
-    [self sendDataWithAlert:@{@"action":@"user.checkuser", @"options":@{@"userid":self.phoneNumber}} successfulCompletion:^(NSDictionary *result) {
+    [self sendData:@{@"action":@"user.checkuser", @"options":@{@"userid":self.phoneNumber}} completion:^(NSDictionary *result) {
         callback( result );
-    }];
+     }];
 }
 
 - (void)getActivationCode:(CKServerConnectionExecuted)callback
@@ -71,10 +59,12 @@
 
 - (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecuted)callback
 {
-    [self sendDataWithAlert:@{@"action":@"user.activate", @"options":@{@"code":code}} successfulCompletion:^(NSDictionary *result) {
-        self.token = result[@"result"];
-         callback(result);
-    }];
+    [self sendData:@{@"action":@"user.activate", @"options":@{@"code":code}} completion:^(NSDictionary *result) {
+        if ([result socketMessageStatus] == S_OK){
+            self.token = result[@"result"];
+        }
+        callback(result);
+     } ];
 }
 
 - (void)suicide:(CKServerConnectionExecutedStatus)callback
@@ -98,10 +88,10 @@
     }];
 }
 
-- (void)createUserWithName:(NSString *)name surname:(NSString *)surname login:(NSString *)login avatar:(UIImage *)avatar birthdate:(NSString *)birthdate sex:(NSString *)sex country:(NSUInteger)country city:(NSUInteger)city callback:(CKServerConnectionExecutedStatus)callback {
-    [self sendDataWithAlert:@{@"action":@"user.create", @"options": @{@"name":name, @"login":login,@"surname":surname, @"birthdate":birthdate, @"sex":sex, @"avatar":avatar?[UIImagePNGRepresentation(avatar) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength]:@"", @"country":@(country), @"city":@(city)}} successfulCompletion:^(NSDictionary *result) {
-            callback((CKStatusCode) result[@"status"]);
-    }];
+- (void)createUserWithName:(NSString *)name surname:(NSString *)surname login:(NSString *)login avatar:(UIImage *)avatar birthdate:(NSString *)birthdate sex:(NSString *)sex country:(NSUInteger)country city:(NSUInteger)city callback:(CKServerConnectionExecuted)callback {
+    [self sendData:@{@"action":@"user.create", @"options": @{@"name":name, @"login":login,@"surname":surname, @"birthdate":birthdate, @"sex":sex, @"avatar":avatar?[UIImagePNGRepresentation(avatar) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength]:@"", @"country":@(country), @"city":@(city)}} completion:^(NSDictionary *result) {
+            callback(result);
+     } ];
 }
 
 - (void)checkUserLogin:(NSString*) login withCallback:(CKServerConnectionExecutedObject)callback

@@ -16,10 +16,10 @@
 #import "CKPromoInfoController.h"
 #import "CKLoginCodeViewController.h"
 #import "UIView+Shake.h"
+#import "CKOperationsProtocol.h"
 
 
-
-@interface CKLoginViewController()<CKCountrySelectionControllerDelegate, UITextFieldDelegate>
+@interface CKLoginViewController()<CKCountrySelectionControllerDelegate, UITextFieldDelegate, CKOperationsProtocol>
 
 @property (nonatomic, strong) NSMutableArray *animatableConstraints;
 
@@ -418,6 +418,16 @@
 
 - (void) viewTapped {
     [self dismissKeyboard];
+}
+
+#pragma mark CKOperationsProtocol
+
+-(void)beginOperation:(NSString*)operation{
+
+}
+
+-(void)endOperation:(NSString*)operation{
+    
 }
 
 @end

@@ -305,7 +305,7 @@ typedef enum CKLoginState{
 
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
     tapRecognizer.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:tapRecognizer];
+//    [self.view addGestureRecognizer:tapRecognizer];
     
 }
 
@@ -646,8 +646,26 @@ typedef enum CKLoginState{
                 case 1:
                 {
                     CKCountryCell *cell = [CKCountryCell new];
-                    cell.title.text = self.profile.countryName;
+                    if (self.profile.countryName) {
+                        cell.title.text = self.profile.countryName;
+                        cell.textLabel.textColor = [UIColor blackColor];
+                    }else{
+                        cell.textLabel.text = @"Страна";
+                        cell.textLabel.textColor = CKClickProfileGrayColor;
+                    }
+                    
+                    [[RACObserve(cell.countryBall, image)
+                     map:^id(UIImage* image) {
+                         return @(image == nil);
+                     }]
+                     subscribeNext:^(id x) {
+                         cell.countryBall.hidden = [x boolValue];
+                    }];
+                    
                     cell.countryBall.image = [UIImage imageNamed:[NSString stringWithFormat:@"%ld", (long)self.profile.iso]];
+                    
+                    
+                    
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     cell.separatorInset = UIEdgeInsetsZero;
                     cell.layoutMargins = UIEdgeInsetsZero;

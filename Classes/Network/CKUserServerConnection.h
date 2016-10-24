@@ -19,10 +19,10 @@
                        sex:(NSString *)sex
                    country:(NSUInteger)country
                       city:(NSUInteger)city
-                  callback:(CKServerConnectionExecutedStatus)callback;
+                  callback:(CKServerConnectionExecuted)callback;
 - (void)checkUserWithCallback:(CKServerConnectionExecuted)callback;
 - (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecuted)callback;
-- (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecutedObject)callback needDisplayAlert:(bool)needDisplayAlert;
+- (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecutedObject)callback;
 - (void)suicide:(CKServerConnectionExecutedStatus)callback;
 - (void)getRegionsInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback;
 - (void)getCitiesInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback;

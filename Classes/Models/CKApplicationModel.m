@@ -81,10 +81,17 @@
         model.likes = [sourceDict[@"likes"] integerValue];
         model.isLiked = [sourceDict[@"isliked"] boolValue];
         model.age = [sourceDict[@"age"] integerValue];
+        
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss"];
         dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
-        [dateFormatter setDateFormat:@"YYYY-MM-DDThh:mm:ss"];
-        model.birthDate = [dateFormatter dateFromString:sourceDict[@"birthdate"]];
+        
+//        NSString* bd = sourceDict[@"birthdate"];
+//        NSDate* dt = [dateFormatter dateFromString:bd];
+//        
+//        NSLog(@"%@", [dateFormatter stringFromDate:[NSDate new]]);
+        
+        model.birthDate =  [dateFormatter dateFromString:sourceDict[@"birthdate"]];
         model.registeredDate = [dateFormatter dateFromString:sourceDict[@"registereddate"]];
         model.statusDate = [dateFormatter dateFromString:sourceDict[@"statusdate"]];
     } @catch (NSException *exception) {
@@ -244,11 +251,16 @@
     {
         [self.mainController showWelcomeScreen];
     } else {
-        [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(id model) {
-            CKUserModel *profile = model;
-            self.userProfile = profile;
-            [self showMainScreen];
-        } needDisplayAlert:YES];
+        [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary* result) {
+            if ([result socketMessageStatus] == S_OK){
+                CKUserModel* profile = [CKUserModel modelWithDictionary:[result socketMessageResult]];
+                self.userProfile = profile;
+                [self showMainScreen];
+            }else{
+                [_mainController showAlertWithResult:result completion:nil];
+            }
+
+        }];
     }
 }
 
@@ -301,52 +313,71 @@
     [CKMessageServerConnection sharedInstance].phoneNumber = phone;
     
     [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSDictionary *result) {
-        NSInteger res = [result socketMessageResultInteger] ;
-        
-        _isNewUser = YES;
-        
-//        result == 1 || result == -1, тогда пользователя можно восстановить, иначе - пользователь новый, пользователь видит инфу
-        
-        switch (res) {
+        if ([result socketMessageStatus] == S_OK){
+            _isNewUser = YES;
+            
+            //        result == 1 || result == -1, тогда пользователя можно восстановить, иначе - пользователь новый, пользователь видит инфу
+            
+            switch ([result socketMessageResultInteger]) {
                 case 0:
-                NSLog(@"0 – Пользователя или нет или неактивирован");
-                _isNewUser = YES;
-                break;
-                
+                    NSLog(@"0 – Пользователя или нет или неактивирован");
+                    _isNewUser = YES;
+                    break;
+                    
                 case 1:
-                NSLog(@"1 – все нормально,");
-                _isNewUser = NO;
-                break;
-                
+                    NSLog(@"1 – все нормально,");
+                    _isNewUser = NO;
+                    break;
+                    
                 case -1:
-                NSLog(@"-1 – есть, активирован но регистрация не завершена, нет профиля");
-                _isNewUser = NO;
-                break;
-            default:
-                break;
+                    NSLog(@"-1 – есть, активирован но регистрация не завершена, нет профиля");
+                    _isNewUser = NO;
+                    break;
+                default:
+                    break;
+            }
+            [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo callback:^(NSDictionary *result) {
+                [self.mainController showAuthenticationScreen];
+            }];
+        }else{
+            [_mainController showAlertWithResult:result completion:nil];
         }
-        [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo callback:^(NSDictionary *result) {
-            [self.mainController showAuthenticationScreen];
-        }];
     }];
 }
 
 - (void)sendPhoneAuthenticationCode:(NSString *)code
 {
     [[CKUserServerConnection sharedInstance] activateUserWithCode:code callback:^(NSDictionary* result) {
-        
-        self.token = [[CKUserServerConnection sharedInstance] token];
-        [CKMessageServerConnection sharedInstance].token = self.token;
-
-        [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(id model) {
-            self.userProfile = (CKUserModel*)model;
-            if (_isNewUser || !self.userProfile.isCreated) {
-                [self.mainController showCreateProfile];
-            }else{
-                [self.mainController showRestoreHistory];
+        if ([result socketMessageStatus] == S_OK){
+            self.token = [[CKUserServerConnection sharedInstance] token];
+            [CKMessageServerConnection sharedInstance].token = self.token;
+            
+            [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary* result) {
                 
-            }
-        } needDisplayAlert:NO];
+                CKUserModel *profile;
+                
+                if ([result socketMessageStatus] == S_OK) {
+                    profile = [CKUserModel modelWithDictionary:[result socketMessageResult]];
+                }else if ([result socketMessageStatus] == S_REQUEST_ERROR){
+                    profile = [CKUserModel new];
+                }
+                
+                if (profile) {
+                    self.userProfile = profile;
+                    if (_isNewUser || !self.userProfile.isCreated) {
+                        [self.mainController showCreateProfile];
+                    }else{
+                        [self.mainController showRestoreHistory];
+                    }
+                }else{
+                    [_mainController showAlertWithResult:result completion:nil];
+                }
+            } ];
+        }else{
+            [_mainController showAlertWithResult:result completion:nil];
+        }
+        
+
     }];
 }
 
@@ -441,8 +472,12 @@
                                                       birthdate:[NSDate date2str:self.userProfile.birthDate ]
                                                             sex:self.userProfile.sex
                                                         country:self.userProfile.countryId
-                                                           city:self.userProfile.city callback:^(CKStatusCode status) {
-                                                               [self showMainScreen];
+                                                           city:self.userProfile.city callback:^(NSDictionary *result) {
+                                                               if ([result socketMessageStatus] == S_OK){
+                                                                   [self showMainScreen];
+                                                               }else{
+                                                                   [_mainController showAlertWithResult:result completion:nil];
+                                                               }
                                                            }];
 }
 

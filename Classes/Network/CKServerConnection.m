@@ -120,15 +120,26 @@
 
 }
 
-- (void)sendDataWithAlert:(NSDictionary *)data successfulCompletion:(CKServerConnectionExecuted)completion{
-    [self sendData:data completion:^(NSDictionary *result) {
-        if ([result socketMessageStatus] == S_OK){
-                completion(result);
-        }else{
-            [[[CKApplicationModel sharedInstance] mainController] showAlertWithResult:result completion:nil];
-        }
-    }];
-}
+//- (void)sendDataWithAlert:(NSDictionary *)data successfulCompletion:(CKServerConnectionExecuted)completion{
+//    [self sendData:data completion:^(NSDictionary *result) {
+//        if ([result socketMessageStatus] == S_OK){
+//                completion(result);
+//        }else{
+//            [[[CKApplicationModel sharedInstance] mainController] showAlertWithResult:result completion:nil];
+//        }
+//    }];
+//}
+
+//- (void)sendData:(NSDictionary *)data successfulCompletion:(CKServerConnectionExecuted)successfulCompletion
+//badResponseCompletion:(CKServerConnectionExecuted)badResponseCompletion{
+//    [self sendData:data completion:^(NSDictionary *result) {
+//        if ([result socketMessageStatus] == S_OK){
+//            successfulCompletion(result);
+//        }else{
+//            badResponseCompletion(result);
+//        }
+//    }];
+//}
 
 - (void)sendData:(NSDictionary *)data completion:(CKServerConnectionExecuted)completion
 {

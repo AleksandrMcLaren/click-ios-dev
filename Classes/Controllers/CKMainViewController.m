@@ -18,6 +18,12 @@
 #import "CKSettingsViewController.h"
 #import "CKLoginCodeViewController.h"
 
+@interface CKMapViewController()
+
+@property (nonatomic, strong, readonly) UIViewController* topViewController;
+
+@end
+
 @implementation CKMainViewController
 {
     UIViewController *_currentController;
@@ -111,6 +117,8 @@
     [self replaceCurrentController:nav];
 }
 
+
+
 #pragma mark Alerts
 
 - (void) showAlertWithResult:(NSDictionary*)result completion:(void (^)(void))completion{
@@ -120,5 +128,24 @@
     [_currentController presentViewController:alert animated:YES completion:completion];
 
 }
+
+#pragma mark CKOperationsProtocol
+
+-(UIViewController*) topViewController{
+    if ([_currentController isKindOfClass:[UINavigationController class]])  {
+        UINavigationController* navigationController = (UINavigationController*)_currentController;
+        return navigationController.topViewController;
+    }
+    return _currentController;
+}
+
+-(void)beginOperation:(NSString*)operation{
+    
+}
+
+-(void)endOperation:(NSString*)operation{
+    
+}
+
 
 @end

@@ -11,6 +11,7 @@
 #import "CKDialogsModel.h"
 #import "CKServerConnection.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import "CKOperationsProtocol.h"
 
 @class CKChatModel;
 
@@ -64,7 +65,7 @@
 @property (nonatomic, strong) NSString *id;
 @end;
 
-@protocol CKMainControllerProtocol <NSObject>
+@protocol CKMainControllerProtocol <NSObject, CKOperationsProtocol>
 
 - (void) showWelcomeScreen;
 - (void) showLoginScreen;

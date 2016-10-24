@@ -33,8 +33,8 @@
         [self.contentView addSubview:_countryCode];
         
         [_countryBall makeConstraints:^(MASConstraintMaker *make) {
-            make.width.equalTo(29);
-            make.height.equalTo(29);
+            make.width.equalTo(28);
+            make.height.equalTo(28);
             make.left.equalTo(self.left).offset(16);
             make.centerY.equalTo(self.centerY);
         }];
@@ -43,7 +43,7 @@
             make.centerY.equalTo(self.centerY);
         }];
         [_title makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(_countryBall.right).offset(16);
+            make.left.equalTo(60);
             make.centerY.equalTo(self.centerY);
             make.right.lessThanOrEqualTo(_countryCode.left).offset(-8);
         }];
