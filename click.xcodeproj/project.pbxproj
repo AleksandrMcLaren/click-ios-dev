@@ -11,6 +11,7 @@
 		3D1A36581DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36571DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m */; };
 		3D1A365A1DB2220F000A8CB7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */; };
 		3D1A36661DB4EC80000A8CB7 /* NSString+NumEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36651DB4EC80000A8CB7 /* NSString+NumEncoding.m */; };
+		3D3AD6EB1DBE61B30017ACFD /* CKActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AD6EA1DBE61B30017ACFD /* CKActivityViewController.m */; };
 		3D7884831DACCE8B00777E10 /* UIView+Shake.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7884821DACCE8B00777E10 /* UIView+Shake.m */; };
 		3DC742441DBBC75000F47599 /* NSDate+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC742431DBBC75000F47599 /* NSDate+Utils.m */; };
 		60673FF2F4F098A555D5E963 /* libPods-click.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC7724C494AFD4568ED92B4 /* libPods-click.a */; };
@@ -128,6 +129,8 @@
 		3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		3D1A36641DB4EC80000A8CB7 /* NSString+NumEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+NumEncoding.h"; sourceTree = "<group>"; };
 		3D1A36651DB4EC80000A8CB7 /* NSString+NumEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+NumEncoding.m"; sourceTree = "<group>"; };
+		3D3AD6E91DBE61B30017ACFD /* CKActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKActivityViewController.h; sourceTree = "<group>"; };
+		3D3AD6EA1DBE61B30017ACFD /* CKActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKActivityViewController.m; sourceTree = "<group>"; };
 		3D3BD6711DAF9BB500997A0E /* CKStatusCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKStatusCode.h; sourceTree = "<group>"; };
 		3D7884811DACCE8B00777E10 /* UIView+Shake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Shake.h"; sourceTree = "<group>"; };
 		3D7884821DACCE8B00777E10 /* UIView+Shake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Shake.m"; sourceTree = "<group>"; };
@@ -400,6 +403,8 @@
 				7807CF791CD0A01E00D9DF9B /* CKGroupHeaderView.m */,
 				3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */,
 				3DC742451DBC5F4400F47599 /* CKOperationsProtocol.h */,
+				3D3AD6E91DBE61B30017ACFD /* CKActivityViewController.h */,
+				3D3AD6EA1DBE61B30017ACFD /* CKActivityViewController.m */,
 			);
 			name = Screens;
 			path = Classes/Screens;
@@ -817,6 +822,7 @@
 				7807CF771CD09FEA00D9DF9B /* CKNewGroupController.m in Sources */,
 				782A00001D0AB9DC00802097 /* CKRecordingAttachModel.m in Sources */,
 				7831EDCE1C90ABDD00319191 /* UILabel+utility.m in Sources */,
+				3D3AD6EB1DBE61B30017ACFD /* CKActivityViewController.m in Sources */,
 				784FE8581C8E7476006469D5 /* main.m in Sources */,
 				78BEA93F1CAAA47D004E85DB /* NSDictionary+UrlEncodedString.m in Sources */,
 				7807CF6F1CC7E06700D9DF9B /* CKFriendSelectionController.m in Sources */,

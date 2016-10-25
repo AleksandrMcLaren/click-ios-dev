@@ -312,7 +312,11 @@
     [CKUserServerConnection sharedInstance].phoneNumber = phone;
     [CKMessageServerConnection sharedInstance].phoneNumber = phone;
     
+    NSString* operation = @"user.checkuser";
+    [_mainController beginOperation:operation];
+    
     [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSDictionary *result) {
+        [_mainController endOperation:operation];
         if ([result socketMessageStatus] == S_OK){
             _isNewUser = YES;
             
@@ -347,7 +351,11 @@
 
 - (void)sendPhoneAuthenticationCode:(NSString *)code
 {
+    NSString* operation = @"user.activate";
+    [_mainController beginOperation:operation];
+    
     [[CKUserServerConnection sharedInstance] activateUserWithCode:code callback:^(NSDictionary* result) {
+        [_mainController endOperation:operation];
         if ([result socketMessageStatus] == S_OK){
             self.token = [[CKUserServerConnection sharedInstance] token];
             [CKMessageServerConnection sharedInstance].token = self.token;

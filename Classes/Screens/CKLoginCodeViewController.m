@@ -64,6 +64,8 @@
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
+    
     _secondsLeft = 10;
     
     self.title = @"Подтверждение номера";
@@ -175,6 +177,10 @@
         make.bottom.equalTo(self.view.bottom).offset(-padding);
         make.left.equalTo(self.view.left).offset(padding);
         make.right.equalTo(self.view.right).offset(-padding);
+    }];
+    [self.activityIndicatorView makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_continueButton.centerX);
+        make.bottom.equalTo(_continueButton.top).offset(-padding);
     }];
 }
 

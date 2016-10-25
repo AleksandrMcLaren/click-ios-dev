@@ -17,6 +17,7 @@
 #import "CKBlogViewController.h"
 #import "CKSettingsViewController.h"
 #import "CKLoginCodeViewController.h"
+#import "CKOperationsProtocol.h"
 
 @interface CKMapViewController()
 
@@ -140,11 +141,19 @@
 }
 
 -(void)beginOperation:(NSString*)operation{
-    
+    UIViewController* controller = [self topViewController];
+    if ([controller respondsToSelector:@selector(beginOperation:)]) {
+        id<CKOperationsProtocol> operationController = (id<CKOperationsProtocol>)controller;
+        [operationController beginOperation:operation];
+    }
 }
 
 -(void)endOperation:(NSString*)operation{
-    
+    UIViewController* controller = [self topViewController];
+    if ([controller respondsToSelector:@selector(endOperation:)]) {
+        id<CKOperationsProtocol> operationController = (id<CKOperationsProtocol>)controller;
+        [operationController endOperation:operation];
+    }
 }
 
 

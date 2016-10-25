@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CKActivityViewController.h"
 
-@interface CKLoginCodeViewController : UIViewController
+@interface CKLoginCodeViewController : CKActivityViewController
 
 @end

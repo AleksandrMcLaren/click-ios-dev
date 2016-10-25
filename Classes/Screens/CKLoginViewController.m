@@ -74,6 +74,8 @@
 
 - (void) viewDidLoad
 {
+    [super viewDidLoad];
+    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = CKClickLightGrayColor;
@@ -124,7 +126,10 @@
         make.right.equalTo(self.view.right).offset(-padding);
     }];
     
-//    [UIActivityIndicatorView]
+    [self.activityIndicatorView makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_continueButton.centerX);
+        make.bottom.equalTo(_continueButton.top).offset(-padding);
+    }];
 }
 
 - (void)continue
@@ -420,14 +425,5 @@
     [self dismissKeyboard];
 }
 
-#pragma mark CKOperationsProtocol
-
--(void)beginOperation:(NSString*)operation{
-
-}
-
--(void)endOperation:(NSString*)operation{
-    
-}
 
 @end
