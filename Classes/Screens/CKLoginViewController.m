@@ -17,7 +17,7 @@
 #import "CKLoginCodeViewController.h"
 #import "UIView+Shake.h"
 #import "CKOperationsProtocol.h"
-
+#import "UIButton+ContinueButton.h"
 
 @interface CKLoginViewController()<CKCountrySelectionControllerDelegate, UITextFieldDelegate, CKOperationsProtocol>
 
@@ -33,8 +33,6 @@
     UITextField *_phoneTextField;
     UITextField *_promoTextField;
     CGFloat _keyboardHeight;
-    UIButton *_continueButton;
-    
 }
 
 - (instancetype)init
@@ -108,18 +106,13 @@
         make.height.equalTo(@(_tableView.contentSize.height));
     }];
     
-    _continueButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_continueButton setTitle:@"Продолжить" forState:UIControlStateNormal];
-    [_continueButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _continueButton.titleLabel.font = CKButtonFont;
-    _continueButton.backgroundColor = CKClickBlueColor;
-    _continueButton.clipsToBounds = YES;
-    _continueButton.layer.cornerRadius = 4;
-    [self.view addSubview:_continueButton];
-    [_continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
+    self.continueButton = [[UIButton alloc] initContinueButton];
+
+    [self.view addSubview:self.continueButton];
+    [self.continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
     
     float padding = CK_STANDART_CONTROL_PADDING;
-    [_continueButton makeConstraints:^(MASConstraintMaker *make) {
+    [self.continueButton makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(CK_STANDART_CONTROL_HEIGHT);
         make.bottom.equalTo(self.view.bottom).offset(-padding);
         make.left.equalTo(self.view.left).offset(padding);
@@ -127,13 +120,15 @@
     }];
     
     [self.activityIndicatorView makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_continueButton.centerX);
-        make.bottom.equalTo(_continueButton.top).offset(-padding);
+        make.centerX.equalTo(self.continueButton.centerX);
+        make.bottom.equalTo(self.continueButton.top).offset(-padding);
     }];
 }
 
 - (void)continue
 {
+    [self dismissKeyboard];
+    
     NSDictionary *countryData = [[CKApplicationModel sharedInstance] countryWithId:_countryId];
 
     if (![self isPhoneValid]) {
@@ -159,6 +154,7 @@
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:confirm
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction *a) {
+                                                             
                                                               [[CKApplicationModel sharedInstance] sendUserPhone:[NSString stringWithFormat:@"%@%@", countryData[@"phonecode"], _phoneTextField.text] promo:_promoTextField.text];
                                                           }];
     [phoneWarning addAction:confirmAction];
@@ -416,7 +412,7 @@
 
 - (void)updateFrames{
     float padding = CK_STANDART_CONTROL_PADDING;
-    [_continueButton updateConstraints:^(MASConstraintMaker *make) {
+    [self.continueButton updateConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.view.bottom).offset(-padding-_keyboardHeight);
     }];
 }

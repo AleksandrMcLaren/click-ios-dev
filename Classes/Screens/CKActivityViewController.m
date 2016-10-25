@@ -8,7 +8,9 @@
 
 #import "CKActivityViewController.h"
 
-@interface CKActivityViewController ()
+@interface CKActivityViewController (){
+    
+}
 
 @end
 
@@ -35,10 +37,12 @@
 
 -(void)beginOperation:(NSString*)operation{
     [self.activityIndicatorView startAnimating];
+    [self.continueButton setEnabled:NO];
 }
 
 -(void)endOperation:(NSString*)operation{
     [self.activityIndicatorView stopAnimating];
+    [self.continueButton setEnabled:YES];
 }
 
 @end

@@ -115,6 +115,8 @@
 {
     CKUserProfileController *controller = [CKUserProfileController new];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
+    nav.navigationBar.backgroundColor = [UIColor whiteColor];
+
     [self replaceCurrentController:nav];
 }
 

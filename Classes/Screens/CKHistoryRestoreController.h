@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CKActivityViewController.h"
 
-@interface CKHistoryRestoreController : UIViewController
+@interface CKHistoryRestoreController : CKActivityViewController
 
 @end

@@ -91,9 +91,9 @@
 //        
 //        NSLog(@"%@", [dateFormatter stringFromDate:[NSDate new]]);
         
-        model.birthDate =  [dateFormatter dateFromString:sourceDict[@"birthdate"]];
-        model.registeredDate = [dateFormatter dateFromString:sourceDict[@"registereddate"]];
-        model.statusDate = [dateFormatter dateFromString:sourceDict[@"statusdate"]];
+        model.birthDate =  [sourceDict[@"birthdate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil : [dateFormatter dateFromString:sourceDict[@"birthdate"]];
+        model.registeredDate =  [sourceDict[@"registereddate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil :[dateFormatter dateFromString:sourceDict[@"registereddate"]];
+        model.statusDate =  [sourceDict[@"statusdate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil :[dateFormatter dateFromString:sourceDict[@"statusdate"]];
     } @catch (NSException *exception) {
         return nil; // bad model
     }
@@ -247,6 +247,7 @@
 - (void) didStarted
 {
     [self setupLocationService];
+    
     if (self.token == nil)
     {
         [self.mainController showWelcomeScreen];
@@ -335,7 +336,7 @@
                     
                 case -1:
                     NSLog(@"-1 – есть, активирован но регистрация не завершена, нет профиля");
-                    _isNewUser = NO;
+                    _isNewUser = YES;
                     break;
                 default:
                     break;
@@ -384,8 +385,6 @@
         }else{
             [_mainController showAlertWithResult:result completion:nil];
         }
-        
-
     }];
 }
 
@@ -460,9 +459,11 @@
     }];
 }
 
-- (void) restoreHistory
+- (void) restoreHistoryWithCallback:(CKServerConnectionExecuted)callback
 {
-    [self showMainScreen];
+    [[CKMessageServerConnection sharedInstance] getDialogListWithCallback:^(NSDictionary *result) {
+        callback(result);
+    }];
 }
 
 - (void) abandonHistory
@@ -473,6 +474,9 @@
 
 - (void)submitNewProfile
 {
+    NSString* operation = @"user.create";
+    [_mainController beginOperation:operation];
+    
     [[CKUserServerConnection sharedInstance] createUserWithName:self.userProfile.name
                                                         surname:self.userProfile.surname
                                                           login:self.userProfile.login
@@ -481,6 +485,7 @@
                                                             sex:self.userProfile.sex
                                                         country:self.userProfile.countryId
                                                            city:self.userProfile.city callback:^(NSDictionary *result) {
+                                                               [_mainController endOperation:operation];
                                                                if ([result socketMessageStatus] == S_OK){
                                                                    [self showMainScreen];
                                                                }else{

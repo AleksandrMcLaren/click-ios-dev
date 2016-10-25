@@ -55,7 +55,7 @@
         float padding = CK_STANDART_CONTROL_PADDING;
         
         [_avatar makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.left).offset(padding);
+            make.left.equalTo(self.left).offset(padding*.5);
             make.top.equalTo(self.top).offset(padding*.5);
             make.width.equalTo(76);
             make.height.equalTo(76);

@@ -12,5 +12,6 @@
 @interface CKActivityViewController : UIViewController<CKOperationsProtocol>
 
 @property (nonatomic, strong) UIActivityIndicatorView* activityIndicatorView;
+@property (nonatomic, strong) UIButton* continueButton;
 
 @end

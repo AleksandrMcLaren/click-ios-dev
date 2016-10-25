@@ -12,6 +12,7 @@
 		3D1A365A1DB2220F000A8CB7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */; };
 		3D1A36661DB4EC80000A8CB7 /* NSString+NumEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36651DB4EC80000A8CB7 /* NSString+NumEncoding.m */; };
 		3D3AD6EB1DBE61B30017ACFD /* CKActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AD6EA1DBE61B30017ACFD /* CKActivityViewController.m */; };
+		3D3AD7EC1DBF95880017ACFD /* UIButton+ContinueButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AD7EB1DBF95880017ACFD /* UIButton+ContinueButton.m */; };
 		3D7884831DACCE8B00777E10 /* UIView+Shake.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7884821DACCE8B00777E10 /* UIView+Shake.m */; };
 		3DC742441DBBC75000F47599 /* NSDate+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC742431DBBC75000F47599 /* NSDate+Utils.m */; };
 		60673FF2F4F098A555D5E963 /* libPods-click.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC7724C494AFD4568ED92B4 /* libPods-click.a */; };
@@ -131,6 +132,8 @@
 		3D1A36651DB4EC80000A8CB7 /* NSString+NumEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+NumEncoding.m"; sourceTree = "<group>"; };
 		3D3AD6E91DBE61B30017ACFD /* CKActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKActivityViewController.h; sourceTree = "<group>"; };
 		3D3AD6EA1DBE61B30017ACFD /* CKActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKActivityViewController.m; sourceTree = "<group>"; };
+		3D3AD7EA1DBF95880017ACFD /* UIButton+ContinueButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+ContinueButton.h"; sourceTree = "<group>"; };
+		3D3AD7EB1DBF95880017ACFD /* UIButton+ContinueButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+ContinueButton.m"; sourceTree = "<group>"; };
 		3D3BD6711DAF9BB500997A0E /* CKStatusCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKStatusCode.h; sourceTree = "<group>"; };
 		3D7884811DACCE8B00777E10 /* UIView+Shake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Shake.h"; sourceTree = "<group>"; };
 		3D7884821DACCE8B00777E10 /* UIView+Shake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Shake.m"; sourceTree = "<group>"; };
@@ -451,6 +454,8 @@
 				3D1A36651DB4EC80000A8CB7 /* NSString+NumEncoding.m */,
 				3DC742421DBBC75000F47599 /* NSDate+Utils.h */,
 				3DC742431DBBC75000F47599 /* NSDate+Utils.m */,
+				3D3AD7EA1DBF95880017ACFD /* UIButton+ContinueButton.h */,
+				3D3AD7EB1DBF95880017ACFD /* UIButton+ContinueButton.m */,
 			);
 			name = Utility;
 			path = Classes/Utility;
@@ -815,6 +820,7 @@
 				782AFFFA1D0AB90300802097 /* CKAttachModel.m in Sources */,
 				7812508F1CB7607600D3BFBB /* CKMessageEditorView.m in Sources */,
 				78BEA9911CAE5DF0004E85DB /* CKAvatarView.m in Sources */,
+				3D3AD7EC1DBF95880017ACFD /* UIButton+ContinueButton.m in Sources */,
 				78B524C81C9FE35D00502AA4 /* CKChatsViewController.m in Sources */,
 				781250891CB6C73700D3BFBB /* CKDialogChatController.m in Sources */,
 				78BEA97F1CAB90CA004E85DB /* CKFriendProfileDetailCell.m in Sources */,

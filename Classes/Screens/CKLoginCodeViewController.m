@@ -11,6 +11,7 @@
 #import "UIColor+hex.h"
 #import "UILabel+utility.h"
 #import "UIView+Shake.h"
+#import "UIButton+ContinueButton.h"
 
 @implementation CKLoginCodeViewController
 {
@@ -22,7 +23,6 @@
     UILabel *_bottomLabel;
     UILabel *_timerLabel;
     UIButton *_resendButton;
-    UIButton *_continueButton;
     
     CGFloat _keyboardHeight;
     
@@ -134,15 +134,10 @@
     [self.view addSubview:_resendButton];
     [_resendButton addTarget:self action:@selector(requestAuthenticationCode) forControlEvents:UIControlEventTouchUpInside];
     
-    _continueButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_continueButton setTitle:@"Продолжить" forState:UIControlStateNormal];
-    [_continueButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _continueButton.titleLabel.font = CKButtonFont;
-    _continueButton.backgroundColor = CKClickBlueColor;
-    _continueButton.clipsToBounds = YES;
-    _continueButton.layer.cornerRadius = 4;
-    [self.view addSubview:_continueButton];
-    [_continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
+    self.continueButton = [[UIButton alloc] initContinueButton];
+
+    [self.view addSubview:self.continueButton];
+    [self.continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
     
     float padding = CK_STANDART_CONTROL_PADDING;
 
@@ -172,20 +167,21 @@
         make.top.equalTo(_resendButton.bottom).offset(0);
         make.centerX.equalTo(self.view);
     }];
-    [_continueButton makeConstraints:^(MASConstraintMaker *make) {
+    [self.continueButton makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@44);
         make.bottom.equalTo(self.view.bottom).offset(-padding);
         make.left.equalTo(self.view.left).offset(padding);
         make.right.equalTo(self.view.right).offset(-padding);
     }];
     [self.activityIndicatorView makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_continueButton.centerX);
-        make.bottom.equalTo(_continueButton.top).offset(-padding);
+        make.centerX.equalTo(self.continueButton.centerX);
+        make.bottom.equalTo(self.continueButton.top).offset(-padding);
     }];
 }
 
 - (void)continue
 {
+    [self dismissKeyboard];
     if (!_codeEntry.text.length){
         [_codeEntry shake];
         return;
@@ -241,7 +237,7 @@
 
 - (void)updateFrames{
     float padding = CK_STANDART_CONTROL_PADDING;
-    [_continueButton updateConstraints:^(MASConstraintMaker *make) {
+    [self.continueButton updateConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.view.bottom).offset(-padding-_keyboardHeight);
     }];
 }

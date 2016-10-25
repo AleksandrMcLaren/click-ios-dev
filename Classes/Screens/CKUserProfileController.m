@@ -14,6 +14,7 @@
 #import <SDWebImage/UIButton+WebCache.h>
 #import "CKCache.h"
 #import "UIView+Shake.h"
+#import "UIButton+ContinueButton.h"
 
 typedef enum CKLoginState{
     CKLoginStateVeryfying,
@@ -201,10 +202,10 @@ typedef enum CKLoginState{
 @end
 
 @interface CKUserProfileController()<UIImagePickerControllerDelegate, UINavigationControllerDelegate, CKCountrySelectionControllerDelegate, UITextFieldDelegate, CKCitySelectionControllerDelegate, UITableViewDataSource, UITableViewDelegate>{
-        UIButton* _continueButton;
     NSString* _originalLogin;
     NSTimer* _loginVerifyTimer;
     CKLoginInputCell* _loginCell;
+    UITapGestureRecognizer* _tapRecognizerForHide;
 }
 
 @property (nonatomic, strong) UITableView* tableView;
@@ -218,11 +219,11 @@ typedef enum CKLoginState{
 {
     if (self = [super init])
     {
-
-        
 //        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Отменить" style:UIBarButtonItemStylePlain target:self action:@selector(cancel)];
 //        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Готово" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
         self.title = @"Профиль";
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
         self.profile = [[CKApplicationModel sharedInstance] userProfile];
     }
     return self;
@@ -230,13 +231,17 @@ typedef enum CKLoginState{
 
 - (void)contune
 {
+    [self dismissKeyboard];
+    
     CKProfileHeaderView *header = (CKProfileHeaderView *)self.tableView.tableHeaderView;
     
     if (!header.firstName.text.length) {
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
         [header.firstName shake];
         return;
     }
     if (!header.secondName.text.length) {
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
         [header.secondName shake];
         return;
     }
@@ -244,6 +249,12 @@ typedef enum CKLoginState{
         [_loginCell.login shake];
         return;
     }
+    
+    if (_loginCell.loginState != CKLoginStateNotExist) {
+        [_loginCell.login shake];
+        return;
+    }
+    
     [[CKApplicationModel sharedInstance] submitNewProfile];
 }
 
@@ -252,10 +263,11 @@ typedef enum CKLoginState{
     self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.scrollEnabled = CKScreenHeight < 500;
     [self.view addSubview:self.tableView];
     
     CKProfileHeaderView *header = [CKProfileHeaderView new];
-    header.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 76+16);
+    header.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 80+16);
     self.tableView.tableHeaderView = header;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tableView.separatorInset = UIEdgeInsetsZero;
@@ -278,18 +290,13 @@ typedef enum CKLoginState{
     }
     [header.avatar addTarget:self action:@selector(takePhoto) forControlEvents:UIControlEventTouchUpInside];
     
-    _continueButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_continueButton setTitle:@"Продолжить" forState:UIControlStateNormal];
-    [_continueButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _continueButton.titleLabel.font = CKButtonFont;
-    _continueButton.backgroundColor = CKClickBlueColor;
-    _continueButton.clipsToBounds = YES;
-    _continueButton.layer.cornerRadius = 4;
-    [self.view addSubview:_continueButton];
-    [_continueButton addTarget:self action:@selector(contune) forControlEvents:UIControlEventTouchUpInside];
+    self.continueButton = [[UIButton alloc] initContinueButton];
+    
+    [self.view addSubview:self.continueButton];
+    [self.continueButton addTarget:self action:@selector(contune) forControlEvents:UIControlEventTouchUpInside];
  
     float padding = CK_STANDART_CONTROL_PADDING;
-    [_continueButton makeConstraints:^(MASConstraintMaker *make) {
+    [self.continueButton makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@44);
         make.bottom.equalTo(self.view.bottom).offset(-padding);
         make.left.equalTo(self.view.left).offset(padding);
@@ -298,15 +305,11 @@ typedef enum CKLoginState{
     
     [self.tableView makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.top);
-        make.bottom.equalTo(_continueButton.top).offset(padding);
+        make.bottom.equalTo(self.continueButton.top).offset(-padding*0.5);
         make.left.equalTo(self.view.left);
         make.right.equalTo(self.view.right);
     }];
 
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
-    tapRecognizer.numberOfTapsRequired = 1;
-//    [self.view addGestureRecognizer:tapRecognizer];
-    
 }
 
 - (void)takePhotoWithSource:(UIImagePickerControllerSourceType)source
@@ -510,6 +513,15 @@ typedef enum CKLoginState{
         case 1:
         {
             CKSectionHeader *header = [CKSectionHeader new];
+            self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            
+            self.activityIndicatorView.hidesWhenStopped = YES;
+            [header addSubview:self.activityIndicatorView];
+            
+            [self.activityIndicatorView makeConstraints:^(MASConstraintMaker *make) {
+                make.center.equalTo(header.center);
+            }];
+            
             return header;
         };
             break;
@@ -591,7 +603,7 @@ typedef enum CKLoginState{
             _loginCell.login.delegate = self;
             _loginCell.login.text = self.profile.login;
 //            _loginTextField = cell.login;
-            _loginCell.loginState = self.profile.isCreated ?  CKLoginStateNotExist : CKLoginStateNone;
+            _loginCell.loginState = self.profile.isCreated && self.profile.login.length ?  CKLoginStateNotExist : CKLoginStateNone;
             return _loginCell;
             
         }
@@ -646,12 +658,12 @@ typedef enum CKLoginState{
                 case 1:
                 {
                     CKCountryCell *cell = [CKCountryCell new];
-                    if (self.profile.countryName) {
+                    if (self.profile.countryName.length) {
                         cell.title.text = self.profile.countryName;
-                        cell.textLabel.textColor = [UIColor blackColor];
+                        cell.title.textColor = [UIColor blackColor];
                     }else{
-                        cell.textLabel.text = @"Страна";
-                        cell.textLabel.textColor = CKClickProfileGrayColor;
+                        cell.title.text = @"Страна";
+                        cell.title.textColor = CKClickProfileGrayColor;
                     }
                     
                     [[RACObserve(cell.countryBall, image)
@@ -662,8 +674,7 @@ typedef enum CKLoginState{
                          cell.countryBall.hidden = [x boolValue];
                     }];
                     
-                    cell.countryBall.image = [UIImage imageNamed:[NSString stringWithFormat:@"%ld", (long)self.profile.iso]];
-                    
+                    cell.countryBall.image = self.profile.iso ? [UIImage imageNamed:[NSString stringWithFormat:@"%ld", (long)self.profile.iso]] : nil;
                     
                     
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -776,17 +787,6 @@ typedef enum CKLoginState{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)dismissKeyboard
-{
-    CKProfileHeaderView *header = (CKProfileHeaderView *)self.tableView.tableHeaderView;
-    
-    if (header.firstName.isFirstResponder) [header.firstName resignFirstResponder];
-    if (header.secondName.isFirstResponder) [header.secondName resignFirstResponder];
-}
-
-- (void) viewTapped {
-    [self dismissKeyboard];
-}
 
 -(void) setProfile:(CKUserModel *)profile{
     _profile = profile;
@@ -824,6 +824,39 @@ typedef enum CKLoginState{
     [[CKApplicationModel sharedInstance] checkUserLogin:login withCallback:^(id model) {
         _loginCell.loginState = [model boolValue] ? CKLoginStateNotExist : CKLoginStateNotExist;
     }];
+}
+
+#pragma mark Keyboard events
+
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    _tapRecognizerForHide = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
+    _tapRecognizerForHide.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:_tapRecognizerForHide];
+}
+
+
+- (void)keyboardFrameChanged:(NSNotification *)notification
+{
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    [self.view removeGestureRecognizer:_tapRecognizerForHide];
+}
+
+
+- (void)dismissKeyboard
+{
+    CKProfileHeaderView *header = (CKProfileHeaderView *)self.tableView.tableHeaderView;
+    
+    if (header.firstName.isFirstResponder) [header.firstName resignFirstResponder];
+    if (header.secondName.isFirstResponder) [header.secondName resignFirstResponder];
+}
+
+
+- (void) viewTapped {
+    [self dismissKeyboard];
 }
 
 @end

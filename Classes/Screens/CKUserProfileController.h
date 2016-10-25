@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CKActivityViewController.h"
 
-@interface CKUserProfileController : UIViewController
+@interface CKUserProfileController : CKActivityViewController
 
 @property (nonatomic, strong) CKUserModel *profile;
 

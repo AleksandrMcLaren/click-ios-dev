@@ -90,7 +90,7 @@
 - (void) checkUserLogin:(NSString *)login withCallback:(CKServerConnectionExecutedObject)callback;
 - (void) requestAuthentication;
 - (void) sendPhoneAuthenticationCode:(NSString *)code;
-- (void) restoreHistory;
+- (void) restoreHistoryWithCallback:(CKServerConnectionExecuted)callback;
 - (void) abandonHistory;
 - (void) submitNewProfile;
 

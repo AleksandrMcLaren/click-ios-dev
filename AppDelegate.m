@@ -71,9 +71,15 @@
     [[CKApplicationModel sharedInstance] setMainController:_mainViewController];
     [[CKApplicationModel sharedInstance] didStarted];
     
-    [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+//    [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+//    
+//    [[UINavigationBar appearance] setShadowImage:[[UIImage alloc] init]];
+//    
+    UIView *statusBar = [[[UIApplication sharedApplication] valueForKey:@"statusBarWindow"] valueForKey:@"statusBar"];
     
-    [[UINavigationBar appearance] setShadowImage:[[UIImage alloc] init]];
+    if ([statusBar respondsToSelector:@selector(setBackgroundColor:)]) {
+        statusBar.backgroundColor = [UIColor whiteColor];
+    }
     
     return YES;
 
