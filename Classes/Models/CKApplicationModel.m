@@ -674,13 +674,9 @@
                         info = [[NSMutableDictionary alloc] initWithDictionary:[countries firstObject]];
                         [[CKUserServerConnection sharedInstance] getCitiesInCountry:[info[@"countryid"] integerValue] mask:[cityName lowercaseString] locale:localeCode callback:^(NSDictionary *resultCity) {
                             NSArray* cyties = [resultCity socketMessageResult];
-                            if (cyties.count) {
-                                for (NSDictionary * attribute in cyties )
-                                {
-                                    [info addEntriesFromDictionary:attribute];
-                                    break;
-                                }
-                                
+                            NSDictionary* city =  [cyties firstObject];
+                            if (city){
+                                [info addEntriesFromDictionary:city];
                             }
                             callback(info);
                         }];

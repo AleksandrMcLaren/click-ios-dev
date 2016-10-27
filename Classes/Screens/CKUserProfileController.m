@@ -207,6 +207,7 @@ typedef enum CKLoginState{
     NSTimer* _loginVerifyTimer;
     CKLoginInputCell* _loginCell;
     UITapGestureRecognizer* _tapRecognizerForHide;
+    UIActivityIndicatorView* _locationActivityIndicatorView;
 }
 
 @property (nonatomic, strong) UITableView* tableView;
@@ -648,11 +649,23 @@ typedef enum CKLoginState{
                     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DetectLocationCell"];
                     cell.textLabel.textAlignment = NSTextAlignmentCenter;
                     cell.textLabel.textColor = CKClickBlueColor;
-                    cell.textLabel.font = [UIFont systemFontOfSize:16.0];
+                    cell.textLabel.font = [UIFont systemFontOfSize:14.0];
                     cell.textLabel.text = @"Определить мое местоположение";
+                    [cell.textLabel sizeToFit];
                     cell.separatorInset = UIEdgeInsetsZero;
                     cell.layoutMargins = UIEdgeInsetsZero;
                     cell.preservesSuperviewLayoutMargins = NO;
+                    
+                    _locationActivityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+                    _locationActivityIndicatorView.hidden = YES;
+                    _locationActivityIndicatorView.hidesWhenStopped = YES;
+                    
+                    [cell addSubview:_locationActivityIndicatorView];
+                    
+                    [_locationActivityIndicatorView makeConstraints:^(MASConstraintMaker *make) {
+                        make.right.equalTo(cell.right).offset(-8);
+                        make.centerY.equalTo(cell.centerY);
+                    }];
                     
                     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(locate)];
                     tapGestureRecognizer.numberOfTapsRequired = 1;
@@ -879,8 +892,10 @@ typedef enum CKLoginState{
 #pragma mark Location
 
 -(void)locate{
-    
+    [_locationActivityIndicatorView startAnimating];
     [[CKApplicationModel sharedInstance] getLocationInfowithCallback:^(NSDictionary* result) {
+        [_locationActivityIndicatorView stopAnimating];
+        
         NSString* countryid = result[@"countryid"] ? result[@"countryid"] : nil;
         NSString* countryname = result[@"countryname"] ? result[@"countryname"] : nil;
         NSInteger iso = result[@"iso"] ? [result[@"iso"] integerValue ]: 0;
