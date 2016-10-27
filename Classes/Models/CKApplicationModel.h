@@ -81,6 +81,7 @@
 @interface CKApplicationModel : NSObject
 
 @property (nonatomic, assign) id<CKMainControllerProtocol>mainController;
+@property (nonatomic, strong, readonly) CLLocation* location;
 
 + (instancetype)sharedInstance;
 
@@ -93,7 +94,7 @@
 - (void) restoreHistoryWithCallback:(CKServerConnectionExecuted)callback;
 - (void) abandonHistory;
 - (void) submitNewProfile;
-
+- (void) getLocationInfowithCallback:(CKServerConnectionExecutedObject)callback;
 // определять по местоположению пользователя
 @property (nonatomic, readonly) NSInteger countryId;
 

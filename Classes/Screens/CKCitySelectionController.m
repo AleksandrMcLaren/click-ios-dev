@@ -187,7 +187,7 @@
                 }
             }];
             
-            [[CKUserServerConnection sharedInstance] getCitiesInCountry:self.countryId callback:^(NSDictionary *result) {
+            [[CKUserServerConnection sharedInstance] getCitiesInCountry:self.countryId mask:@"" locale:@"ru" callback:^(NSDictionary *result) {
                 // load cities to database
                 
                 if ([result[@"status"] integerValue] == 1005) return;

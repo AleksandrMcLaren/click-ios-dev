@@ -246,6 +246,9 @@
 
 - (void) didStarted
 {
+//    [_mainController showCreateProfile];
+//    return;
+//    
     [self setupLocationService];
     
     if (self.token == nil)
@@ -270,11 +273,12 @@
     [self.mainController showLoginScreen];
 }
 
-- (NSDictionary *)countryWithISO:(NSInteger)iso
+
+- (NSDictionary *)countryWithId:(NSInteger)id
 {
     CKDB *ckdb = [CKDB sharedInstance];
 
-    NSMutableString *query = [NSMutableString stringWithFormat:@"select * from countries where iso=%ld", (long)iso];
+    NSMutableString *query = [NSMutableString stringWithFormat:@"select * from countries where id=%ld", (long)id];
     __block NSDictionary *result = nil;
     [ckdb.queue inDatabase:^(FMDatabase *db) {
         FMResultSet *data = [db executeQuery:query];
@@ -288,11 +292,11 @@
     return result;
 }
 
-- (NSDictionary *)countryWithId:(NSInteger)id
+- (NSDictionary *)countryWithPhoneCode:(NSString*)phoneCode
 {
     CKDB *ckdb = [CKDB sharedInstance];
-
-    NSMutableString *query = [NSMutableString stringWithFormat:@"select * from countries where id=%ld", (long)id];
+    
+    NSMutableString *query = [NSMutableString stringWithFormat:@"select * from countries where phonecode=%@", phoneCode];
     __block NSDictionary *result = nil;
     [ckdb.queue inDatabase:^(FMDatabase *db) {
         FMResultSet *data = [db executeQuery:query];
@@ -504,6 +508,7 @@
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
         
+        
         // проверить авторизацию
         CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
         _locationAuthorizationStatus = authorizationStatus;
@@ -526,6 +531,10 @@
 - (void)runUpdatingLocation
 {
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    _locationManager.distanceFilter = kCLDistanceFilterNone;
+    [_locationManager startMonitoringSignificantLocationChanges];
+    
+    
     [_locationManager startUpdatingLocation];
 }
 
@@ -539,10 +548,23 @@
     }
 }
 
+- (void)locationManager:(CLLocationManager *)manager
+       didFailWithError:(NSError *)error{
+//    _location = nil;
+}
+
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation
+           fromLocation:(CLLocation *)oldLocation{
+    _location = newLocation;
+}
+
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     _location = [locations lastObject];
 }
+
 
 - (void) fetchContactsWithCompletion:(void(^)(NSMutableArray* arr))completion
 {
@@ -622,6 +644,57 @@
 - (CKChatModel *)getChatModelWithId:(NSString *)id
 {
     return _chatPool[id];
+}
+
+-(CLLocation*) location{
+    return _location;
+};
+
+- (void) getLocationInfowithCallback:(CKServerConnectionExecutedObject)callback{
+    
+    __block NSMutableDictionary* info;
+    
+    if (_location) {
+        CLGeocoder *reverseGeocoder = [[CLGeocoder alloc] init];
+        [reverseGeocoder reverseGeocodeLocation:_location completionHandler:^(NSArray *placemarks, NSError *error) {
+            // NSLog(@"Received placemarks: %@", placemarks);
+            CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
+            
+            NSString *cityName = [[myPlacemark addressDictionary] objectForKey:@"City"];
+            NSString *countryName = [[myPlacemark addressDictionary] objectForKey:@"Country"];
+//            NSString *cuntryCode = [[myPlacemark addressDictionary] objectForKey:@"CountryCode"];
+            
+            NSLocale *locale = [NSLocale currentLocale];
+            NSString *localeCode = [[locale objectForKey: NSLocaleCountryCode] lowercaseString];
+            
+            [[CKUserServerConnection sharedInstance] getCountriesWithMask:[countryName lowercaseString] locale:localeCode callback:^(NSDictionary *resultCountry) {
+                if ([resultCountry socketMessageResult]) {
+                    NSArray* countries = [resultCountry socketMessageResult];
+                    if (countries.count) {
+                        info = [[NSMutableDictionary alloc] initWithDictionary:[countries firstObject]];
+                        [[CKUserServerConnection sharedInstance] getCitiesInCountry:[info[@"countryid"] integerValue] mask:[cityName lowercaseString] locale:localeCode callback:^(NSDictionary *resultCity) {
+                            NSArray* cyties = [resultCity socketMessageResult];
+                            if (cyties.count) {
+                                for (NSDictionary * attribute in cyties )
+                                {
+                                    [info addEntriesFromDictionary:attribute];
+                                    break;
+                                }
+                                
+                            }
+                            callback(info);
+                        }];
+                    }
+                
+                }
+                
+                
+            }];
+        }];
+    }else{
+        callback(nil);
+    }
+    
 }
 
 @end

@@ -74,9 +74,16 @@
     }];
 }
 
-- (void)getCitiesInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback
+- (void)getCountriesWithMask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback
 {
-    [self sendData:@{@"action":@"geo.city.list", @"options":@{@"continent":@[],@"country":@[@(countryId)], @"region":@[],@"locale":@"ru",@"filter":@[], @"mask":@""}} completion:^(NSDictionary *result) {
+    [self sendData:@{@"action":@"geo.country.list", @"options":@{@"continent":@[],@"locale":locale ? locale : @"",@"filter":@[], @"mask":mask ? mask : @"" }} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+
+- (void)getCitiesInCountry:(NSInteger)countryId mask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback
+{
+    [self sendData:@{@"action":@"geo.city.list", @"options":@{@"continent":@[],@"country":@[@(countryId)], @"region":@[],@"locale":locale ? locale : @"",@"filter":@[], @"mask":mask ? mask : @""}} completion:^(NSDictionary *result) {
         callback(result);
     }];
 }

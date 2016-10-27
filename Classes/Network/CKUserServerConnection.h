@@ -25,7 +25,8 @@
 - (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecuted)callback;
 - (void)suicide:(CKServerConnectionExecutedStatus)callback;
 - (void)getRegionsInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback;
-- (void)getCitiesInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback;
+- (void)getCountriesWithMask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback;
+- (void)getCitiesInCountry:(NSInteger)countryId mask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback;
 - (void)getActivationCode:(CKServerConnectionExecuted)callback;
 - (void)checkUserLogin:(NSString*) login withCallback:(CKServerConnectionExecutedObject)callback;
 @end

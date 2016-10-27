@@ -15,6 +15,7 @@
 #import "CKCache.h"
 #import "UIView+Shake.h"
 #import "UIButton+ContinueButton.h"
+#import <Contacts/CNPostalAddress.h>
 
 typedef enum CKLoginState{
     CKLoginStateVeryfying,
@@ -652,6 +653,12 @@ typedef enum CKLoginState{
                     cell.separatorInset = UIEdgeInsetsZero;
                     cell.layoutMargins = UIEdgeInsetsZero;
                     cell.preservesSuperviewLayoutMargins = NO;
+                    
+                    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(locate)];
+                    tapGestureRecognizer.numberOfTapsRequired = 1;
+                    [cell.textLabel addGestureRecognizer:tapGestureRecognizer];
+                    cell.textLabel.userInteractionEnabled = YES;
+                    
                     return cell;
                 }
                     break;
@@ -770,8 +777,12 @@ typedef enum CKLoginState{
 - (void)countrySelectionController:(CKCountrySelectionController *)controller didSelectCountryWithId:(NSInteger)id name:(NSString *)name code:(NSNumber *)code
 {
     NSDictionary *country = [[CKApplicationModel sharedInstance] countryWithId:id];
+    [self didSelectCountry:country];
+}
+
+-(void)didSelectCountry:(NSDictionary*) country{
     self.profile.iso = [country[@"iso"] integerValue];
-    self.profile.countryId = id;
+    self.profile.countryId = [country[@"id"] integerValue];
     self.profile.countryName = country[@"name"];
     self.profile.city = 0;
     self.profile.cityName = nil;
@@ -781,8 +792,13 @@ typedef enum CKLoginState{
 
 - (void)citySelectionController:(CKCitySelectionController *)controller didSelectCityWithId:(NSInteger)id name:(NSString *)name
 {
+    [self didSelectCityWithId:id name:name];
+}
+
+- (void)didSelectCityWithId:(NSInteger)id name:(NSString *)name
+{
     self.profile.city = id;
-    self.profile.cityName = name;
+    self.profile.cityName = name ? name : @"";
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:NO];
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -858,5 +874,33 @@ typedef enum CKLoginState{
 - (void) viewTapped {
     [self dismissKeyboard];
 }
+
+
+#pragma mark Location
+
+-(void)locate{
+    
+    [[CKApplicationModel sharedInstance] getLocationInfowithCallback:^(NSDictionary* result) {
+        NSString* countryid = result[@"countryid"] ? result[@"countryid"] : nil;
+        NSString* countryname = result[@"countryname"] ? result[@"countryname"] : nil;
+        NSInteger iso = result[@"iso"] ? [result[@"iso"] integerValue ]: 0;
+        
+        if (countryid && countryname) {
+            [self didSelectCountry:@{@"iso":@(iso), @"id":countryid, @"name":countryname}];
+        }
+        
+        NSInteger cityid = result[@"cityid"] ? [result[@"cityid"] integerValue] : 0;
+        NSString* cityname = result[@"cityname"] ? result[@"cityname"] : nil;
+        
+        if (cityname) {
+            [self didSelectCityWithId:cityid name:result[@"cityname"]  ];
+        }
+        
+
+    }];
+
+
+}
+
 
 @end
