@@ -47,9 +47,7 @@
         self.title = @"Настройка MessMe";
         _countryId = [[CKApplicationModel sharedInstance] countryId];
         
-        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
-        tapRecognizer.numberOfTapsRequired = 1;
-        [self.view addGestureRecognizer:tapRecognizer];
+
     }
     return self;
 }
@@ -127,7 +125,6 @@
 
 - (void)continue
 {
-    [self dismissKeyboard];
     
     NSDictionary *countryData = [[CKApplicationModel sharedInstance] countryWithId:_countryId];
 
@@ -135,6 +132,9 @@
         [_phoneTextField shake];
         return;
     }
+    
+    [self dismissKeyboard];
+    
     
     NSString *title = @"Проверка номера телефона";
     NSString *message = [NSString stringWithFormat:@"Это ваш правильный номер?\n\n+%@ %@\n\nSMS с вашим кодом доступа будет отправлено на этот номер", countryData[@"phonecode"],_phoneTextField.text];
@@ -301,7 +301,7 @@
     
     }
     if (_promoTextField.isFirstResponder) {
-        
+        [_promoTextField resignFirstResponder];
     };
     return YES;
 }
@@ -378,16 +378,18 @@
 
 - (void)keyboardWillShow:(NSNotification *)notification
 {
-    CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
-    _keyboardHeight = keyboardHeight;
+    _keyboardHeight =  [self keyboardHeightByKeyboardNotification:notification];;
     [self updateFrames];
+    
+    self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
+    self.tapRecognizer.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:self.tapRecognizer];
 }
 
 
 - (void)keyboardFrameChanged:(NSNotification *)notification
 {
-    CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
-    _keyboardHeight = keyboardHeight;
+    _keyboardHeight =  [self keyboardHeightByKeyboardNotification:notification];;
     
     [self updateFrames];
 }
@@ -395,13 +397,17 @@
 - (void)keyboardWillHide:(NSNotification *)notification
 {
     _keyboardHeight = 0;
+    
+    [self.view removeGestureRecognizer:self.tapRecognizer];
+    self.tapRecognizer = nil;
+    
     [self updateFrames];
 }
 
 -(CGFloat)keyboardHeightByKeyboardNotification:(NSNotification *)notification
 {
     CGRect keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    return CGRectGetHeight(keyboardRect);
+    return (_phoneTextField.isFirstResponder) ? CGRectGetHeight(keyboardRect) : 0;
 }
 
 - (void)dismissKeyboard
@@ -417,9 +423,7 @@
     }];
 }
 
-- (void) viewTapped {
-    [self dismissKeyboard];
-}
+
 
 
 @end

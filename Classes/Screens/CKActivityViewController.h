@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "CKOperationsProtocol.h"
 
-@interface CKActivityViewController : UIViewController<CKOperationsProtocol>
+@interface CKActivityViewController : UIViewController<CKOperationsProtocol, CKViewControllerRotation>
 
 @property (nonatomic, strong) UIActivityIndicatorView* activityIndicatorView;
 @property (nonatomic, strong) UIButton* continueButton;
+@property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
+
+-(void)viewTapped;
 
 @end

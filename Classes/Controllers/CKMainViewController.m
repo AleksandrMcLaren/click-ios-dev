@@ -120,7 +120,9 @@
     [self replaceCurrentController:nav];
 }
 
-
+-(UIViewController*)currentController{
+    return [self topViewController];
+}
 
 #pragma mark Alerts
 

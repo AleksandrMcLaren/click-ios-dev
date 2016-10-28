@@ -45,4 +45,16 @@
     [self.continueButton setEnabled:YES];
 }
 
+- (BOOL)canAutoRotate
+{
+    return NO;
+}
+
+- (void) viewTapped {
+    [self dismissKeyboard];
+}
+
+-(void)dismissKeyboard{
+    
+}
 @end

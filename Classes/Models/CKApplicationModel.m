@@ -246,9 +246,7 @@
 
 - (void) didStarted
 {
-//    [_mainController showCreateProfile];
-//    return;
-//    
+
     [self setupLocationService];
     
     if (self.token == nil)

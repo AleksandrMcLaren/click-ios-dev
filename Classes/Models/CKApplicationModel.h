@@ -67,6 +67,8 @@
 
 @protocol CKMainControllerProtocol <NSObject, CKOperationsProtocol>
 
+@property (nonatomic, strong, readonly) UIViewController* currentController;
+
 - (void) showWelcomeScreen;
 - (void) showLoginScreen;
 - (void) showAuthenticationScreen;
