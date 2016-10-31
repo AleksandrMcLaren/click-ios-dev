@@ -16,6 +16,7 @@
 #import "UIView+Shake.h"
 #import "UIButton+ContinueButton.h"
 #import <Contacts/CNPostalAddress.h>
+#import "NSString+Verify.h"
 
 typedef enum CKLoginState{
     CKLoginStateVeryfying,
@@ -251,6 +252,31 @@ typedef enum CKLoginState{
         [_loginCell.login shake];
         return;
     }
+    
+    NSRange nonLatinSymbols = [_loginCell.login.text nonLatinSymbols];
+    NSMutableAttributedString *attributedLogin =  [[NSMutableAttributedString alloc] initWithString:_loginCell.login.text];
+    
+    if (nonLatinSymbols.location != NSNotFound) {
+         [_loginCell.login shake];
+        [UIView transitionWithView:_loginCell.login duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+
+            [attributedLogin addAttribute:NSForegroundColorAttributeName
+                                    value:[UIColor redColor]
+                                    range:nonLatinSymbols];
+
+            [_loginCell.login setAttributedText: attributedLogin];
+
+        } completion:^(BOOL finished) {
+            [attributedLogin addAttribute:NSForegroundColorAttributeName
+                                    value:[UIColor blackColor]
+                                    range:NSMakeRange(0, attributedLogin.length)];
+            
+            [_loginCell.login setAttributedText: attributedLogin];
+            
+        }];
+        return;
+    }
+
     
     if (_loginCell.loginState != CKLoginStateNotExist) {
         [_loginCell.login shake];
@@ -826,10 +852,18 @@ typedef enum CKLoginState{
 
 -(void) startVerifyLogin:(NSString*)login{
     
+    NSRange nonLatinSymbols = [login nonLatinSymbols];
+    
+    if (nonLatinSymbols.location != NSNotFound) {
+        _loginCell.loginState = CKLoginStateExist;
+        return;
+    }
+    
     if (login.length < 5) {
         _loginCell.loginState = CKLoginStateExist;
         return;
     }
+    
     _loginCell.loginState = CKLoginStateVeryfying;
     
     if (_loginVerifyTimer != nil) {

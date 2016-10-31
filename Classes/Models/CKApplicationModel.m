@@ -678,11 +678,13 @@
                             }
                             callback(info);
                         }];
+                    }else{
+                         callback(nil);
                     }
                 
+                }else{
+                    callback(nil);
                 }
-                
-                
             }];
         }];
     }else{

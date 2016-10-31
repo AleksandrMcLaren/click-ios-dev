@@ -28,6 +28,8 @@
     
     int _secondsLeft;
     NSTimer* _timer;
+    
+    BOOL _showTimer;
 }
 
 - (instancetype)init
@@ -42,6 +44,7 @@
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
         tapRecognizer.numberOfTapsRequired = 1;
         [self.view addGestureRecognizer:tapRecognizer];
+        _showTimer = NO;
     }
     return self;
 }
@@ -132,7 +135,7 @@
 
     
     [self.view addSubview:_resendButton];
-    [_resendButton addTarget:self action:@selector(requestAuthenticationCode) forControlEvents:UIControlEventTouchUpInside];
+    [_resendButton addTarget:self action:@selector(reRequestAuthenticationCode) forControlEvents:UIControlEventTouchUpInside];
     
     self.continueButton = [[UIButton alloc] initContinueButton];
 
@@ -189,6 +192,12 @@
     [[CKApplicationModel sharedInstance] sendPhoneAuthenticationCode:_codeEntry.text];
 }
 
+- (void)reRequestAuthenticationCode
+{
+    _showTimer = YES;
+    [self requestAuthenticationCode];
+    
+}
 - (void)requestAuthenticationCode
 {
     [self startBlockResentButton];
@@ -250,7 +259,7 @@
 
 -(void)startBlockResentButton{
     _resendButton.enabled = NO;
-    _timerLabel.hidden = NO;
+    _timerLabel.hidden = !_showTimer;
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                 target:self
                                             selector:@selector(timerTick:)
