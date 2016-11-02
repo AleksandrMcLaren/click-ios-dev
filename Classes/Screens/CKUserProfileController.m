@@ -340,13 +340,22 @@ typedef enum CKLoginState{
 
 }
 
-- (void)takePhotoWithSource:(UIImagePickerControllerSourceType)source
+- (void)takePhotoWithSource:(NSInteger)source
 {
-    UIImagePickerController* picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = source;
-    picker.delegate = self;
-    picker.allowsEditing = YES;
-    [self presentViewController:picker animated:YES completion:nil];
+    if (source == -1) {
+//        NSData* dataImage = UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"],1);
+//        UIImage* img = [[UIImage alloc] initWithData:dataImage];
+        CKProfileHeaderView *header = (CKProfileHeaderView *)self.tableView.tableHeaderView;
+        [header.avatar setImage:nil forState:UIControlStateNormal];
+        self.profile.avatar = nil;
+    }else{
+        UIImagePickerController* picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = (UIImagePickerControllerSourceType)source;
+        picker.delegate = self;
+        picker.allowsEditing = YES;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+    
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -371,13 +380,26 @@ typedef enum CKLoginState{
                                                                    preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIImagePickerControllerSourceType lastSource = 0;
-    for (NSArray *i in @[
+    
+    
+    NSMutableArray* items = @[
                               @[@"Камера",@(UIImagePickerControllerSourceTypeCamera)],
                               @[@"Фотоальбом",@(UIImagePickerControllerSourceTypePhotoLibrary)],
                               @[@"Сохраненные фотографии",@(UIImagePickerControllerSourceTypeSavedPhotosAlbum)],
-                              ])
+                              @[@"Удалить",@(-1)],
+                              ].mutableCopy;
+
+    for (NSArray *i in items)
     {
-        if (![UIImagePickerController isSourceTypeAvailable:[i[1] integerValue]]) continue;
+        NSInteger actionType = [i[1] integerValue];
+        if (actionType == -1) {
+            if (!self.profile.avatar) {
+                continue;
+            }
+        }else if (![UIImagePickerController isSourceTypeAvailable:actionType]) {
+            continue;
+        }
+      
         lastSource = [i[1] integerValue];
         UIAlertAction *action = [UIAlertAction actionWithTitle:i[0]
                                                                style:UIAlertActionStyleDefault
