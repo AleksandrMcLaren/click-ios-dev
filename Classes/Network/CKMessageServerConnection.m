@@ -30,6 +30,14 @@
     return filter;
 }
 
++ (CKUserFilterModel *)filterWithLocation
+{
+    CKUserFilterModel *filter = [CKUserFilterModel new];
+    filter.status = -1;
+    return filter;
+}
+
+
 - (NSDictionary *)getDictionary
 {
     return @{@"userlist":self.userlist,
@@ -135,6 +143,14 @@
 - (void)createGroupChatWithName:(NSString *)title avatar:(NSString *)avatar description:(NSString *)description users:(NSArray *)userlist callback:(CKServerConnectionExecuted)callback
 {
     [self sendData:@{@"action":@"groupchat.create", @"options":@{@"name":title, @"description":description, @"avatar":avatar, @"userlist":userlist}} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+
+//getUserClasters
+- (void) getUserClasters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSString *)mask withBottomLeftLatitude:(NSNumber *) bottomLeftLatitude withBottomLeftLongtitude: (NSNumber*) bottomLeftLongtitude withtopCoordinate: (NSNumber *)topRightLatitude withTopRigthLongtitude:(NSNumber *)topRightLongtitde withCallback: (CKServerConnectionExecuted)callback
+{
+    [self sendData:@{@"action":@"user.geocluster", @"options":@{@"status":[NSNumber numberWithInteger: [status integerValue]], @"isfriend":[NSNumber numberWithInteger:[isfriend integerValue]], @"country":[NSNumber numberWithInteger:[country integerValue]], @"city":[NSNumber numberWithInteger:[city integerValue]], @"sex":sex, @"minage":[NSNumber numberWithInteger:[minage integerValue]], @"maxage":[NSNumber numberWithInteger:[maxage integerValue] ],                                                                                                                                                                                 @"mask":mask, @"lat1": [NSNumber numberWithDouble: [bottomLeftLatitude doubleValue]],@"lng1":[NSNumber numberWithDouble:[bottomLeftLongtitude doubleValue]],@"lat2":[NSNumber numberWithDouble:[topRightLatitude doubleValue]],@"lng2":[NSNumber numberWithDouble:[topRightLongtitde doubleValue]],}} completion:^(NSDictionary *result) {
         callback(result);
     }];
 }

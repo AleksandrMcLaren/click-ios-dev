@@ -111,6 +111,11 @@
 		78D33D311D21766100B61F21 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D33D2F1D21766100B61F21 /* AVFoundation.framework */; };
 		78D33D321D21766100B61F21 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D33D301D21766100B61F21 /* AVKit.framework */; };
 		78D33D351D236BF400B61F21 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78D33D341D236BF400B61F21 /* MapKit.framework */; };
+		D82EB8A21DCB6BD7008E9035 /* CKFiltersForMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D82EB8A11DCB6BD7008E9035 /* CKFiltersForMapViewController.m */; };
+		D82EB8A51DCB6C50008E9035 /* CKCustomPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D82EB8A41DCB6C50008E9035 /* CKCustomPointAnnotation.m */; };
+		D82EB8A81DCB6C65008E9035 /* CKCustomPinAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D82EB8A71DCB6C65008E9035 /* CKCustomPinAnnotation.m */; };
+		D82EB8AB1DCB6CB8008E9035 /* CKClusterPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D82EB8AA1DCB6CB8008E9035 /* CKClusterPointAnnotation.m */; };
+		D82EB8AE1DCB6CD0008E9035 /* CKClustepPinAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D82EB8AD1DCB6CD0008E9035 /* CKClustepPinAnnotation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -293,6 +298,16 @@
 		78D33D341D236BF400B61F21 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		8B58E691D1EF281591AB01C5 /* Pods-click.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-click.debug.xcconfig"; path = "Pods/Target Support Files/Pods-click/Pods-click.debug.xcconfig"; sourceTree = "<group>"; };
 		A0FB7F40580CA9CAF95E0CB5 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D82EB8A01DCB6BD7008E9035 /* CKFiltersForMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKFiltersForMapViewController.h; sourceTree = "<group>"; };
+		D82EB8A11DCB6BD7008E9035 /* CKFiltersForMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKFiltersForMapViewController.m; sourceTree = "<group>"; };
+		D82EB8A31DCB6C50008E9035 /* CKCustomPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCustomPointAnnotation.h; sourceTree = "<group>"; };
+		D82EB8A41DCB6C50008E9035 /* CKCustomPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCustomPointAnnotation.m; sourceTree = "<group>"; };
+		D82EB8A61DCB6C65008E9035 /* CKCustomPinAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCustomPinAnnotation.h; sourceTree = "<group>"; };
+		D82EB8A71DCB6C65008E9035 /* CKCustomPinAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCustomPinAnnotation.m; sourceTree = "<group>"; };
+		D82EB8A91DCB6CB8008E9035 /* CKClusterPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKClusterPointAnnotation.h; sourceTree = "<group>"; };
+		D82EB8AA1DCB6CB8008E9035 /* CKClusterPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKClusterPointAnnotation.m; sourceTree = "<group>"; };
+		D82EB8AC1DCB6CD0008E9035 /* CKClustepPinAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKClustepPinAnnotation.h; sourceTree = "<group>"; };
+		D82EB8AD1DCB6CD0008E9035 /* CKClustepPinAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKClustepPinAnnotation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -344,6 +359,8 @@
 		7831EDA71C9000AD00319191 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				D82EB8A01DCB6BD7008E9035 /* CKFiltersForMapViewController.h */,
+				D82EB8A11DCB6BD7008E9035 /* CKFiltersForMapViewController.m */,
 				78BEA91B1CA44751004E85DB /* CKCitySelectionController.h */,
 				78BEA91C1CA44751004E85DB /* CKCitySelectionController.m */,
 				78B524B41C9B2D0300502AA4 /* CKHistoryRestoreController.h */,
@@ -368,6 +385,14 @@
 				78B524CA1C9FE3AE00502AA4 /* CKContactsViewController.m */,
 				78B524CC1C9FE3CD00502AA4 /* CKMapViewController.h */,
 				78B524CD1C9FE3CD00502AA4 /* CKMapViewController.m */,
+				D82EB8A31DCB6C50008E9035 /* CKCustomPointAnnotation.h */,
+				D82EB8A41DCB6C50008E9035 /* CKCustomPointAnnotation.m */,
+				D82EB8A61DCB6C65008E9035 /* CKCustomPinAnnotation.h */,
+				D82EB8A71DCB6C65008E9035 /* CKCustomPinAnnotation.m */,
+				D82EB8A91DCB6CB8008E9035 /* CKClusterPointAnnotation.h */,
+				D82EB8AA1DCB6CB8008E9035 /* CKClusterPointAnnotation.m */,
+				D82EB8AC1DCB6CD0008E9035 /* CKClustepPinAnnotation.h */,
+				D82EB8AD1DCB6CD0008E9035 /* CKClustepPinAnnotation.m */,
 				78B524CF1C9FE3F500502AA4 /* CKBlogViewController.h */,
 				78B524D01C9FE3F500502AA4 /* CKBlogViewController.m */,
 				78B524D21C9FE40B00502AA4 /* CKSettingsViewController.h */,
@@ -780,6 +805,7 @@
 				78BEA93E1CAAA47D004E85DB /* CKHTTPRequest.m in Sources */,
 				78BEA9761CAAF9E0004E85DB /* CKFriendProfileHeaderCell.m in Sources */,
 				782AFFFA1D0AB90300802097 /* CKAttachModel.m in Sources */,
+				D82EB8AB1DCB6CB8008E9035 /* CKClusterPointAnnotation.m in Sources */,
 				7812508F1CB7607600D3BFBB /* CKMessageEditorView.m in Sources */,
 				78BEA9911CAE5DF0004E85DB /* CKAvatarView.m in Sources */,
 				78B524C81C9FE35D00502AA4 /* CKChatsViewController.m in Sources */,
@@ -797,9 +823,11 @@
 				78BEA98B1CADC9BB004E85DB /* CKGroupChatCell.m in Sources */,
 				78B524B61C9B2D0300502AA4 /* CKHistoryRestoreController.m in Sources */,
 				7831EDD51C90D32000319191 /* CKCountrySelectionController.m in Sources */,
+				D82EB8A21DCB6BD7008E9035 /* CKFiltersForMapViewController.m in Sources */,
 				78BEA98E1CADC9DC004E85DB /* CKDialogChatCell.m in Sources */,
 				782A000F1D0ABFD500802097 /* CKAttachCell.m in Sources */,
 				78BEA9851CABD833004E85DB /* CKFriendProfileCell.m in Sources */,
+				D82EB8A51DCB6C50008E9035 /* CKCustomPointAnnotation.m in Sources */,
 				7831EDE21C91EE6900319191 /* CKLoginCodeViewController.m in Sources */,
 				78B524BC1C9DCE8C00502AA4 /* CKUserProfileController.m in Sources */,
 				7831EDAE1C90018500319191 /* UIColor+hex.m in Sources */,
@@ -823,8 +851,10 @@
 				781250801CB63E0B00D3BFBB /* CKMessageCell.m in Sources */,
 				78B524D41C9FE40B00502AA4 /* CKSettingsViewController.m in Sources */,
 				78BEA91D1CA44751004E85DB /* CKCitySelectionController.m in Sources */,
+				D82EB8A81DCB6C65008E9035 /* CKCustomPinAnnotation.m in Sources */,
 				78BEA9231CA50B43004E85DB /* CKDialogsModel.m in Sources */,
 				784FE8561C8E7476006469D5 /* AppDelegate.m in Sources */,
+				D82EB8AE1DCB6CD0008E9035 /* CKClustepPinAnnotation.m in Sources */,
 				78BEA9401CAAA47D004E85DB /* NSString+URLParser.m in Sources */,
 				78BEA9941CAE5E04004E85DB /* CKUserAvatarView.m in Sources */,
 				7812508C1CB6C74F00D3BFBB /* CKDialogChatModel.m in Sources */,

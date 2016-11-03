@@ -15,6 +15,27 @@
 #import "CKUserServerConnection.h"
 #import "CKMessageServerConnection.h"
 
+@implementation CKClusterModel
+
++ (instancetype)modelWithDictionary: (NSDictionary *) sourceDict
+{
+    CKClusterModel *clustermodel = [CKClusterModel new];
+    
+    @try{
+        clustermodel.userid = [NSString stringWithFormat:@"%@", sourceDict[@"userid"]];
+        clustermodel.clusterid = [NSString stringWithFormat:@"%@", sourceDict[@"clusterid"]];
+        
+        clustermodel.cnttotal = [NSNumber numberWithInteger: [sourceDict[@"cnttotal"] intValue]];
+        clustermodel.location = CLLocationCoordinate2DMake([sourceDict[@"lat"] doubleValue], [sourceDict[@"lng"] doubleValue]);
+        clustermodel.sex = sourceDict[@"sex"];
+    }
+    @catch (NSException *exception) {
+        return nil; // bad model
+    }
+    return clustermodel;
+}
+@end
+
 @implementation CKUserModel
 
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict
@@ -133,6 +154,20 @@
     BOOL _isNewUser;
     NSDictionary *_phoneContacts;
     NSMutableDictionary *_chatPool;
+    
+    NSNumber *_nelat;
+    NSNumber *_nelng;
+    NSNumber *_swlat;
+    NSNumber *_swlng;
+    NSNumber *_status;
+    NSNumber *_isfriend;
+    NSNumber *_country;
+    NSNumber *_city;
+    NSString *_sex;
+    NSNumber *_minage;
+    NSNumber *_maxage;
+    NSString *_mask;
+
 }
 
 - (instancetype)init
@@ -421,6 +456,17 @@
                     [friends addObject:user];
                 }
                 _friends = friends;
+
+                [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithLocation] callback:^(NSDictionary *result) {
+                    NSMutableArray<CKUserModel*> *userlist = [NSMutableArray new];
+                    for (NSDictionary *i in result[@"result"])
+                    {
+                        CKUserModel *user1 = [CKUserModel modelWithDictionary:i];
+                        [userlist addObject:user1];
+                    }
+                    _userlistMain = userlist;
+                }];
+
                 [self.mainController showMainScreen];
                 [[CKDialogsModel sharedInstance] setDialogsController:[self.mainController dialogsController]];
                 [[CKDialogsModel sharedInstance] run];
@@ -429,6 +475,34 @@
         
     }];
 }
+
+- (void) loadClusters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSString *)mask withBottomLeftLatitude: (NSNumber *)swlat withBottomLeftLongtitude: (NSNumber *)swlng withtopCoordinate: (NSNumber *)nelat withTopRigthLongtitude: (NSNumber *)nelng withInt: (int) count{
+    if (count ==0){
+        _nelat = nelat;
+        _nelng = nelng;
+        _swlat = swlat;
+        _swlng = swlng;
+        _status = status;
+        _isfriend = isfriend;
+        _country = country;
+        _city = city;
+        _sex = sex;
+        _minage = minage;
+        _maxage = maxage;
+        _mask = mask;
+    }
+    [[CKMessageServerConnection sharedInstance] getUserClasters:_status withFriendStatus:_isfriend withCountry:_country withCity:_city withSex:_sex withMinage:_minage andMaxAge:_maxage withMask:_mask withBottomLeftLatitude:_swlat withBottomLeftLongtitude:_swlng withtopCoordinate:_nelat withTopRigthLongtitude:_nelng withCallback:^(NSDictionary *result) {
+        NSMutableArray <CKClusterModel *> *clusterlist = [NSMutableArray new];
+        for (NSDictionary *i in result[@"result"])
+        {
+            CKClusterModel *cluster1 = [CKClusterModel modelWithDictionary:i];
+            [clusterlist addObject: cluster1];
+        }
+        _clusterlist = clusterlist;
+        
+    }];
+}
+
 
 - (void) restoreHistory
 {

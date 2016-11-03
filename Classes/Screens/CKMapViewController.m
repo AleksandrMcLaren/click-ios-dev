@@ -8,8 +8,23 @@
 
 #import "CKMapViewController.h"
 #import <MapKit/MapKit.h>
+#import "CKApplicationModel.h"
+#import "CKCustomPointAnnotation.h"
+#import "CKCustomPinAnnotation.h"
+#import "AppDelegate.h"
+#import "CKUserAvatarView.h"
 #import "CKUserServerConnection.h"
+#import "CKMessageServerConnection.h"
+#import "CKClusterPointAnnotation.h"
+#import "CKClustepPinAnnotation.h"
+#import "CKFiltersForMapViewController.h"
+#import <QuartzCore/QuartzCore.h>
+#import "CKCache.h"
+
 #define METERS_PER_MILE 1609.344
+
+
+
 @implementation CKMapViewController
 {
     MKMapView *_mapView;
@@ -18,9 +33,31 @@
     UIButton *_minusButton;
     UIButton *_setLocationButton;
     UILabel *_menuLabel;
+    int counter;
     
     CGFloat _padding;
     NSArray *_data;
+    NSArray *_friendlist;
+    NSArray<CKUserModel *> *_userlist;
+    NSArray<CKClusterModel *> *_clusterlist;
+    MKMapRect _mRect;
+    NSMutableArray<CKCustomPointAnnotation *> *_annotations1;
+    NSMutableArray<CKClusterPointAnnotation *> *_annotations2;
+    int count;
+    
+    
+    CKFiltersForMapViewController * ffmvc;
+    
+    NSString *sexVar;
+    NSNumber *minageVar;
+    NSNumber *maxageVar;
+    NSNumber *status;
+    NSNumber *inAllUsers;
+    NSString *nameVar;
+    UIImage *countryImageVar;
+    NSString *countryNameVar;
+    BOOL online;
+    
 }
 
 - (instancetype)init
@@ -28,47 +65,118 @@
     if (self = [super init])
     {
         self.title = @"Карта";
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"hamburger"] style:UIBarButtonItemStylePlain target:self action:@selector(filterButton)];
+        self.profile = [[CKApplicationModel sharedInstance] userProfile];
     }
     return self;
 }
 
+
+- (void) filterButton
+{
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:ffmvc];
+    navController.modalTransitionStyle = UIModalPresentationOverCurrentContext;
+    [self presentViewController:navController animated:YES completion:nil];
+}
+
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+    if (ffmvc.endWithSumbit == true)
+    {
+        _sexT = ffmvc.sex;
+        _minageT = ffmvc.minage;
+        _maxageT = ffmvc.maxage;
+        online = ffmvc.switchOn;
+        _allUsersT = ffmvc.allUsers;
+        _nameT = ffmvc.name;
+        _countryIdT = [NSNumber numberWithInteger: ffmvc.countryId];
+        _cityIdT = [NSNumber numberWithInteger:ffmvc.cityId];
+    }
+    if (ffmvc.endWithCancelFilters == YES)
+    {
+        _countryIdT = [NSNumber numberWithInteger: 0];
+        _cityIdT = [NSNumber numberWithInteger: 0];
+    }
+    if (![_sexT isEqual: @""] && _sexT != nil)
+    {
+        if ([_sexT isEqual:@"Мужской"])
+        {
+            sexVar = @"m";
+        }
+        else if ([_sexT isEqual: @"Женский"])
+        {
+            sexVar = @"f";
+        }
+        else
+        {
+            sexVar = @"";
+        }
+    }
+    if (![_minageT isEqual: @0] && _minageT !=nil)
+    {
+        minageVar = _minageT;
+    }
+    if ( ![_maxageT isEqual: @0] && _maxageT !=nil)
+    {
+        maxageVar = _maxageT;
+    }
+    if (![_nameT isEqual:@""] && _nameT != nil)
+    {
+        nameVar = _nameT;
+    }
+    if (_allUsersT == true)
+    {
+        inAllUsers = [NSNumber numberWithInteger:[@-1 integerValue]];
+    }
+    else inAllUsers = [NSNumber numberWithInteger:[@1 integerValue]];
+    if (_countryIdT == nil) _countryIdT = [NSNumber numberWithInteger:[@0 integerValue]];
+    if (_cityIdT == nil) _cityIdT = [NSNumber numberWithInteger:0];
+    
+    _mRect = _mapView.visibleMapRect;
+    MKMapPoint neMapPoint = MKMapPointMake(MKMapRectGetMaxX(_mRect), _mRect.origin.y);
+    MKMapPoint swMapPoint = MKMapPointMake(_mRect.origin.x, MKMapRectGetMaxY(_mRect));
+    
+    CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
+    CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
+    
+    NSNumber *nelat = [[NSNumber alloc] initWithDouble:neCoord.latitude];
+    NSNumber *nelng = [[NSNumber alloc] initWithDouble:neCoord.longitude];
+    NSNumber *swlat = [[NSNumber alloc] initWithDouble:swCoord.latitude];
+    NSNumber *swlng = [[NSNumber alloc] initWithDouble:swCoord.longitude];
+    
+    [[CKApplicationModel sharedInstance] loadClusters: @-1 withFriendStatus:inAllUsers withCountry:_countryIdT withCity:_cityIdT withSex:sexVar withMinage:minageVar andMaxAge:maxageVar withMask:nameVar withBottomLeftLatitude:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt:count];
+    
+    //    [[CKApplicationModel sharedInstance] loadClusters:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt: count];
+    count++;
+}
+
 - (void)viewDidLoad
 {
+    _annotations1 = [NSMutableArray new];
+    _annotations2 = [NSMutableArray new];
+    status = @0;
+    online = true;
+    sexVar = @"";
+    minageVar = @0;
+    maxageVar = @0;
+    inAllUsers = @0;
+    nameVar = @"";
+    _minageT = @0;
+    _maxageT = @0;
+    _sexT = @"";
     double miles = 0.5;
-    
-    //how much area will be shown
+    ffmvc = [CKFiltersForMapViewController new];
+    ffmvc.switchOn = true;
+    //_switchOn = true;
     MKCoordinateSpan span;
     span.latitudeDelta = miles/69.0;
     span.longitudeDelta = miles/69.0;
     
-    /*
-     - (void)viewDidLoad{
-     [super viewDidLoad];
-     
-     // define span for map: how much area will be shown
-     MKCoordinateSpan span;
-     span.latitudeDelta = 0.002;
-     span.longitudeDelta = 0.002;
-     
-     // define starting point for map
-     CLLocationCoordinate2D location;
-     location.latitude = aUserLocation.coordinate.latitude;
-     location.longitude = aUserLocation.coordinate.longitude;
-     
-     // create region, consisting of span and location
-     MKCoordinateRegion region;
-     region.span = span;
-     region.center = location;
-     
-     // move the map to our location
-     [self.mapView setRegion:region animated:YES];*/
-    
     _mapView = [MKMapView new];
+    _mapView.delegate = self;
     _mapView.showsUserLocation = YES;
     MKCoordinateRegion region;
     region.span = span;
     [_mapView setRegion:region animated:YES];
-    //_mapView.mapType = MKMapTypeSatellite;
     [_mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
     [self.view addSubview:_mapView];
     
@@ -79,20 +187,6 @@
         make.height.equalTo(self.view.height);
     }];
     _padding = 15.0;
-    
-    //кнопка "Список"
-    //    _listButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    //    [_listButton setTitle:@"Список" forState: UIControlStateNormal];
-    //    [_listButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    //    [self.view addSubview:_listButton];
-    
-    //кнопка "меню", которая пока является типом label
-    //    _menuLabel = [UILabel labelWithText:@"menu"
-    //                                   font:[UIFont systemFontOfSize: 14.0]
-    //                              textColor:[UIColor whiteColor]
-    //                          textAlignment:NSTextAlignmentCenter];
-    //    _menuLabel.numberOfLines = 1;
-    //    [self.view addSubview:_menuLabel];
     
     //кнопка увеличения
     _plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -115,37 +209,212 @@
     [self.view addSubview:_setLocationButton];
     [_setLocationButton addTarget:self action:@selector(CurrentLocation) forControlEvents:UIControlEventTouchUpInside];
     
-    //_listButton.alpha = 0.0;
     _plusButton.alpha = 0.0;
     _minusButton.alpha = 0.0;
-    //_menuLabel.alpha = 0.0;
     _listButton.alpha = 0.0;
     
+    count=0;
+    ffmvc.minage = @14;
+    ffmvc.maxage = @99;
+    ffmvc.sex = @"Любой";
+    ffmvc.allUsers = true;
+    ffmvc.name = @"";
+    ffmvc.country = @"";
+    ffmvc.countryImageIso = 0;
+    ffmvc.city = @"";
+    ffmvc.endWithCancelFilters = NO;
 }
 
-- (void) loadData
+- (MKAnnotationView*)mapView:(MKMapView *)mapView
+           viewForAnnotation:(id<MKAnnotation>)annotation
 {
-    NSMutableString *query = [NSMutableString stringWithFormat:@"select * from userlist"];
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+        return nil;
+    if ([annotation isKindOfClass:[CKCustomPointAnnotation class]])
+    {
+        CKCustomPinAnnotation* pin = [[CKCustomPinAnnotation alloc]initWithAnnotation:annotation];
+        return pin;
+    }
+    if ([annotation isKindOfClass: [CKClusterPointAnnotation class]])
+    {
+        CKClustepPinAnnotation *pin2 = [[CKClustepPinAnnotation alloc] initWithAnnotation:annotation];
+        return pin2;
+    }
+    return nil;
+}
+
+- (void) reloadAnnotations
+{
+    [_mapView removeAnnotations:_annotations1];
+    [_mapView removeAnnotations:_annotations2];
+    [_annotations1 removeAllObjects];
+    [_annotations2 removeAllObjects];
+    _clusterlist = [[CKApplicationModel sharedInstance] clusterlist];
+    _data = [[CKApplicationModel sharedInstance] userlistMain];
+    _friendlist = [[CKApplicationModel sharedInstance] friends];
+    counter = 1;
     
-    CKDB *ckdb = [CKDB sharedInstance];
     
-    [ckdb.queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *data = [db executeQuery:query];
-        [[CKDB sharedInstance] configureDB:db];
-        NSMutableArray *tmp = [NSMutableArray new];
-        while ([data next])
+    if (_clusterlist !=nil || _clusterlist.count != 0)
+    {
+        for (CKClusterModel *cluster in _clusterlist)
         {
-            [tmp addObject:[data resultDictionary]];
+            if ([cluster.cnttotal intValue] == counter)
+            {
+                for (CKUserModel *user in _data)
+                {
+                    if ([user.id isEqual: cluster.userid])
+                    {
+                        CKCustomPointAnnotation *pin = [[CKCustomPointAnnotation alloc] init];
+                        if (user.age > 13)
+                        {
+                            if (user.isFriend == 1)
+                            {
+                                CKUserModel *friend = [[CKUserModel alloc] init];
+                                for (CKUserModel *friends in _friendlist)
+                                {
+                                    if ([user.login isEqual:friends.login])
+                                        friend = user;
+                                }
+                                if (![friend.name isEqual:@""])
+                                {
+                                    if (![friend.surname isEqual:@""])
+                                    {
+                                        pin.title = [NSString stringWithFormat: @"%@ %@, %d лет", friend.name, friend.surname, friend.age];
+                                        pin.subtitle = friend.login;
+                                        pin.name = friend.name;
+                                    }
+                                    else
+                                    {
+                                        pin.title = [NSString stringWithFormat: @"%@, %d лет", friend.name, friend.age];
+                                        pin.subtitle = friend.login;
+                                        pin.name = friend.name;
+                                    }
+                                }
+                                else
+                                {
+                                    pin.title = [NSString stringWithFormat: @"%@, %d лет", friend.login, friend.age];
+                                    pin.name = user.login;
+                                }
+                            }
+                            else
+                            {
+                                if (![user.name isEqual:@""])
+                                {
+                                    if (![user.surname isEqual:@""])
+                                    {
+                                        pin.title = [NSString stringWithFormat: @"%@ %@, %d лет", user.name, user.surname, user.age];
+                                        pin.subtitle = user.login;
+                                        pin.name = user.name;
+                                    }
+                                    else
+                                    {
+                                        pin.title = [NSString stringWithFormat: @"%@, %d лет", user.name, user.age];
+                                        pin.subtitle = user.login;
+                                        pin.name = user.name;
+                                    }
+                                }
+                                else
+                                {
+                                    pin.title = [NSString stringWithFormat: @"%@, %d лет", user.login, user.age];
+                                    pin.name = user.login;
+                                }
+                            }
+                            
+                        }
+                        else
+                        {
+                            if (user.isFriend == 1)
+                            {
+                                CKUserModel *friend = [[CKUserModel alloc] init];
+                                for (CKUserModel *friends in _friendlist)
+                                {
+                                    if ([user.login isEqual:friends.login])
+                                        friend = user;
+                                }
+                                
+                                if (![friend.name isEqual:@""])
+                                {
+                                    if (![friend.surname isEqual:@""])
+                                    {
+                                        pin.title = [NSString stringWithFormat: @"%@ %@", friend.name, friend.surname];
+                                        pin.subtitle = friend.login;
+                                        pin.name = friend.name;
+                                    }
+                                    else
+                                    {
+                                        pin.title = [NSString stringWithFormat: @"%@", friend.name];
+                                        pin.subtitle = friend.login;
+                                        pin.name = friend.name;
+                                    }
+                                }
+                                else
+                                {
+                                    pin.title = [NSString stringWithFormat: @"%@", friend.login];
+                                    pin.name = friend.login;
+                                }
+                                
+                            }
+                            else
+                            {
+                                if (![user.name isEqual:@""])
+                                {
+                                    if (![user.surname isEqual:@""])
+                                    {
+                                        pin.title = [NSString stringWithFormat: @"%@ %@", user.name, user.surname];
+                                        pin.subtitle = user.login;
+                                        pin.name = user.name;
+                                    }
+                                    else
+                                    {
+                                        pin.title = [NSString stringWithFormat: @"%@", user.name];
+                                        pin.subtitle = user.login;
+                                        pin.name = user.name;
+                                    }
+                                }
+                                else
+                                {
+                                    pin.title = [NSString stringWithFormat: @"%@", user.login];
+                                    pin.name = user.login;
+                                }
+                            }
+                        }
+                        
+                        
+                        pin.coordinate = CLLocationCoordinate2DMake(cluster.location.latitude, cluster.location.longitude);
+                        pin.sex = user.sex;
+                        //UIImage *avatarImage = [[CKCache sharedInstance] imageWithURLString:user.avatarURLString];
+                        NSURL *avatarUrl = [NSURL URLWithString:user.avatarURLString];
+                        //UIImage *avatarImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:user.avatarURLString]]];
+                        pin.avatar = avatarUrl;
+                        [_annotations1 addObject:pin];
+                        [_mapView viewForAnnotation:pin];
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                CKClusterPointAnnotation *pin = [[CKClusterPointAnnotation alloc] init];
+                pin.usersInCluster = cluster.cnttotal;
+                pin.coordinate = CLLocationCoordinate2DMake(cluster.location.latitude, cluster.location.longitude);
+                pin.image = cluster.avatar;
+                [_annotations2 addObject:pin];
+                [_mapView viewForAnnotation:pin];
+            }
         }
-        _data = tmp;
-        [data close];
-    }];
+    }
+    else{
+        
+    }
+    [_mapView addAnnotations:_annotations1];
+    [_mapView addAnnotations:_annotations2];
 }
 
 - (void) viewDidAppear:(BOOL)animated{
     
     CGFloat padding = _padding;
-    
+    count = 0;
     [_plusButton makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(_minusButton.top).offset(-padding/8);
         make.right.equalTo(self.view.right).offset(-padding);
@@ -181,23 +450,44 @@
             _listButton.alpha = 1.0;        }];
         
     }];
+    online = ffmvc.switchOn;
+    if (online == false)
+    {
+        [[CKUserServerConnection sharedInstance] setUserStatus:@0];
+    }
+    else
+        [[CKUserServerConnection sharedInstance] setUserStatus:@1];
+    [self reloadAnnotations];
+    
 }
 
 - (void) ZoomIn{
+    count=0;
+    [_mapView removeAnnotations:_annotations1];
+    [_mapView removeAnnotations:_annotations2];
     MKCoordinateRegion region = _mapView.region;
     region.span.latitudeDelta /= 2.0;
     region.span.longitudeDelta /= 2.0;
     [_mapView setRegion:region animated:YES];
+    [self reloadAnnotations];
 }
 
 - (void) ZoomOut{
+    count=0;
+    [_mapView removeAnnotations:_annotations1];
+    [_mapView removeAnnotations:_annotations2];
     MKCoordinateRegion region = _mapView.region;
     region.span.latitudeDelta  = MIN(region.span.latitudeDelta  * 2.0, 180.0);
     region.span.longitudeDelta = MIN(region.span.longitudeDelta * 2.0, 180.0);
     [_mapView setRegion:region animated:YES];
+    [self reloadAnnotations];
 }
 
 - (void) CurrentLocation{
+    count = 0;
+    [_mapView removeAnnotations:_annotations1];
+    [_mapView removeAnnotations:_annotations2];
     _mapView.userTrackingMode = MKUserTrackingModeFollow;
+    [self reloadAnnotations];
 }
 @end
