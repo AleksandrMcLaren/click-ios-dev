@@ -282,7 +282,7 @@ typedef enum CKLoginState{
         [_loginCell.login shake];
         return;
     }
-    
+    self.profile.login = _loginCell.login.text;
     [[CKApplicationModel sharedInstance] submitNewProfile];
 }
 
@@ -698,7 +698,7 @@ typedef enum CKLoginState{
                     cell.textLabel.textAlignment = NSTextAlignmentCenter;
                     cell.textLabel.textColor = CKClickBlueColor;
                     cell.textLabel.font = [UIFont systemFontOfSize:14.0];
-                    cell.textLabel.text = @"Определить мое местоположение";
+                    cell.textLabel.text = @"Местоположение";
                     [cell.textLabel sizeToFit];
                     cell.separatorInset = UIEdgeInsetsZero;
                     cell.layoutMargins = UIEdgeInsetsZero;
@@ -715,10 +715,10 @@ typedef enum CKLoginState{
                         make.centerY.equalTo(cell.centerY);
                     }];
                     
-                    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(locate)];
-                    tapGestureRecognizer.numberOfTapsRequired = 1;
-                    [cell.textLabel addGestureRecognizer:tapGestureRecognizer];
-                    cell.textLabel.userInteractionEnabled = YES;
+//                    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(locate)];
+//                    tapGestureRecognizer.numberOfTapsRequired = 1;
+//                    [cell.textLabel addGestureRecognizer:tapGestureRecognizer];
+//                    cell.textLabel.userInteractionEnabled = YES;
                     
                     return cell;
                 }
@@ -908,6 +908,7 @@ typedef enum CKLoginState{
     
     [[CKApplicationModel sharedInstance] checkUserLogin:login withCallback:^(id model) {
         _loginCell.loginState = [model boolValue] ? CKLoginStateNotExist : CKLoginStateNotExist;
+       
     }];
 }
 

@@ -89,7 +89,7 @@
 
 - (void) didStarted;
 - (void) userDidAcceptTerms;
-- (void) sendUserPhone:(NSString *)phone promo:(NSString *)promo;
+- (void) sendUserPhone:(NSString *)phone promo:(NSString *)promo countryId:(NSInteger)countryId;
 - (void) checkUserLogin:(NSString *)login withCallback:(CKServerConnectionExecutedObject)callback;
 - (void) requestAuthentication;
 - (void) sendPhoneAuthenticationCode:(NSString *)code;
@@ -100,6 +100,7 @@
 // определять по местоположению пользователя
 @property (nonatomic, readonly) NSInteger countryId;
 
+- (BOOL)countryExistWithId:(NSInteger)id;
 - (NSDictionary *)countryWithId:(NSInteger)id;
 - (NSDictionary *)countryWithISO:(NSInteger)iso;
 

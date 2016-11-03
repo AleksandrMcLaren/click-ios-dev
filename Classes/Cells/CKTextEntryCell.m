@@ -31,7 +31,7 @@
         }];
         
         [_textField makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.left).offset(60);
+            make.left.equalTo(self.left).offset(72);
             make.centerY.equalTo(self.centerY);
             make.right.equalTo(self.right).offset(-12);
         }];
@@ -49,9 +49,9 @@
     _textField = textField;
     [self.contentView addSubview:_textField];
     [_textField makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.left).offset(61);
+        make.left.equalTo(self.left).offset(72);
         make.centerY.equalTo(self.centerY);
-        make.right.equalTo(self.right).offset(-70);
+        make.right.equalTo(self.right).offset(-12);
     }];
 }
 

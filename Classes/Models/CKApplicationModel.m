@@ -271,6 +271,23 @@
     [self.mainController showLoginScreen];
 }
 
+- (BOOL)countryExistWithId:(NSInteger)id{
+    __block BOOL result = NO;
+    
+    CKDB *ckdb = [CKDB sharedInstance];
+    
+    NSMutableString *query = [NSMutableString stringWithFormat:@"select count(*) from countries where id=%ld", (long)id];
+    [ckdb.queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *data = [db executeQuery:query];
+        while ([data next])
+        {
+            result = [data intForColumnIndex:0] > 0;
+            break;
+        }
+        [data close];
+    }];
+    return result;
+}
 
 - (NSDictionary *)countryWithId:(NSInteger)id
 {
@@ -308,10 +325,11 @@
     return result;
 }
 
-- (void) sendUserPhone:(NSString *)phone promo:(NSString *)promo
+- (void) sendUserPhone:(NSString *)phone promo:(NSString *)promo countryId:(NSInteger)countryId
 {
     phone = [[phone componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""];
     _userPhone = phone;
+    _countryId = countryId;
     [CKUserServerConnection sharedInstance].phoneNumber = phone;
     [CKMessageServerConnection sharedInstance].phoneNumber = phone;
     
@@ -367,15 +385,21 @@
                 
                 CKUserModel *profile;
                 
-                if ([result socketMessageStatus] == S_OK) {
+                if ([result socketMessageStatus] == S_OK ) {
                     profile = [CKUserModel modelWithDictionary:[result socketMessageResult]];
-                }else if ([result socketMessageStatus] == S_REQUEST_ERROR){
-                    profile = [CKUserModel new];
+                    if (![[CKApplicationModel sharedInstance] countryExistWithId:profile.countryId]) {
+                        NSDictionary *country = [[CKApplicationModel sharedInstance] countryWithId:self.countryId];
+                        profile.iso = [country[@"iso"] integerValue];
+                        profile.countryName = country[@"name"];
+                        profile.countryId = self.countryId;
+                    }
+                    self.userProfile = profile;
+                }else {
+                    profile = [[CKApplicationModel sharedInstance] userProfile];
                 }
                 
                 if (profile) {
-                    self.userProfile = profile;
-                    if (_isNewUser || !self.userProfile.isCreated) {
+                    if (_isNewUser) {
                         [self.mainController showCreateProfile];
                     }else{
                         [self.mainController showRestoreHistory];

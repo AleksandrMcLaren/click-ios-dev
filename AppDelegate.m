@@ -54,6 +54,8 @@
     
     // copy database from resources
     NSString *destPath = [AppDelegate databasePath];
+    NSLog(@"DB Path:%@", destPath);
+    
     if (![[NSFileManager defaultManager] fileExistsAtPath:destPath])
     {
         NSString *sourcePath = [[NSBundle mainBundle] pathForResource:@"click" ofType:@"db"];

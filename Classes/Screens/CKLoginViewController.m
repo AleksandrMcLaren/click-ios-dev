@@ -155,7 +155,10 @@
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction *a) {
                                                              
-                                                              [[CKApplicationModel sharedInstance] sendUserPhone:[NSString stringWithFormat:@"%@%@", countryData[@"phonecode"], _phoneTextField.text] promo:_promoTextField.text];
+                                                              [[CKApplicationModel sharedInstance]
+                                                                sendUserPhone:[NSString stringWithFormat:@"%@%@", countryData[@"phonecode"], _phoneTextField.text]
+                                                                promo:_promoTextField.text
+                                                                countryId:_countryId];
                                                           }];
     [phoneWarning addAction:confirmAction];
     [phoneWarning addAction:cancelAction];
