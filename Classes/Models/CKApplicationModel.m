@@ -14,6 +14,7 @@
 #import "CKServerConnection.h"
 #import "CKUserServerConnection.h"
 #import "CKMessageServerConnection.h"
+#import "Reachability.h"
 
 @implementation CKUserModel
 
@@ -169,7 +170,9 @@
 
 @end
 
-@interface CKApplicationModel()<CLLocationManagerDelegate>
+@interface CKApplicationModel()<CLLocationManagerDelegate>{
+    Reachability* _internetReachable;
+}
 
 @property (nonatomic, strong) NSString *token;
 @property (nonatomic, strong) CKUserModel *userProfile;
@@ -328,46 +331,56 @@
 - (void) sendUserPhone:(NSString *)phone promo:(NSString *)promo countryId:(NSInteger)countryId
 {
     phone = [[phone componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""];
-    _userPhone = phone;
-    _countryId = countryId;
-    [CKUserServerConnection sharedInstance].phoneNumber = phone;
-    [CKMessageServerConnection sharedInstance].phoneNumber = phone;
-    
     NSString* operation = @"user.checkuser";
     [_mainController beginOperation:operation];
     
-    [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSDictionary *result) {
-        [_mainController endOperation:operation];
-        if ([result socketMessageStatus] == S_OK){
-            _isNewUser = YES;
-            
-            //        result == 1 || result == -1, тогда пользователя можно восстановить, иначе - пользователь новый, пользователь видит инфу
-            
-            switch ([result socketMessageResultInteger]) {
-                case 0:
-                    NSLog(@"0 – Пользователя или нет или неактивирован");
-                    _isNewUser = YES;
-                    break;
-                    
-                case 1:
-                    NSLog(@"1 – все нормально,");
-                    _isNewUser = NO;
-                    break;
-                    
-                case -1:
-                    NSLog(@"-1 – есть, активирован но регистрация не завершена, нет профиля");
-                    _isNewUser = YES;
-                    break;
-                default:
-                    break;
+    [self testInternetConnection:^(Reachability *reachability) {
+        [_internetReachable stopNotifier];
+        _userPhone = phone;
+        _countryId = countryId;
+        [CKUserServerConnection sharedInstance].phoneNumber = phone;
+        [CKMessageServerConnection sharedInstance].phoneNumber = phone;
+        
+       
+        [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSDictionary *result) {
+            [_mainController endOperation:operation];
+            if ([result socketMessageStatus] == S_OK){
+                _isNewUser = YES;
+                
+                //        result == 1 || result == -1, тогда пользователя можно восстановить, иначе - пользователь новый, пользователь видит инфу
+                
+                switch ([result socketMessageResultInteger]) {
+                    case 0:
+                        NSLog(@"0 – Пользователя или нет или неактивирован");
+                        _isNewUser = YES;
+                        break;
+                        
+                    case 1:
+                        NSLog(@"1 – все нормально,");
+                        _isNewUser = NO;
+                        break;
+                        
+                    case -1:
+                        NSLog(@"-1 – есть, активирован но регистрация не завершена, нет профиля");
+                        _isNewUser = YES;
+                        break;
+                    default:
+                        break;
+                }
+                [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo callback:^(NSDictionary *result) {
+                    [self.mainController showAuthenticationScreen];
+                }];
+            }else{
+                [_mainController showAlertWithResult:result completion:nil];
             }
-            [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo callback:^(NSDictionary *result) {
-                [self.mainController showAuthenticationScreen];
-            }];
-        }else{
-            [_mainController showAlertWithResult:result completion:nil];
-        }
+        }];
+    } unreachableBlock:^(Reachability *reachability) {
+        [_internetReachable stopNotifier];
+        [_mainController endOperation:operation];
+        [_mainController showAlertWithResult:nil completion:nil];
     }];
+    
+
 }
 
 - (void)sendPhoneAuthenticationCode:(NSString *)code
@@ -717,4 +730,14 @@
     
 }
 
+
+- (void)testInternetConnection:(NetworkReachable) reachableBlock unreachableBlock:(NetworkUnreachable) unreachableBlock
+{
+    _internetReachable = [Reachability reachabilityWithHostname:CK_URL_BASE];
+    // Internet is reachable
+    _internetReachable.reachableBlock = reachableBlock;
+    // Internet is not reachable
+    _internetReachable.unreachableBlock = unreachableBlock;
+    [_internetReachable startNotifier];
+}
 @end

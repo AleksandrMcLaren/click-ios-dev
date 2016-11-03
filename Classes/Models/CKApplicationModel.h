@@ -12,6 +12,7 @@
 #import "CKServerConnection.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "CKOperationsProtocol.h"
+#import "Reachability.h"
 
 @class CKChatModel;
 
@@ -115,5 +116,6 @@
 - (void)storeChat:(CKChatModel *)model withId:(NSString *)id;
 - (CKChatModel *)getChatModelWithId:(NSString *)id;
 
+- (void)testInternetConnection:(NetworkReachable) reachableBlock unreachableBlock:(NetworkUnreachable) unreachableBlock;
 
 @end

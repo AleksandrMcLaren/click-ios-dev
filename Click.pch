@@ -35,6 +35,7 @@
 
 #import "Masonry.h"
 
+#define CK_URL_BASE @"https://chatclick.ru/"
 #define CK_URL_AVATAR @"https://chatclick.ru:8102/avatar/"
 #define CK_STANDART_CONTROL_HEIGHT 44
 #define CK_STANDART_CONTROL_PADDING  16.0;

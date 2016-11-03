@@ -18,6 +18,7 @@
 #import "UIView+Shake.h"
 #import "CKOperationsProtocol.h"
 #import "UIButton+ContinueButton.h"
+#import "Reachability.h"
 
 @interface CKLoginViewController()<CKCountrySelectionControllerDelegate, UITextFieldDelegate, CKOperationsProtocol>
 
@@ -154,7 +155,6 @@
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:confirm
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction *a) {
-                                                             
                                                               [[CKApplicationModel sharedInstance]
                                                                 sendUserPhone:[NSString stringWithFormat:@"%@%@", countryData[@"phonecode"], _phoneTextField.text]
                                                                 promo:_promoTextField.text

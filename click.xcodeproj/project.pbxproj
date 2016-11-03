@@ -14,6 +14,8 @@
 		3D3AD6EB1DBE61B30017ACFD /* CKActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AD6EA1DBE61B30017ACFD /* CKActivityViewController.m */; };
 		3D3AD7EC1DBF95880017ACFD /* UIButton+ContinueButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AD7EB1DBF95880017ACFD /* UIButton+ContinueButton.m */; };
 		3D7884831DACCE8B00777E10 /* UIView+Shake.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7884821DACCE8B00777E10 /* UIView+Shake.m */; };
+		3DBC3B461DCAF2430070F998 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DBC3B451DCAF2430070F998 /* SystemConfiguration.framework */; };
+		3DBC3B491DCAF3810070F998 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBC3B481DCAF3810070F998 /* Reachability.m */; };
 		3DC742441DBBC75000F47599 /* NSDate+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC742431DBBC75000F47599 /* NSDate+Utils.m */; };
 		3DCDBE391DC6F406001CA851 /* NSString+Verify.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCDBE381DC6F406001CA851 /* NSString+Verify.m */; };
 		60673FF2F4F098A555D5E963 /* libPods-click.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC7724C494AFD4568ED92B4 /* libPods-click.a */; };
@@ -138,6 +140,9 @@
 		3D3BD6711DAF9BB500997A0E /* CKStatusCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKStatusCode.h; sourceTree = "<group>"; };
 		3D7884811DACCE8B00777E10 /* UIView+Shake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Shake.h"; sourceTree = "<group>"; };
 		3D7884821DACCE8B00777E10 /* UIView+Shake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Shake.m"; sourceTree = "<group>"; };
+		3DBC3B451DCAF2430070F998 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		3DBC3B471DCAF3810070F998 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../Screens/Reachability.h; sourceTree = "<group>"; };
+		3DBC3B481DCAF3810070F998 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ../Screens/Reachability.m; sourceTree = "<group>"; };
 		3DBE524D1DC2FDB0001D50D7 /* CKViewControllerRotation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKViewControllerRotation.h; sourceTree = "<group>"; };
 		3DC742421DBBC75000F47599 /* NSDate+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utils.h"; sourceTree = "<group>"; };
 		3DC742431DBBC75000F47599 /* NSDate+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utils.m"; sourceTree = "<group>"; };
@@ -326,6 +331,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DBC3B461DCAF2430070F998 /* SystemConfiguration.framework in Frameworks */,
 				784083981D49D65700D068F1 /* libsqlite3.tbd in Frameworks */,
 				78D33D321D21766100B61F21 /* AVKit.framework in Frameworks */,
 				78D33D311D21766100B61F21 /* AVFoundation.framework in Frameworks */,
@@ -344,6 +350,7 @@
 		26A3A00136B7D779A1131F60 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3DBC3B451DCAF2430070F998 /* SystemConfiguration.framework */,
 				784083971D49D65700D068F1 /* libsqlite3.tbd */,
 				78D33D341D236BF400B61F21 /* MapKit.framework */,
 				78D33D2F1D21766100B61F21 /* AVFoundation.framework */,
@@ -421,6 +428,8 @@
 		7831EDAB1C90018500319191 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				3DBC3B471DCAF3810070F998 /* Reachability.h */,
+				3DBC3B481DCAF3810070F998 /* Reachability.m */,
 				3D7884811DACCE8B00777E10 /* UIView+Shake.h */,
 				3D7884821DACCE8B00777E10 /* UIView+Shake.m */,
 				78BEA98F1CAE5DF0004E85DB /* CKAvatarView.h */,
@@ -820,6 +829,7 @@
 				7831EDBA1C90A24700319191 /* CKApplicationModel.m in Sources */,
 				78BF5F6C1CB18F670026475B /* CKChatListCell.m in Sources */,
 				782A00031D0AB9EE00802097 /* CKAudioAttachModel.m in Sources */,
+				3DBC3B491DCAF3810070F998 /* Reachability.m in Sources */,
 				78BEA9731CAADA49004E85DB /* CKFriendProfileController.m in Sources */,
 				7807CF741CCB5E7900D9DF9B /* CKGroupChatModel.m in Sources */,
 				78BEA93E1CAAA47D004E85DB /* CKHTTPRequest.m in Sources */,
