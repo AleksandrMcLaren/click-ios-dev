@@ -334,8 +334,8 @@
     NSString* operation = @"user.checkuser";
     [_mainController beginOperation:operation];
     
-    [self testInternetConnection:^(Reachability *reachability) {
-        [_internetReachable stopNotifier];
+//    [self testInternetConnection:^(Reachability *reachability) {
+//        [_internetReachable stopNotifier];
         _userPhone = phone;
         _countryId = countryId;
         [CKUserServerConnection sharedInstance].phoneNumber = phone;
@@ -374,11 +374,14 @@
                 [_mainController showAlertWithResult:result completion:nil];
             }
         }];
-    } unreachableBlock:^(Reachability *reachability) {
-        [_internetReachable stopNotifier];
-        [_mainController endOperation:operation];
-        [_mainController showAlertWithResult:nil completion:nil];
-    }];
+//    } unreachableBlock:^(Reachability *reachability) {
+//        [_internetReachable stopNotifier];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [_mainController endOperation:operation];
+//            [_mainController showAlertWithResult:nil completion:nil];
+//        });
+//
+//    }];
     
 
 }

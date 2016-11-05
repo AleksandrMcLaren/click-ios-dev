@@ -114,7 +114,9 @@
     }
     _connection = [[SRWebSocket alloc] initWithURL:url];
     _connection.delegate = self;
-    _queue = [NSMutableArray new];
+//    if (!_queue) {
+        _queue = [NSMutableArray new];
+//    }
     _isConnecting = YES;
     [_connection open];
 
@@ -169,8 +171,8 @@
     if(_connection.readyState == SR_CONNECTING) {
         [_queue addObject:sendString];
     } else if(_connection.readyState == SR_CLOSED) {
-        [_queue addObject:sendString];
         [self connect];
+        [_queue addObject:sendString];
     } else {
         [_connection send:sendString];
     }
@@ -245,7 +247,13 @@
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error
 {
     NSLog(@"didFailWithError %@ %@", webSocket.url, error);
-    _isConnected = NO;
+     _isConnected = NO;
+    if (_connection.readyState == SR_CLOSED) {
+        //Error Domain=com.squareup.SocketRocket Code=504 "Timeout Connecting to Server" UserInfo={NSLocalizedDescription=Timeout Connecting to Server}
+        if (error.code == 504) {
+             [self runCallBackWithError];
+        }
+    }
 }
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean
 {
@@ -258,16 +266,19 @@
         NSLog(@"Reconnect");
         if ((_callbacks.count) && (!_queue.count)) {
             NSLog(@"Есть не обработанные callbacks");
-            for (id callBack in _callbacks.allValues) {
-                NSLog(@"%@ class", callBack );
-                [self runCallBack:callBack withValue:@{CKSocketMessageFieldStatus:@(S_UNDEFINED)}];
-            }
-            [_callbacks removeAllObjects];
+            [self runCallBackWithError];
         }
         [self connect];
     }
 }
 
+-(void)runCallBackWithError{
+    for (id callBack in _callbacks.allValues) {
+        NSLog(@"%@ class", callBack );
+        [self runCallBack:callBack withValue:@{CKSocketMessageFieldStatus:@(S_UNDEFINED)}];
+    }
+    [_callbacks removeAllObjects];
+}
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload
 {
