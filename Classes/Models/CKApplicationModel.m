@@ -362,7 +362,7 @@
                         
                     case -1:
                         NSLog(@"-1 – есть, активирован но регистрация не завершена, нет профиля");
-                        _isNewUser = YES;
+                        _isNewUser = NO;
                         break;
                     default:
                         break;
