@@ -20,32 +20,36 @@
 
 @implementation CKUserModel
 
+-(void)initizlize{
+    self.id = nil;
+    self.login = @"";
+    self.name = @"";
+    self.surname = @"";
+    self.sex = @"";
+    self.avatarName = nil;
+    self.iso = -1;
+    self.countryId = 0;
+    self.countryName = nil;
+    self.city = 0;
+    self.cityName = nil;
+    self.status = 0;
+    self.invite = nil;
+    self.location = kCLLocationCoordinate2DInvalid;
+    self.distance = 0;
+    self.geoStatus = 0;
+    self.isFriend = NO;
+    self.likes = 0;
+    self.isLiked = NO;
+    self.age = 0;
+    self.birthDate = nil;
+    self.registeredDate = nil;
+    self.statusDate = nil;
+    self.avatar = nil;
+}
+
 -(instancetype)init{
     if (self = [super init]) {
-        self.id = nil;
-        self.login = @"";
-        self.name = @"";
-        self.surname = @"";
-        self.sex = @"";
-        self.avatarName = nil;
-        self.iso = -1;
-        self.countryId = -1;
-        self.countryName = nil;
-        self.city = -1;
-        self.cityName = nil;
-        self.status = 0;
-        self.invite = nil;
-        self.location = kCLLocationCoordinate2DInvalid;
-        self.distance = 0;
-        self.geoStatus = 0;
-        self.isFriend = NO;
-        self.likes = 0;
-        self.isLiked = NO;
-        self.age = 0;
-        self.birthDate = nil;
-        self.registeredDate = nil;
-        self.statusDate = nil;
-
+        [self initizlize];
     }
     return self;
 }
@@ -88,11 +92,6 @@
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss"];
         dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
-        
-//        NSString* bd = sourceDict[@"birthdate"];
-//        NSDate* dt = [dateFormatter dateFromString:bd];
-//        
-//        NSLog(@"%@", [dateFormatter stringFromDate:[NSDate new]]);
         
         model.birthDate =  [sourceDict[@"birthdate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil : [dateFormatter dateFromString:sourceDict[@"birthdate"]];
         model.registeredDate =  [sourceDict[@"registereddate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil :[dateFormatter dateFromString:sourceDict[@"registereddate"]];
@@ -183,6 +182,10 @@
         }
     }
     
+}
+
+-(void)clear{
+     [self initizlize];
 }
 
 @end
@@ -529,9 +532,12 @@
     }];
 }
 
-- (void) abandonHistory
+- (void) restoreProfile:(bool) clearProfile
 {
-//    [self showMainScreen];
+    if (clearProfile) {
+        self.userProfile = nil;
+    }
+    
     [[self mainController] showCreateProfile];
 }
 
@@ -674,9 +680,9 @@
             CKPhoneContact* contact = [phoneUsers objectAtIndex:i];
             NSString* phone = contact.phoneNumber;
             contact.phoneNumber = [[phone componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""];
-            if([[contact.phoneNumber substringToIndex:1] isEqualToString:@"8"]) {
-                contact.phoneNumber = [NSString stringWithFormat:@"%@%@", @"7", [contact.phoneNumber substringFromIndex:1]];
-            }
+//            if([[contact.phoneNumber substringToIndex:1] isEqualToString:@"8"]) {
+//                contact.phoneNumber = [NSString stringWithFormat:@"%@%@", @"7", [contact.phoneNumber substringFromIndex:1]];
+//            }
         }
         // remove duplicates
         NSMutableIndexSet* toRemove = [NSMutableIndexSet new];

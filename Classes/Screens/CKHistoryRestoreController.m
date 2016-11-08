@@ -120,11 +120,12 @@
     
     
     _abandonButton = [[UIButton alloc] initContinueButton];
+    _abandonButton.tag = 0;
     [_abandonButton setTitle:@"Не восстанавливать" forState:UIControlStateNormal];
     [self.view addSubview:_abandonButton];
     [_abandonButton.layer addAnimation:animation forKey:@"kCATransitionFade"];
     
-    [_abandonButton addTarget:self action:@selector(abandon) forControlEvents:UIControlEventTouchUpInside];
+    [_abandonButton addTarget:self action:@selector(restoreProfile:) forControlEvents:UIControlEventTouchUpInside];
     
     float padding = CK_STANDART_CONTROL_PADDING;
     
@@ -209,6 +210,7 @@
     [[CKApplicationModel sharedInstance] restoreHistoryWithCallback:^(NSDictionary *result) {
         _abandonButton.enabled = YES;
         _restoreButton.enabled = YES;
+        _abandonButton.tag = 1;
         
         [self endOperation:@"restoreHistory"];
         NSMutableArray *dialogs = [NSMutableArray new];
@@ -234,9 +236,9 @@
     }];
 }
 
-- (void)abandon
+- (void)restoreProfile:(UIButton*)sender
 {
-    [[CKApplicationModel sharedInstance] abandonHistory];
+    [[CKApplicationModel sharedInstance] restoreProfile:(sender.tag == 0)];
 }
 
 

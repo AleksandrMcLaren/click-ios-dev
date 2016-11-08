@@ -50,6 +50,7 @@
 @property (nonatomic, assign, readonly) BOOL isCreated;
 
 -(void)setImageToImageView:(UIImageView*)imageView; //not used
+-(void)clear;
 
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict;
 
@@ -95,7 +96,7 @@
 - (void) requestAuthentication;
 - (void) sendPhoneAuthenticationCode:(NSString *)code;
 - (void) restoreHistoryWithCallback:(CKServerConnectionExecuted)callback;
-- (void) abandonHistory;
+- (void) restoreProfile:(bool)clearProfile;
 - (void) submitNewProfile;
 - (void) getLocationInfowithCallback:(CKServerConnectionExecutedObject)callback;
 // определять по местоположению пользователя

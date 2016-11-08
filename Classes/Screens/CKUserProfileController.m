@@ -236,18 +236,6 @@ typedef enum CKLoginState{
 {
     [self dismissKeyboard];
     
-//    CKProfileHeaderView *header = (CKProfileHeaderView *)self.tableView.tableHeaderView;
-    
-//    if (!header.firstName.text.length) {
-//        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
-//        [header.firstName shake];
-//        return;
-//    }
-//    if (!header.secondName.text.length) {
-//        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
-//        [header.secondName shake];
-//        return;
-//    }
     if (!_loginCell.login.text.length) {
         [_loginCell.login shake];
         return;
