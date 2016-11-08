@@ -165,27 +165,22 @@
     return self.id != nil;
 }
 
-
--(void)setImageToImageView:(UIImageView*)imageView{
-    if (self.avatar) {
-        [imageView setImage:self.avatar];
-    }else{
-        if (self.avatarName && (self.avatarName.length > 0)) {
-            [imageView sd_setImageWithURL:[NSURL URLWithString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                [[CKCache sharedInstance] putImage:image withURLString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString];
-                self.avatar = image;
-            }];
-        }else{
-            UIImage* image = [UIImage imageNamed:@"ic_photo_contact"];
-            [imageView setImage:image];
-            self.avatar = image;
+-(void)setAvatar:(UIImage *)avatar{
+    
+    CGFloat maxSize = 400;
+    if (avatar) {
+        if (MIN(avatar.size.height, avatar.size.width) > maxSize) {
+            CGFloat k = maxSize / MAX(avatar.size.height, avatar.size.width);
+            
+            CGSize newSize = CGSizeMake(avatar.size.width*k, avatar.size.height*k);
+            UIGraphicsBeginImageContext(newSize);
+            [avatar drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+            avatar = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
         }
     }
     
-}
-
--(void)clear{
-     [self initizlize];
+    _avatar = avatar;
 }
 
 @end
@@ -219,7 +214,7 @@
 {
     if (self = [super init])
     {
-        _token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
+//        _token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
         _userPhone = [[NSUserDefaults standardUserDefaults] objectForKey:@"phoneNumber"];
         _countryId = 2017370;
         _isNewUser = NO;
@@ -232,7 +227,7 @@
             [CKMessageServerConnection sharedInstance].phoneNumber = _userPhone;
 
         }
-            
+
     }
     return self;
 }

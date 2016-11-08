@@ -49,9 +49,6 @@
 @property (nonatomic, strong, readonly) NSString* avatarURLString;
 @property (nonatomic, assign, readonly) BOOL isCreated;
 
--(void)setImageToImageView:(UIImageView*)imageView; //not used
--(void)clear;
-
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict;
 
 @property (strong, nonatomic) RACCommand *executeSearch;
@@ -104,7 +101,7 @@
 
 - (BOOL)countryExistWithId:(NSInteger)id;
 - (NSDictionary *)countryWithId:(NSInteger)id;
-- (NSDictionary *)countryWithISO:(NSInteger)iso;
+
 
 // данные пользователя
 @property (nonatomic, readonly) CKUserModel *userProfile;
