@@ -12,12 +12,15 @@
 #import "CKCustomPointAnnotation.h"
 #import "CKCustomPinAnnotation.h"
 #import "AppDelegate.h"
-#import "CKUserAvatarView.h"
+//#import "CKUserAvatarView.h"
 #import "CKUserServerConnection.h"
 #import "CKMessageServerConnection.h"
 #import "CKClusterPointAnnotation.h"
 #import "CKClustepPinAnnotation.h"
+//#import "CKUserProfileController.h"
 #import "CKFiltersForMapViewController.h"
+#import "CKFriendProfileController.h"
+#import "CKDialogChatController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "CKCache.h"
 
@@ -166,7 +169,6 @@
     double miles = 0.5;
     ffmvc = [CKFiltersForMapViewController new];
     ffmvc.switchOn = true;
-    //_switchOn = true;
     MKCoordinateSpan span;
     span.latitudeDelta = miles/69.0;
     span.longitudeDelta = miles/69.0;
@@ -176,7 +178,7 @@
     _mapView.showsUserLocation = YES;
     MKCoordinateRegion region;
     region.span = span;
-    [_mapView setRegion:region animated:YES];
+    //[_mapView setRegion:region animated:YES];
     [_mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
     [self.view addSubview:_mapView];
     
@@ -218,6 +220,7 @@
     ffmvc.maxage = @99;
     ffmvc.sex = @"Любой";
     ffmvc.allUsers = true;
+    _allUsersT = true;
     ffmvc.name = @"";
     ffmvc.country = @"";
     ffmvc.countryImageIso = 0;
@@ -233,6 +236,8 @@
     if ([annotation isKindOfClass:[CKCustomPointAnnotation class]])
     {
         CKCustomPinAnnotation* pin = [[CKCustomPinAnnotation alloc]initWithAnnotation:annotation];
+        pin.leftCalloutAccessoryView.tag = 1;
+        pin.rightCalloutAccessoryView.tag = 2;
         return pin;
     }
     if ([annotation isKindOfClass: [CKClusterPointAnnotation class]])
@@ -241,6 +246,35 @@
         return pin2;
     }
     return nil;
+}
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
+{
+    id <MKAnnotation> annotation = [view annotation];
+    if ([annotation isKindOfClass:[CKCustomPointAnnotation class]])
+    {
+        if ([control tag] == 1)
+        {
+            CKCustomPointAnnotation *ckcpa = view.annotation;
+            CKFriendProfileController *ckfpc = [[CKFriendProfileController alloc] initWithUser:ckcpa.profile];
+            ckfpc.wentFromTheMap = true;
+            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: ckfpc];
+            navController.modalTransitionStyle = UIModalPresentationOverCurrentContext;
+            [self presentViewController:navController animated:YES completion:nil];
+            //ckupc.ownerProfile = true;
+        }
+        else if ([control tag] == 2)
+        {
+            CKCustomPointAnnotation *ckcpa = view.annotation;
+            CKDialogChatController *ctl = [[CKDialogChatController alloc] initWithUserId:ckcpa.profile.id];
+            ctl.user = ckcpa.profile;
+            ctl.wentFromTheMap = true;
+            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: ctl];
+            navController.modalTransitionStyle = UIModalPresentationOverCurrentContext;
+            [self presentViewController:navController animated:YES completion:nil];
+            //[self.navigationController pushViewController:ctl animated:YES];
+        }
+    }
 }
 
 - (void) reloadAnnotations
@@ -383,6 +417,7 @@
                         
                         pin.coordinate = CLLocationCoordinate2DMake(cluster.location.latitude, cluster.location.longitude);
                         pin.sex = user.sex;
+                        pin.profile = user;
                         //UIImage *avatarImage = [[CKCache sharedInstance] imageWithURLString:user.avatarURLString];
                         NSURL *avatarUrl = [NSURL URLWithString:user.avatarURLString];
                         //UIImage *avatarImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:user.avatarURLString]]];
@@ -412,7 +447,6 @@
 }
 
 - (void) viewDidAppear:(BOOL)animated{
-    
     CGFloat padding = _padding;
     count = 0;
     [_plusButton makeConstraints:^(MASConstraintMaker *make) {

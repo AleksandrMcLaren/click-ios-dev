@@ -15,5 +15,6 @@
 - (instancetype)initWithUserId:(NSString *)userId;
 
 @property (nonatomic, strong) CKUserModel *user;
+@property (nonatomic, assign) BOOL wentFromTheMap;
 
 @end

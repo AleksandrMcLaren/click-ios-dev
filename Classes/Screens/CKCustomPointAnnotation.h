@@ -14,5 +14,6 @@
 @property (nonatomic, strong) NSURL *avatar;
 @property (nonatomic, copy) NSString *sex;
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) CKUserModel *profile;
 
 @end

@@ -17,6 +17,7 @@
     self = [super initWithAnnotation:annotation reuseIdentifier:@"CKCustomPinAnnotation"];
     CKCustomPointAnnotation *ann = (CKCustomPointAnnotation *) annotation;
     self.sex = ann.sex;
+    self.profile = ann.profile;
     self.canShowCallout = YES;
     
     BOOL imageWithPhoto = false;
@@ -31,14 +32,14 @@
         str = [ann.name substringToIndex:1];
     }
     UIButton *imageButton = [UIButton new];
-    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 22, 22)];
+    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 32, 32)];
     UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:ann.avatar]];
     UIImage *imageForEmptyAnn = [UIImage new];
     if ([_sex isEqual:@"f"])
     {
         if (image !=nil)
         {
-            image = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(20, 20)];
+            image = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(30, 30)];
             image = [CKUserAvatarView imageWithPurpleBorderAndRoundCornersWithImage:image lineWidth:1.5 cornerRadius:image.size.width/2];
             self.image = image;
             imageWithPhoto = true;
@@ -47,13 +48,14 @@
         {
             //image = [CKUserAvatarView purpleCircle];
             self.image = [CKUserAvatarView purpleCircle];
-            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
             label.textAlignment = NSTextAlignmentCenter;
             label.textColor = [UIColor whiteColor];
             label.text = [NSString stringWithFormat:@"%@", str];
-            label.font = [label.font fontWithSize:9];
+            label.font = [label.font fontWithSize:12];
             [self addSubview:label];
-            imageForEmptyAnn = [CKUserAvatarView drawText:str inImage:self.image atPoint:CGPointMake(5, 2)];
+            //imageForEmptyAnn = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(30, 30)];
+            imageForEmptyAnn = [CKUserAvatarView drawText:str inImage:self.image atPoint:CGPointMake(0, 6)];
             imageWithPhoto = false;
             //            self.image = image;
             
@@ -63,7 +65,7 @@
     {
         if (image !=nil)
         {
-            image = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(20, 20)];
+            image = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(30, 30)];
             image = [CKUserAvatarView imageWithBlueBorderAndRoundCornersWithImage:image lineWidth:1.5 cornerRadius:image.size.width/2];
             self.image = image;
             imageWithPhoto = true;
@@ -71,13 +73,14 @@
         else
         {
             self.image = [CKUserAvatarView blueCircle];
-            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
             label.textAlignment = NSTextAlignmentCenter;
             label.textColor = [UIColor whiteColor];
             label.text = [NSString stringWithFormat:@"%@", str];
             label.font = [label.font fontWithSize:9];
             [self addSubview:label];
-            imageForEmptyAnn = [CKUserAvatarView drawText:str inImage:self.image atPoint:CGPointMake(7, 2)];
+            //imageForEmptyAnn = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(30, 30)];
+            imageForEmptyAnn = [CKUserAvatarView drawText:str inImage:self.image atPoint:CGPointMake(0, 6)];
             imageWithPhoto = false;
         }
     }
@@ -85,7 +88,7 @@
     {
         if (image !=nil)
         {
-            image = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(20, 20)];
+            image = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(30, 30)];
             image = [CKUserAvatarView imageWithGrayBorderAndRoundCornersWithImage:image lineWidth:1.5 cornerRadius:image.size.width/2];
             self.image = image;
             imageWithPhoto = true;
@@ -93,13 +96,14 @@
         else
         {
             self.image = [CKUserAvatarView greyCircle];
-            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
             label.textAlignment = NSTextAlignmentCenter;
             label.textColor = [UIColor whiteColor];
             label.text = [NSString stringWithFormat:@"%@", str];
             label.font = [label.font fontWithSize:9];
             [self addSubview:label];
-            imageForEmptyAnn = [CKUserAvatarView drawText:str inImage:self.image atPoint:CGPointMake(5, 2)];
+            //imageForEmptyAnn = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(30, 30)];
+            imageForEmptyAnn = [CKUserAvatarView drawText:str inImage:self.image atPoint:CGPointMake(0, 6)];
             imageWithPhoto = false;
         }
     }
@@ -144,7 +148,5 @@
     }
     return isInside;
 }
-
-
 
 @end

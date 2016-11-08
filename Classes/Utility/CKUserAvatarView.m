@@ -131,11 +131,11 @@
     static UIImage *blueCircle = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(20.f, 20.f), NO, 0.0f);
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(30.f, 30.f), NO, 0.0f);
         CGContextRef ctx = UIGraphicsGetCurrentContext();
         CGContextSaveGState(ctx);
         
-        CGRect rect = CGRectMake(0, 0, 20, 20);
+        CGRect rect = CGRectMake(0, 0, 30, 30);
         CGContextSetFillColorWithColor(ctx, [UIColor blueColor].CGColor);
         CGContextFillEllipseInRect(ctx, rect);
         
@@ -150,11 +150,11 @@
     static UIImage *purpleCircle = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(20.f, 20.f), NO, 0.0f);
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(30.f, 30.f), NO, 0.0f);
         CGContextRef ctx = UIGraphicsGetCurrentContext();
         CGContextSaveGState(ctx);
         
-        CGRect rect = CGRectMake(0, 0, 20, 20);
+        CGRect rect = CGRectMake(0, 0, 30, 30);
         CGContextSetFillColorWithColor(ctx, [UIColor magentaColor].CGColor);
         CGContextFillEllipseInRect(ctx, rect);
         
@@ -169,11 +169,11 @@
     static UIImage *greyCircle = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(20.f, 20.f), NO, 0.0f);
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(30.f, 30.f), NO, 0.0f);
         CGContextRef ctx = UIGraphicsGetCurrentContext();
         CGContextSaveGState(ctx);
         
-        CGRect rect = CGRectMake(0, 0, 20, 20);
+        CGRect rect = CGRectMake(0, 0, 30, 30);
         CGContextSetFillColorWithColor(ctx, [UIColor grayColor].CGColor);
         CGContextFillEllipseInRect(ctx, rect);
         
@@ -195,11 +195,15 @@
     
     [textStyle addAttribute:NSFontAttributeName  value:[UIFont systemFontOfSize:12.0] range:NSMakeRange(0, textStyle.length)];
     
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc]init] ;
+    [paragraphStyle setAlignment:NSTextAlignmentCenter];
+    [textStyle addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [text length])];
+    
     UIGraphicsBeginImageContext(image.size);
     [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
     CGRect rect = CGRectMake(point.x, point.y, image.size.width, image.size.height);
     [[UIColor whiteColor] set];
-    
+
     [textStyle drawInRect:CGRectIntegral(rect)];
     
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -212,20 +216,22 @@
     static UIImage *blueCircle = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(15.f, 15.f), NO, 0.0f);
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(30.f, 30.f), NO, 0.0f);
         CGContextRef ctx = UIGraphicsGetCurrentContext();
         CGContextSaveGState(ctx);
         
-        CGRect rect = CGRectMake(0, 0, 15, 15);
+        CGRect rect = CGRectMake(0, 0, 30, 30);
         CGContextSetFillColorWithColor(ctx, [[UIColor blueColor] colorWithAlphaComponent:0.6].CGColor);
         CGContextFillEllipseInRect(ctx, rect);
         
         CGContextRestoreGState(ctx);
         blueCircle = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
+        //coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
         
     });
     return blueCircle;
 }
+
 
 @end

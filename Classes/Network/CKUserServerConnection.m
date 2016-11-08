@@ -80,6 +80,11 @@
     }];
 }
 
+- (void) setUserStatus: (NSNumber *)status
+{
+    [self sendData:@{@"action":@"user.setstatus", @"options":@{@"status":[NSNumber numberWithInteger: [status integerValue]]}} completion: nil];
+}
+
 - (void)getRegionsInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback
 {
     [self sendData:@{@"action":@"geo.region.list", @"options":@{@"continent":@[],@"country":@[@(countryId)], @"locale":@"ru",@"filter":@[], @"mask":@""}} completion:^(NSDictionary *result) {

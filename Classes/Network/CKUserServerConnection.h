@@ -28,5 +28,6 @@
 - (void)getCitiesInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback;
 - (void)getActivationCode:(CKServerConnectionExecuted)callback;
 - (void)getUserListForGeoLocation: (CKServerConnectionExecuted)callback;
+- (void)setUserStatus: (NSNumber *)status;
 
 @end

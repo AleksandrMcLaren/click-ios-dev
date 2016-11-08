@@ -77,6 +77,7 @@
     UIButton *cancelFilters;
     CGFloat _keyboardHeight;
     int countViewUp;
+    BOOL _isKeyboardHidden;
 }
 
 - (instancetype)init
@@ -86,6 +87,7 @@
         self.title = @"Карта";
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Отменить" style: UIBarButtonItemStylePlain target:self action:@selector(dismissClick)];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Применить" style: UIBarButtonItemStylePlain target:self action:@selector(submitClick)];
+        //_isKeyboardHidden = YES;
     }
     return self;
 }
@@ -138,6 +140,7 @@
 
 
 - (void)viewDidLoad {
+    
     map = [CKMapViewController new];
     countViewUp = 1;
     sexTest = _sex;
@@ -429,15 +432,20 @@
 }
 
 - (void) viewWillAppear:(BOOL)animated{
-    //    [[NSNotificationCenter defaultCenter] addObserver:self
-    //                                             selector:@selector(keyboardWillShow:)
-    //                                                 name:UIKeyboardWillShowNotification
-    //                                               object:nil];
-    //
-    //    [[NSNotificationCenter defaultCenter] addObserver:self
-    //                                             selector:@selector(keyboardWillHide:)
-    //                                                 name:UIKeyboardWillHideNotification
-    //                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapScreen)];
+    tapRecognizer.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapRecognizer];
     
     
     data = [NSMutableArray new];
@@ -454,28 +462,39 @@
     _pickerData1 = data1;
 }
 
-//- (void) keyboardWillShow:(NSNotification *)notification
-//{
-//
-//}
-//
-//- (void) keyboardWillHide:(NSNotification *)notification
-//{
-//
-//}
-//
-//
-//- (void)viewWillDisappear:(BOOL)animated
-//{
-//    // unregister for keyboard notifications while not visible.
-//    [[NSNotificationCenter defaultCenter] removeObserver:self
-//                                                    name:UIKeyboardWillShowNotification
-//                                                  object:nil];
-//
-//    [[NSNotificationCenter defaultCenter] removeObserver:self
-//                                                    name:UIKeyboardWillHideNotification
-//                                                  object:nil];
-//}
+- (void) keyboardWillShow:(NSNotification *)notification
+{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:.3];
+    [UIView setAnimationBeginsFromCurrentState:TRUE];
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -100., self.view.frame.size.width, self.view.frame.size.height);
+    
+    [UIView commitAnimations];
+    
+}
+
+- (void) keyboardWillHide:(NSNotification *)notification
+{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:.3];
+    [UIView setAnimationBeginsFromCurrentState:TRUE];
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y +100., self.view.frame.size.width, self.view.frame.size.height);
+    
+    [UIView commitAnimations];
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    // unregister for keyboard notifications while not visible.
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillShowNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+}
 
 - (void) countrySelectionController:(CKCountrySelectionController *)controller didSelectCountryWithId:(NSInteger)id name:(NSString *)name code:(NSNumber *)code
 {
@@ -796,6 +815,38 @@
         select.hidden = YES;
         age.text = [NSString stringWithFormat:@"%@-%@", minageTest, maxageTest];
     }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    
+    return YES;
+}
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:.3];
+    [UIView setAnimationBeginsFromCurrentState:TRUE];
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y -200., self.view.frame.size.width, self.view.frame.size.height);
+    
+    [UIView commitAnimations];
+}
+
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:.3];
+    [UIView setAnimationBeginsFromCurrentState:TRUE];
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y +200., self.view.frame.size.width, self.view.frame.size.height);
+    
+    [UIView commitAnimations];
+}
+
+- (void) tapScreen
+{
+    [self.view endEditing:YES];
 }
 
 @end

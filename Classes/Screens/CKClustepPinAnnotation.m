@@ -20,11 +20,11 @@
     NSString *str = [ann.usersInCluster stringValue];
     UIImage *image = ann.image;
     self.image = [CKUserAvatarView bluePinforClusters];
-    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 15, 15)];
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor whiteColor];
     label.text = [NSString stringWithFormat:@"%@", str];
-    label.font = [label.font fontWithSize:9];
+    label.font = [label.font fontWithSize:12];
     [self addSubview:label];
     return self;
     
