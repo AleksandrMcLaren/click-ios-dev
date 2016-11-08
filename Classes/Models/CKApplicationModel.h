@@ -49,7 +49,7 @@
 @property (nonatomic, strong, readonly) NSString* avatarURLString;
 @property (nonatomic, assign, readonly) BOOL isCreated;
 
-
+-(void)setImageToImageView:(UIImageView*)imageView; //not used
 
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict;
 

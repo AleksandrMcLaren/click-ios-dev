@@ -15,6 +15,8 @@
 #import "CKUserServerConnection.h"
 #import "CKMessageServerConnection.h"
 #import "Reachability.h"
+#import "CKCache.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @implementation CKUserModel
 
@@ -162,6 +164,25 @@
 
 -(BOOL)isCreated{
     return self.id != nil;
+}
+
+
+-(void)setImageToImageView:(UIImageView*)imageView{
+    if (self.avatar) {
+        [imageView setImage:self.avatar];
+    }else{
+        if (self.avatarName && (self.avatarName.length > 0)) {
+            [imageView sd_setImageWithURL:[NSURL URLWithString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                [[CKCache sharedInstance] putImage:image withURLString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString];
+                self.avatar = image;
+            }];
+        }else{
+            UIImage* image = [UIImage imageNamed:@"ic_photo_contact"];
+            [imageView setImage:image];
+            self.avatar = image;
+        }
+    }
+    
 }
 
 @end

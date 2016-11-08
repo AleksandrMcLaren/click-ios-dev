@@ -304,6 +304,7 @@ typedef enum CKLoginState{
     header.secondName.delegate = self;
     header.secondName.text = self.profile.surname;
     
+  
     if (self.profile.avatar) {
         [header.avatar setImage:self.profile.avatar forState:UIControlStateNormal];
     }else{

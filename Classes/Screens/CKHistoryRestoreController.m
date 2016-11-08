@@ -44,11 +44,20 @@
     
     
     _avatar = [[UIImageView alloc] init];
-//    _avatar.image = [[CKApplicationModel sharedInstance] userProfile].avatar;
-    [_avatar sd_setImageWithURL:[NSURL URLWithString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        [[CKCache sharedInstance] putImage:image withURLString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString];
-        [[CKApplicationModel sharedInstance] userProfile].avatar = image;
-    }];
+    _avatar.image = [[CKApplicationModel sharedInstance] userProfile].avatar;
+    
+    CKUserModel* userProfile = [[CKApplicationModel sharedInstance] userProfile];
+    
+    if (userProfile.avatarName && (userProfile.avatarName.length > 0)) {
+        [_avatar sd_setImageWithURL:[NSURL URLWithString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [[CKCache sharedInstance] putImage:image withURLString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString];
+            userProfile.avatar = image;
+        }];
+    }else{
+        UIImage* image = [UIImage imageNamed:@"ic_photo_contact"];
+        [_avatar setImage:image];
+    }
+    
     
     //Работа через кеш
 //    int _iteration = 0;
