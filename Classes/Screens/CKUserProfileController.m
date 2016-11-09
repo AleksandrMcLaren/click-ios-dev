@@ -641,8 +641,8 @@ typedef enum CKLoginState{
             _loginCell.preservesSuperviewLayoutMargins = NO;
             _loginCell.login.delegate = self;
             _loginCell.login.text = self.profile.login;
-//            _loginTextField = cell.login;
             _loginCell.loginState = self.profile.isCreated && self.profile.login.length ?  CKLoginStateNotExist : CKLoginStateNone;
+            _loginCell.login.enabled = !self.restoreProfile;
             return _loginCell;
             
         }

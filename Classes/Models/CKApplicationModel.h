@@ -73,7 +73,7 @@
 - (void) showAuthenticationScreen;
 - (void) showMainScreen;
 - (void) showRestoreHistory;
-- (void) showCreateProfile;
+- (void) showProfile:(BOOL)restore;
 - (void) showAlertWithResult:(NSDictionary*)result completion:(void (^)(void))completion;
 - (id<CKDialogsControllerProtocol>) dialogsController;
 
@@ -93,7 +93,7 @@
 - (void) requestAuthentication;
 - (void) sendPhoneAuthenticationCode:(NSString *)code;
 - (void) restoreHistoryWithCallback:(CKServerConnectionExecuted)callback;
-- (void) restoreProfile:(bool)clearProfile;
+- (void) restoreProfile:(bool) restore;
 - (void) submitNewProfile;
 - (void) getLocationInfowithCallback:(CKServerConnectionExecutedObject)callback;
 // определять по местоположению пользователя

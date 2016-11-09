@@ -435,7 +435,7 @@
                 
                 if (profile) {
                     if (_isNewUser) {
-                        [self.mainController showCreateProfile];
+                        [self.mainController showProfile:NO];
                     }else{
                         [self.mainController showRestoreHistory];
                     }
@@ -527,13 +527,13 @@
     }];
 }
 
-- (void) restoreProfile:(bool) clearProfile
+- (void) restoreProfile:(bool) restore
 {
-    if (clearProfile) {
+    if (!restore) {
         self.userProfile = nil;
     }
     
-    [[self mainController] showCreateProfile];
+    [[self mainController] showProfile:restore];
 }
 
 - (void)submitNewProfile
@@ -765,4 +765,6 @@
     _internetReachable.unreachableBlock = unreachableBlock;
     [_internetReachable startNotifier];
 }
+
+
 @end

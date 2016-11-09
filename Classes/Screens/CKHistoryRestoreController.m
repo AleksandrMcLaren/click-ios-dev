@@ -238,7 +238,7 @@
 
 - (void)restoreProfile:(UIButton*)sender
 {
-    [[CKApplicationModel sharedInstance] restoreProfile:(sender.tag == 0)];
+    [[CKApplicationModel sharedInstance] restoreProfile:(sender.tag != 0)];
 }
 
 

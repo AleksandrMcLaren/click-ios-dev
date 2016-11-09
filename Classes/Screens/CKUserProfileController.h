@@ -12,5 +12,5 @@
 @interface CKUserProfileController : CKActivityViewController
 
 @property (nonatomic, strong) CKUserModel *profile;
-
+@property (nonatomic, assign) BOOL restoreProfile;
 @end

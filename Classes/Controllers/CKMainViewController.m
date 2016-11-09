@@ -111,9 +111,10 @@
     [self replaceCurrentController:controller];
 }
 
-- (void) showCreateProfile
+- (void) showProfile:(BOOL)restore
 {
     CKUserProfileController *controller = [CKUserProfileController new];
+    controller.restoreProfile = restore;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
     nav.navigationBar.backgroundColor = [UIColor whiteColor];
 
