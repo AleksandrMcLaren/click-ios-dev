@@ -778,6 +778,8 @@ typedef enum CKLoginState{
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.view endEditing:YES];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     switch (indexPath.section) {
         case 0:
             [self.tableView deselectRowAtIndexPath:indexPath animated:YES];

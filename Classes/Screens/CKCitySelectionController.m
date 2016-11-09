@@ -17,7 +17,9 @@
     UITableView *_tableView;
     NSArray *_data;
     CGFloat _keyboardHeight;
+    UIActivityIndicatorView* _activityIndicatorView;
 }
+
 - (instancetype)init
 {
     if (self = [super init])
@@ -105,6 +107,8 @@
 
 - (void)loadData
 {
+    [_activityIndicatorView stopAnimating];
+    
     NSMutableString *query = [NSMutableString stringWithFormat:@"select c.id as id, c.name as name, b.name as regionname FROM countries a JOIN regions b ON b.countryid=a.id JOIN cities c ON c.regionid=b.id WHERE a.id=%ld ", (long)self.countryId];
     if (_searchBar.text.length)
     {
@@ -131,9 +135,9 @@
 
 - (void)viewDidLoad
 {
-//    self.edgesForExtendedLayout = UIRectEdgeNone;
-//    self.automaticallyAdjustsScrollViewInsets = NO;
-
+    _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _activityIndicatorView.hidesWhenStopped = YES;
+    
     _searchBar = [[UISearchBar alloc] init];
     _searchBar.showsCancelButton = NO;
     _searchBar.translucent = YES;
@@ -164,31 +168,26 @@
         make.width.equalTo(self.view.width);
         make.bottom.equalTo(self.view.bottom);
     }];
-    if ([self hasData])
-    {
+    
+    [_tableView addSubview:_activityIndicatorView];
+    
+    [_activityIndicatorView makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerY.equalTo(_tableView.contentSize.height/2);
+        make.centerX.equalTo(_tableView.centerX);
+        make.centerY.equalTo(CGRectGetMidY(_tableView.bounds));
+    }];
+    
+    
+    [_activityIndicatorView startAnimating];
+    
+    
+    if ([self hasData]) {
         [self loadData];
-    } else
-    {
-        [[CKUserServerConnection sharedInstance] getRegionsInCountry:self.countryId callback:^(NSDictionary *result) {
-            // load regions to database
+    } else{
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-            if ([result[@"status"] integerValue] == 1005) return;
-            
-            CKDB *ckdb = [CKDB sharedInstance];
-            
-            [ckdb.queue inDatabase:^(FMDatabase *db) {
-                NSArray *cities = result[@"result"];
-                for (NSDictionary *i in cities)
-                {
-                    NSMutableString *query = [NSMutableString new];
-                    [query appendFormat:@"INSERT INTO regions (id, name, countryid) VALUES "];
-                    [query appendFormat:@"(%ld, \"%@\", %ld);\n", [i[@"regionid"] integerValue], i[@"regionname"], [i[@"countryid"] integerValue]];
-                    [db executeUpdate:query];
-                }
-            }];
-            
-            [[CKUserServerConnection sharedInstance] getCitiesInCountry:self.countryId mask:@"" locale:@"ru" callback:^(NSDictionary *result) {
-                // load cities to database
+            [[CKUserServerConnection sharedInstance] getRegionsInCountry:self.countryId callback:^(NSDictionary *result) {
+                // load regions to database
                 
                 if ([result[@"status"] integerValue] == 1005) return;
                 
@@ -199,16 +198,37 @@
                     for (NSDictionary *i in cities)
                     {
                         NSMutableString *query = [NSMutableString new];
-                        [query appendFormat:@"INSERT INTO cities (id, name, regionid, latitude, longitude) VALUES "];
-                        [query appendFormat:@"(%ld, \"%@\", %ld, %f, %f);\n", [i[@"cityid"] integerValue], i[@"cityname"], [i[@"regionid"] integerValue], [i[@"lat"] doubleValue], [i[@"lng"] doubleValue]];
+                        [query appendFormat:@"INSERT INTO regions (id, name, countryid) VALUES "];
+                        [query appendFormat:@"(%ld, \"%@\", %ld);\n", [i[@"regionid"] integerValue], i[@"regionname"], [i[@"countryid"] integerValue]];
                         [db executeUpdate:query];
                     }
                 }];
                 
-                [self loadData];
+                [[CKUserServerConnection sharedInstance] getCitiesInCountry:self.countryId mask:@"" locale:@"ru" callback:^(NSDictionary *result) {
+                    // load cities to database
+                    
+                    if ([result[@"status"] integerValue] == 1005) return;
+                    
+                    CKDB *ckdb = [CKDB sharedInstance];
+                    
+                    [ckdb.queue inDatabase:^(FMDatabase *db) {
+                        NSArray *cities = result[@"result"];
+                        for (NSDictionary *i in cities)
+                        {
+                            NSMutableString *query = [NSMutableString new];
+                            [query appendFormat:@"INSERT INTO cities (id, name, regionid, latitude, longitude) VALUES "];
+                            [query appendFormat:@"(%ld, \"%@\", %ld, %f, %f);\n", [i[@"cityid"] integerValue], i[@"cityname"], [i[@"regionid"] integerValue], [i[@"lat"] doubleValue], [i[@"lng"] doubleValue]];
+                            [db executeUpdate:query];
+                        }
+                    }];
+                    
+                    [self loadData];
+                }];
+                
             }];
-            
-        }];
+
+        });
+       
     }
 }
 
