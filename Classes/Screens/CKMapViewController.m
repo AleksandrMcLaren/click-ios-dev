@@ -169,16 +169,15 @@
     double miles = 0.5;
     ffmvc = [CKFiltersForMapViewController new];
     ffmvc.switchOn = true;
-    MKCoordinateSpan span;
-    span.latitudeDelta = miles/69.0;
-    span.longitudeDelta = miles/69.0;
-    
     _mapView = [MKMapView new];
     _mapView.delegate = self;
     _mapView.showsUserLocation = YES;
-    MKCoordinateRegion region;
-    region.span = span;
-    //[_mapView setRegion:region animated:YES];
+    MKCoordinateRegion mapRegion;
+    mapRegion.center.latitude = _mapView.userLocation.coordinate.latitude;
+    mapRegion.center.longitude = _mapView.userLocation.coordinate.longitude;
+    mapRegion.span.latitudeDelta = miles/69.0;
+    mapRegion.span.longitudeDelta = miles/69.0;
+    [_mapView setRegion:mapRegion animated: YES];
     [_mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
     [self.view addSubview:_mapView];
     
