@@ -529,11 +529,26 @@
 
 - (void) restoreProfile:(bool) restore
 {
+    
     if (!restore) {
         self.userProfile = nil;
+        NSString* operation = @"restore";
+        [_mainController beginOperation:operation];
+        
+        [[CKMessageServerConnection sharedInstance] cleanallHistory:^(NSDictionary *result) {
+            [_mainController endOperation:operation];
+   
+            if ([result socketMessageStatus] == S_OK){
+                 [[self mainController] showProfile:NO];
+            }else{
+                [_mainController showAlertWithResult:result completion:nil];
+            }
+        }];
+    }else{
+        [[self mainController] showProfile:YES];
     }
     
-    [[self mainController] showProfile:restore];
+    
 }
 
 - (void)submitNewProfile

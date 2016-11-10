@@ -50,6 +50,7 @@ typedef enum CKDialogType
 - (void)sendMessage:(NSString *)message toGroup:(NSString *)group dialogType:(CKDialogType)dialogType callback:(CKServerConnectionExecuted)callback;
 - (void)createGroupChatWithName:(NSString *)title avatar:(NSString *)avatar description:(NSString *)description users:(NSArray *)userlist callback:(CKServerConnectionExecuted)callback;
 - (void)uploadAttachements:(NSArray<CKAttachModel *>*)attachements completion:(CKServerConnectionExecuted)callback;
+- (void)cleanallHistory:(CKServerConnectionExecuted)callback;
 
 @property (nonatomic, strong) NSMutableDictionary *messageModelCache;
 @property (nonatomic, strong) NSMutableDictionary *attachmentModelCache;

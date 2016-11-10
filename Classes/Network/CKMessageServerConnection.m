@@ -204,4 +204,11 @@
     }
 }
 
+- (void)cleanallHistory:(CKServerConnectionExecuted)callback{
+    [self sendData:@{@"action":@"user.cleanallhistory"} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+
+
 @end

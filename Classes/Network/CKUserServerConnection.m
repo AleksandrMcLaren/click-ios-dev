@@ -37,8 +37,6 @@
 - (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecuted)callback
 {
     [self sendData:@{@"action":@"user.info", @"options":@{@"locale":@"ru", @"userid":userid}} completion:^(NSDictionary *result) {
-        [self connect];
-
         callback(result);
     }];
 }
@@ -107,5 +105,8 @@
         callback( @([result socketMessageStatus] == S_OK));
     }];
 }
+
+
+
 
 @end

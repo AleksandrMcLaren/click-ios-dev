@@ -29,4 +29,5 @@
 - (void)getCitiesInCountry:(NSInteger)countryId mask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback;
 - (void)getActivationCode:(CKServerConnectionExecuted)callback;
 - (void)checkUserLogin:(NSString*) login withCallback:(CKServerConnectionExecutedObject)callback;
+
 @end
