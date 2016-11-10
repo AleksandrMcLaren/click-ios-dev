@@ -165,7 +165,16 @@
     NSData *jsondata = [NSJSONSerialization dataWithJSONObject:mdata options:0 error:nil];
     NSString *sendString = [[NSString alloc] initWithData:jsondata encoding:NSUTF8StringEncoding];
     
-    NSLog(@"\n[Socket Request]\n%@", data);
+    NSMutableDictionary* values = [[NSMutableDictionary alloc] initWithDictionary:data];
+    if ([values objectForKey:@"options"]) {
+        NSMutableDictionary* options = ((NSDictionary*)[values objectForKey:@"options"]).mutableCopy;
+        if ([options objectForKey:@"avatar"]) {
+            [options setObject:@"avatar exist" forKey:@"avatar"];
+            [values setObject:options forKey:@"options"];
+        }
+        
+    }
+    NSLog(@"\n[Socket Request]\n%@", values);
 
     
     if(_connection.readyState == SR_CONNECTING) {

@@ -167,7 +167,7 @@
 
 -(void)setAvatar:(UIImage *)avatar{
     
-    CGFloat maxSize = 400;
+    CGFloat maxSize = 300;
     if (avatar) {
         if (MIN(avatar.size.height, avatar.size.width) > maxSize) {
             CGFloat k = maxSize / MAX(avatar.size.height, avatar.size.width);
