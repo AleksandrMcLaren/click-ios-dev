@@ -214,7 +214,7 @@
 {
     if (self = [super init])
     {
-//        _token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
+        _token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
         _userPhone = [[NSUserDefaults standardUserDefaults] objectForKey:@"phoneNumber"];
         _countryId = 2017370;
         _isNewUser = NO;
