@@ -88,10 +88,11 @@
     [self.view addSubview:_avatar];
     
     _nameLabel = [UILabel labelWithText:[[CKApplicationModel sharedInstance] userProfile].name font:CKButtonFont textColor:CKClickBlueColor textAlignment:NSTextAlignmentCenter];
+    _nameLabel.numberOfLines = 5;
     [self.view addSubview:_nameLabel];
     
     _nickPhoneLabel = [UILabel labelWithText:nil font:[UIFont systemFontOfSize: 12.0] textColor:[UIColor blackColor] textAlignment:NSTextAlignmentCenter];
-    
+    _nickPhoneLabel.numberOfLines = 5;
     NSMutableAttributedString *nickPhoneString = [NSMutableAttributedString new];
     [nickPhoneString appendAttributedString:[NSMutableAttributedString withImageName:@"person" geometry:CGRectMake(0, -2, 12, 12)]];
     [nickPhoneString appendAttributedString:[NSMutableAttributedString withString:[NSString stringWithFormat:@" %@ | ", [[CKApplicationModel sharedInstance] userProfile].login]]];

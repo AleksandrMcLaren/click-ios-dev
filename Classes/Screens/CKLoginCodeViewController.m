@@ -13,6 +13,10 @@
 #import "UIView+Shake.h"
 #import "UIButton+ContinueButton.h"
 
+@interface CKLoginCodeViewController()<UITextFieldDelegate>
+
+@end
+
 @implementation CKLoginCodeViewController
 {
     UILabel *_topLabel1;
@@ -101,7 +105,8 @@
     _codeEntry.backgroundColor = [UIColor whiteColor];
     _codeEntry.keyboardType = UIKeyboardTypeNumberPad;
     _codeEntry.clearButtonMode = UITextFieldViewModeAlways;
-
+    _codeEntry.delegate = self;
+    
 //    UIToolbar *toolBar= [[UIToolbar alloc] initWithFrame:CGRectMake(0,0,320,44)];
 //    UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
 //                                                                      style:UIBarButtonItemStyleDone target:self action:@selector(dismissKeyboard)];
@@ -296,5 +301,21 @@
 }
 
 
+#pragma mark UITextFieldDelegate
+
+#define MAXLENGTH 5
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSUInteger oldLength = [textField.text length];
+    NSUInteger replacementLength = [string length];
+    NSUInteger rangeLength = range.length;
+    
+    NSUInteger newLength = oldLength - rangeLength + replacementLength;
+    
+    BOOL returnKey = [string rangeOfString: @"\n"].location != NSNotFound;
+    
+    return newLength <= MAXLENGTH || returnKey;
+}
 
 @end

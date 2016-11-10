@@ -21,6 +21,7 @@
         _firstName = [UITextField new];
         _firstName.placeholder = @"Имя";
         _firstName.tag = 0;
+        
         [self addSubview:_firstName];
         
         _secondName = [UITextField new];
