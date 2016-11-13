@@ -12,6 +12,16 @@
 
 - (instancetype)initWithUser:(CKUserModel *)user;
 
++ (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
++ (UIImage *)blueCircle;
++ (UIImage *)purpleCircle;
++ (UIImage *)greyCircle;
++ (UIImage* )drawText:(NSString*) text inImage:(UIImage*) image atPoint:(CGPoint) point;
++ (UIImage *)bluePinforClusters;
++ (UIImage *)imageWithPurpleBorderAndRoundCornersWithImage:(UIImage *)image lineWidth:(CGFloat)lineWidth cornerRadius:(CGFloat)cornerRadius;
++ (UIImage *)imageWithGrayBorderAndRoundCornersWithImage:(UIImage *)image lineWidth:(CGFloat)lineWidth cornerRadius:(CGFloat)cornerRadius;
++ (UIImage *)imageWithBlueBorderAndRoundCornersWithImage:(UIImage *)image lineWidth:(CGFloat)lineWidth cornerRadius:(CGFloat)cornerRadius;
+
 @property (nonatomic, strong) CKUserModel *user;
 
 @end

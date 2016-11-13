@@ -25,4 +25,213 @@
     [self setAvatarFile:user.avatarName fallbackName:[user letterName]];
 }
 
++ (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize
+{
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
++ (UIImage *)imageWithPurpleBorderAndRoundCornersWithImage:(UIImage *)image lineWidth:(CGFloat)lineWidth cornerRadius:(CGFloat)cornerRadius{
+    UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale);
+    CGRect rect = CGRectZero;
+    rect.size = image.size;
+    CGRect pathRect = CGRectInset(rect, lineWidth / 2.0, lineWidth / 2.0);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:pathRect cornerRadius:cornerRadius];
+    
+    CGContextBeginPath(context);
+    CGContextAddPath(context, path.CGPath);
+    CGContextClosePath(context);
+    CGContextClip(context);
+    
+    [image drawAtPoint:CGPointZero];
+    
+    CGContextRestoreGState(context);
+    
+    [[UIColor magentaColor] setStroke];
+    path.lineWidth = lineWidth;
+    [path stroke];
+    
+    UIImage *finalImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return finalImage;
+}
+
++ (UIImage *) imageWithBlueBorderAndRoundCornersWithImage:(UIImage *)image lineWidth:(CGFloat)lineWidth cornerRadius:(CGFloat)cornerRadius
+{
+    UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale);
+    CGRect rect = CGRectZero;
+    rect.size = image.size;
+    CGRect pathRect = CGRectInset(rect, lineWidth / 2.0, lineWidth / 2.0);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:pathRect cornerRadius:cornerRadius];
+    
+    CGContextBeginPath(context);
+    CGContextAddPath(context, path.CGPath);
+    CGContextClosePath(context);
+    CGContextClip(context);
+    
+    [image drawAtPoint:CGPointZero];
+    
+    CGContextRestoreGState(context);
+    
+    [[UIColor blueColor] setStroke];
+    path.lineWidth = lineWidth;
+    [path stroke];
+    
+    UIImage *finalImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return finalImage;
+}
+
++(UIImage *) imageWithGrayBorderAndRoundCornersWithImage:(UIImage *)image lineWidth:(CGFloat)lineWidth cornerRadius:(CGFloat)cornerRadius
+{
+    UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale);
+    CGRect rect = CGRectZero;
+    rect.size = image.size;
+    CGRect pathRect = CGRectInset(rect, lineWidth / 2.0, lineWidth / 2.0);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:pathRect cornerRadius:cornerRadius];
+    
+    CGContextBeginPath(context);
+    CGContextAddPath(context, path.CGPath);
+    CGContextClosePath(context);
+    CGContextClip(context);
+    
+    [image drawAtPoint:CGPointZero];
+    
+    CGContextRestoreGState(context);
+    
+    [[UIColor grayColor] setStroke];
+    path.lineWidth = lineWidth;
+    [path stroke];
+    
+    UIImage *finalImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return finalImage;
+    
+}
+
++ (UIImage *)blueCircle{
+    static UIImage *blueCircle = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(30.f, 30.f), NO, 0.0f);
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        CGContextSaveGState(ctx);
+        
+        CGRect rect = CGRectMake(0, 0, 30, 30);
+        CGContextSetFillColorWithColor(ctx, [UIColor blueColor].CGColor);
+        CGContextFillEllipseInRect(ctx, rect);
+        
+        CGContextRestoreGState(ctx);
+        blueCircle = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+    });
+    return blueCircle;
+}
++ (UIImage *)purpleCircle {
+    static UIImage *purpleCircle = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(30.f, 30.f), NO, 0.0f);
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        CGContextSaveGState(ctx);
+        
+        CGRect rect = CGRectMake(0, 0, 30, 30);
+        CGContextSetFillColorWithColor(ctx, [UIColor magentaColor].CGColor);
+        CGContextFillEllipseInRect(ctx, rect);
+        
+        CGContextRestoreGState(ctx);
+        purpleCircle = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+    });
+    return purpleCircle;
+}
++ (UIImage *)greyCircle {
+    static UIImage *greyCircle = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(30.f, 30.f), NO, 0.0f);
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        CGContextSaveGState(ctx);
+        
+        CGRect rect = CGRectMake(0, 0, 30, 30);
+        CGContextSetFillColorWithColor(ctx, [UIColor grayColor].CGColor);
+        CGContextFillEllipseInRect(ctx, rect);
+        
+        CGContextRestoreGState(ctx);
+        greyCircle = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+    });
+    return greyCircle;
+}
+
++(UIImage*) drawText:(NSString*) text inImage:(UIImage*)  image atPoint:(CGPoint)   point
+{
+    
+    NSMutableAttributedString *textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    textStyle = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",text]];
+    
+    [textStyle addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, textStyle.length)];
+    
+    [textStyle addAttribute:NSFontAttributeName  value:[UIFont systemFontOfSize:12.0] range:NSMakeRange(0, textStyle.length)];
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc]init] ;
+    [paragraphStyle setAlignment:NSTextAlignmentCenter];
+    [textStyle addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [text length])];
+    
+    UIGraphicsBeginImageContext(image.size);
+    [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
+    CGRect rect = CGRectMake(point.x, point.y, image.size.width, image.size.height);
+    [[UIColor whiteColor] set];
+
+    [textStyle drawInRect:CGRectIntegral(rect)];
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+
++ (UIImage *)bluePinforClusters {
+    static UIImage *blueCircle = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(30.f, 30.f), NO, 0.0f);
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        CGContextSaveGState(ctx);
+        
+        CGRect rect = CGRectMake(0, 0, 30, 30);
+        CGContextSetFillColorWithColor(ctx, [[UIColor blueColor] colorWithAlphaComponent:0.6].CGColor);
+        CGContextFillEllipseInRect(ctx, rect);
+        
+        CGContextRestoreGState(ctx);
+        blueCircle = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        //coverView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+        
+    });
+    return blueCircle;
+}
+
+
 @end

@@ -37,6 +37,10 @@
 
 - (void)viewDidLoad
 {
+    if (_wentFromTheMap == true)
+    {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Назад" style: UIBarButtonItemStylePlain target:self action:@selector(backToMap)];
+    }
     self.tableView.tableFooterView = [UIView new];
 }
 
@@ -234,4 +238,8 @@
     return nil;
 }
 
+- (void) backToMap
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 @end

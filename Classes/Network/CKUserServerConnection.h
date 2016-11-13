@@ -28,6 +28,8 @@
 - (void)getCountriesWithMask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback;
 - (void)getCitiesInCountry:(NSInteger)countryId mask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback;
 - (void)getActivationCode:(CKServerConnectionExecuted)callback;
+- (void)getUserListForGeoLocation: (CKServerConnectionExecuted)callback;
+- (void)setUserStatus: (NSNumber *)status;
 - (void)checkUserLogin:(NSString*) login withCallback:(CKServerConnectionExecutedObject)callback;
 
 @end

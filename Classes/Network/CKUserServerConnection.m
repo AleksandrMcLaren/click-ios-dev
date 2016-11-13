@@ -86,6 +86,11 @@
     }];
 }
 
+- (void) setUserStatus: (NSNumber *)status
+{
+    [self sendData:@{@"action":@"user.setstatus", @"options":@{@"status":[NSNumber numberWithInteger: [status integerValue]]}} completion: nil];
+}
+
 - (void)getRegionsInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback
 {
     [self sendData:@{@"action":@"geo.region.list", @"options":@{@"continent":@[],@"country":@[@(countryId)], @"locale":@"ru",@"filter":@[], @"mask":@""}} completion:^(NSDictionary *result) {
@@ -106,6 +111,11 @@
     }];
 }
 
+- (void) getUserListForGeoLocation:(CKServerConnectionExecuted)callback{
+    [self sendData:@{@"action": @"user.geolist", @"options":@{@"userlist":@[], @"status": @0, @"isfriend": @0, @"country": @0, @"city": @0, @"sex": @"", @"minage": @0, @"maxage": @0, @"mask": @"", @"lat": @0, @"lng": @0, @"radius": @0, @"count": @0}} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
 
 
 

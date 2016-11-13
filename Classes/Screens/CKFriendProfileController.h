@@ -11,5 +11,6 @@
 @interface CKFriendProfileController : UITableViewController
 
 - (instancetype)initWithUser:(CKUserModel *)user;
+@property (nonatomic, assign) BOOL wentFromTheMap;
 
 @end

@@ -413,7 +413,10 @@
 
 - (void)viewDidLoad
 {
-    
+    if (_wentFromTheMap == true)
+    {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Назад" style: UIBarButtonItemStylePlain target:self action:@selector(backToMap)];
+    }
 }
 
 - (void)media:(id) button {
@@ -472,5 +475,8 @@
     
 }
 
-
+- (void) backToMap
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 @end

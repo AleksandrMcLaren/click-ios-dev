@@ -55,6 +55,19 @@
 
 @end
 
+@interface CKClusterModel : NSObject
+
+@property (nonatomic, strong) NSString *userid;
+@property (nonatomic, strong) NSString *clusterid;
+@property (nonatomic, strong) NSNumber *cnttotal;
+@property (nonatomic, assign) CLLocationCoordinate2D location;
+@property (nonatomic, strong) UIImage *avatar;
+@property (nonatomic, strong) NSString *sex;
+
++ (instancetype)modelWithDictionary:(NSDictionary *)sourceDict;
+
+@end
+
 @interface CKPhoneContact : NSObject
 
 @property (nonatomic, strong) NSString *name;
@@ -96,6 +109,9 @@
 - (void) restoreProfile:(bool) restore;
 - (void) submitNewProfile;
 - (void) getLocationInfowithCallback:(CKServerConnectionExecutedObject)callback;
+- (void) loadClusters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSString *)mask withBottomLeftLatitude: (NSNumber *)swlat withBottomLeftLongtitude: (NSNumber *)swlng withtopCoordinate: (NSNumber *)nelat withTopRigthLongtitude: (NSNumber *)nelng withInt: (int) count;
+
+
 // определять по местоположению пользователя
 @property (nonatomic, readonly) NSInteger countryId;
 
@@ -108,6 +124,10 @@
 
 @property (nonatomic, readonly) NSArray *phoneContacts;
 @property (nonatomic, readonly) NSArray *friends;
+@property (strong, nonatomic, readonly) NSArray<CKUserModel *> *userlistMain;
+@property (nonatomic, readonly) NSArray<CKClusterModel *> *clusterlist;
+@property (nonatomic, readonly) NSArray<CKClusterModel *> *clusterForFilter;
+
 
 
 // пул чатов

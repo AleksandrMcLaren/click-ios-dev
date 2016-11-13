@@ -33,6 +33,7 @@ typedef enum CKDialogType
 @property (nonatomic, strong) NSArray *userlist;
 
 + (CKUserFilterModel *)filterWithAllFriends;
++ (CKUserFilterModel *)filterWithLocation;
 
 - (NSDictionary *)getDictionary;
 
@@ -51,6 +52,7 @@ typedef enum CKDialogType
 - (void)createGroupChatWithName:(NSString *)title avatar:(NSString *)avatar description:(NSString *)description users:(NSArray *)userlist callback:(CKServerConnectionExecuted)callback;
 - (void)uploadAttachements:(NSArray<CKAttachModel *>*)attachements completion:(CKServerConnectionExecuted)callback;
 - (void)cleanallHistory:(CKServerConnectionExecuted)callback;
+- (void) getUserClasters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSNumber *)mask withBottomLeftLatitude:(NSNumber *)bottomLeftLatitude withBottomLeftLongtitude: (NSNumber *) bottomLeftLongtitude withtopCoordinate: (NSNumber *)topRightLatitude withTopRigthLongtitude:(NSNumber *)topRightLongtitde withCallback: (CKServerConnectionExecuted)callback;
 
 @property (nonatomic, strong) NSMutableDictionary *messageModelCache;
 @property (nonatomic, strong) NSMutableDictionary *attachmentModelCache;
