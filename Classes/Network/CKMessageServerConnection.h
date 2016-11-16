@@ -22,7 +22,7 @@ typedef enum CKDialogType
 @interface CKUserFilterModel : NSObject
 
 @property (nonatomic, assign) NSInteger status;
-@property (nonatomic, assign) BOOL isFriend;
+@property (nonatomic, assign) NSInteger isFriend;
 @property (nonatomic, assign) NSInteger country;
 @property (nonatomic, assign) NSInteger city;
 @property (nonatomic, strong) NSString *sex;

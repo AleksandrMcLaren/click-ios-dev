@@ -25,7 +25,8 @@
 + (CKUserFilterModel *)filterWithAllFriends
 {
     CKUserFilterModel *filter = [CKUserFilterModel new];
-    filter.isFriend = YES;
+    //filter.isFriend = YES
+    filter.isFriend = 1;
     filter.status = -1;
     return filter;
 }
@@ -34,6 +35,7 @@
 {
     CKUserFilterModel *filter = [CKUserFilterModel new];
     filter.status = -1;
+    filter.isFriend = -1;
     return filter;
 }
 

@@ -317,20 +317,20 @@
                                 {
                                     if (![friend.surname isEqual:@""])
                                     {
-                                        pin.title = [NSString stringWithFormat: @"%@ %@, %d лет", friend.name, friend.surname, friend.age];
+                                        pin.title = [NSString stringWithFormat: @"%@ %@, %ld лет", friend.name, friend.surname, friend.age];
                                         pin.subtitle = friend.login;
                                         pin.name = friend.name;
                                     }
                                     else
                                     {
-                                        pin.title = [NSString stringWithFormat: @"%@, %d лет", friend.name, friend.age];
+                                        pin.title = [NSString stringWithFormat: @"%@, %ld лет", friend.name, friend.age];
                                         pin.subtitle = friend.login;
                                         pin.name = friend.name;
                                     }
                                 }
                                 else
                                 {
-                                    pin.title = [NSString stringWithFormat: @"%@, %d лет", friend.login, friend.age];
+                                    pin.title = [NSString stringWithFormat: @"%@, %ld лет", friend.login, friend.age];
                                     pin.name = user.login;
                                 }
                             }
@@ -340,20 +340,20 @@
                                 {
                                     if (![user.surname isEqual:@""])
                                     {
-                                        pin.title = [NSString stringWithFormat: @"%@ %@, %d лет", user.name, user.surname, user.age];
+                                        pin.title = [NSString stringWithFormat: @"%@ %@, %ld лет", user.name, user.surname, user.age];
                                         pin.subtitle = user.login;
                                         pin.name = user.name;
                                     }
                                     else
                                     {
-                                        pin.title = [NSString stringWithFormat: @"%@, %d лет", user.name, user.age];
+                                        pin.title = [NSString stringWithFormat: @"%@, %ld лет", user.name, user.age];
                                         pin.subtitle = user.login;
                                         pin.name = user.name;
                                     }
                                 }
                                 else
                                 {
-                                    pin.title = [NSString stringWithFormat: @"%@, %d лет", user.login, user.age];
+                                    pin.title = [NSString stringWithFormat: @"%@, %ld лет", user.login, user.age];
                                     pin.name = user.login;
                                 }
                             }
