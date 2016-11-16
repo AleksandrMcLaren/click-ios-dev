@@ -546,17 +546,6 @@
                     [friends addObject:user];
                 }
                 _friends = friends;
-
-                [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithLocation] callback:^(NSDictionary *result) {
-                    NSMutableArray<CKUserModel*> *userlist = [NSMutableArray new];
-                    for (NSDictionary *i in result[@"result"])
-                    {
-                        CKUserModel *user1 = [CKUserModel modelWithDictionary:i];
-                        [userlist addObject:user1];
-                    }
-                    _userlistMain = userlist;
-                }];
-
                 [self.mainController showMainScreen];
                 [[CKDialogsModel sharedInstance] setDialogsController:[self.mainController dialogsController]];
                 [[CKDialogsModel sharedInstance] run];
@@ -565,6 +554,69 @@
         
     }];
 }
+
+- (void) updateUsers
+{
+    [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithLocation] callback:^(NSDictionary *result) {
+        NSMutableArray<CKUserModel*> *userlist = [NSMutableArray new];
+        for (NSDictionary *i in result[@"result"])
+        {
+            CKUserModel *user1 = [CKUserModel modelWithDictionary:i];
+            [userlist addObject:user1];
+        }
+        _userlistMain = userlist;
+    }];
+}
+
+- (void) checkUserProfile: (NSString *)newFriendPhone
+{
+    __block BOOL isFriend = false;
+    [[CKUserServerConnection sharedInstance] getUserInfoWithId:newFriendPhone callback:^(NSDictionary *result) {
+        //CKUserModel *profile;
+        if ([result socketMessageStatus] == S_OK) {
+            CKUserModel *user = [CKUserModel new];
+            //   profile = [CKUserModel modelWithDictionary:[result socketMessageResult]];
+            
+            user = [CKUserModel modelWithDictionary:[result socketMessageResult]];
+            //user.isFriend = 1;
+            NSArray *friends1 = [[CKApplicationModel sharedInstance] friends];
+            for (CKUserModel *i in friends1)
+            {
+                if (![user.id isEqual:i.id])
+                {
+                    isFriend = true;
+                    break;
+                }
+            }
+            if (isFriend != true)
+            {
+                NSMutableArray *friends = [NSMutableArray new];
+                [friends addObjectsFromArray:_friends];
+                if (user !=nil && ![user.id isEqual:@"0"]) [friends addObject:user];
+                _friends = friends;
+            }
+        }
+        //[[CKApplicationModel sharedInstance] addNewContactToFriends:user];
+    }];
+}
+
+
+- (void) addNewContactToFriends
+{
+    [self fetchContactsWithCompletion:^(NSMutableArray *arr) {
+        
+        NSMutableDictionary *d = [NSMutableDictionary new];
+        for (CKPhoneContact *i in arr)
+        {
+            d[i.phoneNumber] = i;
+        }
+        _phoneContacts = d;
+    }];
+    NSMutableArray *cont = [NSMutableArray new];
+    [cont addObjectsFromArray:[_phoneContacts allValues]];
+    _fullContacts = cont;
+}
+
 
 - (void) restoreHistoryWithCallback:(CKServerConnectionExecuted)callback
 {

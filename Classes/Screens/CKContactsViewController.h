@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AddressBook/AddressBook.h>
+#import <AddressBookUI/AddressBookUI.h>
+@import Contacts;
+@import ContactsUI;
 
-@interface CKContactsViewController : UITableViewController
+@interface CKContactsViewController : UITableViewController<CNContactViewControllerDelegate, UIApplicationDelegate>
+
 
 @end

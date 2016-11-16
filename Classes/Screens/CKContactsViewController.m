@@ -11,11 +11,19 @@
 #import "CKAddressBookCell.h"
 #import "CKCache.h"
 #import "CKFriendProfileController.h"
+#import "CKContactWrapper.h"
+
 
 @implementation CKContactsViewController
 {
     NSMutableArray *_contacts;
     NSArray *_phoneContacts;
+    NSArray *_fullContacts;
+    
+    BOOL errorAdding;
+    int errorHandling;
+    BOOL existedPerson;
+    BOOL deletedWrongPerson;
     
     NSArray *_sections;
 }
@@ -33,28 +41,66 @@
 
 - (void)viewDidLoad
 {
+    deletedWrongPerson = false;
+    errorAdding = false;
+    errorHandling = 0;
+    existedPerson = false;
     self.tableView.backgroundColor = CKClickLightGrayColor;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.tintColor = [UIColor darkGrayColor];
+    [self.refreshControl addTarget:self
+                            action:@selector(reloadData)
+                  forControlEvents:UIControlEventValueChanged];
     [self reloadData];
 }
+
+//- (void)applicationDidEnterBackground:(UIApplication *)application
+//{
+//    UIApplicationState state = [application applicationState];
+//    if (state == UIApplicationStateInactive) {
+//        NSLog(@"Sent to background by locking screen");
+//    } else if (state == UIApplicationStateBackground) {
+//        NSLog(@"Sent to background by home button/switching to other app");
+//    }
+//}
+
 
 - (void)reloadData
 {
     _contacts = [NSMutableArray array];
-
+    _fullContacts = [[CKApplicationModel sharedInstance] fullContacts];
+    //    NSMutableArray *fc = [NSMutableArray new];
+    //    [fc addObjectsFromArray:_fullContacts];
+    
     // fill with friends
-    NSArray *sortedFriends = [[[CKApplicationModel sharedInstance] friends] sortedArrayUsingComparator:^NSComparisonResult(CKUserModel *obj1, CKUserModel *obj2) {
+    NSMutableArray *unsortedFriends = [NSMutableArray new];
+    [unsortedFriends addObjectsFromArray:[[CKApplicationModel sharedInstance] friends]];
+    for (CKUserModel *i in unsortedFriends)
+    {
+        //        CKUserModel *friend = i;
+        for (CKPhoneContact *p in _fullContacts)
+        {
+            //            CKPhoneContact *contact = p;
+            if ([i.id isEqual:p.phoneNumber])
+            {
+                i.name = p.name;
+                i.surname = p.surname;
+                break;
+            }
+        }
+    }
+    NSArray *sortedFriends = [unsortedFriends sortedArrayUsingComparator:^NSComparisonResult(CKUserModel *obj1, CKUserModel *obj2) {
         NSString *str1 = obj1.surname.length?obj1.surname:obj1.name;
         NSString *str2 = obj2.surname.length?obj2.surname:obj2.name;
         return [str1 compare:str2 options: NSCaseInsensitiveSearch];
-
+        
     }];
-    
     NSMutableArray* sections = [NSMutableArray array];
-
+    
     [sections addObject:@{@"title":@"friends", @"arr":sortedFriends}];
-
+    
     for(CKPhoneContact *phoneItem in _phoneContacts) {
         NSString *username = phoneItem.fullname;
         NSString *surname = phoneItem.surname;
@@ -102,13 +148,28 @@
         }
     }];
     NSLog(@"%@", sections);
-
+    
+    [self.refreshControl endRefreshing];
     [self.tableView reloadData];
 }
 
 - (void)add
 {
+    errorAdding = false;
+    existedPerson = false;
     
+    CNContactStore *store = [[CNContactStore alloc] init];
+    
+    CNMutableContact *contact = [[CNMutableContact alloc] init];
+    
+    CNContactViewController *controller = [CNContactViewController viewControllerForNewContact:contact];
+    
+    controller.contactStore = store;
+    controller.delegate = self;
+    controller.title = @"";
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    
+    [self presentViewController: navController animated:YES completion: nil];
 }
 
 #pragma mark - Table view data source
@@ -119,6 +180,8 @@
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     CKFriendProfileController *controller = [[CKFriendProfileController alloc] initWithUser:_sections[0][@"arr"][indexPath.row]];
+    controller.wentFromTheMap = false;
+    
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -160,7 +223,7 @@
     NSArray* arr = [section mutableArrayValueForKey:@"arr"];
     if(indexPath.section == 0) {
         CKFriendCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"CKFriendCell"];
-
+        
         if (!cell) {
             cell = [CKFriendCell new];
         }
@@ -170,6 +233,7 @@
         return cell;
     } else {
         CKAddressBookCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"CKAddressBookCell" ];
+        
         if (!cell) {
             cell = [CKAddressBookCell new];
         }
@@ -184,11 +248,175 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    [[CKApplicationModel sharedInstance] addNewContactToFriends];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateScreenState)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:[UIApplication sharedApplication]];
+}
+
+- (void)updateScreenState
+{
+    [[CKApplicationModel sharedInstance] addNewContactToFriends];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [[CKApplicationModel sharedInstance] addNewContactToFriends];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    //[super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void) invite:(UIButton *)invite
 {
     
 }
+
+
+- (void) contactViewController:(CNContactViewController *)viewController didCompleteWithContact:(CNContact *)contact
+{
+    //    NSString *firstName =  contact.givenName;
+    //    NSString *lastName =  contact.familyName;
+    @try {
+        deletedWrongPerson = false;
+        errorAdding = true;
+        CNLabeledValue<CNPhoneNumber*>* labeledValue = contact.phoneNumbers[0];
+        NSString *phone = labeledValue.value.stringValue;
+        NSString *cleanedString = [[phone componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet]] componentsJoinedByString:@""];
+        
+        if (contact == nil)
+        {
+            deletedWrongPerson = true;
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+        else /*if (cleanedString.length == 11 && ([[cleanedString substringToIndex:1]  isEqual: @"8"] || [[cleanedString substringToIndex:1]  isEqual: @"7"]))*/
+        {
+            if (cleanedString.length == 11 && ([[cleanedString substringToIndex:1]  isEqual: @"8"])) cleanedString = [cleanedString stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@"7"];
+            errorAdding = false;
+            for (CKPhoneContact *i in _phoneContacts)
+            {
+                if ([i.phoneNumber isEqual:cleanedString])
+                {
+                    errorAdding = true;
+                    errorHandling = 2;
+                    deletedWrongPerson = true;
+                    break;
+                }
+            }
+            if (errorAdding !=true)
+            {
+                //                NSArray *friends = [[CKApplicationModel sharedInstance] friends];
+                //                for (CKUserModel *i in friends)
+                //                {
+                //                    if ([i.id isEqual:cleanedString])
+                //                    {
+                //                        errorAdding = true;
+                //                        errorHandling = 2;
+                //                        deletedWrongPerson = true;
+                //                        break;
+                //                    }
+                //                }
+                //                if (errorAdding !=true)
+                //                {
+                [[CKApplicationModel sharedInstance] checkUserProfile: cleanedString];
+                deletedWrongPerson = true;
+                //   }
+            }
+            
+        }
+        [self dismissViewControllerAnimated:YES completion:nil];
+        if (errorAdding == true)
+        {
+            [[CKContactWrapper sharedInstance] deleteContact:contact completionBlock:^(bool isSuccess, NSError * _Nullable error) {
+                if (!isSuccess)
+                {
+                    NSLog(@"Delete contact failed with error : %@", error.localizedDescription);
+                }
+            }];
+            switch (errorHandling) {
+                case 1:
+                {
+                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Ошибка добавления!"
+                                                                                   message:@"Введенный номер некорректен!"
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Понятно" style:UIAlertActionStyleDefault
+                                                                          handler:^(UIAlertAction * action) {}];
+                    
+                    [alert addAction:defaultAction];
+                    [self presentViewController:alert animated:YES completion:nil];
+                }
+                    break;
+                case 2:
+                {
+                    
+                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Ошибка добавления!"
+                                                                                   message:@"Пользователь с таким номером уже есть в ваших контактах!"
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Понятно" style:UIAlertActionStyleDefault
+                                                                          handler:^(UIAlertAction * action) {}];
+                    
+                    [alert addAction:defaultAction];
+                    [self presentViewController:alert animated:YES completion:nil];
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"%@", exception.reason);
+    }
+    @finally {
+        if (deletedWrongPerson == false && errorAdding == true)
+        {
+            [self dismissViewControllerAnimated:YES completion:nil];
+            [[CKContactWrapper sharedInstance] deleteContact:contact completionBlock:^(bool isSuccess, NSError * _Nullable error) {
+                if (!isSuccess)
+                {
+                    NSLog(@"Delete contact failed with error : %@", error.localizedDescription);
+                }
+            }];
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Ошибка добавления!"
+                                                                           message:@"Номер не задан!"
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Понятно" style:UIAlertActionStyleDefault
+                                                                  handler:^(UIAlertAction * action) {}];
+            
+            [alert addAction:defaultAction];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }
+    if (deletedWrongPerson == false && errorAdding == true)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [[CKContactWrapper sharedInstance] deleteContact:contact completionBlock:^(bool isSuccess, NSError * _Nullable error) {
+            if (!isSuccess)
+            {
+                NSLog(@"Delete contact failed with error : %@", error.localizedDescription);
+            }
+        }];
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Ошибка добавления!"
+                                                                       message:@"Номер не задан!"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Понятно" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {}];
+        
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    
+}
+
+
+
 
 @end
