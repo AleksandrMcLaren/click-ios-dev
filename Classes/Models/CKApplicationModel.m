@@ -533,6 +533,9 @@
             d[i.phoneNumber] = i;
         }
         _phoneContacts = d;
+        NSMutableArray *cont = [NSMutableArray new];
+        [cont addObjectsFromArray:[_phoneContacts allValues]];
+        _fullContacts = cont;
         [[CKMessageServerConnection sharedInstance] addFriends:[self contactPhoneList] callback:^(CKStatusCode status) {
             [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithAllFriends] callback:^(NSDictionary *result) {
                 
