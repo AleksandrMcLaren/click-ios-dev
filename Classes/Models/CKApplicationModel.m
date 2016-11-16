@@ -155,8 +155,11 @@
 {
     NSString *surname = self.surname;
     NSString *name = self.name;
+    NSString *login = self.login;
     
-    if (!surname && !name) name = self.login;
+    if (!surname && !name) name = login;
+    
+    if ([surname isEqual:@""] && [name isEqual:@""]) name = login;
     
     if (!surname)
     {
