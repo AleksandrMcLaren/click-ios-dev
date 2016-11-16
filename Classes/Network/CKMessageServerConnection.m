@@ -157,6 +157,12 @@
     }];
 }
 
+- (void) setLocaion:(NSNumber*)lat andLng: (NSNumber *)lng
+{
+    [self sendData:@{@"action":@"user.setgeo", @"options": @{@"lat": lat, @"lng":lng}} completion:nil];
+    
+}
+
 - (void)uploadAttachements:(NSArray<CKAttachModel *>*)attachements completion:(CKServerConnectionExecuted)callback {
     NSMutableArray *userDataArr = [NSMutableArray new];
     NSMutableArray *uuids = [NSMutableArray new];

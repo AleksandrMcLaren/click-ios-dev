@@ -8,6 +8,7 @@
 
 #import "CKMapViewController.h"
 #import <MapKit/MapKit.h>
+
 #import "CKApplicationModel.h"
 #import "CKCustomPointAnnotation.h"
 #import "CKCustomPinAnnotation.h"
@@ -41,6 +42,8 @@
     CGFloat _padding;
     NSArray *_data;
     NSArray *_friendlist;
+    NSNumber *userLat;
+    NSNumber *userLng;
     NSArray<CKUserModel *> *_userlist;
     NSArray<CKClusterModel *> *_clusterlist;
     MKMapRect _mRect;
@@ -128,9 +131,9 @@
     }
     if (_allUsersT == true)
     {
-        inAllUsers = [NSNumber numberWithInteger:[@-1 integerValue]];
+        inAllUsers = [NSNumber numberWithInteger:-1];
     }
-    else inAllUsers = [NSNumber numberWithInteger:[@1 integerValue]];
+    else inAllUsers = [NSNumber numberWithInteger:1];
     if (_countryIdT == nil) _countryIdT = [NSNumber numberWithInteger:[@0 integerValue]];
     if (_cityIdT == nil) _cityIdT = [NSNumber numberWithInteger:0];
     
@@ -184,6 +187,10 @@
     _mapView.userLocation.title = @"Текущее местоположение";
     [_mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
     [self.view addSubview:_mapView];
+    
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [self.locationManager startUpdatingLocation];
     
     [_mapView makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view.left);
@@ -495,7 +502,9 @@
     else
         [[CKUserServerConnection sharedInstance] setUserStatus:@1];
     [self reloadAnnotations];
-    
+    [self deviceLocation];
+
+    [[CKMessageServerConnection sharedInstance] setLocaion:userLat andLng:userLng];
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -531,5 +540,15 @@
     [_mapView removeAnnotations:_annotations2];
     _mapView.userTrackingMode = MKUserTrackingModeFollow;
     [self reloadAnnotations];
+    [self deviceLocation];
+    
+    [[CKMessageServerConnection sharedInstance] setLocaion:userLat andLng:userLng];
+}
+
+- (void)deviceLocation
+{
+    userLat = [NSNumber numberWithDouble:_locationManager.location.coordinate.latitude];
+    userLng = [NSNumber numberWithDouble:_locationManager.location.coordinate.longitude];
+    
 }
 @end

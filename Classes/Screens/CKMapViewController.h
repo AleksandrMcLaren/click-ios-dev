@@ -20,5 +20,5 @@
 @property (nonatomic, strong) NSNumber *countryIdT;
 @property (nonatomic, strong) NSNumber *cityIdT;
 
-
+@property (nonatomic,retain) CLLocationManager *locationManager;
 @end
