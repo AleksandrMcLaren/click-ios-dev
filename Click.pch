@@ -20,6 +20,12 @@
 #import "CKDB.h"
 #import "CKDate+utility.h"
 #import "ReactiveCocoa.h"
+#import "CKStatusCode.h"
+#import "NSDictionary+CKSocketMessage.h"
+#import "UIAlertController+CKSocketMessage.h"
+#import "NSString+NumEncoding.h"
+#import "NSDate+Utils.h"
+#import "CKViewControllerRotation.h"
 
 //define this constant if you want to use Masonry without the 'mas_' prefix
 #define MAS_SHORTHAND
@@ -29,12 +35,25 @@
 
 #import "Masonry.h"
 
+#define CK_URL_BASE @"https://chatclick.ru/"
+#define CK_URL_AVATAR @"https://chatclick.ru:8102/avatar/"
+#define CK_STANDART_CONTROL_HEIGHT 44
+#define CK_STANDART_CONTROL_PADDING  16.0;
+
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
-#define CONTROL_PADDING  16.0;
+#define CKScreenHeight CGRectGetHeight([[UIScreen mainScreen] bounds])
+
+
+#define CKSocketMessageFieldResult @"result"
+#define CKSocketMessageFieldStatus @"status"
+#define CKSocketMessageFieldMID @"mid"
+#define CKSocketMessageFieldAction @"action"
+#define CKSocketMessageFieldOptions @"options"
+#define CKSocketMessageFieldInvite @"invite"
 
 #endif

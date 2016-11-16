@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CKActivityViewController.h"
 
-@interface CKLoginViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface CKLoginViewController : CKActivityViewController<UITableViewDataSource, UITableViewDelegate>
 
 @end

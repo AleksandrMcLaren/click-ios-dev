@@ -10,6 +10,12 @@
 #import "CKApplicationModel.h"
 #import "UIColor+hex.h"
 #import "UILabel+utility.h"
+#import "UIView+Shake.h"
+#import "UIButton+ContinueButton.h"
+
+@interface CKLoginCodeViewController()<UITextFieldDelegate>
+
+@end
 
 @implementation CKLoginCodeViewController
 {
@@ -21,12 +27,13 @@
     UILabel *_bottomLabel;
     UILabel *_timerLabel;
     UIButton *_resendButton;
-    UIButton *_continueButton;
     
     CGFloat _keyboardHeight;
     
     int _secondsLeft;
     NSTimer* _timer;
+    
+    BOOL _showTimer;
 }
 
 - (instancetype)init
@@ -41,6 +48,7 @@
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
         tapRecognizer.numberOfTapsRequired = 1;
         [self.view addGestureRecognizer:tapRecognizer];
+        _showTimer = NO;
     }
     return self;
 }
@@ -63,6 +71,8 @@
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
+    
     _secondsLeft = 10;
     
     self.title = @"Подтверждение номера";
@@ -95,7 +105,8 @@
     _codeEntry.backgroundColor = [UIColor whiteColor];
     _codeEntry.keyboardType = UIKeyboardTypeNumberPad;
     _codeEntry.clearButtonMode = UITextFieldViewModeAlways;
-
+    _codeEntry.delegate = self;
+    
 //    UIToolbar *toolBar= [[UIToolbar alloc] initWithFrame:CGRectMake(0,0,320,44)];
 //    UIBarButtonItem *barButtonDone = [[UIBarButtonItem alloc] initWithTitle:@"Done"
 //                                                                      style:UIBarButtonItemStyleDone target:self action:@selector(dismissKeyboard)];
@@ -129,19 +140,14 @@
 
     
     [self.view addSubview:_resendButton];
-    [_resendButton addTarget:self action:@selector(requestAuthenticationCode) forControlEvents:UIControlEventTouchUpInside];
+    [_resendButton addTarget:self action:@selector(reRequestAuthenticationCode) forControlEvents:UIControlEventTouchUpInside];
     
-    _continueButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_continueButton setTitle:@"Продолжить" forState:UIControlStateNormal];
-    [_continueButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _continueButton.titleLabel.font = CKButtonFont;
-    _continueButton.backgroundColor = CKClickBlueColor;
-    _continueButton.clipsToBounds = YES;
-    _continueButton.layer.cornerRadius = 4;
-    [self.view addSubview:_continueButton];
-    [_continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
+    self.continueButton = [[UIButton alloc] initContinueButton];
+
+    [self.view addSubview:self.continueButton];
+    [self.continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
     
-    float padding = CONTROL_PADDING;
+    float padding = CK_STANDART_CONTROL_PADDING;
 
     [_topLabel2 makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.top).offset(padding);
@@ -169,19 +175,34 @@
         make.top.equalTo(_resendButton.bottom).offset(0);
         make.centerX.equalTo(self.view);
     }];
-    [_continueButton makeConstraints:^(MASConstraintMaker *make) {
+    [self.continueButton makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@44);
         make.bottom.equalTo(self.view.bottom).offset(-padding);
         make.left.equalTo(self.view.left).offset(padding);
         make.right.equalTo(self.view.right).offset(-padding);
     }];
+    [self.activityIndicatorView makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.continueButton.centerX);
+        make.bottom.equalTo(self.continueButton.top).offset(-padding);
+    }];
 }
 
 - (void)continue
 {
+    [self dismissKeyboard];
+    if (!_codeEntry.text.length){
+        [_codeEntry shake];
+        return;
+    }
     [[CKApplicationModel sharedInstance] sendPhoneAuthenticationCode:_codeEntry.text];
 }
 
+- (void)reRequestAuthenticationCode
+{
+    _showTimer = YES;
+    [self requestAuthenticationCode];
+    
+}
 - (void)requestAuthenticationCode
 {
     [self startBlockResentButton];
@@ -229,8 +250,8 @@
 }
 
 - (void)updateFrames{
-    float padding = CONTROL_PADDING;
-    [_continueButton updateConstraints:^(MASConstraintMaker *make) {
+    float padding = CK_STANDART_CONTROL_PADDING;
+    [self.continueButton updateConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.view.bottom).offset(-padding-_keyboardHeight);
     }];
 }
@@ -243,7 +264,7 @@
 
 -(void)startBlockResentButton{
     _resendButton.enabled = NO;
-    _timerLabel.hidden = NO;
+    _timerLabel.hidden = !_showTimer;
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
                                                 target:self
                                             selector:@selector(timerTick:)
@@ -279,5 +300,22 @@
     
 }
 
+
+#pragma mark UITextFieldDelegate
+
+#define MAXLENGTH 5
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSUInteger oldLength = [textField.text length];
+    NSUInteger replacementLength = [string length];
+    NSUInteger rangeLength = range.length;
+    
+    NSUInteger newLength = oldLength - rangeLength + replacementLength;
+    
+    BOOL returnKey = [string rangeOfString: @"\n"].location != NSNotFound;
+    
+    return newLength <= MAXLENGTH || returnKey;
+}
 
 @end

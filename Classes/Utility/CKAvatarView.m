@@ -34,7 +34,7 @@
     
     if (_filename.length)
     {
-        NSData *avatarData = [[CKCache sharedInstance] dataWithURLString:[NSString stringWithFormat:@"http://click.httpx.ru:8102/avatar/%@", _filename]
+        NSData *avatarData = [[CKCache sharedInstance] dataWithURLString:[NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, _filename]
                                                               completion:^(NSData *result, NSDictionary *userdata) {
                                                                   if (_iteration != [userdata[@"iteration"] integerValue]) return;
                                                                   if (!result)

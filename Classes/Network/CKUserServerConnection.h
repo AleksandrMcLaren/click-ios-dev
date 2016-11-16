@@ -19,15 +19,17 @@
                        sex:(NSString *)sex
                    country:(NSUInteger)country
                       city:(NSUInteger)city
-                  callback:(CKServerConnectionExecutedStatus)callback;
-- (void)checkUserWithCallback:(CKServerConnectionExecutedStatus)callback;
-- (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecutedStatus)callback;
+                  callback:(CKServerConnectionExecuted)callback;
+- (void)checkUserWithCallback:(CKServerConnectionExecuted)callback;
+- (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecuted)callback;
 - (void)getUserInfoWithId:(NSString *)userid callback:(CKServerConnectionExecuted)callback;
 - (void)suicide:(CKServerConnectionExecutedStatus)callback;
 - (void)getRegionsInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback;
-- (void)getCitiesInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback;
+- (void)getCountriesWithMask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback;
+- (void)getCitiesInCountry:(NSInteger)countryId mask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback;
 - (void)getActivationCode:(CKServerConnectionExecuted)callback;
 - (void)getUserListForGeoLocation: (CKServerConnectionExecuted)callback;
 - (void)setUserStatus: (NSNumber *)status;
+- (void)checkUserLogin:(NSString*) login withCallback:(CKServerConnectionExecutedObject)callback;
 
 @end

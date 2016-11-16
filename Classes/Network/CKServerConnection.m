@@ -76,7 +76,6 @@
 
 - (void)connect:(NSString *)entryPoint callback:(CKServerConnectionExecuted)callback
 {
-    //NSMutableString *connectionString = [NSMutableString stringWithFormat:@"ws://click.httpx.ru:8101/%@?", entryPoint];
     if (callback) {
         _callbacks[CONNECTION_OPEN_CALLBACK_IDENTIFIER] = callback;
     }
@@ -115,11 +114,34 @@
     }
     _connection = [[SRWebSocket alloc] initWithURL:url];
     _connection.delegate = self;
-    _queue = [NSMutableArray new];
+//    if (!_queue) {
+        _queue = [NSMutableArray new];
+//    }
     _isConnecting = YES;
     [_connection open];
 
 }
+
+//- (void)sendDataWithAlert:(NSDictionary *)data successfulCompletion:(CKServerConnectionExecuted)completion{
+//    [self sendData:data completion:^(NSDictionary *result) {
+//        if ([result socketMessageStatus] == S_OK){
+//                completion(result);
+//        }else{
+//            [[[CKApplicationModel sharedInstance] mainController] showAlertWithResult:result completion:nil];
+//        }
+//    }];
+//}
+
+//- (void)sendData:(NSDictionary *)data successfulCompletion:(CKServerConnectionExecuted)successfulCompletion
+//badResponseCompletion:(CKServerConnectionExecuted)badResponseCompletion{
+//    [self sendData:data completion:^(NSDictionary *result) {
+//        if ([result socketMessageStatus] == S_OK){
+//            successfulCompletion(result);
+//        }else{
+//            badResponseCompletion(result);
+//        }
+//    }];
+//}
 
 - (void)sendData:(NSDictionary *)data completion:(CKServerConnectionExecuted)completion
 {
@@ -143,14 +165,23 @@
     NSData *jsondata = [NSJSONSerialization dataWithJSONObject:mdata options:0 error:nil];
     NSString *sendString = [[NSString alloc] initWithData:jsondata encoding:NSUTF8StringEncoding];
     
-    NSLog(@"\n[Socket Request]\n%@", data);
+    NSMutableDictionary* values = [[NSMutableDictionary alloc] initWithDictionary:data];
+    if ([values objectForKey:@"options"]) {
+        NSMutableDictionary* options = ((NSDictionary*)[values objectForKey:@"options"]).mutableCopy;
+        if ([options objectForKey:@"avatar"]) {
+            [options setObject:@"avatar exist" forKey:@"avatar"];
+            [values setObject:options forKey:@"options"];
+        }
+        
+    }
+    NSLog(@"\n[Socket Request]\n%@", values);
 
     
     if(_connection.readyState == SR_CONNECTING) {
         [_queue addObject:sendString];
     } else if(_connection.readyState == SR_CLOSED) {
-        [_queue addObject:sendString];
         [self connect];
+        [_queue addObject:sendString];
     } else {
         [_connection send:sendString];
     }
@@ -184,14 +215,18 @@
     NSString *mid = [dict objectForKey:@"mid"];
     if (mid)
     {
-        CKServerConnectionExecuted callback = [_callbacks objectForKey:mid];
-        if (callback)
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                callback(dict);
-            });
-        }
+        [self runCallBack:[_callbacks objectForKey:mid] withValue:dict];
         [_callbacks removeObjectForKey:mid];
+    }
+}
+
+-(void)runCallBack:(id)callBack withValue:(id) value{
+    CKServerConnectionExecuted block = callBack;
+    if (block)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            block(value);
+        });
     }
 }
 
@@ -221,7 +256,13 @@
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error
 {
     NSLog(@"didFailWithError %@ %@", webSocket.url, error);
-    _isConnected = NO;
+     _isConnected = NO;
+    if (_connection.readyState == SR_CLOSED) {
+        //Error Domain=com.squareup.SocketRocket Code=504 "Timeout Connecting to Server" UserInfo={NSLocalizedDescription=Timeout Connecting to Server}
+        if (error.code == 504) {
+             [self runCallBackWithError];
+        }
+    }
 }
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean
 {
@@ -231,9 +272,21 @@
         // do nothing
         NSLog(@"Connecting now");
     } else {
-        //NSLog(@"Reconnect");
-        //[self connect];
+        NSLog(@"Reconnect");
+        if ((_callbacks.count) && (!_queue.count)) {
+            NSLog(@"Есть не обработанные callbacks");
+            [self runCallBackWithError];
+        }
+        [self connect];
     }
+}
+
+-(void)runCallBackWithError{
+    for (id callBack in _callbacks.allValues) {
+        NSLog(@"%@ class", callBack );
+        [self runCallBack:callBack withValue:@{CKSocketMessageFieldStatus:@(S_UNDEFINED)}];
+    }
+    [_callbacks removeAllObjects];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload

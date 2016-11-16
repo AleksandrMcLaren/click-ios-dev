@@ -17,6 +17,13 @@
 #import "CKBlogViewController.h"
 #import "CKSettingsViewController.h"
 #import "CKLoginCodeViewController.h"
+#import "CKOperationsProtocol.h"
+
+@interface CKMapViewController()
+
+@property (nonatomic, strong, readonly) UIViewController* topViewController;
+
+@end
 
 @implementation CKMainViewController
 {
@@ -104,40 +111,55 @@
     [self replaceCurrentController:controller];
 }
 
-- (void) showCreateProfile
+- (void) showProfile:(BOOL)restore
 {
     CKUserProfileController *controller = [CKUserProfileController new];
+    controller.restoreProfile = restore;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:controller];
+    nav.navigationBar.backgroundColor = [UIColor whiteColor];
+
     [self replaceCurrentController:nav];
 }
 
--(void)showAlertWithAction:(NSString*) action result:(NSInteger) result status:(NSInteger) status completion:(void (^ __nullable)(void))completion{
-//TODO: создать отдельно конвертер собщения ошибки из входных параметров, пока локально
-    NSString* title = action;
-    NSString* message = [NSString stringWithFormat:@"Error result:%ld status:%ld", result, (long)status];
-    if ([action isEqualToString:@"getUserState"]) {
-        title = @"Настройка MessMe";
-        message = @"Убедитесь в правильности введенного номера телефона и повторите попытку";
-    }
-    [self showAlertWithTitle:title message:message completion:completion];
+-(UIViewController*)currentController{
+    return [self topViewController];
 }
 
--(void)showAlertWithTitle:(NSString*) title message:(NSString*) message completion:(void (^ __nullable)(void))completion{
-    UIAlertController * alert = [UIAlertController
-                                 alertControllerWithTitle:title
-                                 message:message
-                                 preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction* okButton = [UIAlertAction
-                                actionWithTitle:@"OK"
-                                style:UIAlertActionStyleDefault
-                                handler:^(UIAlertAction * action) {
-                                    //Handle your yes please button action here
-                                }];
+#pragma mark Alerts
 
-    [alert addAction:okButton];
-    
+- (void) showAlertWithResult:(NSDictionary*)result completion:(void (^)(void))completion{
+
+    UIAlertController* alert = [UIAlertController newWithSocketResult:result];
+  
     [_currentController presentViewController:alert animated:YES completion:completion];
+
 }
+
+#pragma mark CKOperationsProtocol
+
+-(UIViewController*) topViewController{
+    if ([_currentController isKindOfClass:[UINavigationController class]])  {
+        UINavigationController* navigationController = (UINavigationController*)_currentController;
+        return navigationController.topViewController;
+    }
+    return _currentController;
+}
+
+-(void)beginOperation:(NSString*)operation{
+    UIViewController* controller = [self topViewController];
+    if ([controller respondsToSelector:@selector(beginOperation:)]) {
+        id<CKOperationsProtocol> operationController = (id<CKOperationsProtocol>)controller;
+        [operationController beginOperation:operation];
+    }
+}
+
+-(void)endOperation:(NSString*)operation{
+    UIViewController* controller = [self topViewController];
+    if ([controller respondsToSelector:@selector(endOperation:)]) {
+        id<CKOperationsProtocol> operationController = (id<CKOperationsProtocol>)controller;
+        [operationController endOperation:operation];
+    }
+}
+
 
 @end

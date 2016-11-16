@@ -14,6 +14,9 @@
 #import "CKServerConnection.h"
 #import "CKUserServerConnection.h"
 #import "CKMessageServerConnection.h"
+#import "Reachability.h"
+#import "CKCache.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @implementation CKClusterModel
 
@@ -37,6 +40,48 @@
 @end
 
 @implementation CKUserModel
+
+-(void)initizlize{
+    self.id = nil;
+    self.login = @"";
+    self.name = @"";
+    self.surname = @"";
+    self.sex = @"";
+    self.avatarName = nil;
+    self.iso = -1;
+    self.countryId = 0;
+    self.countryName = nil;
+    self.city = 0;
+    self.cityName = nil;
+    self.status = 0;
+    self.invite = nil;
+    self.location = kCLLocationCoordinate2DInvalid;
+    self.distance = 0;
+    self.geoStatus = 0;
+    self.isFriend = NO;
+    self.likes = 0;
+    self.isLiked = NO;
+    self.age = 0;
+    self.birthDate = nil;
+    self.registeredDate = nil;
+    self.statusDate = nil;
+    self.avatar = nil;
+}
+
+-(instancetype)init{
+    if (self = [super init]) {
+        [self initizlize];
+    }
+    return self;
+}
+
+- (RACSignal *)executeSearchSignal {
+    return [[[[RACSignal empty]
+              logAll]
+             delay:2.0]
+            logAll];
+}
+
 
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict
 {
@@ -64,12 +109,14 @@
         model.likes = [sourceDict[@"likes"] integerValue];
         model.isLiked = [sourceDict[@"isliked"] boolValue];
         model.age = [sourceDict[@"age"] integerValue];
+        
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss"];
         dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
-        [dateFormatter setDateFormat:@"YYYY-MM-DDThh:mm:ss"];
-        model.birthDate = [dateFormatter dateFromString:sourceDict[@"birthdate"]];
-        model.registeredDate = [dateFormatter dateFromString:sourceDict[@"registereddate"]];
-        model.statusDate = [dateFormatter dateFromString:sourceDict[@"statusdate"]];
+        
+        model.birthDate =  [sourceDict[@"birthdate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil : [dateFormatter dateFromString:sourceDict[@"birthdate"]];
+        model.registeredDate =  [sourceDict[@"registereddate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil :[dateFormatter dateFromString:sourceDict[@"registereddate"]];
+        model.statusDate =  [sourceDict[@"statusdate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil :[dateFormatter dateFromString:sourceDict[@"statusdate"]];
     } @catch (NSException *exception) {
         return nil; // bad model
     }
@@ -131,13 +178,41 @@
     return [self.id hash];
 }
 
+-(NSString*)avatarURLString{
+    return [NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, self.avatarName];
+}
+
+-(BOOL)isCreated{
+    return self.id != nil;
+}
+
+-(void)setAvatar:(UIImage *)avatar{
+    
+    CGFloat maxSize = 300;
+    if (avatar) {
+        if (MIN(avatar.size.height, avatar.size.width) > maxSize) {
+            CGFloat k = maxSize / MAX(avatar.size.height, avatar.size.width);
+            
+            CGSize newSize = CGSizeMake(avatar.size.width*k, avatar.size.height*k);
+            UIGraphicsBeginImageContext(newSize);
+            [avatar drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+            avatar = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+    }
+    
+    _avatar = avatar;
+}
+
 @end
 
 @implementation CKPhoneContact
 
 @end
 
-@interface CKApplicationModel()<CLLocationManagerDelegate>
+@interface CKApplicationModel()<CLLocationManagerDelegate>{
+    Reachability* _internetReachable;
+}
 
 @property (nonatomic, strong) NSString *token;
 @property (nonatomic, strong) CKUserModel *userProfile;
@@ -187,7 +262,7 @@
             [CKMessageServerConnection sharedInstance].phoneNumber = _userPhone;
 
         }
-            
+
     }
     return self;
 }
@@ -228,22 +303,22 @@
 
 - (void) didStarted
 {
+
     [self setupLocationService];
+    
     if (self.token == nil)
     {
         [self.mainController showWelcomeScreen];
     } else {
-        [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary *result) {
-            CKUserModel *profile = [CKUserModel modelWithDictionary:result[@"result"]];
-            if (!profile)
-            {
-                // error
-                NSLog(@"error!");
-            } else
-            {
+        [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary* result) {
+            if ([result socketMessageStatus] == S_OK){
+                CKUserModel* profile = [CKUserModel modelWithDictionary:[result socketMessageResult]];
                 self.userProfile = profile;
                 [self showMainScreen];
+            }else{
+                [_mainController showAlertWithResult:result completion:nil];
             }
+
         }];
     }
 }
@@ -253,17 +328,17 @@
     [self.mainController showLoginScreen];
 }
 
-- (NSDictionary *)countryWithISO:(NSInteger)iso
-{
+- (BOOL)countryExistWithId:(NSInteger)id{
+    __block BOOL result = NO;
+    
     CKDB *ckdb = [CKDB sharedInstance];
-
-    NSMutableString *query = [NSMutableString stringWithFormat:@"select * from countries where iso=%ld", (long)iso];
-    __block NSDictionary *result = nil;
+    
+    NSMutableString *query = [NSMutableString stringWithFormat:@"select count(*) from countries where id=%ld", (long)id];
     [ckdb.queue inDatabase:^(FMDatabase *db) {
         FMResultSet *data = [db executeQuery:query];
         while ([data next])
         {
-            result = [data resultDictionary];
+            result = [data intForColumnIndex:0] > 0;
             break;
         }
         [data close];
@@ -289,114 +364,129 @@
     return result;
 }
 
-- (void) sendUserPhone:(NSString *)phone promo:(NSString *)promo
+- (NSDictionary *)countryWithPhoneCode:(NSString*)phoneCode
+{
+    CKDB *ckdb = [CKDB sharedInstance];
+    
+    NSMutableString *query = [NSMutableString stringWithFormat:@"select * from countries where phonecode=%@", phoneCode];
+    __block NSDictionary *result = nil;
+    [ckdb.queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *data = [db executeQuery:query];
+        while ([data next])
+        {
+            result = [data resultDictionary];
+            break;
+        }
+        [data close];
+    }];
+    return result;
+}
+
+- (void) sendUserPhone:(NSString *)phone promo:(NSString *)promo countryId:(NSInteger)countryId
 {
     phone = [[phone componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""];
-    _userPhone = phone;
-    [CKUserServerConnection sharedInstance].phoneNumber = phone;
-    [CKMessageServerConnection sharedInstance].phoneNumber = phone;
+    NSString* operation = @"user.checkuser";
+    [_mainController beginOperation:operation];
     
-    [[CKMessageServerConnection sharedInstance] connectWithCallback:^(NSDictionary *result) {
-        NSInteger status = [result[@"status"] integerValue];
-        NSInteger res = [result[@"result"] integerValue];
-        NSString* action = @"getUserState";
+//    [self testInternetConnection:^(Reachability *reachability) {
+//        [_internetReachable stopNotifier];
+        _userPhone = phone;
+        _countryId = countryId;
+        [CKUserServerConnection sharedInstance].phoneNumber = phone;
+        [CKMessageServerConnection sharedInstance].phoneNumber = phone;
         
-        
-        _isNewUser = YES;
-        
-        if (status == 2205) {
-            
-            
-            switch (res) {
-                    
+       
+        [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSDictionary *result) {
+            [_mainController endOperation:operation];
+            if ([result socketMessageStatus] == S_OK){
+                _isNewUser = YES;
+                
+                //        result == 1 || result == -1, тогда пользователя можно восстановить, иначе - пользователь новый, пользователь видит инфу
+                
+                switch ([result socketMessageResultInteger]) {
+                    case 0:
+                        NSLog(@"0 – Пользователя или нет или неактивирован");
+                        _isNewUser = YES;
+                        break;
+                        
                     case 1:
-                    NSLog(@"1 - пользователь заблокирован");
-                    _isNewUser = NO;
-                    break;
-                    
-                    case 2:
-                    NSLog(@"2 - пользователь не активирован");
-                    
-                    _isNewUser = NO;
-                    break;
-                    
-                    case 3:
-                    NSLog(@"3 - пользователь есть но не совпадает uuid или deviceid, то есть новое устройство");
-                    _isNewUser = NO;
-                    break;
-                    
-                    case 4:
-                    NSLog(@"4 - пользователя в базе нет");
-                    _isNewUser = YES;
-                    break;
-                    
-                    case 5:
-                    NSLog(@"5 - не заполнен профиль, регистрация прошла не до конца");
-                    _isNewUser = NO;
-                    break;
-                default:
-                    break;
+                        NSLog(@"1 – все нормально,");
+                        _isNewUser = NO;
+                        break;
+                        
+                    case -1:
+                        NSLog(@"-1 – есть, активирован но регистрация не завершена, нет профиля");
+                        _isNewUser = NO;
+                        break;
+                    default:
+                        break;
+                }
+                [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo callback:^(NSDictionary *result) {
+                    [self.mainController showAuthenticationScreen];
+                }];
+            }else{
+                [_mainController showAlertWithResult:result completion:nil];
             }
-            [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo?promo:@"" callback:^(NSDictionary *result) {
-                [self.mainController showAuthenticationScreen];
-            }];
-        }else{
-            //Выводим сообщение
-            [[[CKApplicationModel sharedInstance] mainController] showAlertWithAction:action result:res status:status completion:nil];
-        }
-        
-
-    }];
-    
-//    [[CKUserServerConnection sharedInstance] checkUserWithCallback:^(NSInteger status) {
-
-        
-//        if (status == 1000)
-//        {
-//            NSLog(@"new user");
-//            _isNewUser = YES;
-//        } else
-//        {
-//            NSLog(@"existing user");
-//        }
-//        [[CKUserServerConnection sharedInstance] registerUserWithPromo:promo?promo:@"" callback:^(NSDictionary *result) {
-//            [[CKUserServerConnection sharedInstance] getActivationCode:^(NSDictionary *result) {
-//                [self.mainController showAuthenticationScreen];
-//            }];
-//        }];
-
+        }];
+//    } unreachableBlock:^(Reachability *reachability) {
+//        [_internetReachable stopNotifier];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [_mainController endOperation:operation];
+//            [_mainController showAlertWithResult:nil completion:nil];
+//        });
+//
 //    }];
+    
+
 }
 
 - (void)sendPhoneAuthenticationCode:(NSString *)code
 {
-    [[CKUserServerConnection sharedInstance] activateUserWithCode:code callback:^(NSInteger status) {
-        if (status == 1000)
-        {
+    NSString* operation = @"user.activate";
+    [_mainController beginOperation:operation];
+    
+    [[CKUserServerConnection sharedInstance] activateUserWithCode:code callback:^(NSDictionary* result) {
+        [_mainController endOperation:operation];
+        if ([result socketMessageStatus] == S_OK){
             self.token = [[CKUserServerConnection sharedInstance] token];
             [CKMessageServerConnection sharedInstance].token = self.token;
-            if (_isNewUser)
-            {
-                [self.mainController showCreateProfile];
-            } else
-            {
-                [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary *result) {
-                    CKUserModel *profile = [CKUserModel modelWithDictionary:result[@"result"]];
-                    if (!profile)
-                    {
-                        // error
-                        NSLog(@"error!");
-                    } else
-                    {
-                        self.userProfile = profile;
+            
+            [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary* result) {
+                
+                CKUserModel *profile;
+                
+                if ([result socketMessageStatus] == S_OK ) {
+                    profile = [CKUserModel modelWithDictionary:[result socketMessageResult]];
+                    if (![[CKApplicationModel sharedInstance] countryExistWithId:profile.countryId]) {
+                        NSDictionary *country = [[CKApplicationModel sharedInstance] countryWithId:self.countryId];
+                        profile.iso = [country[@"iso"] integerValue];
+                        profile.countryName = country[@"name"];
+                        profile.countryId = self.countryId;
+                    }
+                    self.userProfile = profile;
+                }else {
+                    profile = [[CKApplicationModel sharedInstance] userProfile];
+                }
+                
+                if (profile) {
+                    if (_isNewUser) {
+                        [self.mainController showProfile:NO];
+                    }else{
                         [self.mainController showRestoreHistory];
                     }
-                }];
-            }
+                }else{
+                    [_mainController showAlertWithResult:result completion:nil];
+                }
+            } ];
         }else{
-            //вывести ошибку про пароль
+            [_mainController showAlertWithResult:result completion:nil];
         }
-        
+    }];
+}
+
+- (void)checkUserLogin:(NSString *)login withCallback:(CKServerConnectionExecutedObject)callback{
+    [[CKUserServerConnection sharedInstance] checkUserLogin:login withCallback:^(id result) {
+        callback(result);
     }];
 }
 
@@ -440,7 +530,7 @@
             d[i.phoneNumber] = i;
         }
         _phoneContacts = d;
-        [[CKMessageServerConnection sharedInstance] addFriends:[self contactPhoneList] callback:^(NSInteger status) {
+        [[CKMessageServerConnection sharedInstance] addFriends:[self contactPhoneList] callback:^(CKStatusCode status) {
             [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithAllFriends] callback:^(NSDictionary *result) {
                 
                 NSMutableArray *friends = [NSMutableArray new];
@@ -476,6 +566,14 @@
     }];
 }
 
+- (void) restoreHistoryWithCallback:(CKServerConnectionExecuted)callback
+{
+    [[CKMessageServerConnection sharedInstance] getDialogListWithCallback:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+
+
 - (void) loadClusters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSString *)mask withBottomLeftLatitude: (NSNumber *)swlat withBottomLeftLongtitude: (NSNumber *)swlng withtopCoordinate: (NSNumber *)nelat withTopRigthLongtitude: (NSNumber *)nelng withInt: (int) count{
     if (count ==0){
         _nelat = nelat;
@@ -503,37 +601,49 @@
     }];
 }
 
-
-- (void) restoreHistory
+- (void) restoreProfile:(bool) restore
 {
-    [self showMainScreen];
-}
-
-- (void) abandonHistory
-{
-    [self showMainScreen];
-}
-
-+(NSString*)date2str:(NSDate*)date {
-    if (!date) return @"Не указана";
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"dd.MM.yyyy"];
     
-    NSString *stringFromDate = [formatter stringFromDate:date];
-    return stringFromDate;
+    if (!restore) {
+        self.userProfile = nil;
+        NSString* operation = @"restore";
+        [_mainController beginOperation:operation];
+        
+        [[CKMessageServerConnection sharedInstance] cleanallHistory:^(NSDictionary *result) {
+            [_mainController endOperation:operation];
+   
+            if ([result socketMessageStatus] == S_OK){
+                 [[self mainController] showProfile:NO];
+            }else{
+                [_mainController showAlertWithResult:result completion:nil];
+            }
+        }];
+    }else{
+        [[self mainController] showProfile:YES];
+    }
+    
+    
 }
 
 - (void)submitNewProfile
 {
+    NSString* operation = @"user.create";
+    [_mainController beginOperation:operation];
+    
     [[CKUserServerConnection sharedInstance] createUserWithName:self.userProfile.name
                                                         surname:self.userProfile.surname
                                                           login:self.userProfile.login
                                                          avatar:self.userProfile.avatar
-                                                      birthdate:[CKApplicationModel date2str:self.userProfile.birthDate]
+                                                      birthdate:[NSDate date2str:self.userProfile.birthDate ]
                                                             sex:self.userProfile.sex
                                                         country:self.userProfile.countryId
-                                                           city:self.userProfile.city callback:^(NSInteger status) {
-                                                               [self showMainScreen];
+                                                           city:self.userProfile.city callback:^(NSDictionary *result) {
+                                                               [_mainController endOperation:operation];
+                                                               if ([result socketMessageStatus] == S_OK){
+                                                                   [self showMainScreen];
+                                                               }else{
+                                                                   [_mainController showAlertWithResult:result completion:nil];
+                                                               }
                                                            }];
 }
 
@@ -546,6 +656,7 @@
     {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
+        
         
         // проверить авторизацию
         CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
@@ -569,6 +680,10 @@
 - (void)runUpdatingLocation
 {
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    _locationManager.distanceFilter = kCLDistanceFilterNone;
+    [_locationManager startMonitoringSignificantLocationChanges];
+    
+    
     [_locationManager startUpdatingLocation];
 }
 
@@ -582,10 +697,23 @@
     }
 }
 
+- (void)locationManager:(CLLocationManager *)manager
+       didFailWithError:(NSError *)error{
+//    _location = nil;
+}
+
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation
+           fromLocation:(CLLocation *)oldLocation{
+    _location = newLocation;
+}
+
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     _location = [locations lastObject];
 }
+
 
 - (void) fetchContactsWithCompletion:(void(^)(NSMutableArray* arr))completion
 {
@@ -636,9 +764,9 @@
             CKPhoneContact* contact = [phoneUsers objectAtIndex:i];
             NSString* phone = contact.phoneNumber;
             contact.phoneNumber = [[phone componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""];
-            if([[contact.phoneNumber substringToIndex:1] isEqualToString:@"8"]) {
-                contact.phoneNumber = [NSString stringWithFormat:@"%@%@", @"7", [contact.phoneNumber substringFromIndex:1]];
-            }
+//            if([[contact.phoneNumber substringToIndex:1] isEqualToString:@"8"]) {
+//                contact.phoneNumber = [NSString stringWithFormat:@"%@%@", @"7", [contact.phoneNumber substringFromIndex:1]];
+//            }
         }
         // remove duplicates
         NSMutableIndexSet* toRemove = [NSMutableIndexSet new];
@@ -666,5 +794,66 @@
 {
     return _chatPool[id];
 }
+
+-(CLLocation*) location{
+    return _location;
+};
+
+- (void) getLocationInfowithCallback:(CKServerConnectionExecutedObject)callback{
+    
+    __block NSMutableDictionary* info;
+    
+    if (_location) {
+        CLGeocoder *reverseGeocoder = [[CLGeocoder alloc] init];
+        [reverseGeocoder reverseGeocodeLocation:_location completionHandler:^(NSArray *placemarks, NSError *error) {
+            // NSLog(@"Received placemarks: %@", placemarks);
+            CLPlacemark *myPlacemark = [placemarks objectAtIndex:0];
+            
+            NSString *cityName = [[myPlacemark addressDictionary] objectForKey:@"City"];
+            NSString *countryName = [[myPlacemark addressDictionary] objectForKey:@"Country"];
+//            NSString *cuntryCode = [[myPlacemark addressDictionary] objectForKey:@"CountryCode"];
+            
+            NSLocale *locale = [NSLocale currentLocale];
+            NSString *localeCode = [[locale objectForKey: NSLocaleCountryCode] lowercaseString];
+            
+            [[CKUserServerConnection sharedInstance] getCountriesWithMask:[countryName lowercaseString] locale:localeCode callback:^(NSDictionary *resultCountry) {
+                if ([resultCountry socketMessageResult]) {
+                    NSArray* countries = [resultCountry socketMessageResult];
+                    if (countries.count) {
+                        info = [[NSMutableDictionary alloc] initWithDictionary:[countries firstObject]];
+                        [[CKUserServerConnection sharedInstance] getCitiesInCountry:[info[@"countryid"] integerValue] mask:[cityName lowercaseString] locale:localeCode callback:^(NSDictionary *resultCity) {
+                            NSArray* cyties = [resultCity socketMessageResult];
+                            NSDictionary* city =  [cyties firstObject];
+                            if (city){
+                                [info addEntriesFromDictionary:city];
+                            }
+                            callback(info);
+                        }];
+                    }else{
+                         callback(nil);
+                    }
+                
+                }else{
+                    callback(nil);
+                }
+            }];
+        }];
+    }else{
+        callback(nil);
+    }
+    
+}
+
+
+- (void)testInternetConnection:(NetworkReachable) reachableBlock unreachableBlock:(NetworkUnreachable) unreachableBlock
+{
+    _internetReachable = [Reachability reachabilityWithHostname:CK_URL_BASE];
+    // Internet is reachable
+    _internetReachable.reachableBlock = reachableBlock;
+    // Internet is not reachable
+    _internetReachable.unreachableBlock = unreachableBlock;
+    [_internetReachable startNotifier];
+}
+
 
 @end

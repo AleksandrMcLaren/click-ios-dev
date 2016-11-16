@@ -10,6 +10,9 @@
 #import <MapKit/MapKit.h>
 #import "CKDialogsModel.h"
 #import "CKServerConnection.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
+#import "CKOperationsProtocol.h"
+#import "Reachability.h"
 
 @class CKChatModel;
 
@@ -19,7 +22,7 @@
 @property (nonatomic, strong) NSString *login;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *surname;
-@property (nonatomic, assign) NSString *sex;
+@property (nonatomic, strong) NSString *sex;
 @property (nonatomic, assign) NSInteger iso;
 @property (nonatomic, assign) NSInteger countryId;
 @property (nonatomic, strong) NSString *countryName;
@@ -37,13 +40,18 @@
 @property (nonatomic, assign) BOOL isLiked;
 @property (nonatomic, assign) NSInteger age;
 @property (nonatomic, strong) NSDate *birthDate;
+
 @property (nonatomic, strong) NSDate *registeredDate;
 @property (nonatomic, strong) NSDate *statusDate;
 
 @property (nonatomic, readonly) NSString *commonName;
 @property (nonatomic, readonly) NSString *letterName;
+@property (nonatomic, strong, readonly) NSString* avatarURLString;
+@property (nonatomic, assign, readonly) BOOL isCreated;
 
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict;
+
+@property (strong, nonatomic) RACCommand *executeSearch;
 
 @end
 
@@ -69,16 +77,17 @@
 @property (nonatomic, strong) NSString *id;
 @end;
 
-@protocol CKMainControllerProtocol <NSObject>
+@protocol CKMainControllerProtocol <NSObject, CKOperationsProtocol>
+
+@property (nonatomic, strong, readonly) UIViewController* currentController;
 
 - (void) showWelcomeScreen;
 - (void) showLoginScreen;
 - (void) showAuthenticationScreen;
 - (void) showMainScreen;
 - (void) showRestoreHistory;
-- (void) showCreateProfile;
-- (void) showAlertWithTitle:(NSString*) title message:(NSString*) message completion:(void (^)(void))completion;
-- (void) showAlertWithAction:(NSString*) action result:(NSInteger) result status:(NSInteger) status completion:(void (^)(void))completion;
+- (void) showProfile:(BOOL)restore;
+- (void) showAlertWithResult:(NSDictionary*)result completion:(void (^)(void))completion;
 - (id<CKDialogsControllerProtocol>) dialogsController;
 
 @end
@@ -86,25 +95,29 @@
 @interface CKApplicationModel : NSObject
 
 @property (nonatomic, assign) id<CKMainControllerProtocol>mainController;
+@property (nonatomic, strong, readonly) CLLocation* location;
 
 + (instancetype)sharedInstance;
 
 - (void) didStarted;
 - (void) userDidAcceptTerms;
-- (void) sendUserPhone:(NSString *)phone promo:(NSString *)promo;
+- (void) sendUserPhone:(NSString *)phone promo:(NSString *)promo countryId:(NSInteger)countryId;
+- (void) checkUserLogin:(NSString *)login withCallback:(CKServerConnectionExecutedObject)callback;
 - (void) requestAuthentication;
 - (void) sendPhoneAuthenticationCode:(NSString *)code;
-- (void) restoreHistory;
-- (void) abandonHistory;
+- (void) restoreHistoryWithCallback:(CKServerConnectionExecuted)callback;
+- (void) restoreProfile:(bool) restore;
 - (void) submitNewProfile;
+- (void) getLocationInfowithCallback:(CKServerConnectionExecutedObject)callback;
 - (void) loadClusters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSString *)mask withBottomLeftLatitude: (NSNumber *)swlat withBottomLeftLongtitude: (NSNumber *)swlng withtopCoordinate: (NSNumber *)nelat withTopRigthLongtitude: (NSNumber *)nelng withInt: (int) count;
 
 
 // определять по местоположению пользователя
 @property (nonatomic, readonly) NSInteger countryId;
 
+- (BOOL)countryExistWithId:(NSInteger)id;
 - (NSDictionary *)countryWithId:(NSInteger)id;
-- (NSDictionary *)countryWithISO:(NSInteger)iso;
+
 
 // данные пользователя
 @property (nonatomic, readonly) CKUserModel *userProfile;
@@ -121,5 +134,6 @@
 - (void)storeChat:(CKChatModel *)model withId:(NSString *)id;
 - (CKChatModel *)getChatModelWithId:(NSString *)id;
 
+- (void)testInternetConnection:(NetworkReachable) reachableBlock unreachableBlock:(NetworkUnreachable) unreachableBlock;
 
 @end

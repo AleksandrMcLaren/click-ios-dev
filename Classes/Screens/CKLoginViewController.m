@@ -16,10 +16,11 @@
 #import "CKPromoInfoController.h"
 #import "CKLoginCodeViewController.h"
 #import "UIView+Shake.h"
+#import "CKOperationsProtocol.h"
+#import "UIButton+ContinueButton.h"
+#import "Reachability.h"
 
-
-
-@interface CKLoginViewController()<CKCountrySelectionControllerDelegate, UITextFieldDelegate>
+@interface CKLoginViewController()<CKCountrySelectionControllerDelegate, UITextFieldDelegate, CKOperationsProtocol>
 
 @property (nonatomic, strong) NSMutableArray *animatableConstraints;
 
@@ -33,8 +34,6 @@
     UITextField *_phoneTextField;
     UITextField *_promoTextField;
     CGFloat _keyboardHeight;
-    UIButton *_continueButton;
-    
 }
 
 - (instancetype)init
@@ -49,9 +48,7 @@
         self.title = @"Настройка MessMe";
         _countryId = [[CKApplicationModel sharedInstance] countryId];
         
-        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
-        tapRecognizer.numberOfTapsRequired = 1;
-        [self.view addGestureRecognizer:tapRecognizer];
+
     }
     return self;
 }
@@ -74,25 +71,31 @@
 
 - (void) viewDidLoad
 {
+    [super viewDidLoad];
+    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = CKClickLightGrayColor;
     
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     UILabel *header = [UILabel labelWithText:@"Введите код страны\nи ваш номер телефона"
-                                                   font:[UIFont systemFontOfSize:20.0]
+                                                   font:[UIFont systemFontOfSize:16.0]
                                               textColor:[UIColor blackColor]
                                           textAlignment:NSTextAlignmentCenter];
     header.numberOfLines = 2;
-    header.frame = self.view.bounds;
+//    header.frame = self.view.bounds;
     header.backgroundColor = self.view.backgroundColor;
-    [header sizeToFit];
-    CGSize s = header.frame.size;
-    header.frame = CGRectMake(0, 0, s.width, s.height+10);
+    [header setFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CK_STANDART_CONTROL_HEIGHT)];
+    
+//    [header sizeToFit];
+//    CGSize s = header.frame.size;
+//    header.frame = CGRectMake(0, 0, s.width, s.height+10);
     _tableView.tableHeaderView = header;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.scrollEnabled = NO;
+//    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    
     [self.view addSubview:_tableView];
     [_tableView reloadData];
     [_tableView makeConstraints:^(MASConstraintMaker *make) {
@@ -102,33 +105,37 @@
         make.height.equalTo(@(_tableView.contentSize.height));
     }];
     
-    _continueButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_continueButton setTitle:@"Продолжить" forState:UIControlStateNormal];
-    [_continueButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _continueButton.titleLabel.font = CKButtonFont;
-    _continueButton.backgroundColor = CKClickBlueColor;
-    _continueButton.clipsToBounds = YES;
-    _continueButton.layer.cornerRadius = 4;
-    [self.view addSubview:_continueButton];
-    [_continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
+    self.continueButton = [[UIButton alloc] initContinueButton];
+
+    [self.view addSubview:self.continueButton];
+    [self.continueButton addTarget:self action:@selector(continue) forControlEvents:UIControlEventTouchUpInside];
     
-    float padding = CONTROL_PADDING;
-    [_continueButton makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@44);
+    float padding = CK_STANDART_CONTROL_PADDING;
+    [self.continueButton makeConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(CK_STANDART_CONTROL_HEIGHT);
         make.bottom.equalTo(self.view.bottom).offset(-padding);
         make.left.equalTo(self.view.left).offset(padding);
         make.right.equalTo(self.view.right).offset(-padding);
+    }];
+    
+    [self.activityIndicatorView makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.continueButton.centerX);
+        make.bottom.equalTo(self.continueButton.top).offset(-padding);
     }];
 }
 
 - (void)continue
 {
+    
     NSDictionary *countryData = [[CKApplicationModel sharedInstance] countryWithId:_countryId];
 
     if (![self isPhoneValid]) {
         [_phoneTextField shake];
         return;
     }
+    
+    [self dismissKeyboard];
+    
     
     NSString *title = @"Проверка номера телефона";
     NSString *message = [NSString stringWithFormat:@"Это ваш правильный номер?\n\n+%@ %@\n\nSMS с вашим кодом доступа будет отправлено на этот номер", countryData[@"phonecode"],_phoneTextField.text];
@@ -148,7 +155,10 @@
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:confirm
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction *a) {
-                                                              [[CKApplicationModel sharedInstance] sendUserPhone:[NSString stringWithFormat:@"%@%@", countryData[@"phonecode"], _phoneTextField.text] promo:_promoTextField.text];
+                                                              [[CKApplicationModel sharedInstance]
+                                                                sendUserPhone:[NSString stringWithFormat:@"%@%@", countryData[@"phonecode"], _phoneTextField.text]
+                                                                promo:_promoTextField.text
+                                                                countryId:_countryId];
                                                           }];
     [phoneWarning addAction:confirmAction];
     [phoneWarning addAction:cancelAction];
@@ -164,7 +174,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (section == 0) return 0;
-    return 54;
+    return CK_STANDART_CONTROL_HEIGHT;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -177,7 +187,8 @@
     header.numberOfLines = 2;
     header.frame = self.view.bounds;
     header.backgroundColor = self.view.backgroundColor;
-    [header sizeToFit];
+//    [header sizeToFit];
+     [header setFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CK_STANDART_CONTROL_HEIGHT)];
     return header;
 }
 
@@ -293,10 +304,11 @@
     
     }
     if (_promoTextField.isFirstResponder) {
-        
+        [_promoTextField resignFirstResponder];
     };
     return YES;
 }
+
 
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -370,16 +382,18 @@
 
 - (void)keyboardWillShow:(NSNotification *)notification
 {
-    CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
-    _keyboardHeight = keyboardHeight;
+    _keyboardHeight =  [self keyboardHeightByKeyboardNotification:notification];;
     [self updateFrames];
+    
+    self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped)];
+    self.tapRecognizer.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:self.tapRecognizer];
 }
 
 
 - (void)keyboardFrameChanged:(NSNotification *)notification
 {
-    CGFloat keyboardHeight = [self keyboardHeightByKeyboardNotification:notification];
-    _keyboardHeight = keyboardHeight;
+    _keyboardHeight =  [self keyboardHeightByKeyboardNotification:notification];;
     
     [self updateFrames];
 }
@@ -387,13 +401,17 @@
 - (void)keyboardWillHide:(NSNotification *)notification
 {
     _keyboardHeight = 0;
+    
+    [self.view removeGestureRecognizer:self.tapRecognizer];
+    self.tapRecognizer = nil;
+    
     [self updateFrames];
 }
 
 -(CGFloat)keyboardHeightByKeyboardNotification:(NSNotification *)notification
 {
     CGRect keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    return CGRectGetHeight(keyboardRect);
+    return (_phoneTextField.isFirstResponder) ? CGRectGetHeight(keyboardRect) : 0;
 }
 
 - (void)dismissKeyboard
@@ -403,14 +421,13 @@
 }
 
 - (void)updateFrames{
-    float padding = CONTROL_PADDING;
-    [_continueButton updateConstraints:^(MASConstraintMaker *make) {
+    float padding = CK_STANDART_CONTROL_PADDING;
+    [self.continueButton updateConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.view.bottom).offset(-padding-_keyboardHeight);
     }];
 }
 
-- (void) viewTapped {
-    [self dismissKeyboard];
-}
+
+
 
 @end

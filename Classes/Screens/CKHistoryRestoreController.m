@@ -10,6 +10,10 @@
 #import "CKApplicationModel.h"
 #import "UIColor+hex.h"
 #import "UILabel+utility.h"
+#import "CKMessageServerConnection.h"
+#import "CKCache.h"
+#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIButton+ContinueButton.h"
 
 @implementation CKHistoryRestoreController
 {
@@ -25,6 +29,8 @@
 
 - (void) viewDidLoad
 {
+    [super viewDidLoad];
+    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -36,9 +42,44 @@
     _alreadyRegisteredLabel = [UILabel labelWithText:@"Вы уже зарегистрированы в Click" font:[UIFont systemFontOfSize: 15.0] textColor:[UIColor blackColor] textAlignment:NSTextAlignmentCenter];
     [self.view addSubview:_alreadyRegisteredLabel];
     
+    
     _avatar = [[UIImageView alloc] init];
     _avatar.image = [[CKApplicationModel sharedInstance] userProfile].avatar;
     
+    CKUserModel* userProfile = [[CKApplicationModel sharedInstance] userProfile];
+    
+    if (userProfile.avatarName && (userProfile.avatarName.length > 0)) {
+        [_avatar sd_setImageWithURL:[NSURL URLWithString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [[CKCache sharedInstance] putImage:image withURLString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString];
+            userProfile.avatar = image;
+        }];
+    }else{
+        UIImage* image = [UIImage imageNamed:@"ic_photo_contact"];
+        [_avatar setImage:image];
+    }
+    
+    
+    //Работа через кеш
+//    int _iteration = 0;
+    
+//    NSData *avatarData = [[CKCache sharedInstance] dataWithURLString:[NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, [[CKApplicationModel sharedInstance] userProfile].avatarName]
+//                                                          completion:^(NSData *result, NSDictionary *userdata) {
+//                                                              if (_iteration != [userdata[@"iteration"] integerValue]) return;
+//                                                              if (!result)
+//                                                              {
+//                                                                  _avatar.hidden = YES;
+//                                                              } else
+//                                                              {
+//                                                                  _avatar.hidden = NO;
+//                                                                  UIImage *img = [UIImage imageWithData:result];
+//                                                                  _avatar.image = img;
+//                                                              }
+//                                                          } userData:@{@"iteration":@(_iteration)}];
+//    if (avatarData)
+//    {
+//        _avatar.image = [UIImage imageWithData:avatarData];
+//        _avatar.hidden = NO;
+//    }
     _avatar.layer.cornerRadius = 60.0;
     _avatar.layer.borderColor = [[UIColor whiteColor] CGColor];
     _avatar.layer.borderWidth = 3.0;
@@ -47,44 +88,47 @@
     [self.view addSubview:_avatar];
     
     _nameLabel = [UILabel labelWithText:[[CKApplicationModel sharedInstance] userProfile].name font:CKButtonFont textColor:CKClickBlueColor textAlignment:NSTextAlignmentCenter];
+    _nameLabel.numberOfLines = 5;
     [self.view addSubview:_nameLabel];
     
     _nickPhoneLabel = [UILabel labelWithText:nil font:[UIFont systemFontOfSize: 12.0] textColor:[UIColor blackColor] textAlignment:NSTextAlignmentCenter];
-    
+    _nickPhoneLabel.numberOfLines = 5;
     NSMutableAttributedString *nickPhoneString = [NSMutableAttributedString new];
     [nickPhoneString appendAttributedString:[NSMutableAttributedString withImageName:@"person" geometry:CGRectMake(0, -2, 12, 12)]];
     [nickPhoneString appendAttributedString:[NSMutableAttributedString withString:[NSString stringWithFormat:@" %@ | ", [[CKApplicationModel sharedInstance] userProfile].login]]];
     [nickPhoneString appendAttributedString:[NSMutableAttributedString withImageName:@"phone" geometry:CGRectMake(0, -2, 12, 12)]];
-    [nickPhoneString appendAttributedString:[NSMutableAttributedString withString:[NSString stringWithFormat:@" +%@", [[CKApplicationModel sharedInstance] userProfile].id]]];
+    [nickPhoneString appendAttributedString:[NSMutableAttributedString withString:[NSString stringWithFormat:@" +%@", [[CKApplicationModel sharedInstance] userProfile].id ? [[CKApplicationModel sharedInstance] userProfile].id : @""]]];
     
     _nickPhoneLabel.attributedText = nickPhoneString;
     [self.view addSubview:_nickPhoneLabel];
     
     _restoreLabel = [UILabel labelWithText:@"Восстановить историю переписки и чатов?" font:[UIFont systemFontOfSize: 14.0] textColor:[UIColor blackColor] textAlignment:NSTextAlignmentCenter];
     _restoreLabel.numberOfLines = 2;
+    
+    CATransition *animation = [CATransition animation];
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    animation.type = kCATransitionFade;
+    animation.duration = 0.5;
+    [_restoreLabel.layer addAnimation:animation forKey:@"kCATransitionFade"];
+    
+    
     [self.view addSubview:_restoreLabel];
     
-    _restoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _restoreButton = [[UIButton alloc] initContinueButton];
     [_restoreButton setTitle:@"Восстановить" forState:UIControlStateNormal];
-    [_restoreButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _restoreButton.titleLabel.font = CKButtonFont;
-    _restoreButton.backgroundColor = CKClickBlueColor;
-    _restoreButton.clipsToBounds = YES;
-    _restoreButton.layer.cornerRadius = 4;
     [self.view addSubview:_restoreButton];
     [_restoreButton addTarget:self action:@selector(restore) forControlEvents:UIControlEventTouchUpInside];
     
-    _abandonButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    _abandonButton = [[UIButton alloc] initContinueButton];
+    _abandonButton.tag = 0;
     [_abandonButton setTitle:@"Не восстанавливать" forState:UIControlStateNormal];
-    [_abandonButton setTitleColor:CKClickBlueColor forState:UIControlStateNormal];
-    _abandonButton.titleLabel.font = CKButtonFont;
-    _abandonButton.backgroundColor = [UIColor whiteColor];
-    _abandonButton.layer.borderColor = [CKClickBlueColor CGColor];
-    _abandonButton.layer.borderWidth = 2.0;
-    _abandonButton.clipsToBounds = YES;
-    _abandonButton.layer.cornerRadius = 4;
     [self.view addSubview:_abandonButton];
-    [_abandonButton addTarget:self action:@selector(restore) forControlEvents:UIControlEventTouchUpInside];
+    [_abandonButton.layer addAnimation:animation forKey:@"kCATransitionFade"];
+    
+    [_abandonButton addTarget:self action:@selector(restoreProfile:) forControlEvents:UIControlEventTouchUpInside];
+    
+    float padding = CK_STANDART_CONTROL_PADDING;
     
     [_clickSetupLabel makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.top).offset(25);
@@ -95,8 +139,8 @@
     [_alreadyRegisteredLabel makeConstraints:^(MASConstraintMaker *make) {
         make.top.greaterThanOrEqualTo(_clickSetupLabel.bottom).offset(10);
         make.top.lessThanOrEqualTo(_clickSetupLabel.bottom).offset(25);
-        make.left.equalTo(self.view.left).offset(15);
-        make.right.equalTo(self.view.right).offset(-15);
+        make.left.equalTo(self.view.left).offset(padding);
+        make.right.equalTo(self.view.right).offset(-padding);
     }];
     
     [_avatar makeConstraints:^(MASConstraintMaker *make) {
@@ -108,46 +152,95 @@
     
     [_nameLabel makeConstraints:^(MASConstraintMaker *make) {
         make.top.lessThanOrEqualTo(_avatar.bottom).offset(25);
-        make.left.equalTo(self.view.left).offset(15);
-        make.right.equalTo(self.view.right).offset(-15);
+        make.left.equalTo(self.view.left).offset(padding);
+        make.right.equalTo(self.view.right).offset(-padding);
     }];
     
     [_nickPhoneLabel makeConstraints:^(MASConstraintMaker *make) {
         make.top.lessThanOrEqualTo(_nameLabel.bottom).offset(25);
-        make.left.equalTo(self.view.left).offset(15);
-        make.right.equalTo(self.view.right).offset(-15);
+        make.left.equalTo(self.view.left).offset(padding);
+        make.right.equalTo(self.view.right).offset(-padding);
     }];
     
     [_restoreLabel makeConstraints:^(MASConstraintMaker *make) {
-        make.top.greaterThanOrEqualTo(_nickPhoneLabel.bottom).offset(10.0);
+        make.top.greaterThanOrEqualTo(_nickPhoneLabel.bottom).offset(padding/2);
         make.bottom.greaterThanOrEqualTo(_restoreButton.top).offset(-25);
-        make.left.equalTo(self.view.left).offset(15);
-        make.right.equalTo(self.view.right).offset(-15);
+        make.left.equalTo(self.view.left).offset(padding);
+        make.right.equalTo(self.view.right).offset(-padding);
     }];
     
     [_restoreButton makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@44);
-        make.bottom.equalTo(_abandonButton.top).offset(-10);
-        make.left.equalTo(self.view.left).offset(15);
-        make.right.equalTo(self.view.right).offset(-15);
+        make.bottom.equalTo(_abandonButton.top).offset(-padding/2);
+        make.left.equalTo(self.view.left).offset(padding);
+        make.right.equalTo(self.view.right).offset(-padding);
     }];
     
     [_abandonButton makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@44);
-        make.bottom.equalTo(self.view.bottom).offset(-15);
-        make.left.equalTo(self.view.left).offset(15);
-        make.right.equalTo(self.view.right).offset(-15);
+        make.bottom.equalTo(self.view.bottom).offset(-padding);
+        make.left.equalTo(self.view.left).offset(padding);
+        make.right.equalTo(self.view.right).offset(-padding);
+    }];
+    
+    [self.activityIndicatorView makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_restoreLabel.centerX);
+        make.bottom.equalTo(_restoreLabel.top).offset(-padding);
     }];
 }
 
 - (void)restore
 {
-    [[CKApplicationModel sharedInstance] restoreHistory];
+    _abandonButton.enabled = NO;
+    _restoreButton.enabled = NO;
+    
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         _restoreButton.alpha = 0.0;
+                     }
+                     completion:^(BOOL finished){
+                         _restoreButton.hidden = YES;
+                     }];
+
+    [_abandonButton setTitle:@"Продолжить" forState:UIControlStateNormal];
+
+    
+    [self beginOperation:@"restoreHistory"];
+    [[CKApplicationModel sharedInstance] restoreHistoryWithCallback:^(NSDictionary *result) {
+        _abandonButton.enabled = YES;
+        _restoreButton.enabled = YES;
+        _abandonButton.tag = 1;
+        
+        [self endOperation:@"restoreHistory"];
+        NSMutableArray *dialogs = [NSMutableArray new];
+        for (NSDictionary *dictionary in result[@"result"])
+        {
+            CKDialogListEntryModel *model = [CKDialogListEntryModel modelWithDictionary:dictionary];
+            [dialogs addObject:model];
+        }
+        NSString* text;
+        if (dialogs.count) {
+            text = [NSString stringWithFormat:@"Поздаравляем!\nУспешно %@ %d %@",
+                    [NSString terminationForValue:(int)dialogs.count withWords: @[@"восстановлено", @"восстановлено", @"восстановлен"]],
+                    (int)dialogs.count,
+                    [NSString terminationForValue:(int)dialogs.count withWords: @[@"чатов", @"чата", @"чат"]]];
+        }else{
+            text = @"Нет доступных для восстановления чатов";
+        }
+        _restoreLabel.text =  text;
+        
+        [_abandonButton setTitleColor:[UIColor whiteColor]  forState:UIControlStateNormal];
+        _abandonButton.backgroundColor = CKClickBlueColor;
+        
+    }];
 }
 
-- (void)abandon
+- (void)restoreProfile:(UIButton*)sender
 {
-    [[CKApplicationModel sharedInstance] abandonHistory];
+    [[CKApplicationModel sharedInstance] restoreProfile:(sender.tag != 0)];
 }
+
 
 @end

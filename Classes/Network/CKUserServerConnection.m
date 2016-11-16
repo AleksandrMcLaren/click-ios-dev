@@ -28,7 +28,8 @@
 
 - (void)registerUserWithPromo:(NSString *)promo callback:(CKServerConnectionExecuted)callback
 {
-    [self sendData:@{@"action":@"user.register", @"options":@{@"invite":promo}} completion:^(NSDictionary *result) {
+    [self sendData:@{CKSocketMessageFieldAction:@"user.register",
+                     CKSocketMessageFieldOptions:@{CKSocketMessageFieldInvite:promo?promo:@"" }} completion:^(NSDictionary *result) {
         callback(result);
     }];
 }
@@ -40,11 +41,11 @@
     }];
 }
 
-- (void)checkUserWithCallback:(CKServerConnectionExecutedStatus)callback
+- (void)checkUserWithCallback:(CKServerConnectionExecuted)callback
 {
     [self sendData:@{@"action":@"user.checkuser", @"options":@{@"userid":self.phoneNumber}} completion:^(NSDictionary *result) {
-        callback([result[@"status"] integerValue]);
-    }];
+        callback( result );
+     }];
 }
 
 - (void)getActivationCode:(CKServerConnectionExecuted)callback
@@ -54,28 +55,33 @@
     }];
 }
 
-- (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecutedStatus)callback
+- (void)activateUserWithCode:(NSString *)code callback:(CKServerConnectionExecuted)callback
 {
     [self sendData:@{@"action":@"user.activate", @"options":@{@"code":code}} completion:^(NSDictionary *result) {
-        if ([result[@"status"] integerValue] == 1000 && result[@"result"])
-        {
+        if ([result socketMessageStatus] == S_OK){
             self.token = result[@"result"];
-            [self connect];
         }
-        callback([result[@"status"] integerValue]);
-    }];
+        callback(result);
+     } ];
 }
 
 - (void)suicide:(CKServerConnectionExecutedStatus)callback
 {
     [self sendData:@{@"action":@"user.suicide"} completion:^(NSDictionary *result) {
-        callback([result[@"status"] integerValue]);
+        callback((CKStatusCode) result[@"status"]);
     }];
 }
 
-- (void)getCitiesInCountry:(NSInteger)countryId callback:(CKServerConnectionExecuted)callback
+- (void)getCountriesWithMask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback
 {
-    [self sendData:@{@"action":@"geo.city.list", @"options":@{@"continent":@[],@"country":@[@(countryId)], @"region":@[],@"locale":@"ru",@"filter":@[], @"mask":@""}} completion:^(NSDictionary *result) {
+    [self sendData:@{@"action":@"geo.country.list", @"options":@{@"continent":@[],@"locale":locale ? locale : @"",@"filter":@[], @"mask":mask ? mask : @"" }} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+
+- (void)getCitiesInCountry:(NSInteger)countryId mask:(NSString*)mask locale:(NSString*)locale callback:(CKServerConnectionExecuted)callback
+{
+    [self sendData:@{@"action":@"geo.city.list", @"options":@{@"continent":@[],@"country":@[@(countryId)], @"region":@[],@"locale":locale ? locale : @"",@"filter":@[], @"mask":mask ? mask : @""}} completion:^(NSDictionary *result) {
         callback(result);
     }];
 }
@@ -92,9 +98,16 @@
     }];
 }
 
-- (void)createUserWithName:(NSString *)name surname:(NSString *)surname login:(NSString *)login avatar:(UIImage *)avatar birthdate:(NSString *)birthdate sex:(NSString *)sex country:(NSUInteger)country city:(NSUInteger)city callback:(CKServerConnectionExecutedStatus)callback {
+- (void)createUserWithName:(NSString *)name surname:(NSString *)surname login:(NSString *)login avatar:(UIImage *)avatar birthdate:(NSString *)birthdate sex:(NSString *)sex country:(NSUInteger)country city:(NSUInteger)city callback:(CKServerConnectionExecuted)callback {
     [self sendData:@{@"action":@"user.create", @"options": @{@"name":name, @"login":login,@"surname":surname, @"birthdate":birthdate, @"sex":sex, @"avatar":avatar?[UIImagePNGRepresentation(avatar) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength]:@"", @"country":@(country), @"city":@(city)}} completion:^(NSDictionary *result) {
-        callback([result[@"status"] integerValue]);
+            callback(result);
+     } ];
+}
+
+- (void)checkUserLogin:(NSString*) login withCallback:(CKServerConnectionExecutedObject)callback
+{
+    [self sendData:@{@"action":@"user.checklogin", @"options":@{@"login":login}} completion:^(NSDictionary *result) {
+        callback( @([result socketMessageStatus] == S_OK));
     }];
 }
 
@@ -103,5 +116,7 @@
         callback(result);
     }];
 }
+
+
 
 @end

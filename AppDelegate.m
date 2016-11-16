@@ -54,6 +54,8 @@
     
     // copy database from resources
     NSString *destPath = [AppDelegate databasePath];
+    NSLog(@"DB Path:%@", destPath);
+    
     if (![[NSFileManager defaultManager] fileExistsAtPath:destPath])
     {
         NSString *sourcePath = [[NSBundle mainBundle] pathForResource:@"click" ofType:@"db"];
@@ -70,6 +72,16 @@
     
     [[CKApplicationModel sharedInstance] setMainController:_mainViewController];
     [[CKApplicationModel sharedInstance] didStarted];
+    
+//    [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+//    
+//    [[UINavigationBar appearance] setShadowImage:[[UIImage alloc] init]];
+//    
+    UIView *statusBar = [[[UIApplication sharedApplication] valueForKey:@"statusBarWindow"] valueForKey:@"statusBar"];
+    
+    if ([statusBar respondsToSelector:@selector(setBackgroundColor:)]) {
+        statusBar.backgroundColor = [UIColor whiteColor];
+    }
     
     return YES;
 
@@ -110,6 +122,57 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+{
+    UIViewController *currentViewController = [self topViewController];
+    
+    if ([currentViewController respondsToSelector:@selector(canAutoRotate)]) {
+        NSMethodSignature *signature = [currentViewController methodSignatureForSelector:@selector(canAutoRotate)];
+        
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+        
+        [invocation setSelector:@selector(canAutoRotate)];
+        [invocation setTarget:currentViewController];
+        
+        [invocation invoke];
+        
+        BOOL canAutorotate = NO;
+        [invocation getReturnValue:&canAutorotate];
+        
+        if (canAutorotate) {
+            return UIInterfaceOrientationMaskAll;
+        }
+        
+    }
+    
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIViewController *)topViewController
+{
+    return [self topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
+}
+
+- (UIViewController *)topViewControllerWithRootViewController:(UIViewController *)rootViewController
+{
+    
+    if ([rootViewController isKindOfClass:[CKMainViewController class]]) {
+        CKMainViewController* mainViewController = (CKMainViewController*)rootViewController;
+        return mainViewController.currentController;
+    }else if ([rootViewController isKindOfClass:[UITabBarController class]]) {
+        UITabBarController* tabBarController = (UITabBarController*)rootViewController;
+        return [self topViewControllerWithRootViewController:tabBarController.selectedViewController];
+    } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController* navigationController = (UINavigationController*)rootViewController;
+        return [self topViewControllerWithRootViewController:navigationController.visibleViewController];
+    } else if (rootViewController.presentedViewController) {
+        UIViewController* presentedViewController = rootViewController.presentedViewController;
+        return [self topViewControllerWithRootViewController:presentedViewController];
+    } else {
+        return rootViewController;
+    }
 }
 
 @end
