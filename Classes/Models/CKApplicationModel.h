@@ -110,6 +110,9 @@
 - (void) submitNewProfile;
 - (void) getLocationInfowithCallback:(CKServerConnectionExecutedObject)callback;
 - (void) loadClusters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSString *)mask withBottomLeftLatitude: (NSNumber *)swlat withBottomLeftLongtitude: (NSNumber *)swlng withtopCoordinate: (NSNumber *)nelat withTopRigthLongtitude: (NSNumber *)nelng withInt: (int) count;
+- (void) addNewContactToFriends;
+- (void) checkUserProfile: (NSString *)newFriendPhone;
+- (void) updateUsers;
 
 
 // определять по местоположению пользователя
@@ -123,6 +126,7 @@
 @property (nonatomic, readonly) CKUserModel *userProfile;
 
 @property (nonatomic, readonly) NSArray *phoneContacts;
+@property (nonatomic, readonly) NSArray *fullContacts;
 @property (nonatomic, readonly) NSArray *friends;
 @property (strong, nonatomic, readonly) NSArray<CKUserModel *> *userlistMain;
 @property (nonatomic, readonly) NSArray<CKClusterModel *> *clusterlist;

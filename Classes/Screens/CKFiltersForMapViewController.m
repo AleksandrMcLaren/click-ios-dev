@@ -66,6 +66,8 @@
     NSString *sexTest;
     NSNumber *minageTest;
     NSNumber *maxageTest;
+    NSNumber *minAgeBeforeSelection;
+    NSNumber *maxAgeBeforeSelection;
     NSString *nameTest;
     NSString *countryTest;
     NSInteger countryIdTest;
@@ -87,7 +89,6 @@
         self.title = @"Карта";
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Отменить" style: UIBarButtonItemStylePlain target:self action:@selector(dismissClick)];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Применить" style: UIBarButtonItemStylePlain target:self action:@selector(submitClick)];
-        //_isKeyboardHidden = YES;
     }
     return self;
 }
@@ -95,7 +96,14 @@
 - (void)dismissClick
 {
     _endWithCancelFilters = NO;
-    age.text = [NSString stringWithFormat:@"%@-%@", _minage, _maxage];
+    if ([_minage  isEqual: @0] && [_maxage  isEqual: @0])
+    {
+        age.text = [NSString stringWithFormat:@"%@-%@", @14, @99];
+    }
+    else
+    {
+        age.text = [NSString stringWithFormat:@"%@-%@", _minage, _maxage];
+    }
     sexLabel.text = [NSString stringWithFormat:@"%@", _sex];
     searchTextField.text = _name;
     if ([_city isEqual:@""]) cityName.text = @"Любой город";
@@ -118,9 +126,13 @@
 - (void)submitClick
 {
     _endWithCancelFilters = NO;
-    //_switchOn = true;
     _minage = minageTest;
     _maxage = maxageTest;
+    if ([_minage  isEqual: @14] && [_maxage  isEqual: @99])
+    {
+        _minage = @0;
+        _maxage = @0;
+    }
     _sex = sexTest;
     nameTest = searchTextField.text;
     _name = nameTest;
@@ -138,9 +150,8 @@
     }];
 }
 
-
-- (void)viewDidLoad {
-    
+- (void)viewDidLoad
+{
     map = [CKMapViewController new];
     countViewUp = 1;
     sexTest = _sex;
@@ -189,6 +200,10 @@
     
     view2 = [UIView new];
     [self.view addSubview:view2];
+    UITapGestureRecognizer *singleFingerTap =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(selectAgePicker)];
+    [view2 addGestureRecognizer:singleFingerTap];
     view2.backgroundColor = [UIColor whiteColor];
     view2.layer.borderColor = [[UIColor grayColor] colorWithAlphaComponent:0.6].CGColor;
     view2.layer.borderWidth = 0.5f;
@@ -223,7 +238,25 @@
     
     age = [UILabel new];
     [self.view addSubview:age];
-    age.text = [NSString stringWithFormat:@"%@-%@", _minage, _maxage];
+    if ([_minage  isEqual: @0] && [_maxage  isEqual: @0])
+    {
+        _minage = @14;
+        _maxage = @99;
+        //        minageTest = _minage;
+        //        maxageTest = _maxage;
+    }
+    if ([minageTest isEqual:@0] && [maxageTest isEqual:@0])
+    {
+        minAgeBeforeSelection = @14;
+        maxAgeBeforeSelection = @99;
+    }
+    else
+    {
+        minAgeBeforeSelection = minageTest;
+        maxAgeBeforeSelection = maxageTest;
+    }
+    
+    age.text = [NSString stringWithFormat:@"%@-%@", minAgeBeforeSelection, maxAgeBeforeSelection];
     [age setFont:[UIFont systemFontOfSize:14]];
     [age setTextColor:[UIColor grayColor]];
     [age makeConstraints:^(MASConstraintMaker *make) {
@@ -232,8 +265,13 @@
         make.width.equalTo(@50);
     }];
     
+    
     view3 = [UIView new];
     [self.view addSubview:view3];
+    UITapGestureRecognizer *singleFingerTap1 =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(selectSexPicker)];
+    [view3 addGestureRecognizer:singleFingerTap1];
     view3.backgroundColor = [UIColor whiteColor];
     view3.layer.borderColor = [[UIColor grayColor] colorWithAlphaComponent:0.6].CGColor;
     view3.layer.borderWidth = 0.5f;
@@ -279,6 +317,10 @@
     
     view4 = [UIView new];
     [self.view addSubview:view4];
+    UITapGestureRecognizer *singleFingerTap2 =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(selectCountry)];
+    [view4 addGestureRecognizer:singleFingerTap2];
     view4.backgroundColor = [UIColor whiteColor];
     view4.layer.borderColor = [[UIColor grayColor] colorWithAlphaComponent:0.6].CGColor;
     view4.layer.borderWidth = 0.5f;
@@ -294,6 +336,7 @@
     else
         countryImage = [UIImageView new];
     [self.view addSubview:countryImage];
+    
     //[countryImage setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed: [NSString stringWithFormat:@"%ld", (long)_countryImageIso]]]];
     [countryImage makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view4.left).offset(@10);
@@ -327,6 +370,10 @@
     
     view5 = [UIView new];
     [self.view addSubview:view5];
+    UITapGestureRecognizer *singleFingerTap3 =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(selectCity)];
+    [view5 addGestureRecognizer:singleFingerTap3];
     view5.backgroundColor = [UIColor whiteColor];
     view5.layer.borderColor = [[UIColor grayColor] colorWithAlphaComponent:0.6].CGColor;
     view5.layer.borderWidth = 0.5f;
@@ -537,8 +584,8 @@
     }
 }
 - (void) cancelFilters{
-    _minage = @14;
-    _maxage = @99;
+    _minage = @0;
+    _maxage = @0;
     _sex = @"";
     _name = @"";
     _allUsers = true;
@@ -588,6 +635,11 @@
     UINavigationController *navContr = [[UINavigationController alloc] init];
     viewForAgeSelectionDark = navContr.view;
     [self.view addSubview:viewForAgeSelectionDark];
+    UITapGestureRecognizer *singleFingerTap =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(closeAgeSelection)];
+    [viewForAgeSelectionDark addGestureRecognizer:singleFingerTap];
+    
     viewForAgeSelectionDark.backgroundColor = [UIColor colorWithWhite:0.5f alpha:0.4f];
     [viewForAgeSelectionDark makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view.left);
@@ -798,7 +850,7 @@
 
 - (void) selectMinMaxAge
 {
-    if ([minageTest integerValue] >= [maxageTest integerValue] || [maxageTest integerValue] == 99)
+    if ([minageTest integerValue] >= [maxageTest integerValue] /*|| [maxageTest integerValue] == 99*/)
     {
         //maxageTest = [NSNumber numberWithInt: [minageTest intValue] + 1];
         maxageTest = _pickerData1[0];
@@ -807,6 +859,8 @@
     {
         viewForAgeSelection.hidden = YES;
         viewForAgeSelectionDark.hidden = YES;
+        minAgeBeforeSelection = minageTest;
+        maxAgeBeforeSelection = maxageTest;
         textLabel.hidden = YES;
         ageFrom.hidden = YES;
         ageTo.hidden = YES;
@@ -815,6 +869,22 @@
         select.hidden = YES;
         age.text = [NSString stringWithFormat:@"%@-%@", minageTest, maxageTest];
     }
+}
+
+- (void) closeAgeSelection
+{
+    minageTest = minAgeBeforeSelection;
+    maxageTest = maxAgeBeforeSelection;
+    viewForAgeSelection.hidden = YES;
+    viewForAgeSelectionDark.hidden = YES;
+    textLabel.hidden = YES;
+    ageFrom.hidden = YES;
+    ageTo.hidden = YES;
+    _selectAgeFrom.hidden = YES;
+    _selectAgeTo.hidden = YES;
+    select.hidden = YES;
+    age.text = [NSString stringWithFormat:@"%@-%@", minAgeBeforeSelection, maxAgeBeforeSelection];
+    
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

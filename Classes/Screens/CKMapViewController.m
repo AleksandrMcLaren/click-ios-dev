@@ -114,11 +114,11 @@
             sexVar = @"";
         }
     }
-    if (![_minageT isEqual: @0] && _minageT !=nil)
+    if (/*![_minageT isEqual: @0] && */_minageT !=nil)
     {
         minageVar = _minageT;
     }
-    if ( ![_maxageT isEqual: @0] && _maxageT !=nil)
+    if ( /*![_maxageT isEqual: @0] &&*/ _maxageT !=nil)
     {
         maxageVar = _maxageT;
     }
@@ -146,7 +146,7 @@
     NSNumber *swlat = [[NSNumber alloc] initWithDouble:swCoord.latitude];
     NSNumber *swlng = [[NSNumber alloc] initWithDouble:swCoord.longitude];
     
-    [[CKApplicationModel sharedInstance] loadClusters: @-1 withFriendStatus:inAllUsers withCountry:_countryIdT withCity:_cityIdT withSex:sexVar withMinage:minageVar andMaxAge:maxageVar withMask:nameVar withBottomLeftLatitude:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt:count];
+    [[CKApplicationModel sharedInstance] loadClusters: @1 withFriendStatus:inAllUsers withCountry:_countryIdT withCity:_cityIdT withSex:sexVar withMinage:minageVar andMaxAge:maxageVar withMask:nameVar withBottomLeftLatitude:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt:count];
     
     //    [[CKApplicationModel sharedInstance] loadClusters:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt: count];
     count++;
@@ -178,6 +178,10 @@
     mapRegion.span.latitudeDelta = miles/69.0;
     mapRegion.span.longitudeDelta = miles/69.0;
     [_mapView setRegion:mapRegion animated: YES];
+    //    MKCoordinateRegion region;
+    //    region.span = span;
+    //[_mapView setRegion:region animated:YES];
+    _mapView.userLocation.title = @"Текущее местоположение";
     [_mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
     [self.view addSubview:_mapView];
     
@@ -215,8 +219,8 @@
     _listButton.alpha = 0.0;
     
     count=0;
-    ffmvc.minage = @14;
-    ffmvc.maxage = @99;
+    ffmvc.minage = @0;
+    ffmvc.maxage = @0;
     ffmvc.sex = @"Любой";
     ffmvc.allUsers = true;
     _allUsersT = true;
@@ -492,6 +496,11 @@
         [[CKUserServerConnection sharedInstance] setUserStatus:@1];
     [self reloadAnnotations];
     
+}
+
+- (void) viewWillAppear:(BOOL)animated
+{
+    [[CKApplicationModel sharedInstance] updateUsers];
 }
 
 - (void) ZoomIn{

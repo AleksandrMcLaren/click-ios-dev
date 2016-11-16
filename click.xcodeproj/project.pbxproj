@@ -126,6 +126,7 @@
 		D82EB8A81DCB6C65008E9035 /* CKCustomPinAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D82EB8A71DCB6C65008E9035 /* CKCustomPinAnnotation.m */; };
 		D82EB8AB1DCB6CB8008E9035 /* CKClusterPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D82EB8AA1DCB6CB8008E9035 /* CKClusterPointAnnotation.m */; };
 		D82EB8AE1DCB6CD0008E9035 /* CKClustepPinAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D82EB8AD1DCB6CD0008E9035 /* CKClustepPinAnnotation.m */; };
+		D83E83911DDC1871003D9F81 /* CKContactWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E83901DDC1871003D9F81 /* CKContactWrapper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -339,6 +340,8 @@
 		D82EB8AA1DCB6CB8008E9035 /* CKClusterPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKClusterPointAnnotation.m; sourceTree = "<group>"; };
 		D82EB8AC1DCB6CD0008E9035 /* CKClustepPinAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKClustepPinAnnotation.h; sourceTree = "<group>"; };
 		D82EB8AD1DCB6CD0008E9035 /* CKClustepPinAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKClustepPinAnnotation.m; sourceTree = "<group>"; };
+		D83E838F1DDC1871003D9F81 /* CKContactWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKContactWrapper.h; sourceTree = "<group>"; };
+		D83E83901DDC1871003D9F81 /* CKContactWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContactWrapper.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -539,6 +542,8 @@
 		7831EDC21C90A5B900319191 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D83E838F1DDC1871003D9F81 /* CKContactWrapper.h */,
+				D83E83901DDC1871003D9F81 /* CKContactWrapper.m */,
 				78B41EED1CB61C3B00417D3C /* CKChatController.h */,
 				78B41EEE1CB61C3B00417D3C /* CKChatController.m */,
 				7831EDC31C90A5B900319191 /* CKMainViewController.h */,
@@ -913,6 +918,7 @@
 				78BEA91D1CA44751004E85DB /* CKCitySelectionController.m in Sources */,
 				D82EB8A81DCB6C65008E9035 /* CKCustomPinAnnotation.m in Sources */,
 				78BEA9231CA50B43004E85DB /* CKDialogsModel.m in Sources */,
+				D83E83911DDC1871003D9F81 /* CKContactWrapper.m in Sources */,
 				784FE8561C8E7476006469D5 /* AppDelegate.m in Sources */,
 				D82EB8AE1DCB6CD0008E9035 /* CKClustepPinAnnotation.m in Sources */,
 				78BEA9401CAAA47D004E85DB /* NSString+URLParser.m in Sources */,
