@@ -13,9 +13,14 @@
 		3D1A36661DB4EC80000A8CB7 /* NSString+NumEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36651DB4EC80000A8CB7 /* NSString+NumEncoding.m */; };
 		3D3AD6EB1DBE61B30017ACFD /* CKActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AD6EA1DBE61B30017ACFD /* CKActivityViewController.m */; };
 		3D3AD7EC1DBF95880017ACFD /* UIButton+ContinueButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AD7EB1DBF95880017ACFD /* UIButton+ContinueButton.m */; };
+		3D72B40D1DE1F167001A4992 /* NotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B4081DE1F167001A4992 /* NotificationCenter.m */; };
+		3D72B40E1DE1F167001A4992 /* NSDictionary+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B40A1DE1F167001A4992 /* NSDictionary+Util.m */; };
+		3D72B40F1DE1F167001A4992 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B40C1DE1F167001A4992 /* UserDefaults.m */; };
+		3D72B4141DE20571001A4992 /* CKApplicationModel+Chat.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B4131DE20571001A4992 /* CKApplicationModel+Chat.m */; };
 		3D7884831DACCE8B00777E10 /* UIView+Shake.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7884821DACCE8B00777E10 /* UIView+Shake.m */; };
 		3DBC3B461DCAF2430070F998 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DBC3B451DCAF2430070F998 /* SystemConfiguration.framework */; };
 		3DBC3B491DCAF3810070F998 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBC3B481DCAF3810070F998 /* Reachability.m */; };
+		3DC5D9D71DDF6141005823ED /* NoChatsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC5D9D61DDF6141005823ED /* NoChatsView.m */; };
 		3DC742441DBBC75000F47599 /* NSDate+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC742431DBBC75000F47599 /* NSDate+Utils.m */; };
 		3DCDBE391DC6F406001CA851 /* NSString+Verify.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCDBE381DC6F406001CA851 /* NSString+Verify.m */; };
 		60673FF2F4F098A555D5E963 /* libPods-click.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC7724C494AFD4568ED92B4 /* libPods-click.a */; };
@@ -144,12 +149,24 @@
 		3D3AD7EA1DBF95880017ACFD /* UIButton+ContinueButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+ContinueButton.h"; sourceTree = "<group>"; };
 		3D3AD7EB1DBF95880017ACFD /* UIButton+ContinueButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+ContinueButton.m"; sourceTree = "<group>"; };
 		3D3BD6711DAF9BB500997A0E /* CKStatusCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKStatusCode.h; sourceTree = "<group>"; };
+		3D72B4051DE1F011001A4992 /* AppConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppConstant.h; sourceTree = "<group>"; };
+		3D72B4071DE1F167001A4992 /* NotificationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationCenter.h; sourceTree = "<group>"; };
+		3D72B4081DE1F167001A4992 /* NotificationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationCenter.m; sourceTree = "<group>"; };
+		3D72B4091DE1F167001A4992 /* NSDictionary+Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Util.h"; sourceTree = "<group>"; };
+		3D72B40A1DE1F167001A4992 /* NSDictionary+Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Util.m"; sourceTree = "<group>"; };
+		3D72B40B1DE1F167001A4992 /* UserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaults.h; sourceTree = "<group>"; };
+		3D72B40C1DE1F167001A4992 /* UserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
+		3D72B4101DE1F1FB001A4992 /* utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
+		3D72B4121DE20571001A4992 /* CKApplicationModel+Chat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKApplicationModel+Chat.h"; sourceTree = "<group>"; };
+		3D72B4131DE20571001A4992 /* CKApplicationModel+Chat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CKApplicationModel+Chat.m"; sourceTree = "<group>"; };
 		3D7884811DACCE8B00777E10 /* UIView+Shake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Shake.h"; sourceTree = "<group>"; };
 		3D7884821DACCE8B00777E10 /* UIView+Shake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Shake.m"; sourceTree = "<group>"; };
 		3DBC3B451DCAF2430070F998 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3DBC3B471DCAF3810070F998 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../Screens/Reachability.h; sourceTree = "<group>"; };
 		3DBC3B481DCAF3810070F998 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ../Screens/Reachability.m; sourceTree = "<group>"; };
 		3DBE524D1DC2FDB0001D50D7 /* CKViewControllerRotation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKViewControllerRotation.h; sourceTree = "<group>"; };
+		3DC5D9D51DDF6141005823ED /* NoChatsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoChatsView.h; sourceTree = "<group>"; };
+		3DC5D9D61DDF6141005823ED /* NoChatsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoChatsView.m; sourceTree = "<group>"; };
 		3DC742421DBBC75000F47599 /* NSDate+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utils.h"; sourceTree = "<group>"; };
 		3DC742431DBBC75000F47599 /* NSDate+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utils.m"; sourceTree = "<group>"; };
 		3DC742451DBC5F4400F47599 /* CKOperationsProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKOperationsProtocol.h; sourceTree = "<group>"; };
@@ -383,6 +400,48 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3D72B4061DE1F167001A4992 /* general1 */ = {
+			isa = PBXGroup;
+			children = (
+				3D72B4071DE1F167001A4992 /* NotificationCenter.h */,
+				3D72B4081DE1F167001A4992 /* NotificationCenter.m */,
+				3D72B4091DE1F167001A4992 /* NSDictionary+Util.h */,
+				3D72B40A1DE1F167001A4992 /* NSDictionary+Util.m */,
+				3D72B40B1DE1F167001A4992 /* UserDefaults.h */,
+				3D72B40C1DE1F167001A4992 /* UserDefaults.m */,
+			);
+			path = general1;
+			sourceTree = "<group>";
+		};
+		3D72B4151DE20578001A4992 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				3D72B4121DE20571001A4992 /* CKApplicationModel+Chat.h */,
+				3D72B4131DE20571001A4992 /* CKApplicationModel+Chat.m */,
+			);
+			name = Chat;
+			sourceTree = "<group>";
+		};
+		3D72B4161DE3522A001A4992 /* DB */ = {
+			isa = PBXGroup;
+			children = (
+				78BEA91E1CA45F5A004E85DB /* CKDB.h */,
+				78BEA91F1CA45F5A004E85DB /* CKDB.m */,
+			);
+			name = DB;
+			sourceTree = "<group>";
+		};
+		3DC5D9D21DDF6106005823ED /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				78B524C61C9FE35D00502AA4 /* CKChatsViewController.h */,
+				78B524C71C9FE35D00502AA4 /* CKChatsViewController.m */,
+				3DC5D9D51DDF6141005823ED /* NoChatsView.h */,
+				3DC5D9D61DDF6141005823ED /* NoChatsView.m */,
+			);
+			name = Chat;
+			sourceTree = "<group>";
+		};
 		698FD9764F1BC9BC93AE3763 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -395,6 +454,7 @@
 		7831EDA71C9000AD00319191 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				3DC5D9D21DDF6106005823ED /* Chat */,
 				D82EB8A01DCB6BD7008E9035 /* CKFiltersForMapViewController.h */,
 				D82EB8A11DCB6BD7008E9035 /* CKFiltersForMapViewController.m */,
 				78BEA91B1CA44751004E85DB /* CKCitySelectionController.h */,
@@ -415,8 +475,6 @@
 				78B524BB1C9DCE8C00502AA4 /* CKUserProfileController.m */,
 				78B524BD1C9DD29500502AA4 /* CKProfileHeaderView.h */,
 				78B524BE1C9DD29500502AA4 /* CKProfileHeaderView.m */,
-				78B524C61C9FE35D00502AA4 /* CKChatsViewController.h */,
-				78B524C71C9FE35D00502AA4 /* CKChatsViewController.m */,
 				78B524C91C9FE3AE00502AA4 /* CKContactsViewController.h */,
 				78B524CA1C9FE3AE00502AA4 /* CKContactsViewController.m */,
 				78B524CC1C9FE3CD00502AA4 /* CKMapViewController.h */,
@@ -456,11 +514,13 @@
 		7831EDAB1C90018500319191 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				3D72B4161DE3522A001A4992 /* DB */,
+				3D72B4061DE1F167001A4992 /* general1 */,
+				78BEA98F1CAE5DF0004E85DB /* CKAvatarView.h */,
 				3DBC3B471DCAF3810070F998 /* Reachability.h */,
 				3DBC3B481DCAF3810070F998 /* Reachability.m */,
 				3D7884811DACCE8B00777E10 /* UIView+Shake.h */,
 				3D7884821DACCE8B00777E10 /* UIView+Shake.m */,
-				78BEA98F1CAE5DF0004E85DB /* CKAvatarView.h */,
 				78BEA9901CAE5DF0004E85DB /* CKAvatarView.m */,
 				78BEA9921CAE5E04004E85DB /* CKUserAvatarView.h */,
 				78BEA9931CAE5E04004E85DB /* CKUserAvatarView.m */,
@@ -470,8 +530,6 @@
 				78BEA93B1CAAA47D004E85DB /* NSDictionary+UrlEncodedString.m */,
 				78BEA93C1CAAA47D004E85DB /* NSString+URLParser.h */,
 				78BEA93D1CAAA47D004E85DB /* NSString+URLParser.m */,
-				78BEA91E1CA45F5A004E85DB /* CKDB.h */,
-				78BEA91F1CA45F5A004E85DB /* CKDB.m */,
 				78B524C31C9FA41100502AA4 /* CKCache.h */,
 				78B524C41C9FA41100502AA4 /* CKCache.m */,
 				7831EDAC1C90018500319191 /* UIColor+hex.h */,
@@ -500,6 +558,7 @@
 				3D3AD7EB1DBF95880017ACFD /* UIButton+ContinueButton.m */,
 				3DCDBE371DC6F406001CA851 /* NSString+Verify.h */,
 				3DCDBE381DC6F406001CA851 /* NSString+Verify.m */,
+				3D72B4101DE1F1FB001A4992 /* utilities.h */,
 			);
 			name = Utility;
 			path = Classes/Utility;
@@ -508,6 +567,7 @@
 		7831EDB71C90A24700319191 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3D72B4151DE20578001A4992 /* Chat */,
 				7831EDB81C90A24700319191 /* CKApplicationModel.h */,
 				7831EDB91C90A24700319191 /* CKApplicationModel.m */,
 				78BEA9211CA50B43004E85DB /* CKDialogsModel.h */,
@@ -632,6 +692,7 @@
 				784FE8551C8E7476006469D5 /* main.m */,
 				7831EDAF1C90038500319191 /* Click.pch */,
 				7831EDE61C9353CC00319191 /* CKVisualSettings.h */,
+				3D72B4051DE1F011001A4992 /* AppConstant.h */,
 			);
 			name = Click;
 			sourceTree = "<group>";
@@ -883,6 +944,7 @@
 				3D1A36551DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m in Sources */,
 				78B524D81CA0239200502AA4 /* CKServerConnection.m in Sources */,
 				782AFFF21D09782700802097 /* CKAttachButton.m in Sources */,
+				3DC5D9D71DDF6141005823ED /* NoChatsView.m in Sources */,
 				78BEA98B1CADC9BB004E85DB /* CKGroupChatCell.m in Sources */,
 				78B524B61C9B2D0300502AA4 /* CKHistoryRestoreController.m in Sources */,
 				7831EDD51C90D32000319191 /* CKCountrySelectionController.m in Sources */,
@@ -904,6 +966,7 @@
 				78BEA9371CAA89C0004E85DB /* CKAddressBookCell.m in Sources */,
 				782A00091D0ABA0800802097 /* CKLocationAttachModel.m in Sources */,
 				78B524B91C9C54CD00502AA4 /* NSMutableAttributedString+utility.m in Sources */,
+				3D72B40F1DE1F167001A4992 /* UserDefaults.m in Sources */,
 				78B41EEF1CB61C3B00417D3C /* CKChatController.m in Sources */,
 				7831EDDA1C91772000319191 /* CKTextEntryCell.m in Sources */,
 				78B41EEC1CB50BF800417D3C /* CKChatModel.m in Sources */,
@@ -916,8 +979,11 @@
 				78B524D41C9FE40B00502AA4 /* CKSettingsViewController.m in Sources */,
 				3D1A36661DB4EC80000A8CB7 /* NSString+NumEncoding.m in Sources */,
 				78BEA91D1CA44751004E85DB /* CKCitySelectionController.m in Sources */,
+				3D72B40D1DE1F167001A4992 /* NotificationCenter.m in Sources */,
 				D82EB8A81DCB6C65008E9035 /* CKCustomPinAnnotation.m in Sources */,
 				78BEA9231CA50B43004E85DB /* CKDialogsModel.m in Sources */,
+				3D72B40E1DE1F167001A4992 /* NSDictionary+Util.m in Sources */,
+				3D72B4141DE20571001A4992 /* CKApplicationModel+Chat.m in Sources */,
 				D83E83911DDC1871003D9F81 /* CKContactWrapper.m in Sources */,
 				784FE8561C8E7476006469D5 /* AppDelegate.m in Sources */,
 				D82EB8AE1DCB6CD0008E9035 /* CKClustepPinAnnotation.m in Sources */,

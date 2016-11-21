@@ -313,15 +313,14 @@
     {
         [self.mainController showWelcomeScreen];
     } else {
+        [self showMainScreen];
         [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary* result) {
             if ([result socketMessageStatus] == S_OK){
                 CKUserModel* profile = [CKUserModel modelWithDictionary:[result socketMessageResult]];
                 self.userProfile = profile;
-                [self showMainScreen];
             }else{
                 [_mainController showAlertWithResult:result completion:nil];
             }
-
         }];
     }
 }
@@ -524,6 +523,10 @@
 
 - (void)showMainScreen
 {
+    [[CKDialogsModel sharedInstance] setDialogsController:[self.mainController dialogsController]];
+    [[CKDialogsModel sharedInstance] run];
+    
+    [self.mainController showMainScreen];
     
     [self fetchContactsWithCompletion:^(NSMutableArray *arr) {
         
@@ -552,9 +555,8 @@
                     [friends addObject:user];
                 }
                 _friends = friends;
-                [self.mainController showMainScreen];
-                [[CKDialogsModel sharedInstance] setDialogsController:[self.mainController dialogsController]];
-                [[CKDialogsModel sharedInstance] run];
+               
+
             }];
         }];
         

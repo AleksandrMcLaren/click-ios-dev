@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 @protocol CKDialogsControllerProtocol <NSObject>
 
@@ -49,6 +49,7 @@
 + (instancetype)sharedInstance;
 
 @property (nonatomic, assign) id<CKDialogsControllerProtocol>dialogsController;
+@property (nonatomic, strong, readonly) RACSignal* dialogsDidChanged;
 
 - (void)run;
 

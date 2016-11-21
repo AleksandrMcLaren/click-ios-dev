@@ -15,5 +15,5 @@
 
 + (instancetype)sharedInstance;
 - (void) configureDB: (FMDatabase *)db;
-
+- (void) updateTable:(NSString*)table withValues:(NSDictionary*)values;
 @end

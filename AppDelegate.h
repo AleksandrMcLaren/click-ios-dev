@@ -12,8 +12,5 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-+ (NSString *)dataDir;
-+ (NSString *)databasePath;
-
 @end
 

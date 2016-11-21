@@ -23,27 +23,7 @@
     CKMainViewController *_mainViewController;
 }
 
-+ (NSString *)dataDir
-{
-    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"data"];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        NSError *dirCreationError = nil;
-        [[NSFileManager defaultManager] createDirectoryAtPath:path
-                                  withIntermediateDirectories:YES
-                                                   attributes:nil
-                                                        error:&dirCreationError];
-        if (dirCreationError != nil) {
-            NSLog(@"Ошибка создания папки для кэша");
-            assert(0);
-        }
-    }
-    return path;
-}
 
-+ (NSString *)databasePath
-{
-    return [[AppDelegate dataDir] stringByAppendingPathComponent:@"click.db"];
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
@@ -51,16 +31,6 @@
     
     [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
     [[UIApplication sharedApplication] registerForRemoteNotifications];
-    
-    // copy database from resources
-    NSString *destPath = [AppDelegate databasePath];
-    NSLog(@"DB Path:%@", destPath);
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:destPath])
-    {
-        NSString *sourcePath = [[NSBundle mainBundle] pathForResource:@"click" ofType:@"db"];
-        [[NSFileManager defaultManager] copyItemAtPath:sourcePath toPath:destPath error:nil];
-    }
     
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -73,10 +43,6 @@
     [[CKApplicationModel sharedInstance] setMainController:_mainViewController];
     [[CKApplicationModel sharedInstance] didStarted];
     
-//    [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
-//    
-//    [[UINavigationBar appearance] setShadowImage:[[UIImage alloc] init]];
-//    
     UIView *statusBar = [[[UIApplication sharedApplication] valueForKey:@"statusBarWindow"] valueForKey:@"statusBar"];
     
     if ([statusBar respondsToSelector:@selector(setBackgroundColor:)]) {

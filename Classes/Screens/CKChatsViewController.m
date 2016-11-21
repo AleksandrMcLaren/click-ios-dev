@@ -12,6 +12,9 @@
 #import "CKDialogChatController.h"
 #import "CKFriendSelectionController.h"
 #import "CKNewGroupController.h"
+#import "NoChatsView.h"
+#import "utilities.h"
+#import "CKApplicationModel+Chat.h"
 
 @implementation CKChatsViewController
 {
@@ -20,10 +23,8 @@
     NSArray *_personalchats;
     UISearchBar *_searchBar;
     UIView *_noChatsView;
-    UILabel *_noChatsLabel;
-    UILabel *_createLabel;
-    UIButton *_createChatButton;
-    UIImageView *_logo;
+    
+    SWTableViewCell* lastCell;
 }
 
 
@@ -31,11 +32,28 @@
 {
     if (self = [super init])
     {
-        self.title = @"Сообщения";
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newChat)];
-        [[CKDialogsModel sharedInstance] addObserver:self forKeyPath:@"dialogs" options:NSKeyValueObservingOptionNew context:nil];
+        [self initialize];
     }
     return self;
+}
+
+-(void) initialize{
+    self.title = @"Сообщения";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(actionCompose)];
+    
+    [NotificationCenter addObserver:self selector:@selector(actionCleanup) name:NOTIFICATION_USER_LOGGED_OUT];
+    [NotificationCenter addObserver:self selector:@selector(refreshTableView) name:NOTIFICATION_REFRESH_RECENTS];
+    
+    [[CKDialogsModel sharedInstance].dialogsDidChanged subscribeNext:^(NSArray *dialogs) {
+        _tableView.hidden = dialogs.count == 0;
+        _noChatsView.hidden = dialogs.count != 0;
+        
+        if (dialogs.count) {
+            [self loadRecents];
+        }
+    }];
+    
+    [self loadRecents];
 }
 
 + (UIImage *)imageFromColor:(UIColor *)color {
@@ -49,100 +67,15 @@
     return image;
 }
 
-- (void)newChat
-{
-    UIAlertController *chatPicker = [UIAlertController alertControllerWithTitle:nil
-                                                                       message:nil
-                                                                preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Диалог"
-                                                     style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction *a){
-                                                       CKFriendSelectionController *ctl = [CKFriendSelectionController new];
-                                                       [self.navigationController pushViewController:ctl animated:YES];
-                                                   }];
-    [chatPicker addAction:action];
-    action = [UIAlertAction actionWithTitle:@"Группу"
-                                                     style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction *a){
-                                                       CKNewGroupController *ctl = [CKNewGroupController new];
-                                                       [self.navigationController pushViewController:ctl animated:YES];
 
-                                                   }];
-    [chatPicker addAction:action];
-    action = [UIAlertAction actionWithTitle:@"Рассылку"
-                                                     style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction *a){
-                                                       CKNewGroupController *ctl = [CKNewGroupController new];
-                                                       [self.navigationController pushViewController:ctl animated:YES];
-
-                                                   }];
-    [chatPicker addAction:action];
-
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Отменить"
-                                                           style:UIAlertActionStyleCancel
-                                                         handler:^(UIAlertAction *a){
-                                                             [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
-                                                         }];
-    [chatPicker addAction:cancelAction];
+-(void)viewDidLoad{
+    [super viewDidLoad];
     
-    [self presentViewController:chatPicker
-                       animated:YES
-                     completion:nil];
-}
-
-- (void)loadView
-{
-    self.view = [UIView new];
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    [self.view addSubview:self.tableView];
-    _noChatsView = [UIView new];
+    _noChatsView = [[NoChatsView alloc] initWithFrame:self.view.frame];
+    _noChatsView.hidden = YES;
     
-    _noChatsView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgwhite"]];
-
-    _noChatsLabel = [UILabel labelWithText:@"У вас нет диалогов групп и рассылок"
-                                     font:[UIFont systemFontOfSize:20.0]
-                                textColor:[UIColor blackColor]
-                            textAlignment:NSTextAlignmentCenter];
-    _noChatsLabel.numberOfLines = 2;
-    [_noChatsView addSubview:_noChatsLabel];
-    
-    _logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo-blue"]];
-    _logo.contentMode = UIViewContentModeCenter;
-
-    [_noChatsView addSubview:_logo];
-    
-    _createLabel = [UILabel labelWithText:@"Создайте диалог, группу или рассылку для участников из вашего списка Контактов" font:[UIFont systemFontOfSize: 18.0] textColor:[UIColor colorFromHexString:@"#67696b"] textAlignment:NSTextAlignmentCenter];
-    _createLabel.numberOfLines = 3;
-    [_noChatsView addSubview:_createLabel];
-    
-    _createChatButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_createChatButton setTitle:@"Создать" forState:UIControlStateNormal];
-    [_createChatButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _createChatButton.titleLabel.font = CKButtonFont;
-    _createChatButton.backgroundColor = CKClickBlueColor;
-    _createChatButton.clipsToBounds = YES;
-    _createChatButton.layer.cornerRadius = 4;
-    [_createChatButton addTarget:self action:@selector(newChat) forControlEvents:UIControlEventTouchUpInside];
-    [_noChatsView addSubview:_createChatButton];
-        
     [self.view addSubview:_noChatsView];
-    self.tableView.tableFooterView = [UIView new];
-    self.tableView.tableFooterView.backgroundColor = CKClickLightGrayColor;
-    self.tableView.backgroundColor = CKClickLightGrayColor;
-    UIView *searchBarBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 45)];
-    searchBarBackground.backgroundColor = CKClickLightGrayColor;
-    UIView *separator = [UIView new];
-    [searchBarBackground addSubview:separator];
-    separator.backgroundColor = CKClickProfileGrayColor;
-    [separator makeConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(searchBarBackground.width);
-        make.height.equalTo(0.5);
-        make.bottom.equalTo(searchBarBackground.bottom);
-    }];
-    
+
     _searchBar = [[UISearchBar alloc] init];
     _searchBar.showsCancelButton = NO;
     _searchBar.translucent = YES;
@@ -153,73 +86,65 @@
     _searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 64);
     _searchBar.placeholder = @"Поиск";
     
+    UIView *searchBarBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 45)];
     [searchBarBackground addSubview:_searchBar];
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.tableHeaderView = searchBarBackground;
+
+    [self.view addSubview:self.tableView];
+    
+    [self makeConstraints];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [_searchBar resignFirstResponder];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
+}
+
+-(void)makeConstraints{
+    CGFloat topOffset = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame) + CGRectGetHeight(self.navigationController.navigationBar.frame);
+    CGFloat bottomOffset = CGRectGetHeight(self.tabBarController.tabBar.frame);
+   
+    [_noChatsView makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(0).offset(topOffset);
+        make.bottom.equalTo(0).offset(-bottomOffset);
+        make.left.right.equalTo(0);
+    }];
+    
+    [_tableView makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(0).offset(topOffset);
+        make.bottom.equalTo(0).offset(-bottomOffset);
+        make.left.right.equalTo(0);
+    }];
+    
     [_searchBar makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(_searchBar.superview.width);
         make.height.equalTo(_searchBar.superview.height).offset(-1);
         make.top.equalTo(0);
         make.left.equalTo(0);
     }];
-    
-    self.tableView.tableHeaderView = searchBarBackground;
+
 }
 
-- (void)updateViewConstraints
-{
-    [super updateViewConstraints];
-    
-    [_tableView makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
-    }];
-    
-    [_noChatsView makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
-    }];
-    
-    [_noChatsLabel makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_noChatsView.top).offset(15.0*2 + self.topLayoutGuide.length);
-        make.left.equalTo(_noChatsView.left).offset(15.0*2);
-        make.right.equalTo(_noChatsView.right).offset(-15.0*2);
-        
-    }];
-    
-    [_logo remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_noChatsLabel.bottom).offset(15.0);
-        make.height.greaterThanOrEqualTo(167).priorityHigh();
-        make.centerX.equalTo(_noChatsView.centerX);
-    }];
-    
-    [_createLabel remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_logo.bottom).offset(10.0);
-        make.bottom.lessThanOrEqualTo(_createChatButton.top).offset(-25).with.priorityLow();
-        make.left.equalTo(_noChatsView.left).offset(15);
-        make.right.equalTo(_noChatsView.right).offset(-15);
-    }];
-    
-    [_createChatButton remakeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@44);
-        make.bottom.equalTo(self.view.bottom).offset(-15 - self.bottomLayoutGuide.length);
-        make.left.equalTo(_noChatsView.left).offset(15);
-        make.right.equalTo(_noChatsView.right).offset(-15);
-    }];
-    _noChatsView.hidden = YES;
+#pragma mark - Cleanup methods
+
+- (void)actionCleanup{
+    [self refreshTableView];
 }
 
-- (void)viewDidLayoutSubviews
-{
-    NSLog(@"%@", _logo);
-}
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:@"dialogs"])
-    {
-        [self reloadData];
-    }
-}
+#pragma mark - Realm methods
 
-- (void)reloadData
+- (void)loadRecents
 {
+    NSString *text = _searchBar.text;
+
     NSMutableArray *broadcasts = [NSMutableArray new];
     NSMutableArray *groupchats = [NSMutableArray new];
     NSMutableArray *personalchats = [NSMutableArray new];
@@ -243,8 +168,138 @@
     _broadcasts = broadcasts;
     _groupchats = groupchats;
     _personalchats = personalchats;
-    [self.tableView reloadData];
+    
+    [self refreshTableView];
 }
+
+//
+//- (void)archiveRecent:(DBRecent *)dbrecent
+//{
+//
+//}
+//
+//- (void)deleteRecent:(DBRecent *)dbrecent
+//{
+//}
+
+#pragma mark - Refresh methods
+
+- (void)refreshTableView
+{
+    [self.tableView reloadData];
+    [self refreshTabCounter];
+}
+
+- (void)refreshTabCounter
+{
+    NSInteger total = 0;
+    
+//    for (DBRecent *dbrecent in dbrecents)
+//        total += dbrecent.counter;
+    
+    UITabBarItem *item = self.tabBarController.tabBar.items[0];
+    item.badgeValue = (total != 0) ? [NSString stringWithFormat:@"%ld", (long) total] : nil;
+    
+    UIUserNotificationSettings *currentUserNotificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
+    if (currentUserNotificationSettings.types & UIUserNotificationTypeBadge)
+        [UIApplication sharedApplication].applicationIconBadgeNumber = total;
+}
+
+
+#pragma mark - User actions
+
+- (void)actionCompose
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"Диалог" style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction *action) { [self actionSelectSingle]; }];
+    UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"Группу" style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction *action) { [self actionSelectMultiple]; }];
+    UIAlertAction *action3 = [UIAlertAction actionWithTitle:@"Рассылку" style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction *action) { [self actionSelectMultiple]; }];
+    UIAlertAction *action4 = [UIAlertAction actionWithTitle:@"Отмена" style:UIAlertActionStyleCancel
+                                                    handler:^(UIAlertAction *action) {
+//                                                        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+                                                    }];
+    
+    [alert addAction:action1]; [alert addAction:action2]; [alert addAction:action3]; [alert addAction:action4];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)actionSelectSingle
+
+{
+//    SelectSingleView *selectSingleView = [[SelectSingleView alloc] init];
+//    selectSingleView.delegate = self;
+//    NavigationController *navController = [[NavigationController alloc] initWithRootViewController:selectSingleView];
+//    [self presentViewController:navController animated:YES completion:nil];
+}
+
+- (void)actionSelectMultiple
+{
+//    SelectMultipleView *selectMultipleView = [[SelectMultipleView alloc] init];
+//    selectMultipleView.delegate = self;
+//    NavigationController *navController = [[NavigationController alloc] initWithRootViewController:selectMultipleView];
+//    [self presentViewController:navController animated:YES completion:nil];
+}
+
+- (void)actionArchive:(NSInteger)index
+{
+//    DBRecent *dbrecent = dbrecents[index];
+//    NSString *recentId = dbrecent.objectId;
+//    [self archiveRecent:dbrecent];
+//    [self refreshTabCounter];
+//    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+//    [self performSelector:@selector(delayedArchive:) withObject:recentId afterDelay:0.25];
+}
+
+- (void)delayedArchive:(NSString *)recentId
+{
+    [self.tableView reloadData];
+//    [Recent archiveItem:recentId];
+}
+
+
+- (void)actionDelete:(NSInteger)index
+{
+//    DBRecent *dbrecent = dbrecents[index];
+//    NSString *recentId = dbrecent.objectId;
+//    [self deleteRecent:dbrecent];
+    [self refreshTabCounter];
+    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+//    [self performSelector:@selector(delayedDelete:) withObject:recentId afterDelay:0.25];
+}
+
+- (void)delayedDelete:(NSString *)recentId
+{
+    [self.tableView reloadData];
+//    [Recent deleteItem:recentId];
+}
+
+#pragma mark - SelectSingleDelegate
+
+- (void)didSelectSingleUser:(id)user
+{
+    [[CKApplicationModel sharedInstance] startPrivateChat:user];
+}
+
+#pragma mark - SelectMultipleDelegate
+
+- (void)didSelectMultipleUsers:(NSArray *)userIds
+{
+    [[CKApplicationModel sharedInstance] startMultipleChat:userIds];
+
+}
+
+#pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 64.0;
+}
+
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -268,11 +323,6 @@
             break;
     }
     return 0;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 64.0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -318,29 +368,89 @@
     return nil;
 }
 
+#pragma mark - SWTableViewCellDelegate
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
+{
+    [cell hideUtilityButtonsAnimated:YES];
+    //---------------------------------------------------------------------------------------------------------------------------------------------
+    if (index == 0) [self actionArchive:cell.tag];
+    if (index == 1) [self actionDelete:cell.tag];
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+{
+    if (state == kCellStateRight) lastCell = cell;
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+{
+    return YES;
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+- (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+{
+    return YES;
+}
+
+#pragma mark - Table view delegate
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch (indexPath.section)
-    {
-        case 0:
-        case 1:
-            break;
-        case 2:
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if ((lastCell == nil) || [lastCell isUtilityButtonsHidden]){
+        
+        switch (indexPath.section)
         {
-            CKDialogListEntryModel *model = [_personalchats objectAtIndex:indexPath.row];
-            CKDialogChatController *ctl = [[CKDialogChatController alloc] initWithUserId:model.userId];
-            [self.navigationController pushViewController:ctl animated:YES];
+            case 0:
+            case 1:
+                break;
+            case 2:
+            {
+                CKDialogListEntryModel *model = [_personalchats objectAtIndex:indexPath.row];
+                [[CKApplicationModel sharedInstance] restartRecentChat:model];
+            }
+                break;
         }
-            break;
-    }
+    }else [lastCell hideUtilityButtonsAnimated:YES];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [_searchBar resignFirstResponder];    
+
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    [self loadRecents];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar_
+{
+    [_searchBar setShowsCancelButton:YES animated:YES];
 }
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar_
+{
+    [_searchBar setShowsCancelButton:NO animated:YES];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar_
+{
+    _searchBar.text = @"";
+    [_searchBar resignFirstResponder];
+    [self loadRecents];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar_
+{
+    [_searchBar resignFirstResponder];
+}
+
 
 @end

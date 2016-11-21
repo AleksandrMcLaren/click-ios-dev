@@ -10,10 +10,10 @@
 #import "CKAvatarView.h"
 #import "SWTableViewCell.h"
 
+
 @interface CKChatListCell : SWTableViewCell
 
 - (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier;
-
 
 @property (nonatomic, readonly) CKAvatarView *avatar;
 @property (nonatomic, readonly) UILabel *title;

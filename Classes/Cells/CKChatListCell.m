@@ -99,6 +99,7 @@
 {
     _model = model;
     [self.avatar setAvatarFile:model.dialogAvatarId fallbackName:[self letterNameWithName:model.userName surname:model.userSurname login:model.userLogin]];
+    
     self.unreadCount.text = [NSString stringWithFormat:@"%ld", (long)model.messagesUnread];
     [_unreadCount remakeConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.contentView.bottom).offset(-12);
@@ -118,5 +119,6 @@
         self.leftUtilityButtons = @[[self utilityButtonWithTitle:@"пометить\nкак\nпрочитанное" color:CKClickBlueColor fontSize:12.0]];
     }
 }
+
 
 @end

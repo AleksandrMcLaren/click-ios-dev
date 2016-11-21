@@ -26,6 +26,7 @@
 #import "NSString+NumEncoding.h"
 #import "NSDate+Utils.h"
 #import "CKViewControllerRotation.h"
+#import "AppConstant.h"
 
 //define this constant if you want to use Masonry without the 'mas_' prefix
 #define MAS_SHORTHAND

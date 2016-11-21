@@ -81,6 +81,7 @@
     if (self = [super init])
     {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDialogList) name:CKMessageServerConnectionReceived object:nil];
+        _dialogsDidChanged = [RACObserve(self, dialogs) ignore:nil];
     }
     return self;
 }
@@ -88,25 +89,42 @@
 - (void)run
 {
     _dialogs = [NSMutableArray new];
+    [self loadDialogList];
     [self reloadDialogList];
 }
 
 - (void)reloadDialogList
 {
-    [[CKMessageServerConnection sharedInstance] getDialogListWithCallback:^(NSDictionary *result) {
-        NSMutableArray *dialogs = [NSMutableArray new];
-        for (NSDictionary *i in result[@"result"])
+    NSString *query = @"select * from dialogs";
+    __block NSMutableArray *result = [NSMutableArray new];
+    [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *data = [db executeQuery:query];
+        while ([data next])
         {
-            CKDialogListEntryModel *model = [CKDialogListEntryModel modelWithDictionary:i];
-            [dialogs addObject:model];
+            NSDictionary* resultDictionary = [data resultDictionary];
+            CKDialogListEntryModel *model = [CKDialogListEntryModel modelWithDictionary:resultDictionary];
+            [result addObject:model];
         }
-        self.dialogs = dialogs;
     }];
+    self.dialogs = result.copy;
+}
+
+-(void)loadDialogList{
+    [[CKMessageServerConnection sharedInstance] getDialogListWithCallback:^(NSDictionary *result) {
+        for (NSDictionary *i in result[@"result"]){
+            [self saveDialog:i];
+        }
+        [self reloadDialogList];
+    }];
+    
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+-(void)saveDialog:(NSDictionary*)dialog{
+    [[CKDB sharedInstance] updateTable:@"dialogs" withValues:dialog];
+}
 
 @end
