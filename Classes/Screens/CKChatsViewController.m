@@ -14,7 +14,6 @@
 #import "CKNewGroupController.h"
 #import "NoChatsView.h"
 #import "utilities.h"
-#import "CKApplicationModel+Chat.h"
 
 @implementation CKChatsViewController
 {
@@ -281,14 +280,14 @@
 
 - (void)didSelectSingleUser:(id)user
 {
-    [[CKApplicationModel sharedInstance] startPrivateChat:user];
+    [[CKDialogsModel sharedInstance] startPrivateChat:user];
 }
 
 #pragma mark - SelectMultipleDelegate
 
 - (void)didSelectMultipleUsers:(NSArray *)userIds
 {
-    [[CKApplicationModel sharedInstance] startMultipleChat:userIds];
+    [[CKDialogsModel sharedInstance] startMultipleChat:userIds];
 
 }
 
@@ -378,23 +377,17 @@
     if (index == 1) [self actionDelete:cell.tag];
 }
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state
-//-------------------------------------------------------------------------------------------------------------------------------------------------
 {
     if (state == kCellStateRight) lastCell = cell;
 }
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------
 - (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell
-//-------------------------------------------------------------------------------------------------------------------------------------------------
 {
     return YES;
 }
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------
 - (BOOL)swipeableTableViewCell:(SWTableViewCell *)cell canSwipeToState:(SWCellState)state
-//-------------------------------------------------------------------------------------------------------------------------------------------------
 {
     return YES;
 }
@@ -415,7 +408,7 @@
             case 2:
             {
                 CKDialogListEntryModel *model = [_personalchats objectAtIndex:indexPath.row];
-                [[CKApplicationModel sharedInstance] restartRecentChat:model];
+                [[CKDialogsModel sharedInstance] restartRecentChat:model];
             }
                 break;
         }
@@ -451,6 +444,31 @@
 {
     [_searchBar resignFirstResponder];
 }
+
+#pragma mark CKDialogsControllerProtocol
+
+- (void)startPrivateChat:(id)user{
+    if ([user isKindOfClass:[CKDialogListEntryModel class]]) {
+        CKDialogListEntryModel *model = (CKDialogListEntryModel*) user;
+        
+        CKDialogChatController *ctl = [[CKDialogChatController alloc] initWithUserId:model.userId];
+        [self.navigationController pushViewController:ctl animated:YES];
+    }
+}
+
+- (void)startMultipleChat:(NSArray *) userIds{
+    
+}
+
+- (void)restartRecentChat:(id)user{
+    if ([user isKindOfClass:[CKDialogListEntryModel class]]) {
+        CKDialogListEntryModel *model = (CKDialogListEntryModel*) user;
+        
+        CKDialogChatController *ctl = [[CKDialogChatController alloc] initWithUserId:model.userId];
+        [self.navigationController pushViewController:ctl animated:YES];
+    }
+}
+
 
 
 @end

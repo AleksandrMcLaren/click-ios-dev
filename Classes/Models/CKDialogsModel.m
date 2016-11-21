@@ -8,6 +8,7 @@
 
 #import "CKDialogsModel.h"
 #import "CKMessageServerConnection.h"
+#import "CKDialogChatController.h"
 
 @implementation CKDialogListEntryModel
 
@@ -125,6 +126,21 @@
 
 -(void)saveDialog:(NSDictionary*)dialog{
     [[CKDB sharedInstance] updateTable:@"dialogs" withValues:dialog];
+}
+
+-(void)startPrivateChat:(id)user{
+    [self.dialogsController startPrivateChat:user];
+    
+    
+}
+
+
+-(void)startMultipleChat:(NSArray *) userIds{
+    
+}
+
+-(void)restartRecentChat:(id)user{
+    [self.dialogsController restartRecentChat:user];
 }
 
 @end

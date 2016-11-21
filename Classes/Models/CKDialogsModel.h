@@ -10,6 +10,9 @@
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
 @protocol CKDialogsControllerProtocol <NSObject>
+- (void)startPrivateChat:(id)user;
+- (void)startMultipleChat:(NSArray *) userIds;
+- (void)restartRecentChat:(id)user;
 
 @end
 
@@ -50,9 +53,11 @@
 
 @property (nonatomic, assign) id<CKDialogsControllerProtocol>dialogsController;
 @property (nonatomic, strong, readonly) RACSignal* dialogsDidChanged;
+@property (nonatomic, readonly) NSArray *dialogs;
 
 - (void)run;
-
-@property (nonatomic, readonly) NSArray *dialogs;
+- (void)startPrivateChat:(id)user;
+- (void)startMultipleChat:(NSArray *) userIds;
+- (void)restartRecentChat:(id)user;
 
 @end

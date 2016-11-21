@@ -523,10 +523,9 @@
 
 - (void)showMainScreen
 {
+    [self.mainController showMainScreen];
     [[CKDialogsModel sharedInstance] setDialogsController:[self.mainController dialogsController]];
     [[CKDialogsModel sharedInstance] run];
-    
-    [self.mainController showMainScreen];
     
     [self fetchContactsWithCompletion:^(NSMutableArray *arr) {
         

@@ -16,7 +16,6 @@
 		3D72B40D1DE1F167001A4992 /* NotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B4081DE1F167001A4992 /* NotificationCenter.m */; };
 		3D72B40E1DE1F167001A4992 /* NSDictionary+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B40A1DE1F167001A4992 /* NSDictionary+Util.m */; };
 		3D72B40F1DE1F167001A4992 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B40C1DE1F167001A4992 /* UserDefaults.m */; };
-		3D72B4141DE20571001A4992 /* CKApplicationModel+Chat.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B4131DE20571001A4992 /* CKApplicationModel+Chat.m */; };
 		3D7884831DACCE8B00777E10 /* UIView+Shake.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7884821DACCE8B00777E10 /* UIView+Shake.m */; };
 		3DBC3B461DCAF2430070F998 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DBC3B451DCAF2430070F998 /* SystemConfiguration.framework */; };
 		3DBC3B491DCAF3810070F998 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBC3B481DCAF3810070F998 /* Reachability.m */; };
@@ -157,8 +156,6 @@
 		3D72B40B1DE1F167001A4992 /* UserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaults.h; sourceTree = "<group>"; };
 		3D72B40C1DE1F167001A4992 /* UserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
 		3D72B4101DE1F1FB001A4992 /* utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
-		3D72B4121DE20571001A4992 /* CKApplicationModel+Chat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKApplicationModel+Chat.h"; sourceTree = "<group>"; };
-		3D72B4131DE20571001A4992 /* CKApplicationModel+Chat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CKApplicationModel+Chat.m"; sourceTree = "<group>"; };
 		3D7884811DACCE8B00777E10 /* UIView+Shake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Shake.h"; sourceTree = "<group>"; };
 		3D7884821DACCE8B00777E10 /* UIView+Shake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Shake.m"; sourceTree = "<group>"; };
 		3DBC3B451DCAF2430070F998 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -416,8 +413,6 @@
 		3D72B4151DE20578001A4992 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				3D72B4121DE20571001A4992 /* CKApplicationModel+Chat.h */,
-				3D72B4131DE20571001A4992 /* CKApplicationModel+Chat.m */,
 			);
 			name = Chat;
 			sourceTree = "<group>";
@@ -983,7 +978,6 @@
 				D82EB8A81DCB6C65008E9035 /* CKCustomPinAnnotation.m in Sources */,
 				78BEA9231CA50B43004E85DB /* CKDialogsModel.m in Sources */,
 				3D72B40E1DE1F167001A4992 /* NSDictionary+Util.m in Sources */,
-				3D72B4141DE20571001A4992 /* CKApplicationModel+Chat.m in Sources */,
 				D83E83911DDC1871003D9F81 /* CKContactWrapper.m in Sources */,
 				784FE8561C8E7476006469D5 /* AppDelegate.m in Sources */,
 				D82EB8AE1DCB6CD0008E9035 /* CKClustepPinAnnotation.m in Sources */,
