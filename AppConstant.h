@@ -7,6 +7,9 @@
 //
 
 //---------------------------------------------------------------------------------
+#define		HEXCOLOR(c) [UIColor colorWithRed:((c>>24)&0xFF)/255.0 green:((c>>16)&0xFF)/255.0 blue:((c>>8)&0xFF)/255.0 alpha:((c)&0xFF)/255.0]
+
+//---------------------------------------------------------------------------------
 #define		NOTIFICATION_APP_STARTED			@"NotificationAppStarted"
 #define		NOTIFICATION_USER_LOGGED_IN			@"NotificationUserLoggedIn"
 #define		NOTIFICATION_USER_LOGGED_OUT		@"NotificationUserLoggedOut"

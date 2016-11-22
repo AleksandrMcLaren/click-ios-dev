@@ -11,6 +11,11 @@
 		3D1A36581DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36571DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m */; };
 		3D1A365A1DB2220F000A8CB7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */; };
 		3D1A36661DB4EC80000A8CB7 /* NSString+NumEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36651DB4EC80000A8CB7 /* NSString+NumEncoding.m */; };
+		3D29CB241DE4235600142830 /* SelectMultipleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D29CB1E1DE4235600142830 /* SelectMultipleView.m */; };
+		3D29CB251DE4235600142830 /* SelectMultipleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D29CB1F1DE4235600142830 /* SelectMultipleView.xib */; };
+		3D29CB261DE4235600142830 /* SelectSingleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D29CB221DE4235600142830 /* SelectSingleView.m */; };
+		3D29CB271DE4235600142830 /* SelectSingleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D29CB231DE4235600142830 /* SelectSingleView.xib */; };
+		3D29CB2B1DE42B8C00142830 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D29CB2A1DE42B8C00142830 /* NavigationController.m */; };
 		3D3AD6EB1DBE61B30017ACFD /* CKActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AD6EA1DBE61B30017ACFD /* CKActivityViewController.m */; };
 		3D3AD7EC1DBF95880017ACFD /* UIButton+ContinueButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AD7EB1DBF95880017ACFD /* UIButton+ContinueButton.m */; };
 		3D72B40D1DE1F167001A4992 /* NotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B4081DE1F167001A4992 /* NotificationCenter.m */; };
@@ -143,6 +148,14 @@
 		3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		3D1A36641DB4EC80000A8CB7 /* NSString+NumEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+NumEncoding.h"; sourceTree = "<group>"; };
 		3D1A36651DB4EC80000A8CB7 /* NSString+NumEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+NumEncoding.m"; sourceTree = "<group>"; };
+		3D29CB1D1DE4235600142830 /* SelectMultipleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectMultipleView.h; sourceTree = "<group>"; };
+		3D29CB1E1DE4235600142830 /* SelectMultipleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectMultipleView.m; sourceTree = "<group>"; };
+		3D29CB1F1DE4235600142830 /* SelectMultipleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectMultipleView.xib; sourceTree = "<group>"; };
+		3D29CB211DE4235600142830 /* SelectSingleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectSingleView.h; sourceTree = "<group>"; };
+		3D29CB221DE4235600142830 /* SelectSingleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectSingleView.m; sourceTree = "<group>"; };
+		3D29CB231DE4235600142830 /* SelectSingleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectSingleView.xib; sourceTree = "<group>"; };
+		3D29CB291DE42B8C00142830 /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
+		3D29CB2A1DE42B8C00142830 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		3D3AD6E91DBE61B30017ACFD /* CKActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKActivityViewController.h; sourceTree = "<group>"; };
 		3D3AD6EA1DBE61B30017ACFD /* CKActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKActivityViewController.m; sourceTree = "<group>"; };
 		3D3AD7EA1DBF95880017ACFD /* UIButton+ContinueButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+ContinueButton.h"; sourceTree = "<group>"; };
@@ -397,6 +410,35 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3D29CB1C1DE4235600142830 /* SelectMultiple */ = {
+			isa = PBXGroup;
+			children = (
+				3D29CB1D1DE4235600142830 /* SelectMultipleView.h */,
+				3D29CB1E1DE4235600142830 /* SelectMultipleView.m */,
+				3D29CB1F1DE4235600142830 /* SelectMultipleView.xib */,
+			);
+			path = SelectMultiple;
+			sourceTree = "<group>";
+		};
+		3D29CB201DE4235600142830 /* SelectSingle */ = {
+			isa = PBXGroup;
+			children = (
+				3D29CB211DE4235600142830 /* SelectSingleView.h */,
+				3D29CB221DE4235600142830 /* SelectSingleView.m */,
+				3D29CB231DE4235600142830 /* SelectSingleView.xib */,
+			);
+			path = SelectSingle;
+			sourceTree = "<group>";
+		};
+		3D29CB281DE42B8C00142830 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				3D29CB291DE42B8C00142830 /* NavigationController.h */,
+				3D29CB2A1DE42B8C00142830 /* NavigationController.m */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
 		3D72B4061DE1F167001A4992 /* general1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -408,13 +450,6 @@
 				3D72B40C1DE1F167001A4992 /* UserDefaults.m */,
 			);
 			path = general1;
-			sourceTree = "<group>";
-		};
-		3D72B4151DE20578001A4992 /* Chat */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Chat;
 			sourceTree = "<group>";
 		};
 		3D72B4161DE3522A001A4992 /* DB */ = {
@@ -429,12 +464,29 @@
 		3DC5D9D21DDF6106005823ED /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				3D29CB1C1DE4235600142830 /* SelectMultiple */,
+				3D29CB201DE4235600142830 /* SelectSingle */,
+				781250871CB6C73700D3BFBB /* CKDialogChatController.h */,
+				781250881CB6C73700D3BFBB /* CKDialogChatController.m */,
 				78B524C61C9FE35D00502AA4 /* CKChatsViewController.h */,
 				78B524C71C9FE35D00502AA4 /* CKChatsViewController.m */,
 				3DC5D9D51DDF6141005823ED /* NoChatsView.h */,
 				3DC5D9D61DDF6141005823ED /* NoChatsView.m */,
 			);
 			name = Chat;
+			sourceTree = "<group>";
+		};
+		3DE48E6A1DE46BD500787749 /* Dialog */ = {
+			isa = PBXGroup;
+			children = (
+				78BF5F6A1CB18F670026475B /* CKChatListCell.h */,
+				78BF5F6B1CB18F670026475B /* CKChatListCell.m */,
+				78BEA9891CADC9BB004E85DB /* CKGroupChatCell.h */,
+				78BEA98A1CADC9BB004E85DB /* CKGroupChatCell.m */,
+				78BEA98C1CADC9DC004E85DB /* CKDialogChatCell.h */,
+				78BEA98D1CADC9DC004E85DB /* CKDialogChatCell.m */,
+			);
+			name = Dialog;
 			sourceTree = "<group>";
 		};
 		698FD9764F1BC9BC93AE3763 /* Pods */ = {
@@ -449,6 +501,7 @@
 		7831EDA71C9000AD00319191 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				3D29CB281DE42B8C00142830 /* Application */,
 				3DC5D9D21DDF6106005823ED /* Chat */,
 				D82EB8A01DCB6BD7008E9035 /* CKFiltersForMapViewController.h */,
 				D82EB8A11DCB6BD7008E9035 /* CKFiltersForMapViewController.m */,
@@ -488,8 +541,6 @@
 				78B524D31C9FE40B00502AA4 /* CKSettingsViewController.m */,
 				78BEA9711CAADA49004E85DB /* CKFriendProfileController.h */,
 				78BEA9721CAADA49004E85DB /* CKFriendProfileController.m */,
-				781250871CB6C73700D3BFBB /* CKDialogChatController.h */,
-				781250881CB6C73700D3BFBB /* CKDialogChatController.m */,
 				7807CF6D1CC7E06700D9DF9B /* CKFriendSelectionController.h */,
 				7807CF6E1CC7E06700D9DF9B /* CKFriendSelectionController.m */,
 				7807CF751CD09FEA00D9DF9B /* CKNewGroupController.h */,
@@ -562,7 +613,6 @@
 		7831EDB71C90A24700319191 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				3D72B4151DE20578001A4992 /* Chat */,
 				7831EDB81C90A24700319191 /* CKApplicationModel.h */,
 				7831EDB91C90A24700319191 /* CKApplicationModel.m */,
 				78BEA9211CA50B43004E85DB /* CKDialogsModel.h */,
@@ -615,6 +665,7 @@
 		7831EDCF1C90CFC300319191 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				3DE48E6A1DE46BD500787749 /* Dialog */,
 				781250921CB7A8EC00D3BFBB /* secondaryCellMaskShadow@2x.png */,
 				781250901CB7A7EB00D3BFBB /* cellMaskShadow@2x.png */,
 				781250851CB6802A00D3BFBB /* secondaryCellMask@2x.png */,
@@ -637,12 +688,6 @@
 				78BEA9811CAB9942004E85DB /* CKFriendProfileLocationCell.m */,
 				78BEA9831CABD833004E85DB /* CKFriendProfileCell.h */,
 				78BEA9841CABD833004E85DB /* CKFriendProfileCell.m */,
-				78BF5F6A1CB18F670026475B /* CKChatListCell.h */,
-				78BF5F6B1CB18F670026475B /* CKChatListCell.m */,
-				78BEA9891CADC9BB004E85DB /* CKGroupChatCell.h */,
-				78BEA98A1CADC9BB004E85DB /* CKGroupChatCell.m */,
-				78BEA98C1CADC9DC004E85DB /* CKDialogChatCell.h */,
-				78BEA98D1CADC9DC004E85DB /* CKDialogChatCell.m */,
 				7812507E1CB63E0B00D3BFBB /* CKMessageCell.h */,
 				7812507F1CB63E0B00D3BFBB /* CKMessageCell.m */,
 				782A000D1D0ABFD500802097 /* CKAttachCell.h */,
@@ -816,9 +861,11 @@
 			files = (
 				781250861CB6802A00D3BFBB /* secondaryCellMask@2x.png in Resources */,
 				7807CF711CC8C28700D9DF9B /* checkwhite@2x.png in Resources */,
+				3D29CB251DE4235600142830 /* SelectMultipleView.xib in Resources */,
 				782AFFF71D099A4B00802097 /* attachaudio@2x.png in Resources */,
 				3D1A365A1DB2220F000A8CB7 /* Launch Screen.storyboard in Resources */,
 				781250821CB6645C00D3BFBB /* cellMask@2x.png in Resources */,
+				3D29CB271DE4235600142830 /* SelectSingleView.xib in Resources */,
 				781250911CB7A7EB00D3BFBB /* cellMaskShadow@2x.png in Resources */,
 				783BFAAE1CDBA6360067CEDE /* circleplus@2x.png in Resources */,
 				781250971CB7AFBE00D3BFBB /* bg@2x.png in Resources */,
@@ -918,6 +965,7 @@
 				3DBC3B491DCAF3810070F998 /* Reachability.m in Sources */,
 				78BEA9731CAADA49004E85DB /* CKFriendProfileController.m in Sources */,
 				7807CF741CCB5E7900D9DF9B /* CKGroupChatModel.m in Sources */,
+				3D29CB241DE4235600142830 /* SelectMultipleView.m in Sources */,
 				78BEA93E1CAAA47D004E85DB /* CKHTTPRequest.m in Sources */,
 				78BEA9761CAAF9E0004E85DB /* CKFriendProfileHeaderCell.m in Sources */,
 				782AFFFA1D0AB90300802097 /* CKAttachModel.m in Sources */,
@@ -968,6 +1016,7 @@
 				78B524BF1C9DD29500502AA4 /* CKProfileHeaderView.m in Sources */,
 				7807CF7A1CD0A01E00D9DF9B /* CKGroupHeaderView.m in Sources */,
 				78B524C51C9FA41100502AA4 /* CKCache.m in Sources */,
+				3D29CB2B1DE42B8C00142830 /* NavigationController.m in Sources */,
 				78BEA9261CA6A052004E85DB /* CKUserServerConnection.m in Sources */,
 				78BEA9821CAB9942004E85DB /* CKFriendProfileLocationCell.m in Sources */,
 				781250801CB63E0B00D3BFBB /* CKMessageCell.m in Sources */,
@@ -975,6 +1024,7 @@
 				3D1A36661DB4EC80000A8CB7 /* NSString+NumEncoding.m in Sources */,
 				78BEA91D1CA44751004E85DB /* CKCitySelectionController.m in Sources */,
 				3D72B40D1DE1F167001A4992 /* NotificationCenter.m in Sources */,
+				3D29CB261DE4235600142830 /* SelectSingleView.m in Sources */,
 				D82EB8A81DCB6C65008E9035 /* CKCustomPinAnnotation.m in Sources */,
 				78BEA9231CA50B43004E85DB /* CKDialogsModel.m in Sources */,
 				3D72B40E1DE1F167001A4992 /* NSDictionary+Util.m in Sources */,

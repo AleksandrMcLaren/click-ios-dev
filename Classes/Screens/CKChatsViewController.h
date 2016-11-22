@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SelectSingleView.h"
+#import "SelectMultipleView.h"
 
 @interface CKChatsViewController : UIViewController<CKDialogsControllerProtocol, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource>
 

@@ -14,8 +14,9 @@
 #import "CKNewGroupController.h"
 #import "NoChatsView.h"
 #import "utilities.h"
+#import "NavigationController.h"
 
-@interface CKChatsViewController()<SWTableViewCellDelegate>
+@interface CKChatsViewController()<SWTableViewCellDelegate,SelectSingleDelegate,SelectMultipleDelegate>
 
 @end
 
@@ -74,6 +75,8 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     
+    self.view.backgroundColor = CKClickLightGrayColor;
+    
     _noChatsView = [[NoChatsView alloc] initWithFrame:self.view.frame];
     _noChatsView.hidden = YES;
     
@@ -96,7 +99,10 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.tableHeaderView = searchBarBackground;
-
+    self.tableView.bounces = YES;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.tableView.backgroundColor = CKClickLightGrayColor;
+    
     [self.view addSubview:self.tableView];
     
     [self makeConstraints];
@@ -191,6 +197,7 @@
 {
     [self.tableView reloadData];
     [self refreshTabCounter];
+    //[self.tableView setContentOffset:CGPointMake(0, 44)];
 }
 
 - (void)refreshTabCounter
@@ -238,18 +245,16 @@
 - (void)actionSelectSingle
 
 {
-//    SelectSingleView *selectSingleView = [[SelectSingleView alloc] init];
-//    selectSingleView.delegate = self;
-//    NavigationController *navController = [[NavigationController alloc] initWithRootViewController:selectSingleView];
-//    [self presentViewController:navController animated:YES completion:nil];
+    SelectSingleView *selectSingleView = [[SelectSingleView alloc] init];
+    selectSingleView.delegate = self;
+    [self.navigationController pushViewController:selectSingleView animated:YES];
 }
 
 - (void)actionSelectMultiple
 {
-//    SelectMultipleView *selectMultipleView = [[SelectMultipleView alloc] init];
-//    selectMultipleView.delegate = self;
-//    NavigationController *navController = [[NavigationController alloc] initWithRootViewController:selectMultipleView];
-//    [self presentViewController:navController animated:YES completion:nil];
+    SelectMultipleView *selectMultipleView = [[SelectMultipleView alloc] init];
+    selectMultipleView.delegate = self;
+    [self.navigationController pushViewController:selectMultipleView animated:YES];
 }
 
 - (void)actionArchive:(NSInteger)index
@@ -377,10 +382,14 @@
 
 #pragma mark - SWTableViewCellDelegate
 
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index
+{
+    [cell hideUtilityButtonsAnimated:YES];
+}
+
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
 {
     [cell hideUtilityButtonsAnimated:YES];
-    //---------------------------------------------------------------------------------------------------------------------------------------------
     if (index == 0) [self actionArchive:cell.tag];
     if (index == 1) [self actionDelete:cell.tag];
 }

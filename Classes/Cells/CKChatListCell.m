@@ -15,6 +15,7 @@
     if (self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier])
     {
         _avatar = [CKAvatarView new];
+        
         [self.contentView addSubview:_avatar];
         
         _title = [UILabel labelWithText:@"Текст" font:[UIFont boldSystemFontOfSize: 16.0] textColor:[UIColor blackColor] textAlignment:NSTextAlignmentLeft];

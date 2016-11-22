@@ -23,6 +23,8 @@
 {
     _filename = filename;
     _fallbackName = fallbackName;
+    self.fallbackColor = CKClickBlueColor;
+    
     if (!_filename) {
         _avatar.image = nil;
     }

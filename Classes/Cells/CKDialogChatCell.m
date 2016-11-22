@@ -44,6 +44,7 @@
 
     self.subtitle.text = model.message;
     self.activity.text = [model.date readableMessageTimestampString];
+    
     if (model.messagesUnread == 0)
     {
         self.title.textColor = [UIColor blackColor];
