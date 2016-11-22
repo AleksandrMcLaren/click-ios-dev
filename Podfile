@@ -19,5 +19,7 @@ pod "MWPhotoBrowser"
 pod 'Fabric'
 pod 'Crashlytics'
 pod 'SAMKeychain'
+pod 'ProgressHUD'
+pod 'JSQMessagesViewController'
 
 end

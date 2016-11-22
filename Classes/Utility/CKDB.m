@@ -106,13 +106,13 @@ static void myLow(sqlite3_context *context, int argc, sqlite3_value **argv)
         `dlgavatar`	TEXT, \
         `dlgdesc`	TEXT, \
         `dlgname`	TEXT, \
-        `entryid`	TEXT, \
+        `entryid`	TEXT NOT NULL UNIQUE, \
         `inblacklist`	INTEGER, \
         `lat`	NUMERIC, \
         `lng`	NUMERIC, \
         `login`	TEXT, \
         `message`	INTEGER, \
-        `msgid`	TEXT NOT NULL UNIQUE, \
+        `msgid`	TEXT , \
         `msgstatus`	INTEGER, \
         `msgtotal`	INTEGER, \
         `msgtype`	INTEGER, \
@@ -124,7 +124,7 @@ static void myLow(sqlite3_context *context, int argc, sqlite3_value **argv)
         `surname`	TEXT, \
         `type`	INTEGER, \
         `userid`	INTEGER, \
-        PRIMARY KEY(`msgid`) \
+        PRIMARY KEY(`entryid`) \
         ) ";
         BOOL success = [db executeUpdate:sql];
         if (!success) {
