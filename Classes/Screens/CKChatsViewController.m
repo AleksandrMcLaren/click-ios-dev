@@ -15,6 +15,10 @@
 #import "NoChatsView.h"
 #import "utilities.h"
 
+@interface CKChatsViewController()<SWTableViewCellDelegate>
+
+@end
+
 @implementation CKChatsViewController
 {
     NSArray *_broadcasts;
@@ -207,6 +211,11 @@
 
 #pragma mark - User actions
 
+- (void)actionChat:(CKDialogListEntryModel *)dialog{
+    CKDialogChatController *ctl = [[CKDialogChatController alloc] initWithUserId:dialog.userId];
+    [self.navigationController pushViewController:ctl animated:YES];
+}
+
 - (void)actionCompose
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -326,45 +335,44 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    CKChatListCell* cell;
     switch (indexPath.section)
     {
         case 0:
         {
             CKDialogListEntryModel *model = [_broadcasts objectAtIndex:indexPath.row];
-            CKGroupChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CKGroupChatCell"];
+            cell = [tableView dequeueReusableCellWithIdentifier:@"CKGroupChatCell"];
             if (!cell)
             {
                 cell = [CKGroupChatCell new];
             }
             cell.model = model;
-            return cell;
         }
         case 1:
         {
             CKDialogListEntryModel *model = [_groupchats objectAtIndex:indexPath.row];
-            CKGroupChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CKGroupChatCell"];
+            cell = [tableView dequeueReusableCellWithIdentifier:@"CKGroupChatCell"];
             if (!cell)
             {
                 cell = [CKGroupChatCell new];
             }
             cell.model = model;
-            return cell;
         }
             break;
         case 2:
         {
             CKDialogListEntryModel *model = [_personalchats objectAtIndex:indexPath.row];
-            CKDialogChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CKDialogChatCell"];
+            cell = [tableView dequeueReusableCellWithIdentifier:@"CKDialogChatCell"];
             if (!cell)
             {
                 cell = [CKDialogChatCell new];
             }
             cell.model = model;
-            return cell;
         }
             break;
     }
-    return nil;
+    cell.delegate = self;
+    return cell;
 }
 
 #pragma mark - SWTableViewCellDelegate
@@ -408,7 +416,7 @@
             case 2:
             {
                 CKDialogListEntryModel *model = [_personalchats objectAtIndex:indexPath.row];
-                [[CKDialogsModel sharedInstance] restartRecentChat:model];
+                [self actionChat:model];
             }
                 break;
         }
