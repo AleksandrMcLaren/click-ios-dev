@@ -9,14 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "CKUserAvatarView.h"
 
+@protocol CKFriendProfileHeaderCellDelegate;
+
 @interface CKFriendProfileHeaderCell : UITableViewCell
 
 @property (nonatomic, readonly) CKUserAvatarView *avatar;
 @property (nonatomic, readonly) UILabel *name;
+@property (nonatomic, readonly) UILabel *surname;
 @property (nonatomic, readonly) UILabel *status;
 @property (nonatomic, readonly) UIButton *likes;
 @property (nonatomic, readonly) UILabel *login;
 @property (nonatomic, readonly) UIButton *openChat;
+@property (nonatomic, assign) BOOL isLiked;
 
 - (void) setNumberOfLikes:(NSInteger)likes;
 - (void) setUserStatus:(NSString *)status showCalendar:(BOOL)showCalendar;

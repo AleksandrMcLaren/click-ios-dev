@@ -13,12 +13,10 @@
 #import "CKCustomPointAnnotation.h"
 #import "CKCustomPinAnnotation.h"
 #import "AppDelegate.h"
-//#import "CKUserAvatarView.h"
 #import "CKUserServerConnection.h"
 #import "CKMessageServerConnection.h"
 #import "CKClusterPointAnnotation.h"
 #import "CKClustepPinAnnotation.h"
-//#import "CKUserProfileController.h"
 #import "CKFiltersForMapViewController.h"
 #import "CKFriendProfileController.h"
 #import "CKDialogChatController.h"
@@ -51,7 +49,6 @@
     NSMutableArray<CKClusterPointAnnotation *> *_annotations2;
     int count;
     
-    
     CKFiltersForMapViewController * ffmvc;
     
     NSString *sexVar;
@@ -63,7 +60,7 @@
     UIImage *countryImageVar;
     NSString *countryNameVar;
     BOOL online;
-    
+    BOOL zoomByGesture;
 }
 
 - (instancetype)init
@@ -73,90 +70,16 @@
         self.title = @"Карта";
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"hamburger"] style:UIBarButtonItemStylePlain target:self action:@selector(filterButton)];
         self.profile = [[CKApplicationModel sharedInstance] userProfile];
+        zoomByGesture = false;
     }
     return self;
 }
 
 
-- (void) filterButton
-{
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:ffmvc];
-    navController.modalTransitionStyle = UIModalPresentationOverCurrentContext;
-    [self presentViewController:navController animated:YES completion:nil];
-}
-
-- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
-    if (ffmvc.endWithSumbit == true)
-    {
-        _sexT = ffmvc.sex;
-        _minageT = ffmvc.minage;
-        _maxageT = ffmvc.maxage;
-        online = ffmvc.switchOn;
-        _allUsersT = ffmvc.allUsers;
-        _nameT = ffmvc.name;
-        _countryIdT = [NSNumber numberWithInteger: ffmvc.countryId];
-        _cityIdT = [NSNumber numberWithInteger:ffmvc.cityId];
-    }
-    if (ffmvc.endWithCancelFilters == YES)
-    {
-        _countryIdT = [NSNumber numberWithInteger: 0];
-        _cityIdT = [NSNumber numberWithInteger: 0];
-    }
-    if (![_sexT isEqual: @""] && _sexT != nil)
-    {
-        if ([_sexT isEqual:@"Мужской"])
-        {
-            sexVar = @"m";
-        }
-        else if ([_sexT isEqual: @"Женский"])
-        {
-            sexVar = @"f";
-        }
-        else
-        {
-            sexVar = @"";
-        }
-    }
-    if (/*![_minageT isEqual: @0] && */_minageT !=nil)
-    {
-        minageVar = _minageT;
-    }
-    if ( /*![_maxageT isEqual: @0] &&*/ _maxageT !=nil)
-    {
-        maxageVar = _maxageT;
-    }
-    if (![_nameT isEqual:@""] && _nameT != nil)
-    {
-        nameVar = _nameT;
-    }
-    if (_allUsersT == true)
-    {
-        inAllUsers = [NSNumber numberWithInteger:-1];
-    }
-    else inAllUsers = [NSNumber numberWithInteger:1];
-    if (_countryIdT == nil) _countryIdT = [NSNumber numberWithInteger:[@0 integerValue]];
-    if (_cityIdT == nil) _cityIdT = [NSNumber numberWithInteger:0];
-    
-    _mRect = _mapView.visibleMapRect;
-    MKMapPoint neMapPoint = MKMapPointMake(MKMapRectGetMaxX(_mRect), _mRect.origin.y);
-    MKMapPoint swMapPoint = MKMapPointMake(_mRect.origin.x, MKMapRectGetMaxY(_mRect));
-    
-    CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
-    CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
-    
-    NSNumber *nelat = [[NSNumber alloc] initWithDouble:neCoord.latitude];
-    NSNumber *nelng = [[NSNumber alloc] initWithDouble:neCoord.longitude];
-    NSNumber *swlat = [[NSNumber alloc] initWithDouble:swCoord.latitude];
-    NSNumber *swlng = [[NSNumber alloc] initWithDouble:swCoord.longitude];
-    
-    [[CKApplicationModel sharedInstance] loadClusters: @1 withFriendStatus:inAllUsers withCountry:_countryIdT withCity:_cityIdT withSex:sexVar withMinage:minageVar andMaxAge:maxageVar withMask:nameVar withBottomLeftLatitude:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt:count];
-    
-    //    [[CKApplicationModel sharedInstance] loadClusters:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt: count];
-    count++;
-}
 
 - (void)viewDidLoad
 {
+    zoomByGesture = false;
     _annotations1 = [NSMutableArray new];
     _annotations2 = [NSMutableArray new];
     status = @0;
@@ -186,7 +109,13 @@
     //[_mapView setRegion:region animated:YES];
     _mapView.userLocation.title = @"Текущее местоположение";
     [_mapView setUserTrackingMode:MKUserTrackingModeFollow animated:YES];
+    _mapView.multipleTouchEnabled = YES;
+    _mapView.userInteractionEnabled = YES;
     [self.view addSubview:_mapView];
+    
+    UIPinchGestureRecognizer *tapRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(zoom:)];
+    tapRecognizer.delegate = self;
+    [_mapView addGestureRecognizer:tapRecognizer];
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
@@ -236,6 +165,166 @@
     ffmvc.countryImageIso = 0;
     ffmvc.city = @"";
     ffmvc.endWithCancelFilters = NO;
+}
+
+- (void) viewDidAppear:(BOOL)animated{
+    zoomByGesture = false;
+    CGFloat padding = _padding;
+    count = 0;
+    [_plusButton makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(_minusButton.top).offset(-padding/8);
+        make.right.equalTo(self.view.right).offset(-padding);
+        make.width.equalTo(@50);
+        make.height.equalTo(50);
+    }
+     ];
+    
+    [_minusButton makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(@0);
+        make.right.equalTo(self.view.right).offset(-padding);
+        make.width.equalTo(@50);
+        make.height.equalTo(@50);
+    }];
+    
+    [_setLocationButton makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_minusButton.bottom).offset(padding*2);
+        make.right.equalTo(self.view.right).offset(-padding);
+        make.width.equalTo(@50);
+        make.height.equalTo(@50);
+    }];
+    
+    [UIView animateWithDuration:0.4 animations:^{
+        [self.view layoutIfNeeded];
+        
+    } completion:^(BOOL finished) {
+        
+        [UIView animateWithDuration:0.4 animations:^{
+            _listButton.alpha = 1.0;
+            _plusButton.alpha = 1.0;
+            _minusButton.alpha = 1.0;
+            _menuLabel.alpha = 1.0;
+            _listButton.alpha = 1.0;        }];
+        
+    }];
+    online = ffmvc.switchOn;
+    if (online == false)
+    {
+        [[CKUserServerConnection sharedInstance] setUserStatus:@0];
+        //[self deviceLocation];
+        //[[CKMessageServerConnection sharedInstance] setLocaion:@0 andLng:@0];
+    }
+    else
+    {
+        [[CKUserServerConnection sharedInstance] setUserStatus:@1];
+        //[self deviceLocation];
+        //[[CKMessageServerConnection sharedInstance] setLocaion:userLat andLng:userLng];
+    }
+    [self reloadAnnotations];
+    [self deviceLocation];
+    [[CKMessageServerConnection sharedInstance] setLocaion:userLat andLng:userLng];
+}
+
+- (void) viewWillAppear:(BOOL)animated
+{
+    zoomByGesture = false;
+    [[CKApplicationModel sharedInstance] updateUsers];
+    
+}
+
+- (void) filterButton
+{
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:ffmvc];
+    navController.modalTransitionStyle = UIModalPresentationOverCurrentContext;
+    [self presentViewController:navController animated:YES completion:nil];
+}
+
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+    if (zoomByGesture == false || count < 2)
+    {
+        if (ffmvc.endWithSumbit == true)
+        {
+            _sexT = ffmvc.sex;
+            _minageT = ffmvc.minage;
+            _maxageT = ffmvc.maxage;
+            online = ffmvc.switchOn;
+            _allUsersT = ffmvc.allUsers;
+            _nameT = ffmvc.name;
+            _countryIdT = [NSNumber numberWithInteger: ffmvc.countryId];
+            _cityIdT = [NSNumber numberWithInteger:ffmvc.cityId];
+            
+        }
+        if (online == true)
+        {
+            [[CKUserServerConnection sharedInstance] setUserStatus:@1];
+            //[self deviceLocation];
+            //[[CKMessageServerConnection sharedInstance] setLocaion:userLat andLng:userLng];
+        }
+        else
+        {
+            [[CKUserServerConnection sharedInstance] setUserStatus:@0];
+            //[[CKMessageServerConnection sharedInstance] setLocaion:@0 andLng:@0];
+        }
+        if (ffmvc.endWithCancelFilters == YES)
+        {
+            _countryIdT = [NSNumber numberWithInteger: 0];
+            _cityIdT = [NSNumber numberWithInteger: 0];
+        }
+        if (![_sexT isEqual: @""] && _sexT != nil)
+        {
+            if ([_sexT isEqual:@"Мужской"])
+            {
+                sexVar = @"m";
+            }
+            else if ([_sexT isEqual: @"Женский"])
+            {
+                sexVar = @"f";
+            }
+            else
+            {
+                sexVar = @"";
+            }
+        }
+        if (/*![_minageT isEqual: @0] && */_minageT !=nil)
+        {
+            minageVar = _minageT;
+        }
+        if ( /*![_maxageT isEqual: @0] &&*/ _maxageT !=nil)
+        {
+            maxageVar = _maxageT;
+        }
+        if (![_nameT isEqual:@""] && _nameT != nil)
+        {
+            nameVar = _nameT;
+        }
+        if (_allUsersT == true)
+        {
+            inAllUsers = [NSNumber numberWithInteger:-1];
+        }
+        else inAllUsers = [NSNumber numberWithInteger:1];
+        if (_countryIdT == nil) _countryIdT = [NSNumber numberWithInteger:[@0 integerValue]];
+        if (_cityIdT == nil) _cityIdT = [NSNumber numberWithInteger:0];
+        
+        _mRect = _mapView.visibleMapRect;
+        MKMapPoint neMapPoint = MKMapPointMake(MKMapRectGetMaxX(_mRect), _mRect.origin.y);
+        MKMapPoint swMapPoint = MKMapPointMake(_mRect.origin.x, MKMapRectGetMaxY(_mRect));
+        
+        CLLocationCoordinate2D neCoord = MKCoordinateForMapPoint(neMapPoint);
+        CLLocationCoordinate2D swCoord = MKCoordinateForMapPoint(swMapPoint);
+        
+        NSNumber *nelat = [[NSNumber alloc] initWithDouble:neCoord.latitude];
+        NSNumber *nelng = [[NSNumber alloc] initWithDouble:neCoord.longitude];
+        NSNumber *swlat = [[NSNumber alloc] initWithDouble:swCoord.latitude];
+        NSNumber *swlng = [[NSNumber alloc] initWithDouble:swCoord.longitude];
+        
+        [[CKApplicationModel sharedInstance] loadClusters: @1 withFriendStatus:inAllUsers withCountry:_countryIdT withCity:_cityIdT withSex:sexVar withMinage:minageVar andMaxAge:maxageVar withMask:nameVar withBottomLeftLatitude:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt:count];
+        
+        //    [[CKApplicationModel sharedInstance] loadClusters:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt: count];
+        count++;
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
 }
 
 - (MKAnnotationView*)mapView:(MKMapView *)mapView
@@ -456,63 +545,46 @@
     [_mapView addAnnotations:_annotations2];
 }
 
-- (void) viewDidAppear:(BOOL)animated{
-    CGFloat padding = _padding;
-    count = 0;
-    [_plusButton makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(_minusButton.top).offset(-padding/8);
-        make.right.equalTo(self.view.right).offset(-padding);
-        make.width.equalTo(@50);
-        make.height.equalTo(50);
-    }
-     ];
-    
-    [_minusButton makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(@0);
-        make.right.equalTo(self.view.right).offset(-padding);
-        make.width.equalTo(@50);
-        make.height.equalTo(@50);
-    }];
-    
-    [_setLocationButton makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_minusButton.bottom).offset(padding*2);
-        make.right.equalTo(self.view.right).offset(-padding);
-        make.width.equalTo(@50);
-        make.height.equalTo(@50);
-    }];
-    
-    [UIView animateWithDuration:0.4 animations:^{
-        [self.view layoutIfNeeded];
-        
-    } completion:^(BOOL finished) {
-        
-        [UIView animateWithDuration:0.4 animations:^{
-            _listButton.alpha = 1.0;
-            _plusButton.alpha = 1.0;
-            _minusButton.alpha = 1.0;
-            _menuLabel.alpha = 1.0;
-            _listButton.alpha = 1.0;        }];
-        
-    }];
-    online = ffmvc.switchOn;
-    if (online == false)
-    {
-        [[CKUserServerConnection sharedInstance] setUserStatus:@0];
-    }
-    else
-        [[CKUserServerConnection sharedInstance] setUserStatus:@1];
-    [self reloadAnnotations];
-    [self deviceLocation];
 
-    [[CKMessageServerConnection sharedInstance] setLocaion:userLat andLng:userLng];
-}
 
-- (void) viewWillAppear:(BOOL)animated
+- (void) zoom: (UIPinchGestureRecognizer *) sender
 {
-    [[CKApplicationModel sharedInstance] updateUsers];
+    zoomByGesture = false;
+    static MKCoordinateRegion originalRegion;
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        originalRegion = _mapView.region;
+    }
+    if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        if (sender.scale > 1)
+        {
+            
+            count=0;
+            [_mapView removeAnnotations:_annotations1];
+            [_mapView removeAnnotations:_annotations2];
+            MKCoordinateRegion region = _mapView.region;
+            region.span.latitudeDelta /= 2.0;
+            region.span.longitudeDelta /= 2.0;
+            [_mapView setRegion:region animated:YES];
+        }
+        else
+        {
+            count=0;
+            [_mapView removeAnnotations:_annotations1];
+            [_mapView removeAnnotations:_annotations2];
+            MKCoordinateRegion region = _mapView.region;
+            region.span.latitudeDelta  = MIN(region.span.latitudeDelta  * 2.0, 180.0);
+            region.span.longitudeDelta = MIN(region.span.longitudeDelta * 2.0, 180.0);
+            [_mapView setRegion:region animated:YES];
+        }
+        [self mapView:_mapView regionDidChangeAnimated:YES];
+        zoomByGesture = true;
+        [self reloadAnnotations];
+    }
 }
 
 - (void) ZoomIn{
+    zoomByGesture = false;
     count=0;
     [_mapView removeAnnotations:_annotations1];
     [_mapView removeAnnotations:_annotations2];
@@ -524,6 +596,7 @@
 }
 
 - (void) ZoomOut{
+    zoomByGesture = false;
     count=0;
     [_mapView removeAnnotations:_annotations1];
     [_mapView removeAnnotations:_annotations2];
@@ -535,13 +608,19 @@
 }
 
 - (void) CurrentLocation{
+    zoomByGesture = false;
     count = 0;
     [_mapView removeAnnotations:_annotations1];
     [_mapView removeAnnotations:_annotations2];
     _mapView.userTrackingMode = MKUserTrackingModeFollow;
+    MKCoordinateRegion mapRegion;
+    mapRegion.center.latitude = _mapView.userLocation.coordinate.latitude;
+    mapRegion.center.longitude = _mapView.userLocation.coordinate.longitude;
+    mapRegion.span.latitudeDelta = 0.5/69.0;
+    mapRegion.span.longitudeDelta = 0.5/69.0;
+    [_mapView setRegion:mapRegion animated: YES];
     [self reloadAnnotations];
     [self deviceLocation];
-    
     [[CKMessageServerConnection sharedInstance] setLocaion:userLat andLng:userLng];
 }
 

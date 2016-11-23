@@ -113,6 +113,8 @@
 - (void) addNewContactToFriends;
 - (void) checkUserProfile: (NSString *)newFriendPhone;
 - (void) updateUsers;
+- (void) UpdateUserInfo: (NSString *) userid  callback: (CKServerConnectionExecutedObject) callback;
+- (void) updateFriends;
 
 
 // определять по местоположению пользователя

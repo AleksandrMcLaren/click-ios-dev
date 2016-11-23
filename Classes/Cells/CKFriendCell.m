@@ -27,7 +27,6 @@
         
         _avatar = [CKUserAvatarView new];
         _avatar.fallbackColor = [UIColor orangeColor];
-        //_avatar.fallbackColor = [self setColorToAvatar];
         
         [self.contentView addSubview:_avatar];
         
@@ -163,12 +162,22 @@
         self.login.text = friend.login.length?friend.login:friend.id;
     }
     self.avatar.user = friend;
+    _avatar.fallbackColor = [self setColorToAvatar];
 }
 
 - (UIColor *) setColorToAvatar
 {
     _avatar.fallbackColor = [UIColor orangeColor];
-    NSString *str = [_avatar.user.name substringToIndex:1];
+    NSString *str = [NSString new];
+    str = _friend.name;
+    if ([str isEqual:@""] || str == nil)
+    {
+        str = [[_friend.login substringToIndex:1] uppercaseString];
+    }
+    else
+    {
+        str = [[str substringToIndex:1] uppercaseString];
+    }
     
     typedef void (^CaseBlock)();
     
@@ -176,35 +185,279 @@
     NSDictionary *d = @{
                         @"A":
                             ^{
-                                _avatar.fallbackColor = [UIColor colorWithRed:230 green:54 blue:180 alpha:1.0];
+                                _avatar.fallbackColor = [UIColor colorWithRed:230/255.0f green:54/255.0f blue:180/255.0f alpha:1.0];
                             },
                         @"B":
                             ^{
-                                _avatar.fallbackColor = [UIColor orangeColor];
+                                _avatar.fallbackColor = [UIColor colorWithRed:250/255.0f green:55/255.0f blue:122/255.0f alpha:1.0];
                             },
                         @"C":
                             ^{
-                                _avatar.fallbackColor = [UIColor orangeColor];
+                                _avatar.fallbackColor = [UIColor colorWithRed:255/255.0f green:112/255.0f blue:102/255.0f alpha:1.0];
                             },
                         @"D":
                             ^{
-                                _avatar.fallbackColor = [UIColor orangeColor];
+                                _avatar.fallbackColor = [UIColor colorWithRed:255/255.0f green:123/255.0f blue:82/255.0f alpha:1.0];
                             },
                         @"E":
                             ^{
-                                _avatar.fallbackColor = [UIColor orangeColor];
+                                _avatar.fallbackColor = [UIColor colorWithRed:254/255.0f green:200/255.0f blue:7/255.0f alpha:1.0];
                             },
                         @"F":
                             ^{
-                                _avatar.fallbackColor = [UIColor orangeColor];
+                                _avatar.fallbackColor = [UIColor colorWithRed:96/255.0f green:219/255.0f blue:100/255.0f alpha:1.0];
                             },
                         @"G":
                             ^{
-                                _avatar.fallbackColor = [UIColor colorWithRed:96 green:219 blue:100 alpha:1.0];
+                                _avatar.fallbackColor = [UIColor colorWithRed:194/255.0f green:35/255.0f blue:137/255.0f alpha:1.0];
                             },
                         @"H":
                             ^{
-                                _avatar.fallbackColor = [UIColor orangeColor];
+                                _avatar.fallbackColor = [UIColor colorWithRed:232/255.0f green:30/255.0f blue:99/255.0f alpha:1.0];
+                            },
+                        @"I":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:243/255.0f green:67/255.0f blue:54/255.0f alpha:1.0];
+                            },
+                        @"J":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:254/255.0f green:87/255.0f blue:34/255.0f alpha:1.0];
+                            },
+                        @"K":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:254/255.0f green:151/255.0f blue:0/255.0f alpha:1.0];
+                            },
+                        @"L":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:76/255.0f green:174/255.0f blue:80/255.0f alpha:1.0];
+                            },
+                        @"M":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:124/255.0f green:21/255.0f blue:104/255.0f alpha:1.0];
+                            },
+                        @"N":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:135/255.0f green:14/255.0f blue:79/255.0f alpha:1.0];
+                            },
+                        @"O":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:182/255.0f green:28/255.0f blue:28/255.0f alpha:1.0];
+                            },
+                        @"P":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:190/255.0f green:54/255.0f blue:12/255.0f alpha:1.0];
+                            },
+                        @"Q":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:299/255.0f green:81/255.0f blue:0/255.0f alpha:1.0];
+                            },
+                        @"R":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:27/255.0f green:94/255.0f blue:32/255.0f alpha:1.0];
+                            },
+                        @"S":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:181/255.0f blue:164/255.0f alpha:1.0];
+                            },
+                        @"T":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:197/255.0f blue:222/255.0f alpha:1.0];
+                            },
+                        @"U":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:78/255.0f green:99/255.0f blue:219/255.0f alpha:1.0];
+                            },
+                        @"V":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:144/255.0f green:76/255.0f blue:228/255.0f alpha:1.0];
+                            },
+                        @"W":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:210/255.0f green:53/255.0f blue:237/255.0f alpha:1.0];
+                            },
+                        @"X":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:121/255.0f green:157/255.0f blue:173/255.0f alpha:1.0];
+                            },
+                        @"Y":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:176/255.0f green:124/255.0f blue:105/255.0f alpha:1.0];
+                            },
+                        @"Z":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:149/255.0f blue:135/255.0f alpha:1.0];
+                            },
+                        @"0":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:172/255.0f blue:194/255.0f alpha:1.0];
+                            },
+                        @"1":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:63/255.0f green:81/255.0f blue:180/255.0f alpha:1.0];
+                            },
+                        @"2":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:109/255.0f green:60/255.0f blue:178/255.0f alpha:1.0];
+                            },
+                        @"3":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:155/255.0f green:39/255.0f blue:175/255.0f alpha:1.0];
+                            },
+                        @"4":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:96/255.0f green:125/255.0f blue:138/255.0f alpha:1.0];
+                            },
+                        @"5":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:121/255.0f green:85/255.0f blue:72/255.0f alpha:1.0];
+                            },
+                        @"6":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:77/255.0f blue:64/255.0f alpha:1.0];
+                            },
+                        @"7":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:96/255.0f blue:100/255.0f alpha:1.0];
+                            },
+                        @"8":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:21/255.0f green:31/255.0f blue:124/255.0f alpha:1.0];
+                            },
+                        @"9":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:70/255.0f green:32/255.0f blue:127/255.0f alpha:1.0];
+                            },
+                        @"А":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:230/255.0f green:54/255.0f blue:180/255.0f alpha:1.0];
+                            },
+                        @"Б":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:250/255.0f green:55/255.0f blue:122/255.0f alpha:1.0];
+                            },
+                        @"В":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:255/255.0f green:112/255.0f blue:102/255.0f alpha:1.0];
+                            },
+                        @"Г":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:255/255.0f green:123/255.0f blue:82/255.0f alpha:1.0];
+                            },
+                        @"Д":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:254/255.0f green:200/255.0f blue:7/255.0f alpha:1.0];
+                            },
+                        @"Е":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:96/255.0f green:219/255.0f blue:100/255.0f alpha:1.0];
+                            },
+                        @"Ё":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:194/255.0f green:35/255.0f blue:137/255.0f alpha:1.0];
+                            },
+                        @"Ж":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:232/255.0f green:30/255.0f blue:99/255.0f alpha:1.0];
+                            },
+                        @"З":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:243/255.0f green:67/255.0f blue:54/255.0f alpha:1.0];
+                            },
+                        @"И":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:254/255.0f green:87/255.0f blue:34/255.0f alpha:1.0];
+                            },
+                        @"Й":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:254/255.0f green:151/255.0f blue:0/255.0f alpha:1.0];
+                            },
+                        @"К":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:76/255.0f green:174/255.0f blue:80/255.0f alpha:1.0];
+                            },
+                        @"Л":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:124/255.0f green:21/255.0f blue:104/255.0f alpha:1.0];
+                            },
+                        @"М":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:135/255.0f green:14/255.0f blue:79/255.0f alpha:1.0];
+                            },
+                        @"Н":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:182/255.0f green:28/255.0f blue:28/255.0f alpha:1.0];
+                            },
+                        @"О":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:190/255.0f green:54/255.0f blue:12/255.0f alpha:1.0];
+                            },
+                        @"П":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:299/255.0f green:81/255.0f blue:0/255.0f alpha:1.0];
+                            },
+                        @"Р":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:27/255.0f green:94/255.0f blue:32/255.0f alpha:1.0];
+                            },
+                        @"С":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:181/255.0f blue:164/255.0f alpha:1.0];
+                            },
+                        @"Т":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:197/255.0f blue:222/255.0f alpha:1.0];
+                            },
+                        @"У":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:78/255.0f green:99/255.0f blue:219/255.0f alpha:1.0];
+                            },
+                        @"Ф":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:144/255.0f green:76/255.0f blue:228/255.0f alpha:1.0];
+                            },
+                        @"Х":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:210/255.0f green:53/255.0f blue:237/255.0f alpha:1.0];
+                            },
+                        @"Ц":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:121/255.0f green:157/255.0f blue:173/255.0f alpha:1.0];
+                            },
+                        @"Ч":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:176/255.0f green:124/255.0f blue:105/255.0f alpha:1.0];
+                            },
+                        @"Ш":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:149/255.0f blue:135/255.0f alpha:1.0];
+                            },
+                        @"Щ":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:172/255.0f blue:194/255.0f alpha:1.0];
+                            },
+                        @"Ъ":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:63/255.0f green:81/255.0f blue:180/255.0f alpha:1.0];
+                            },
+                        @"Ы":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:109/255.0f green:60/255.0f blue:178/255.0f alpha:1.0];
+                            },
+                        @"Ь":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:155/255.0f green:39/255.0f blue:175/255.0f alpha:1.0];
+                            },
+                        @"Э":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:96/255.0f green:125/255.0f blue:138/255.0f alpha:1.0];
+                            },
+                        @"Ю":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:121/255.0f green:85/255.0f blue:72/255.0f alpha:1.0];
+                            },
+                        @"Я":
+                            ^{
+                                _avatar.fallbackColor = [UIColor colorWithRed:0/255.0f green:77/255.0f blue:64/255.0f alpha:1.0];
                             }
                         };
     
@@ -214,121 +467,4 @@
     }
     return _avatar.fallbackColor;
 }
-/*
- switch (lastChar.charAt(0))
- {
- case 'A':
- rgb = new int[]{230, 54, 180};
- break;
- case 'B':
- rgb = new int[]{250, 55, 122};
- break;
- case 'C':
- rgb = new int[]{255, 112, 102};
- break;
- case 'D':
- rgb = new int[]{255, 123, 82};
- break;
- case 'E':
- rgb = new int[]{254, 200, 7};
- break;
- case 'F':
- rgb = new int[]{96, 219, 100};
- break;
- case 'G':
- rgb = new int[]{194, 35, 137};
- break;
- case 'H':
- rgb = new int[]{232, 30, 99};
- break;
- case 'I':
- rgb = new int[]{243, 67, 54};
- break;
- case 'J':
- rgb = new int[]{254, 87, 34};
- break;
- case 'K':
- rgb = new int[]{254, 151, 0};
- break;
- case 'L':
- rgb = new int[]{76, 174, 80};
- break;
- case 'M':
- rgb = new int[]{124, 21, 104};
- break;
- case 'N':
- rgb = new int[]{135, 14, 79};
- break;
- case 'O':
- rgb = new int[]{182, 28, 28};
- break;
- case 'P':
- rgb = new int[]{190, 54, 12};
- break;
- case 'Q':
- rgb = new int[]{229, 81, 0};
- break;
- case 'R':
- rgb = new int[]{27, 94, 32};
- break;
- case 'S':
- rgb = new int[]{0, 181, 164};
- break;
- case 'T':
- rgb = new int[]{0, 197, 222};
- break;
- case 'U':
- rgb = new int[]{78, 99, 219};
- break;
- case 'V':
- rgb = new int[]{144, 76, 228};
- break;
- case 'W':
- rgb = new int[]{210, 53, 237};
- break;
- case 'X':
- rgb = new int[]{121, 157, 173};
- break;
- case 'Y':
- rgb = new int[]{176, 124, 105};
- break;
- case 'Z':
- rgb = new int[]{0, 149, 135};
- break;
- case '0':
- rgb = new int[]{0, 172, 194};
- break;
- case '1':
- rgb = new int[]{63, 81, 180};
- break;
- case '2':
- rgb = new int[]{109, 60, 178};
- break;
- case '3':
- rgb = new int[]{155, 39, 175};
- break;
- case '4':
- rgb = new int[]{96, 125, 138};
- break;
- case '5':
- rgb = new int[]{121, 85, 72};
- break;
- case '6':
- rgb = new int[]{0, 77, 64};
- break;
- case '7':
- rgb = new int[]{0, 96, 100};
- break;
- case '8':
- rgb = new int[]{21, 31, 124};
- break;
- case '9':
- rgb = new int[]{70, 32, 127};
- break;
- default:
- rgb = new int[]{113, 28, 128};
- break;
- }
- */
-
 @end

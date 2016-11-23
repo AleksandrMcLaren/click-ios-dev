@@ -588,7 +588,7 @@
             NSArray *friends1 = [[CKApplicationModel sharedInstance] friends];
             for (CKUserModel *i in friends1)
             {
-                if (![user.id isEqual:i.id])
+                if ([user.id isEqual:i.id])
                 {
                     isFriend = true;
                     break;
@@ -602,7 +602,6 @@
                 _friends = friends;
             }
         }
-        //[[CKApplicationModel sharedInstance] addNewContactToFriends:user];
     }];
 }
 
@@ -617,10 +616,35 @@
             d[i.phoneNumber] = i;
         }
         _phoneContacts = d;
+        NSMutableArray *cont = [NSMutableArray new];
+        [cont addObjectsFromArray:[_phoneContacts allValues]];
+        _fullContacts = cont;
     }];
-    NSMutableArray *cont = [NSMutableArray new];
-    [cont addObjectsFromArray:[_phoneContacts allValues]];
-    _fullContacts = cont;
+}
+
+
+- (void) updateFriends
+{
+    [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithAllFriends] callback:^(NSDictionary *result) {
+        NSMutableArray<CKUserModel*> *userlist = [NSMutableArray new];
+        for (NSDictionary *i in result[@"result"])
+        {
+            CKUserModel *user1 = [CKUserModel modelWithDictionary:i];
+            [userlist addObject:user1];
+        }
+        _friends = userlist;
+    }];
+}
+
+- (void) UpdateUserInfo: (NSString *) userid  callback: (CKServerConnectionExecutedObject) callback
+{
+    __block CKUserModel *updatedUser = [CKUserModel new];
+    [[CKUserServerConnection sharedInstance] getUserInfoWithId:userid callback:^(NSDictionary *result) {
+        if ([result socketMessageStatus] == S_OK){
+            updatedUser = [CKUserModel modelWithDictionary:[result socketMessageResult]];
+            callback(updatedUser);
+        }
+    }];
 }
 
 

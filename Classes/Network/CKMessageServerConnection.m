@@ -163,6 +163,11 @@
     
 }
 
+- (void) setLike:(NSString *)userid withValue:(NSNumber *)likeValue
+{
+    [self sendData:@{@"action":@"user.like", @"options":@{@"id":userid, @"value":[NSNumber numberWithInteger:[likeValue integerValue]]}} completion:nil];
+}
+
 - (void)uploadAttachements:(NSArray<CKAttachModel *>*)attachements completion:(CKServerConnectionExecuted)callback {
     NSMutableArray *userDataArr = [NSMutableArray new];
     NSMutableArray *uuids = [NSMutableArray new];

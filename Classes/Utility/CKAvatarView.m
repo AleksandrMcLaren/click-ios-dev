@@ -61,7 +61,7 @@
         _letterAvatar.hidden = NO;
         
     }
-    if (_fallbackName.length) _letterAvatar.text = [_fallbackName substringToIndex:1];
+    if (_fallbackName.length) _letterAvatar.text = [[_fallbackName substringToIndex:1]uppercaseString];
 }
 
 - (instancetype)init

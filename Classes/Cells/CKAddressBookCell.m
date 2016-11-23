@@ -7,15 +7,19 @@
 //
 
 #import "CKAddressBookCell.h"
+#import "CKContactsViewController.h"
 
 @implementation CKAddressBookCell
 {
     UIView *_separator;
+    CKContactsViewController *contacts;
 }
+
 
 
 - (instancetype)init
 {
+    contacts = [CKContactsViewController new];
     if (self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([CKAddressBookCell class])])
     {
         
@@ -47,7 +51,7 @@
             make.width.equalTo(80);
             
         }];
-        
+        //[self.inviteButton addTarget:self action:@selector(invite:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
@@ -58,6 +62,19 @@
     CGRect r = self.textLabel.frame;
     r.origin.x = 16.0;
     self.textLabel.frame = r;
+}
+
+- (void) invite
+{
+    if (_delegate && [_delegate respondsToSelector:@selector(inviteContact:)])
+    {
+        [_delegate inviteContact:_inviteButton];
+    }
+}
+
+- (void) inviteContact
+{
+    NSLog(@"");
 }
 
 @end

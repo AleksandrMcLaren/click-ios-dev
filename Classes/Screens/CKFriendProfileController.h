@@ -7,10 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+@import Contacts;
+@import ContactsUI;
 
-@interface CKFriendProfileController : UITableViewController
+@interface CKFriendProfileController : UITableViewController<CNContactViewControllerDelegate>
 
 - (instancetype)initWithUser:(CKUserModel *)user;
 @property (nonatomic, assign) BOOL wentFromTheMap;
+@property (nonatomic, strong) CKUserModel* user;
+@property (nonatomic, assign) BOOL fromProfile;
+
 
 @end

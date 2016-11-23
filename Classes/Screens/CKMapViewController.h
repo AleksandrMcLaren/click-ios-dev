@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CKFiltersForMapViewController.h"
 
-@interface CKMapViewController : UIViewController<MKMapViewDelegate>
+@interface CKMapViewController : UIViewController<MKMapViewDelegate, UIGestureRecognizerDelegate>
 
 @property(nonatomic, strong) NSString *sexT;
 @property(nonatomic,strong) NSNumber *minageT;

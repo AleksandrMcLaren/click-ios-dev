@@ -13,7 +13,6 @@
 #import "CKFriendProfileController.h"
 #import "CKContactWrapper.h"
 
-
 @implementation CKContactsViewController
 {
     NSMutableArray *_contacts;
@@ -26,10 +25,14 @@
     BOOL deletedWrongPerson;
     
     NSArray *_sections;
+    NSInteger chosenSection;
+    
+    CKFriendProfileController *frPrC;
 }
 
 - (instancetype)init
 {
+    frPrC = [CKFriendProfileController new];
     if (self = [super initWithStyle:UITableViewStylePlain])
     {
         self.title = @"Контакты";
@@ -41,6 +44,7 @@
 
 - (void)viewDidLoad
 {
+    frPrC.fromProfile = false;
     deletedWrongPerson = false;
     errorAdding = false;
     errorHandling = 0;
@@ -56,16 +60,6 @@
     [self reloadData];
 }
 
-//- (void)applicationDidEnterBackground:(UIApplication *)application
-//{
-//    UIApplicationState state = [application applicationState];
-//    if (state == UIApplicationStateInactive) {
-//        NSLog(@"Sent to background by locking screen");
-//    } else if (state == UIApplicationStateBackground) {
-//        NSLog(@"Sent to background by home button/switching to other app");
-//    }
-//}
-
 
 - (void)reloadData
 {
@@ -77,14 +71,19 @@
     // fill with friends
     NSMutableArray *unsortedFriends = [NSMutableArray new];
     [unsortedFriends addObjectsFromArray:[[CKApplicationModel sharedInstance] friends]];
+    
     for (CKUserModel *i in unsortedFriends)
     {
+        NSString *phoneNumber = [NSString new];
         //        CKUserModel *friend = i;
         for (CKPhoneContact *p in _fullContacts)
         {
+            phoneNumber = p.phoneNumber;
+            if (phoneNumber.length == 11 && ([[phoneNumber substringToIndex:1]  isEqual: @"8"])) phoneNumber = [phoneNumber stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@"7"];
             //            CKPhoneContact *contact = p;
-            if ([i.id isEqual:p.phoneNumber])
+            if ([i.id isEqual:phoneNumber])
             {
+                //i.name = [i. name stringByReplacingCharactersInRange:NSMakeRange(0, i.name.length) withString:p.name];
                 i.name = p.name;
                 i.surname = p.surname;
                 break;
@@ -97,11 +96,31 @@
         return [str1 compare:str2 options: NSCaseInsensitiveSearch];
         
     }];
+    NSMutableArray *contactsWithoutFriends = [NSMutableArray new];
+    int count = 0;
+    for (CKPhoneContact *phoneItem in _fullContacts)
+    {
+        NSString *phoneNumber = phoneNumber = phoneItem.phoneNumber;
+        if (phoneNumber.length == 11 && ([[phoneNumber substringToIndex:1]  isEqual: @"8"])) phoneNumber = [phoneNumber stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@"7"];
+        for (CKUserModel *i in sortedFriends)
+        {
+            count = 0;
+            if ([phoneNumber isEqual: i.id])
+            {
+                count++;
+                break;
+            }
+        }
+        if (count == 0)
+        {
+            [contactsWithoutFriends addObject:phoneItem];
+        }
+    }
     NSMutableArray* sections = [NSMutableArray array];
     
     [sections addObject:@{@"title":@"friends", @"arr":sortedFriends}];
     
-    for(CKPhoneContact *phoneItem in _phoneContacts) {
+    for(CKPhoneContact *phoneItem in /*_phoneContacts*/ contactsWithoutFriends) {
         NSString *username = phoneItem.fullname;
         NSString *surname = phoneItem.surname;
         if (!surname.length) surname = username;
@@ -176,13 +195,20 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 1) {
+    if (indexPath.section != 0) {
+        //        NSString *str = _sections[1][@"arr"][indexPath.row];
+        //        CKPhoneContact *contact = (CKPhoneContact *)[_sections[1][@"arr"] objectAtIndex:indexPath.row];
+        //        _chosenContact = contact;
+        //
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
-    CKFriendProfileController *controller = [[CKFriendProfileController alloc] initWithUser:_sections[0][@"arr"][indexPath.row]];
-    controller.wentFromTheMap = false;
-    
-    [self.navigationController pushViewController:controller animated:YES];
+    else
+    {
+        frPrC.fromProfile = true;
+        CKFriendProfileController *controller = [[CKFriendProfileController alloc] initWithUser:_sections[0][@"arr"][indexPath.row]];
+        controller.wentFromTheMap = false;
+        [self.navigationController pushViewController:controller animated:YES];
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -233,13 +259,24 @@
         return cell;
     } else {
         CKAddressBookCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"CKAddressBookCell" ];
-        
+        //cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        //cell.userInteractionEnabled = false;
         if (!cell) {
             cell = [CKAddressBookCell new];
         }
         CKPhoneContact *contact = (CKPhoneContact *)[arr objectAtIndex:indexPath.row];
         NSAttributedString *s = [NSMutableAttributedString withName:contact.name surname:contact.surname size:16.0];
         cell.textLabel.attributedText = s;
+        //cell.delegate = self;
+        //_chosenContact = contact;
+        chosenSection = indexPath.section;
+        //NSArray * arr = [NSArray arrayWithObject:@1];
+        cell.inviteButton.tag = indexPath.section;
+        
+        [cell.inviteButton addTarget:self
+                              action: @selector(inviteContact:)
+                    forControlEvents:UIControlEventTouchUpInside];
+        
         return cell;
     }
     return nil;
@@ -247,6 +284,10 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    if (frPrC.fromProfile == true)
+    {
+        [[CKApplicationModel sharedInstance] updateFriends];
+    }
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
     [[CKApplicationModel sharedInstance] addNewContactToFriends];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -263,6 +304,11 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [[CKApplicationModel sharedInstance] addNewContactToFriends];
+    if (frPrC.fromProfile == true)
+    {
+        [self reloadData];
+    }
+    frPrC.fromProfile = false;
 }
 
 -(void) viewWillDisappear:(BOOL)animated
@@ -271,9 +317,46 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void) invite:(UIButton *)invite
+- (void) inviteContact: (UIButton *) sender
 {
+    BOOL accessToSMS = true;
     
+    UIButton *button = (UIButton*)sender; // convert sender to UIButton
+    NSInteger index = button.tag;
+    
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
+    
+    CKPhoneContact *contact = (CKPhoneContact *)[_sections[index][@"arr"] objectAtIndex:indexPath.row];
+    _chosenContact = contact;
+    if (![MFMessageComposeViewController canSendText]) {
+        accessToSMS = false;
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Ошибка!"
+                                                                       message:@"Сервисы сообщений не доступны!"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Понятно" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {}];
+        
+        [alert addAction:defaultAction];
+    }
+    if (accessToSMS == true)
+    {
+        MFMessageComposeViewController* composeVC = [[MFMessageComposeViewController alloc] init];
+        composeVC.messageComposeDelegate = self;
+        
+        // Configure the fields of the interface.
+        composeVC.recipients = @[contact.phoneNumber];
+        composeVC.body = @"Я пользуюсь отличной программой для общения'Click'. Присоединяйся, друг!";
+        
+        // Present the view controller modally.
+        [self presentViewController:composeVC animated:YES completion:nil];
+    }
+}
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult)result {
+    // Check the result or perform other tasks.    // Dismiss the message compose view controller.
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -286,8 +369,33 @@
         errorAdding = true;
         CNLabeledValue<CNPhoneNumber*>* labeledValue = contact.phoneNumbers[0];
         NSString *phone = labeledValue.value.stringValue;
+        //        for (CNLabeledValue<CNPhoneNumber*>* labeledValue in contact.phoneNumbers)
+        //        {
+        //            if ([labeledValue.label isEqualToString:CNLabelPhoneNumberMobile])
+        //            {
+        //                phone = labeledValue.value.stringValue;
+        //                break;
+        //            }
+        //        }
         NSString *cleanedString = [[phone componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet]] componentsJoinedByString:@""];
-        
+        /*
+         The digits are a private variable. For getting a phone number:
+         
+         CNLabeledValue<CNPhoneNumber*>* labeledValue = contact.phoneNumbers[0];
+         NSString *phone = labeledValue.value.stringValue;
+         E.g. to get a mobile number:
+         
+         // get mobile
+         NSString *phone = nil;
+         for (CNLabeledValue<CNPhoneNumber*>* labeledValue in contact.phoneNumbers)
+         {
+         if ([labeledValue.label isEqualToString:CNLabelPhoneNumberMobile])
+         {
+         phoneNumber = labeledValue.value.stringValue;
+         break;
+         }
+         }
+         */
         if (contact == nil)
         {
             deletedWrongPerson = true;
@@ -416,6 +524,15 @@
     
 }
 
+//- (void)applicationDidEnterBackground:(UIApplication *)application
+//{
+//    UIApplicationState state = [application applicationState];
+//    if (state == UIApplicationStateInactive) {
+//        NSLog(@"Sent to background by locking screen");
+//    } else if (state == UIApplicationStateBackground) {
+//        NSLog(@"Sent to background by home button/switching to other app");
+//    }
+//}
 
 
 
