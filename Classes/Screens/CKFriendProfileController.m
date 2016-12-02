@@ -16,6 +16,7 @@
 #import "CKDialogsModel.h"
 #import "CKGroupChatModel.h"
 #import "CKRemoveFriendCellTableViewCell.h"
+#import "CKCommonGroupsView.h"
 
 @implementation CKFriendProfileController
 {
@@ -32,16 +33,17 @@
     
     NSNumber *groupchatCount;
     NSString *str;
+    NSMutableArray *groupsId;
     BOOL groupsAreHidden;
 }
 
 - (instancetype)initWithUser:(CKUserModel *)user
 {
+    groupsId = [NSMutableArray new];
     groupsAreHidden = false;
     groupchatCount = @0;
     dialoglist = [[CKDialogsModel sharedInstance] dialogs];
     __block int curCount = 0;
-    //__block NSNumber *count;
     for (CKDialogListEntryModel *i in dialoglist)
     {
         if (i.type == 1)
@@ -49,37 +51,18 @@
             [[CKMessageServerConnection sharedInstance] getGroupChatList:i.dialogId withcallback:^(NSDictionary *result)
             {
                 CKGroupModel *groupchatModel = [CKGroupModel modelWithDictionary:[result socketMessageResult]];
-                for (NSString *i in groupchatModel.userlist[0])
+                for (NSString *p in groupchatModel.userlist[0])
                 {
-                    if ([i isEqual:user.id])
+                    if ([p isEqual:user.id])
                     {
                         curCount = curCount +1;
+                        [groupsId addObject:i];
                         break;
                     }
                 }
                 groupchatCount = [NSNumber numberWithInt:curCount];
 
             }];
-//            [self loadGroupchatUsers:i.dialogId withcallback:^(id model) {
-//                curCount = curCount + [model integerValue];
-//                groupchatCount = [NSNumber numberWithInt:curCount];
-//            }];
-
-//    [[CKMessageServerConnection sharedInstance] getGroupChatList:i.dialogId withcallback:^(NSDictionary *result) {
-//                //neededPerson = false;
-//        for (NSDictionary *i in result[@"result"])
-//        {
-//            
-//            if ([i isEqual: user.id])
-//            {
-//                curCount = curCount + 1;
-//                break;
-//            }
-//        }
-//        groupchatCount = [NSNumber numberWithInt:curCount];
-//        
-//    }];
-
         }
         
     }
@@ -283,7 +266,33 @@
             [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
             break;
         case 1:
-            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+            switch (indexPath.row) {
+                case 0:
+                    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    break;
+                case 1:
+                    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    break;
+                case 2:
+                {
+                    CKCommonGroupsView *cgv = [CKCommonGroupsView new];
+                    UINavigationController *newNavigationController = [[UINavigationController alloc] initWithRootViewController:cgv];
+                    cgv.commonGroups = groupsId;
+                    [self presentViewController:newNavigationController animated:YES completion:nil];
+                    //[self.navigationController pushViewController:cgv animated:YES];
+                    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                }
+                    break;
+                case 3:
+                    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    break;
+                case 4:
+                    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    break;
+                    
+                default:
+                    break;
+            }
             break;
         case 2:
             [self.tableView deselectRowAtIndexPath:indexPath animated:YES];

@@ -129,6 +129,7 @@
 		D82F207C1DE5CC5E00310382 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D82F207B1DE5CC5E00310382 /* MessageUI.framework */; };
 		D83E83911DDC1871003D9F81 /* CKContactWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = D83E83901DDC1871003D9F81 /* CKContactWrapper.m */; };
 		D87B5BE61DF13A6A0042E046 /* CKRemoveFriendCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D87B5BE51DF13A6A0042E046 /* CKRemoveFriendCellTableViewCell.m */; };
+		D87B5BE91DF189520042E046 /* CKCommonGroupsView.m in Sources */ = {isa = PBXBuildFile; fileRef = D87B5BE81DF189520042E046 /* CKCommonGroupsView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -347,6 +348,8 @@
 		D83E83901DDC1871003D9F81 /* CKContactWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContactWrapper.m; sourceTree = "<group>"; };
 		D87B5BE41DF13A6A0042E046 /* CKRemoveFriendCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRemoveFriendCellTableViewCell.h; sourceTree = "<group>"; };
 		D87B5BE51DF13A6A0042E046 /* CKRemoveFriendCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKRemoveFriendCellTableViewCell.m; sourceTree = "<group>"; };
+		D87B5BE71DF189520042E046 /* CKCommonGroupsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKCommonGroupsView.h; sourceTree = "<group>"; };
+		D87B5BE81DF189520042E046 /* CKCommonGroupsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCommonGroupsView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -424,6 +427,8 @@
 				78B524BE1C9DD29500502AA4 /* CKProfileHeaderView.m */,
 				78B524C61C9FE35D00502AA4 /* CKChatsViewController.h */,
 				78B524C71C9FE35D00502AA4 /* CKChatsViewController.m */,
+				D87B5BE71DF189520042E046 /* CKCommonGroupsView.h */,
+				D87B5BE81DF189520042E046 /* CKCommonGroupsView.m */,
 				78B524C91C9FE3AE00502AA4 /* CKContactsViewController.h */,
 				78B524CA1C9FE3AE00502AA4 /* CKContactsViewController.m */,
 				78B524CC1C9FE3CD00502AA4 /* CKMapViewController.h */,
@@ -939,6 +944,7 @@
 				78BEA9311CAA3B88004E85DB /* CKFriendCell.m in Sources */,
 				7812507D1CB6219000D3BFBB /* CKMessagesListController.m in Sources */,
 				7807CF7D1CD1D7EB00D9DF9B /* CKPictureCaptureManager.m in Sources */,
+				D87B5BE91DF189520042E046 /* CKCommonGroupsView.m in Sources */,
 				78B524D11C9FE3F500502AA4 /* CKBlogViewController.m in Sources */,
 				3D1A36581DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m in Sources */,
 				782A00061D0AB9FA00802097 /* CKCloudAttachModel.m in Sources */,
