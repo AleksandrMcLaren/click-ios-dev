@@ -10,4 +10,6 @@
 
 @interface CKSettingsViewController : UITableViewController
 
+@property (strong,nonatomic) NSArray *content;
+
 @end

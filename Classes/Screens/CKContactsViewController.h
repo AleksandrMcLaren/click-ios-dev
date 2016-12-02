@@ -11,8 +11,12 @@
 #import <AddressBookUI/AddressBookUI.h>
 @import Contacts;
 @import ContactsUI;
+@import MessageUI;
+#import "CKAddressBookCell.h"
 
-@interface CKContactsViewController : UITableViewController<CNContactViewControllerDelegate, UIApplicationDelegate>
+@interface CKContactsViewController : UITableViewController<CNContactViewControllerDelegate, UIApplicationDelegate, CKAddressBookCellDelegate, MFMessageComposeViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
+
+@property (nonatomic, strong) CKPhoneContact *chosenContact;
 
 
 @end

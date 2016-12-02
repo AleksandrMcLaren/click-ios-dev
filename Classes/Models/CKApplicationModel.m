@@ -245,6 +245,9 @@
     NSNumber *_minage;
     NSNumber *_maxage;
     NSString *_mask;
+    
+    NSNumber *_userLat;
+    NSNumber *_userLng;
 
 }
 
@@ -306,8 +309,9 @@
 
 - (void) didStarted
 {
-
     [self setupLocationService];
+    [self deviceLocation];
+    [[CKMessageServerConnection sharedInstance] setLocaion:_userLat andLng:_userLng];
     
     if (self.token == nil)
     {
@@ -561,6 +565,19 @@
     }];
 }
 
+- (void) logOut
+{
+    _token = nil;
+    _userPhone = nil;
+    [self setToken:nil];
+    [CKUserServerConnection sharedInstance].token = _token;
+    [CKUserServerConnection sharedInstance].phoneNumber = _userPhone;
+    //NSString *str = [NSString stringWithFormat:@"%@",[CKServerConnection sharedInstance].token];
+    //NSLog(@" WARNING_1 %@", str);
+    //NSLog(@"%@",[CKServerConnection sharedInstance].apnToken);
+    [self didStarted];
+}
+
 - (void) updateUsers
 {
     [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithLocation] callback:^(NSDictionary *result) {
@@ -574,7 +591,7 @@
     }];
 }
 
-- (void) checkUserProfile: (NSString *)newFriendPhone
+- (void) checkUserProfile: (NSString *)newFriendPhone withCallback: (CKServerConnectionExecutedObject) callback
 {
     __block BOOL isFriend = false;
     [[CKUserServerConnection sharedInstance] getUserInfoWithId:newFriendPhone callback:^(NSDictionary *result) {
@@ -588,9 +605,10 @@
             NSArray *friends1 = [[CKApplicationModel sharedInstance] friends];
             for (CKUserModel *i in friends1)
             {
-                if (![user.id isEqual:i.id])
+                if ([user.id isEqual:i.id])
                 {
                     isFriend = true;
+                    callback(user);
                     break;
                 }
             }
@@ -600,9 +618,37 @@
                 [friends addObjectsFromArray:_friends];
                 if (user !=nil && ![user.id isEqual:@"0"]) [friends addObject:user];
                 _friends = friends;
+                NSArray *arr = [NSArray arrayWithObject:user.id];
+                [[CKMessageServerConnection sharedInstance] setNewFriend: arr];
+                callback(user);
             }
         }
         //[[CKApplicationModel sharedInstance] addNewContactToFriends:user];
+    }];
+}
+
+- (void) updateFriends
+{
+    [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithAllFriends] callback:^(NSDictionary *result) {
+        NSMutableArray<CKUserModel*> *userlist = [NSMutableArray new];
+        
+        for (NSDictionary *i in result[@"result"])
+        {
+            CKUserModel *user1 = [CKUserModel modelWithDictionary:i];
+            [userlist addObject:user1];
+        }
+        _friends = userlist;
+    }];
+}
+
+- (void) UpdateUserInfo: (NSString *) userid  callback: (CKServerConnectionExecutedObject) callback
+{
+    __block CKUserModel *updatedUser = [CKUserModel new];
+    [[CKUserServerConnection sharedInstance] getUserInfoWithId:userid callback:^(NSDictionary *result) {
+        if ([result socketMessageStatus] == S_OK){
+            updatedUser = [CKUserModel modelWithDictionary:[result socketMessageResult]];
+            callback(updatedUser);
+        }
     }];
 }
 
@@ -617,10 +663,10 @@
             d[i.phoneNumber] = i;
         }
         _phoneContacts = d;
+        NSMutableArray *cont = [NSMutableArray new];
+        [cont addObjectsFromArray:[_phoneContacts allValues]];
+        _fullContacts = cont;
     }];
-    NSMutableArray *cont = [NSMutableArray new];
-    [cont addObjectsFromArray:[_phoneContacts allValues]];
-    _fullContacts = cont;
 }
 
 
@@ -632,7 +678,7 @@
 }
 
 
-- (void) loadClusters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSString *)mask withBottomLeftLatitude: (NSNumber *)swlat withBottomLeftLongtitude: (NSNumber *)swlng withtopCoordinate: (NSNumber *)nelat withTopRigthLongtitude: (NSNumber *)nelng withInt: (int) count{
+- (void) loadClusters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSString *)mask withBottomLeftLatitude: (NSNumber *)swlat withBottomLeftLongtitude: (NSNumber *)swlng withtopCoordinate: (NSNumber *)nelat withTopRigthLongtitude: (NSNumber *)nelng withInt: (int) count withCallback: (CKServerConnectionExecutedObject) callback{
     if (count ==0){
         _nelat = nelat;
         _nelng = nelng;
@@ -655,7 +701,7 @@
             [clusterlist addObject: cluster1];
         }
         _clusterlist = clusterlist;
-        
+        callback(clusterlist);
     }];
 }
 
@@ -911,6 +957,13 @@
     // Internet is not reachable
     _internetReachable.unreachableBlock = unreachableBlock;
     [_internetReachable startNotifier];
+}
+
+- (void)deviceLocation
+{
+    _userLat = [NSNumber numberWithDouble:_locationManager.location.coordinate.latitude];
+    _userLng = [NSNumber numberWithDouble:_locationManager.location.coordinate.longitude];
+    
 }
 
 

@@ -32,7 +32,7 @@
         str = [ann.name substringToIndex:1];
     }
     UIButton *imageButton = [UIButton new];
-    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 32, 32)];
+    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:ann.avatar]];
     UIImage *imageForEmptyAnn = [UIImage new];
     if ([_sex isEqual:@"f"])
@@ -46,18 +46,12 @@
         }
         else
         {
-            //image = [CKUserAvatarView purpleCircle];
-            self.image = [CKUserAvatarView purpleCircle];
-            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-            label.textAlignment = NSTextAlignmentCenter;
-            label.textColor = [UIColor whiteColor];
-            label.text = [NSString stringWithFormat:@"%@", str];
-            label.font = [label.font fontWithSize:12];
-            [self addSubview:label];
-            //imageForEmptyAnn = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(30, 30)];
-            imageForEmptyAnn = [CKUserAvatarView drawText:str inImage:self.image atPoint:CGPointMake(0, 6)];
+            UIColor *color = [CKUserAvatarView getColorForAvatar:str];
+            imageForEmptyAnn = [CKUserAvatarView blankImageWithSize:CGSizeMake(30, 30) color:color];
+            imageForEmptyAnn = [CKUserAvatarView drawText:str atPoint:CGPointMake(1, 0) withImg:imageForEmptyAnn];
+            imageForEmptyAnn = [CKUserAvatarView getRounded:imageForEmptyAnn];
+            self.image = imageForEmptyAnn;
             imageWithPhoto = false;
-            //            self.image = image;
             
         }
     }
@@ -72,15 +66,11 @@
         }
         else
         {
-            self.image = [CKUserAvatarView blueCircle];
-            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-            label.textAlignment = NSTextAlignmentCenter;
-            label.textColor = [UIColor whiteColor];
-            label.text = [NSString stringWithFormat:@"%@", str];
-            label.font = [label.font fontWithSize:9];
-            [self addSubview:label];
-            //imageForEmptyAnn = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(30, 30)];
-            imageForEmptyAnn = [CKUserAvatarView drawText:str inImage:self.image atPoint:CGPointMake(0, 6)];
+            UIColor *color = [CKUserAvatarView getColorForAvatar:str];
+            imageForEmptyAnn = [CKUserAvatarView blankImageWithSize:CGSizeMake(30, 30) color:color];
+            imageForEmptyAnn = [CKUserAvatarView drawText:str atPoint:CGPointMake(1, 0) withImg:imageForEmptyAnn];
+            imageForEmptyAnn = [CKUserAvatarView getRounded:imageForEmptyAnn];
+            self.image = imageForEmptyAnn;
             imageWithPhoto = false;
         }
     }
@@ -95,15 +85,11 @@
         }
         else
         {
-            self.image = [CKUserAvatarView greyCircle];
-            UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-            label.textAlignment = NSTextAlignmentCenter;
-            label.textColor = [UIColor whiteColor];
-            label.text = [NSString stringWithFormat:@"%@", str];
-            label.font = [label.font fontWithSize:9];
-            [self addSubview:label];
-            //imageForEmptyAnn = [CKUserAvatarView imageWithImage:image scaledToSize:CGSizeMake(30, 30)];
-            imageForEmptyAnn = [CKUserAvatarView drawText:str inImage:self.image atPoint:CGPointMake(0, 6)];
+            UIColor *color = [CKUserAvatarView getColorForAvatar:str];
+            imageForEmptyAnn = [CKUserAvatarView blankImageWithSize:CGSizeMake(30, 30) color:color];
+            imageForEmptyAnn = [CKUserAvatarView drawText:str atPoint:CGPointMake(1, 0) withImg:imageForEmptyAnn];
+            imageForEmptyAnn = [CKUserAvatarView getRounded:imageForEmptyAnn];
+            self.image = imageForEmptyAnn;
             imageWithPhoto = false;
         }
     }

@@ -197,6 +197,7 @@
         make.right.equalTo(view1.right).offset(@-10);
         make.top.equalTo(view1.top).offset(@12);
     }];
+    [sw addTarget:self action:@selector(setState:) forControlEvents:UIControlEventValueChanged];
     
     view2 = [UIView new];
     [self.view addSubview:view2];
@@ -509,6 +510,18 @@
     _pickerData1 = data1;
 }
 
+- (void)setState:(id)sender
+{
+    if ([sender isOn])
+    {
+        _switchOn = true;
+    }
+    else
+    {
+        _switchOn = false;
+    }
+}
+
 - (void) keyboardWillShow:(NSNotification *)notification
 {
     [UIView beginAnimations:nil context:nil];
@@ -589,8 +602,9 @@
     _sex = @"";
     _name = @"";
     _allUsers = true;
+    _switchOn = true;
     _endWithSumbit = true;
-    age.text = [NSString stringWithFormat:@"%@-%@", _minage, _maxage];
+    age.text = [NSString stringWithFormat:@"%@-%@", @"14", @"99"];
     sexLabel.text = [NSString stringWithFormat:@"%@", _sex];
     searchTextField.text = _name;
     _countryId = 0;
@@ -601,7 +615,7 @@
     countryName.text = @"Любая страна";
     cityName.text = @"Любой город";
     countryIdTest = 0;
-    _endWithSumbit = false;
+    _endWithSumbit = true;
     _endWithCancelFilters = YES;
     [self dismissViewControllerAnimated:YES completion:^{
         map.sexT = _sex;

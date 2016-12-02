@@ -157,6 +157,45 @@
     }];
 }
 
+- (void) setLocaion:(NSNumber*)lat andLng: (NSNumber *)lng
+{
+    [self sendData:@{@"action":@"user.setgeo", @"options": @{@"lat": lat, @"lng":lng}} completion:nil];
+    
+}
+
+- (void) setLike:(NSString *)userid withValue:(NSNumber *)likeValue
+{
+    [self sendData:@{@"action":@"user.like", @"options":@{@"id":userid, @"value":[NSNumber numberWithInteger:[likeValue integerValue]]}} completion:nil];
+}
+
+- (void) setNewFriend: (NSArray *) userlist
+{
+    [self sendData:@{@"action":@"user.setfriend", @"options":@{@"userlist":userlist}} completion:nil];
+}
+
+- (void) removeFriends:(NSArray *)removedFriends
+{
+    [self sendData:@{@"action":@"user.removefriend", @"options":@{@"userlist":removedFriends}} completion:nil];
+}
+
+- (void) addUserToABlackList:(NSArray *)blackUser
+{
+    [self sendData:@{@"action":@"user.blacklist.add", @"options":@{@"userlist":blackUser}} completion:nil];
+}
+
+- (void) removeUserFromBlackList:(NSArray *)blackUser
+{
+    [self sendData:@{@"action":@"user.blacklist.remove", @"options":@{@"userlist":blackUser}} completion:nil];
+}
+
+- (void) getBlackListUser:(CKServerConnectionExecuted)callback
+{
+    [self sendData:@{@"action":@"user.blacklist.list", @"options":@{@"userlist":@""}} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+
+
 - (void)uploadAttachements:(NSArray<CKAttachModel *>*)attachements completion:(CKServerConnectionExecuted)callback {
     NSMutableArray *userDataArr = [NSMutableArray new];
     NSMutableArray *uuids = [NSMutableArray new];

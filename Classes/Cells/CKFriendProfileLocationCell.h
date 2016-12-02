@@ -15,5 +15,4 @@
 @property (nonatomic, strong) UILabel *distanceLabel;
 @property (nonatomic, strong) UILabel *showMap;
 
-
 @end
