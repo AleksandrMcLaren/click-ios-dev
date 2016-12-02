@@ -14,6 +14,7 @@
 #import "CKDialogChatController.h"
 #import "CKMessageServerConnection.h"
 #import "CKDialogsModel.h"
+#import "CKGroupChatModel.h"
 #import "CKRemoveFriendCellTableViewCell.h"
 
 @implementation CKFriendProfileController
@@ -28,11 +29,61 @@
     CKRemoveFriendCellTableViewCell *cellToAddToABlackList;
     NSArray *dialoglist;
     NSArray *friendlist;
+    
+    NSNumber *groupchatCount;
+    NSString *str;
+    BOOL groupsAreHidden;
 }
 
 - (instancetype)initWithUser:(CKUserModel *)user
 {
+    groupsAreHidden = false;
+    groupchatCount = @0;
     dialoglist = [[CKDialogsModel sharedInstance] dialogs];
+    __block int curCount = 0;
+    //__block NSNumber *count;
+    for (CKDialogListEntryModel *i in dialoglist)
+    {
+        if (i.type == 1)
+        {
+            [[CKMessageServerConnection sharedInstance] getGroupChatList:i.dialogId withcallback:^(NSDictionary *result)
+            {
+                CKGroupModel *groupchatModel = [CKGroupModel modelWithDictionary:[result socketMessageResult]];
+                for (NSString *i in groupchatModel.userlist[0])
+                {
+                    if ([i isEqual:user.id])
+                    {
+                        curCount = curCount +1;
+                        break;
+                    }
+                }
+                groupchatCount = [NSNumber numberWithInt:curCount];
+
+            }];
+//            [self loadGroupchatUsers:i.dialogId withcallback:^(id model) {
+//                curCount = curCount + [model integerValue];
+//                groupchatCount = [NSNumber numberWithInt:curCount];
+//            }];
+
+//    [[CKMessageServerConnection sharedInstance] getGroupChatList:i.dialogId withcallback:^(NSDictionary *result) {
+//                //neededPerson = false;
+//        for (NSDictionary *i in result[@"result"])
+//        {
+//            
+//            if ([i isEqual: user.id])
+//            {
+//                curCount = curCount + 1;
+//                break;
+//            }
+//        }
+//        groupchatCount = [NSNumber numberWithInt:curCount];
+//        
+//    }];
+
+        }
+        
+    }
+
     if (self = [super initWithStyle:UITableViewStylePlain])
     {
         _user = user;
@@ -141,11 +192,27 @@
             case 1:
             {
                 CKFriendProfileCell *fc = [CKFriendProfileCell new];
-                if (fc.tag == 11) return 44.0;
-                else return 0;
+                if (fc.tag == 11)
+                {
+                    return 44.0;
+                }
+                else{
+                    return 0;
+                }
             }
             case 2:
-                return 44.0;
+            {
+                if (groupsAreHidden == false)
+                {
+                    return 44.0;
+                }
+                else return 0;
+                //CKFriendProfileCell *fpc = [[CKFriendProfileCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"commonGroupsCell"];
+//                if (fpc.tag == 16)
+//                    return 44.0;
+//                else if (fpc.tag == 17)return 0;
+                //else return 44.0;
+            }
                 break;
             case 3:
                 return 44.0;
@@ -354,20 +421,40 @@
                         cell.detailLabel.text = [NSString stringWithFormat:@"%@", attaches];
                         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                         cell.tag = 10;
+                        [self.tableView beginUpdates];
+                        [self.tableView endUpdates];
                     }
                     else
                     {
                         cell.tag = 11;
+                        [self.tableView beginUpdates];
+                        [self.tableView endUpdates];
                     }
                     return cell;
                 }
                     break;
                 case 2:
                 {
-                    CKFriendProfileCell *cell = [[CKFriendProfileCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"commonGroupsCell"];
-                    cell.titleLabel.text = @"Общие группы";
-                    cell.detailLabel.text = [NSString stringWithFormat:@"555"];
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    CKFriendProfileCell *cell = [[CKFriendProfileCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"commonGroupsCell"];
+                    if ([groupchatCount integerValue] != 0)
+                    {
+                        cell.titleLabel.text = @"Общие группы";
+                        cell.detailLabel.text = [NSString stringWithFormat:@"%d", [groupchatCount integerValue]];
+                        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                        cell.tag = 16;
+                        groupsAreHidden = false;
+                        [self.tableView beginUpdates];
+                        [self.tableView endUpdates];
+                    }
+                    else
+                    {
+                        cell.tag = 17;
+                        groupsAreHidden = true;
+                        [self.tableView beginUpdates];
+                        [self.tableView endUpdates];
+                    }
+                    //__block BOOL neededChat;
+                    
                     return cell;
                 }
                     break;
@@ -476,6 +563,27 @@
     }
     
     return nil;
+}
+
+- (void) loadGroupchatUsers: (NSString *)groupchatId withcallback: (CKServerConnectionExecutedObject) callback
+{
+    //__block BOOL neededPerson = false;
+    __block NSNumber *count;
+    [[CKMessageServerConnection sharedInstance] getGroupChatList:groupchatId withcallback:^(NSDictionary *result) {
+        //neededPerson = false;
+        count = @0;
+        for (NSString *i in result[@"result"])
+        {
+            if ([i isEqual: _user.id])
+            {
+                count = @1;
+                break;
+            }
+        }
+        callback(count);
+    }];
+
+    
 }
 
 - (void)removeFriend

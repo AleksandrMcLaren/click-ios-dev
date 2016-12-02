@@ -195,6 +195,13 @@
     }];
 }
 
+- (void) getGroupChatList: (NSString *)groupid withcallback:(CKServerConnectionExecuted)callback
+{
+    [self sendData:@{@"action":@"groupchat.info", @"options":@{@"id":groupid}} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+
 
 - (void)uploadAttachements:(NSArray<CKAttachModel *>*)attachements completion:(CKServerConnectionExecuted)callback {
     NSMutableArray *userDataArr = [NSMutableArray new];
