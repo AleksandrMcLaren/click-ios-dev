@@ -115,6 +115,7 @@
 - (void) updateUsers;
 - (void) UpdateUserInfo: (NSString *) userid  callback: (CKServerConnectionExecutedObject) callback;
 - (void) updateFriends;
+
 - (void) logOut;
 
 

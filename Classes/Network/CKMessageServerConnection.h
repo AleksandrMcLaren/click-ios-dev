@@ -60,6 +60,7 @@ typedef enum CKDialogType
 - (void) addUserToABlackList: (NSArray *) blackUser;
 - (void) removeUserFromBlackList: (NSArray *) blackUser;
 - (void) getBlackListUser: (CKServerConnectionExecuted) callback;
+- (void)getGroupChatList: (NSString *) groupid withcallback:(CKServerConnectionExecuted) callback;
 
 @property (nonatomic, strong) NSMutableDictionary *messageModelCache;
 @property (nonatomic, strong) NSMutableDictionary *attachmentModelCache;

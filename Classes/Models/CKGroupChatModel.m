@@ -63,3 +63,48 @@
 
 
 @end
+
+@implementation CKGroupModel
+
+- (void) initialize
+{
+    self.adminid = @"";
+    self.avatar = @"";
+    self.date = nil;
+    self.groupDescription = @"";
+    self.groupId = @"";
+    self.issecret = false;
+    self.name = @"";
+    self.password = @"";
+    self.userid = @"";
+    self.userlist = nil;
+}
+
++ (instancetype) modelWithDictionary:(NSDictionary *)sourceDict
+{
+    CKGroupModel *model = [CKGroupModel new];
+    
+    @try {
+        model.adminid = [NSString stringWithFormat:@"%@", sourceDict[@"adminid"]];
+        model.avatar = [NSString stringWithFormat:@"%@", sourceDict[@"avatar"]];
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss"];
+        dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
+        
+        model.date = [sourceDict[@"date"] isEqualToString:@"0001-01-01T00:00:00"] ? nil : [dateFormatter dateFromString:sourceDict[@"date"]];
+        model.groupDescription = [NSString stringWithFormat:@"%@", sourceDict[@"description"]];
+        model.groupId = [NSString stringWithFormat:@"%@", sourceDict[@"id"]];
+        model.issecret = [sourceDict[@"issecret"] boolValue];
+        model.name = [NSString stringWithFormat:@"%@", sourceDict[@"name"]];
+        model.password = [NSString stringWithFormat:@"%@", sourceDict[@"password"]];
+        model.userid = [NSString stringWithFormat:@"%@", sourceDict[@"userid"]];
+        model.userlist = [NSArray arrayWithObjects: sourceDict[@"userlist"], nil];
+    } @catch (NSException *exception) {
+        return nil; // bad model
+    }
+    
+    return model;
+}
+
+@end
