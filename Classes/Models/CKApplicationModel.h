@@ -109,12 +109,13 @@
 - (void) restoreProfile:(bool) restore;
 - (void) submitNewProfile;
 - (void) getLocationInfowithCallback:(CKServerConnectionExecutedObject)callback;
-- (void) loadClusters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSString *)mask withBottomLeftLatitude: (NSNumber *)swlat withBottomLeftLongtitude: (NSNumber *)swlng withtopCoordinate: (NSNumber *)nelat withTopRigthLongtitude: (NSNumber *)nelng withInt: (int) count;
+- (void) loadClusters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSString *)mask withBottomLeftLatitude: (NSNumber *)swlat withBottomLeftLongtitude: (NSNumber *)swlng withtopCoordinate: (NSNumber *)nelat withTopRigthLongtitude: (NSNumber *)nelng withInt: (int) count withCallback: (CKServerConnectionExecutedObject) callback;
 - (void) addNewContactToFriends;
-- (void) checkUserProfile: (NSString *)newFriendPhone;
+- (void) checkUserProfile: (NSString *)newFriendPhone withCallback: (CKServerConnectionExecutedObject) callback;
 - (void) updateUsers;
 - (void) UpdateUserInfo: (NSString *) userid  callback: (CKServerConnectionExecutedObject) callback;
 - (void) updateFriends;
+- (void) logOut;
 
 
 // определять по местоположению пользователя

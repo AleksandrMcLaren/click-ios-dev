@@ -100,7 +100,6 @@
     }];
     if (![_name.text isEqual:@""])
     {
-        //_login = [UILabel labelWithText:_login.text font:[UIFont systemFontOfSize:10.0] textColor:[UIColor grayColor] textAlignment:NSTextAlignmentLeft];
         [_login remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_avatar.right).offset(8);
             make.bottom.equalTo(_avatar.bottom).offset(-4);
@@ -119,7 +118,6 @@
         [_login setFont:[UIFont boldSystemFontOfSize: 12.0]];
         [_login setTextColor:[UIColor blackColor]];
         [_login setTextAlignment:NSTextAlignmentLeft];
-        //_login = [UILabel labelWithText:_login.text font:[UIFont boldSystemFontOfSize:12.0] textColor:[UIColor blackColor] textAlignment:NSTextAlignmentLeft];
         [_login remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_avatar.right).offset(8);
             make.top.equalTo(_avatar.top).offset(10);

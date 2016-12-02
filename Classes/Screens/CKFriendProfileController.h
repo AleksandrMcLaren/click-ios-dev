@@ -16,6 +16,6 @@
 @property (nonatomic, assign) BOOL wentFromTheMap;
 @property (nonatomic, strong) CKUserModel* user;
 @property (nonatomic, assign) BOOL fromProfile;
-
+//CKUserModel *_user;
 
 @end

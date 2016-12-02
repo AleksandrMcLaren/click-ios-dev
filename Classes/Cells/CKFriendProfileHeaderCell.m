@@ -11,9 +11,11 @@
 #import "CKUserAvatarView.h"
 #import "CKFriendProfileController.h"
 
+
 @implementation CKFriendProfileHeaderCell
 {
     CKFriendProfileController *profileController;
+    NSString *exitDate;
 }
 
 - (instancetype)init
@@ -129,15 +131,12 @@
     NSMutableAttributedString *statusString = [NSMutableAttributedString new];
     if (showCalendar == YES)
     {
-        //UIImage * image = [CKUserAvatarView blankImageWithSize:CGSizeMake(4, 4) color:[UIColor greenColor]];
-        //image = [CKUserAvatarView getRounded:image];
         [statusString appendAttributedString:[NSMutableAttributedString withImageName:@"green" geometry:CGRectMake(0, 0, 11, 11)]];
         [statusString appendAttributedString:[NSMutableAttributedString withString:[NSString stringWithFormat:@" %@", status]]];
         _status.attributedText = statusString;
     }
     else
     {
-        //UIImage * image = [CKUserAvatarView blankImageWithSize:CGSizeMake(4, 4) color:[UIColor grayColor]];
         [statusString appendAttributedString:[NSMutableAttributedString withImageName:@"gray" geometry:CGRectMake(0, 0, 11, 11)]];
         [statusString appendAttributedString:[NSMutableAttributedString withString:[NSString stringWithFormat:@" %@", status]]];
         _status.attributedText = statusString;
@@ -147,6 +146,11 @@
 - (void)setFriend:(CKUserModel *)friend
 {
     _friend = friend;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"dd.MM в HH:mm"];
+    NSString *result = [formatter stringFromDate:friend.statusDate];
+    if (result == nil || [result isEqual:@""] ) result = @"давно";
+    
     [self setNumberOfLikes:_friend.likes];
     if (_friend.status == 1)
     {
@@ -156,11 +160,13 @@
     {
         if ([_friend.sex isEqual:@"f"])
         {
-            [self setUserStatus:@"Была в " showCalendar:NO];
+            NSString *fullStringStatus = [NSString stringWithFormat:@"Была в сети %@", result];
+            [self setUserStatus:fullStringStatus showCalendar:NO];
         }
         else
         {
-            [self setUserStatus:@"Был в " showCalendar:NO];
+            NSString *fullStringStatus = [NSString stringWithFormat:@"Был в сети %@", result];
+            [self setUserStatus:fullStringStatus showCalendar:NO];
         }
     }
     
@@ -178,7 +184,6 @@
     UIColor *color = [CKUserAvatarView getColorForAvatar:letter];
     self.avatar.fallbackColor = color;
     self.avatar.user = friend;
-    //self.name.text = [[NSString stringWithFormat:@"%@ %@", friend.name?friend.name:@"", friend.surname?friend.surname:@""] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.name.text = [NSString stringWithFormat:@"%@", friend.name?friend.name:@""];
     self.surname.text = [NSString stringWithFormat:@"%@", friend.surname?friend.surname:@""];
     self.login.text = friend.login.length?friend.login:friend.id;

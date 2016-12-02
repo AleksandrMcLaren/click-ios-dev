@@ -456,7 +456,7 @@
 {
     text = [text uppercaseString];
     UIImage* image = img;
-    double fontSize = 24.0/34*img.size.width; // sorry, magic way
+    double fontSize = 28.0/34*img.size.width; // sorry, magic way
     UIFont *font = [UIFont systemFontOfSize:fontSize];
     UIGraphicsBeginImageContext(image.size);
     [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];

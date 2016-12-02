@@ -117,6 +117,11 @@
     tapRecognizer.delegate = self;
     [_mapView addGestureRecognizer:tapRecognizer];
     
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveMap:)];
+    panRecognizer.delegate = self;
+    panRecognizer.maximumNumberOfTouches = 1;
+    [_mapView addGestureRecognizer:panRecognizer];
+    
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [self.locationManager startUpdatingLocation];
@@ -210,14 +215,10 @@
     if (online == false)
     {
         [[CKUserServerConnection sharedInstance] setUserStatus:@0];
-        //[self deviceLocation];
-        //[[CKMessageServerConnection sharedInstance] setLocaion:@0 andLng:@0];
     }
     else
     {
         [[CKUserServerConnection sharedInstance] setUserStatus:@1];
-        //[self deviceLocation];
-        //[[CKMessageServerConnection sharedInstance] setLocaion:userLat andLng:userLng];
     }
     [self reloadAnnotations];
     [self deviceLocation];
@@ -256,13 +257,10 @@
         if (online == true)
         {
             [[CKUserServerConnection sharedInstance] setUserStatus:@1];
-            //[self deviceLocation];
-            //[[CKMessageServerConnection sharedInstance] setLocaion:userLat andLng:userLng];
         }
         else
         {
             [[CKUserServerConnection sharedInstance] setUserStatus:@0];
-            //[[CKMessageServerConnection sharedInstance] setLocaion:@0 andLng:@0];
         }
         if (ffmvc.endWithCancelFilters == YES)
         {
@@ -316,9 +314,10 @@
         NSNumber *swlat = [[NSNumber alloc] initWithDouble:swCoord.latitude];
         NSNumber *swlng = [[NSNumber alloc] initWithDouble:swCoord.longitude];
         
-        [[CKApplicationModel sharedInstance] loadClusters: @1 withFriendStatus:inAllUsers withCountry:_countryIdT withCity:_cityIdT withSex:sexVar withMinage:minageVar andMaxAge:maxageVar withMask:nameVar withBottomLeftLatitude:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt:count];
-        
-        //    [[CKApplicationModel sharedInstance] loadClusters:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt: count];
+        [[CKApplicationModel sharedInstance] loadClusters: @1 withFriendStatus:inAllUsers withCountry:_countryIdT withCity:_cityIdT withSex:sexVar withMinage:minageVar andMaxAge:maxageVar withMask:nameVar withBottomLeftLatitude:swlat withBottomLeftLongtitude:swlng withtopCoordinate:nelat withTopRigthLongtitude:nelng withInt:count withCallback:^(id model) {
+            _clusterlist = model;
+            [self reloadAnnotations];
+        }];
         count++;
     }
 }
@@ -382,7 +381,7 @@
     [_mapView removeAnnotations:_annotations2];
     [_annotations1 removeAllObjects];
     [_annotations2 removeAllObjects];
-    _clusterlist = [[CKApplicationModel sharedInstance] clusterlist];
+    //_clusterlist = [[CKApplicationModel sharedInstance] clusterlist];
     _data = [[CKApplicationModel sharedInstance] userlistMain];
     _friendlist = [[CKApplicationModel sharedInstance] friends];
     counter = 1;
@@ -517,9 +516,7 @@
                         pin.coordinate = CLLocationCoordinate2DMake(cluster.location.latitude, cluster.location.longitude);
                         pin.sex = user.sex;
                         pin.profile = user;
-                        //UIImage *avatarImage = [[CKCache sharedInstance] imageWithURLString:user.avatarURLString];
                         NSURL *avatarUrl = [NSURL URLWithString:user.avatarURLString];
-                        //UIImage *avatarImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:user.avatarURLString]]];
                         pin.avatar = avatarUrl;
                         [_annotations1 addObject:pin];
                         [_mapView viewForAnnotation:pin];
@@ -579,8 +576,18 @@
         }
         [self mapView:_mapView regionDidChangeAnimated:YES];
         zoomByGesture = true;
-        [self reloadAnnotations];
+        //[self reloadAnnotations];
     }
+}
+
+- (void)moveMap: (UIPanGestureRecognizer *) sender
+{
+    count = 0;
+    zoomByGesture = false;
+    MKCoordinateRegion region = _mapView.region;
+    region.span.latitudeDelta = _mapView.region.span.latitudeDelta;
+    region.span.longitudeDelta = _mapView.region.span.longitudeDelta;
+    [_mapView setRegion:region animated:YES];
 }
 
 - (void) ZoomIn{
@@ -592,7 +599,6 @@
     region.span.latitudeDelta /= 2.0;
     region.span.longitudeDelta /= 2.0;
     [_mapView setRegion:region animated:YES];
-    [self reloadAnnotations];
 }
 
 - (void) ZoomOut{
@@ -604,7 +610,6 @@
     region.span.latitudeDelta  = MIN(region.span.latitudeDelta  * 2.0, 180.0);
     region.span.longitudeDelta = MIN(region.span.longitudeDelta * 2.0, 180.0);
     [_mapView setRegion:region animated:YES];
-    [self reloadAnnotations];
 }
 
 - (void) CurrentLocation{
@@ -619,7 +624,6 @@
     mapRegion.span.latitudeDelta = 0.5/69.0;
     mapRegion.span.longitudeDelta = 0.5/69.0;
     [_mapView setRegion:mapRegion animated: YES];
-    [self reloadAnnotations];
     [self deviceLocation];
     [[CKMessageServerConnection sharedInstance] setLocaion:userLat andLng:userLng];
 }
