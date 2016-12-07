@@ -75,8 +75,7 @@
                                                                error:nil];
     }
     if (attachments){
-        for (NSDictionary *i in attachments)
-        {
+        for (NSDictionary *i in attachments){
             CKAttachModel *attach = [CKAttachModel modelWithDictionary:i];
             [attachements addObject:attach];
             if (attach.preview) {
@@ -88,7 +87,7 @@
         model.entryid = dict[@"entryid"];
     }
     if (dict[@"dialogtype"]) {
-        model.dialogType = [dict[@"dialogtype"] integerValue];
+        model.dialogType = (CKDialogType)[dict[@"dialogtype"] integerValue];
     }
   
     model.attachements = attachements;
@@ -144,11 +143,15 @@
     self.userid = user.objectId;
 }
 
--(void)update:(Message *)message{
+-(void)updateWithMessage:(Message *)message{
+    if (![self.id isEqualToString:message.id]) {
+        [Message updateId:self.id withId:message.id];
+    }
     self.isOwner = message.isOwner;
     self.message = message.message;
-    self.id = message.id;
     
+    self.id = message.id;
+    self.status = message.status;
     self.date = message.date;
     self.userid = message.userid;
     self.userlogin = message.userlogin;
@@ -158,6 +161,49 @@
     self.location = message.location;
 }
 
+- (void)save{
+    NSMutableDictionary* dictionary = [NSMutableDictionary new];
+    dictionary[@"owner"] = @(self.isOwner);
+    dictionary[@"message"] = self.message;
+    dictionary[@"id"] = self.id;
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"]; //2016-11-22T13:42:38.46505+00:00
+    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
+    
+    dictionary[@"date"] = [dateFormatter stringFromDate:self.date];
+    dictionary[@"userid"] = self.userid ;
+    dictionary[@"userlogin"] = self.userlogin;
+    
+    NSMutableArray *attachements = [NSMutableArray new];
+    
+//TODO сохранять аттачмент
+    dictionary[@"attach"] = @"";
+  
+    dictionary[@"entryid"] = self.entryid;
+    dictionary[@"dialogtype"] = @(self.dialogType);
+    dictionary[@"timer"]  = @(self.timer);
+    dictionary[@"lat"] = @(self.location.latitude);
+    dictionary[@"lng"] = @(self.location.longitude);
+    [Message update:dictionary];
+}
+
++(void)update:(NSDictionary *)dictionary{
+    [[CKDB sharedInstance] updateTable:@"messages" withValues:dictionary];
+}
+
++ (void)updateId:(NSString*)oldId withId:(NSString*)newId{
+    CKDB *ckdb = [CKDB sharedInstance];
+    
+    [ckdb.queue inDatabase:^(FMDatabase *db) {
+        NSString* sql = @"update messages set id = ? where id = ?";
+        BOOL success = [db executeUpdate:sql withArgumentsInArray:@[newId, oldId]];
+        if (!success) {
+            NSLog(@"%@", [db lastError]);
+        }
+    }];
+}
 @end
 
 #pragma mark MessageSent
@@ -170,6 +216,9 @@
         self.status = CKMessageStatusSent;
         self.date = [NSDate new];
         self.id = [[NSUUID UUID] UUIDString];
+        self.userid = [CKUser currentUser].id;
+        self.userlogin = [CKUser currentUser].login;
+        
     }
     return self;
 }

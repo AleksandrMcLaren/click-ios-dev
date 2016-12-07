@@ -49,13 +49,15 @@ typedef enum CKMessageType
 
 + (void)updateIncoming:(NSString *)messageId;
 + (void)updateStatus:(NSString *)groupId messageId:(NSString *)messageId;
-
++ (void)update:(NSDictionary*)dictionary;
++ (void)updateId:(NSString*)oldId withId:(NSString*)newId;
 + (void)deleteItem:(NSString *)groupId messageId:(NSString *)messageId;
 
 + (void)deleteItem:(Message *)dbmessage;
 
 //- (void)updateWithSender:(CKUser*)user;
-- (void)update:(Message*)message;
+- (void)updateWithMessage:(Message*)message;
+- (void)save;
 @end
 
 @interface MessageSent : Message

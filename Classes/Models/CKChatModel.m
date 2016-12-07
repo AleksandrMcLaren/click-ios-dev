@@ -74,7 +74,7 @@
 - (void)send:(NSString *)text Video:(NSURL *)video Picture:(UIImage *)picture Audio:(NSString *)audio
 
 {
-    Message *message = [MessageSent new];
+    Message *message = [self newMessage];
     
     if (text != nil)	[self sendTextMessage:message Text:text];
     if (picture != nil)	[self sendPictureMessage:message Picture:picture];
@@ -134,6 +134,11 @@
         return [self.dialogId isEqualToString:message.entryid];
     }
     return NO;
+}
+
+//ovverite
+-(Message*)newMessage{
+    return nil;
 }
 @end
 

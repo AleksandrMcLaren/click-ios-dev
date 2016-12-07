@@ -53,8 +53,9 @@
     self.attachements = arr;
 }
 
-- (void)sendMessage:(Message *)message
-{   self.messages = [self.messages arrayByAddingObject:message];
+- (void)sendMessage:(Message *)message{
+    [message save];
+    [self loadMessages];
     
     [[CKMessageServerConnection sharedInstance] uploadAttachements:self.attachements completion:^(NSDictionary *result) {
         self.attachements = @[];
@@ -63,8 +64,11 @@
                                                          toUser:_userId
                                                        callback:^(NSDictionary *result) {
                                                            if (result.socketMessageStatus == S_OK) {
-                                                               Message *messageRecived = [Message modelWithDictionary:result[@"result"]];
-                                                               [message update:messageRecived];
+                                                               NSDictionary* dictionary = result[@"result"];
+                                                               Message *messageRecived = [Message modelWithDictionary:dictionary];
+                                                               [message updateWithMessage:messageRecived];
+                                                               
+                                                               [self reloadMessages];
                                                            }else{
                                                                [ProgressHUD showError:@"Message sending failed."];
                                                            }
@@ -77,4 +81,10 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+//ovverite
+-(Message*)newMessage{
+    Message *message = [MessageSent new];
+    message.dialogType = CKDialogTypeChat;
+    return message;
+}
 @end
