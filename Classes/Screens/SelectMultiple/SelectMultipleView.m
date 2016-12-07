@@ -71,7 +71,7 @@
 	{
 		[sections addObject:[NSMutableArray array]];
 	}
-	for (CKUserModel *user in users)
+	for (CKUser *user in users)
 	{
 		NSInteger section = [[UILocalizedIndexedCollation currentCollation] sectionForObject:user collationStringSelector:@selector(fullname)];
 		[sections[section] addObject:user];
@@ -138,7 +138,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
 	if (cell == nil) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
 	NSArray *users_section = sections[indexPath.section];
-	CKUserModel *user = users_section[indexPath.row];
+	CKUser *user = users_section[indexPath.row];
 	cell.textLabel.text = user.login;
 	cell.accessoryType = [selection containsObject:user.id] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 	return cell;
@@ -150,7 +150,7 @@
 {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	NSArray *dbusers_section = sections[indexPath.section];
-	CKUserModel *user = dbusers_section[indexPath.row];
+	CKUser *user = dbusers_section[indexPath.row];
 	if ([selection containsObject:user.id])
 		[selection removeObject:user.id];
 	else [selection addObject:user.id];

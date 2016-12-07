@@ -7,10 +7,11 @@
 //
 
 #import "CKAvatarView.h"
+#import "utilities.h"
 
 @interface CKUserAvatarView : CKAvatarView
 
-- (instancetype)initWithUser:(CKUserModel *)user;
+- (instancetype)initWithUser:(CKUser *)user;
 
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 + (UIImage *)blueCircle;
@@ -22,6 +23,6 @@
 + (UIImage *)imageWithGrayBorderAndRoundCornersWithImage:(UIImage *)image lineWidth:(CGFloat)lineWidth cornerRadius:(CGFloat)cornerRadius;
 + (UIImage *)imageWithBlueBorderAndRoundCornersWithImage:(UIImage *)image lineWidth:(CGFloat)lineWidth cornerRadius:(CGFloat)cornerRadius;
 
-@property (nonatomic, strong) CKUserModel *user;
+@property (nonatomic, strong) CKUser *user;
 
 @end

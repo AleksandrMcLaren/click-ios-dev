@@ -131,16 +131,89 @@ static void myLow(sqlite3_context *context, int argc, sqlite3_value **argv)
             NSLog(@"dialogs create error %@", [db lastError]);
         }
     }];
+    
+    [_queue inDatabase:^(FMDatabase *db) {
+        NSString* sql = @"CREATE TABLE `users` ( \
+        'age' INTEGER, \
+        'avatar' TEXT, \
+        'birthdate' TEXT, \
+        'city' INTEGER, \
+        'cityname' TEXT, \
+        'country' INTEGER, \
+        'countryname' TEXT, \
+        'distance' NUMERIC, \
+        'geostatus' INTEGER, \
+        'id' TEXT, \
+        'inanonblacklist' INTEGER, \
+        'inblacklist' INTEGER, \
+        'invite' TEXT, \
+        'isfriend' INTEGER, \
+        'isliked' INTEGER, \
+        'iso' INTEGER, \
+        'lat' NUMERIC, \
+        'likes' INTEGER, \
+        'lng' NUMERIC, \
+        'login'  TEXT, \
+        'name' TEXT, \
+        'registereddate' TEXT, \
+        'reregister' INTEGER, \
+        'sex' TEXT, \
+        'status' INTEGER, \
+        'statusdate' TEXT, \
+        'surname' TEXT, \
+         PRIMARY KEY(`id`) \
+        )";
+        BOOL success = [db executeUpdate:sql];
+        if (!success) {
+            NSLog(@"users create error %@", [db lastError]);
+        }
+    }];
+   
+    [_queue inDatabase:^(FMDatabase *db) {
+        NSString* sql = @"CREATE TABLE `messages` ( \
+        attach  TEXT, \
+        date  TEXT, \
+        dialogstate INTEGER, \
+        dialogtype INTEGER, \
+        entryid  TEXT, \
+        id TEXT, \
+        lat NUMERIC, \
+        lng NUMERIC, \
+        message  TEXT, \
+        owner NUMERIC, \
+        status NUMERIC, \
+        timer NUMERIC, \
+        type INTEGER, \
+        useravatar  TEXT, \
+        userid TEXT, \
+        userlist  TEXT, \
+        userlogin TEXT, \
+        username  TEXT, \
+        userstatus  INTEGER, \
+        usersurname   TEXT, \
+        PRIMARY KEY(`id`) \
+        )";
+        BOOL success = [db executeUpdate:sql];
+        if (!success) {
+            NSLog(@"users create messages %@", [db lastError]);
+        }
+    }];
 }
 
 -(void)updateTable:(NSString*)table withValues:(NSDictionary*)values{
-    
+    NSDictionary* preparedValues = [values prepared];
     [self.queue inDatabase:^(FMDatabase *db) {
         NSMutableArray* cols = [[NSMutableArray alloc] init];
         NSMutableArray* vals = [[NSMutableArray alloc] init];
-        for (id key in values) {
+        for (id key in preparedValues) {
             [cols addObject:key];
-            [vals addObject:[values objectForKey:key]];
+//            NSJSONSerialization
+            id value = [preparedValues objectForKey:key];
+            if ([value isKindOfClass:[NSArray class]]) {
+                NSData* innerJson = [NSJSONSerialization dataWithJSONObject:value options:0 error:NULL];
+                value = [[NSString alloc] initWithData:innerJson encoding:NSUTF8StringEncoding];
+            }
+            [vals addObject:value];
         }
         NSMutableArray* newCols = [[NSMutableArray alloc] init];
         NSMutableArray* newVals = [[NSMutableArray alloc] init];

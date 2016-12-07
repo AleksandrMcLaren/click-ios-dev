@@ -34,5 +34,17 @@
     return self[CKSocketMessageFieldAction];
 }
 
+-(NSDictionary*)prepared{
+    NSMutableDictionary* attributes = [[NSMutableDictionary alloc] init];
+    
+    for (NSString* key in self.allKeys) {
+        id value = self[key];
+        
+        if (![[self valueForKey:key] isKindOfClass:[NSNull class] ]) {
+            [attributes setValue:value forKey:key];
+        }
+    }
+    return attributes;
+}
 
 @end

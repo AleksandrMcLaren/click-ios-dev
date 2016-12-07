@@ -16,5 +16,6 @@
 -(CKStatusCode)socketMessageStatus;
 -(NSString*)socketMessageMid;
 -(NSString*)socketMessageAction;
+-(NSDictionary*)prepared;
 
 @end

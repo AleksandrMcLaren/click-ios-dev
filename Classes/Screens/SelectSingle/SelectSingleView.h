@@ -5,7 +5,7 @@
 
 @protocol SelectSingleDelegate
 
-- (void)didSelectSingleUser:(CKUserModel *)user;
+- (void)didSelectSingleUser:(CKUser *)user;
 
 @end
 

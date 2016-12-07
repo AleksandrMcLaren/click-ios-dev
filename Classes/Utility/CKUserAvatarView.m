@@ -10,7 +10,7 @@
 
 @implementation CKUserAvatarView
 
-- (instancetype)initWithUser:(CKUserModel *)user
+- (instancetype)initWithUser:(CKUser *)user
 {
     if (self = [super init])
     {
@@ -19,7 +19,7 @@
     return self;
 }
 
-- (void)setUser:(CKUserModel *)user
+- (void)setUser:(CKUser *)user
 {
     _user = user;
     [self setAvatarFile:user.avatarName fallbackName:[user letterName]];
