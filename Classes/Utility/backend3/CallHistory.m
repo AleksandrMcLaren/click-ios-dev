@@ -7,23 +7,23 @@
 @implementation CallHistory
 
 
-+ (void)createItem:(NSString *)userId recipientId:(NSString *)recipientId text:(NSString *)text details:(id<SINCallDetails>)details
++ (void)createItem:(NSString *)userId recipientId:(NSString *)recipientId text:(NSString *)text details:(id)details
 
 {
 	NSString *status = @"None";
 	
-	if (details.endCause == SINCallEndCauseTimeout)		status = @"Unreachable";
-	if (details.endCause == SINCallEndCauseDenied)		status = @"Rejected";
-	if (details.endCause == SINCallEndCauseNoAnswer)	status = @"No answer";
-	if (details.endCause == SINCallEndCauseError)		status = @"Error";
-	if (details.endCause == SINCallEndCauseHungUp)		status = @"Succeed";
-	if (details.endCause == SINCallEndCauseCanceled)	status = @"Canceled";
-	if (details.endCause == SINCallEndCauseOtherDeviceAnswered) status = @"Other device answered";
+//	if (details.endCause == SINCallEndCauseTimeout)		status = @"Unreachable";
+//	if (details.endCause == SINCallEndCauseDenied)		status = @"Rejected";
+//	if (details.endCause == SINCallEndCauseNoAnswer)	status = @"No answer";
+//	if (details.endCause == SINCallEndCauseError)		status = @"Error";
+//	if (details.endCause == SINCallEndCauseHungUp)		status = @"Succeed";
+//	if (details.endCause == SINCallEndCauseCanceled)	status = @"Canceled";
+//	if (details.endCause == SINCallEndCauseOtherDeviceAnswered) status = @"Other device answered";
 	
 	NSString *call = [userId isEqualToString:recipientId] ? @"↘️" : @"↗️";
 	
-	NSInteger duration = (NSInteger) [details.endedTime timeIntervalSinceDate:details.establishedTime];
-	if (details.endCause != SINCallEndCauseHungUp) duration = 0;
+//	NSInteger duration = (NSInteger) [details.endedTime timeIntervalSinceDate:details.establishedTime];
+//	if (details.endCause != SINCallEndCauseHungUp) duration = 0;
 	
 
 	

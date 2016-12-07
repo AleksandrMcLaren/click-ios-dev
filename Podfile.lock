@@ -33,10 +33,6 @@ PODS:
   - SDWebImage (3.7.6):
     - SDWebImage/Core (= 3.7.6)
   - SDWebImage/Core (3.7.6)
-  - SinchRTC (3.9.7)
-  - SinchService (1.0.2):
-    - SinchService/SinchHeaders (= 1.0.2)
-  - SinchService/SinchHeaders (1.0.2)
   - SocketRocket (0.5.1)
   - SWTableViewCell (0.3.7)
   - UIActivityIndicator-for-SDWebImage (1.2):
@@ -58,8 +54,6 @@ DEPENDENCIES:
   - RNGridMenu
   - SAMKeychain
   - SDWebImage (~> 3.7.1)
-  - SinchRTC
-  - SinchService
   - SocketRocket
   - SWTableViewCell (~> 0.3.7)
   - UIActivityIndicator-for-SDWebImage (~> 1.2)
@@ -84,13 +78,11 @@ SPEC CHECKSUMS:
   SAMKeychain: 1865333198217411f35327e8da61b43de79b635b
   SCSiriWaveformView: b8b2756af42addcd31900c3945f24edafefb5395
   SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
-  SinchRTC: f77b1f6edd17b35af0f6f372be0d907e3bdc1fb9
-  SinchService: 3af981e6b9df04345788ca40a24dcd411eeb58ea
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SWTableViewCell: 2a94aadc9d47b2b611fa064566bf57948b95b579
   UIActivityIndicator-for-SDWebImage: 7bf7ebbf0ed1747dedc0d6e949c4603a6d0f9e0c
   Underscore.m: b86ca364d60509a39eb9c7886443c063b793aaba
 
-PODFILE CHECKSUM: 56ce4b5fde2b4a183ea2a079bdb72d0488e8c722
+PODFILE CHECKSUM: 438387c88c6fdb0ade61863d572dee5118139f61
 
 COCOAPODS: 1.0.1

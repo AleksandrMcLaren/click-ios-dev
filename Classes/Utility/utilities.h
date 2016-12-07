@@ -19,8 +19,8 @@
 #import <AVKit/AVKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-#import <Sinch/Sinch.h>
-#import <SinchService/SinchService.h>
+//#import <Sinch/Sinch.h>
+//#import <SinchService/SinchService.h>
 #import <MapKit/MapKit.h>
 
 #import "Reachability.h"

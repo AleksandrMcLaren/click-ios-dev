@@ -22,7 +22,5 @@ pod 'ProgressHUD'
 pod 'JSQMessagesViewController'
 pod 'RNGridMenu'
 pod 'IQAudioRecorderController'
-pod 'SinchRTC'
-pod 'SinchService'
 pod 'RNCryptor', '~> 3.0.1'
 end

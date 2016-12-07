@@ -14,8 +14,8 @@
 	BOOL incoming, outgoing;
 	BOOL muted, speaker;
 
-	id<SINCall> call;
-	id<SINAudioController> audioController;
+	id call;
+	id audioController;
 }
 
 @property (strong, nonatomic) IBOutlet UIImageView *imageUser;

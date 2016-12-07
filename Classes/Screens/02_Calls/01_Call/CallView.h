@@ -5,8 +5,9 @@
 #import "utilities.h"
 
 
-@interface CallView : UIViewController <SINCallDelegate>
+//@interface CallView : UIViewController <SINCallDelegate>
 
+@interface CallView : UIViewController 
 
 
 @end
