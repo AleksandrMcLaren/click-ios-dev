@@ -21,6 +21,6 @@
 - (void) setNumberOfLikes:(NSInteger)likes;
 - (void) setUserStatus:(NSString *)status showCalendar:(BOOL)showCalendar;
 
-@property (nonatomic, strong) CKUserModel *friend;
+@property (nonatomic, strong) CKUser *friend;
 
 @end

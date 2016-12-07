@@ -21,6 +21,7 @@ typedef enum CKAttachType {
 @interface CKAttachModel : NSObject
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
+
 + (CKAttachModel *)modelWithDictionary:(NSDictionary *)dict;
 
 @property (nonatomic, strong) UIImage *preview;

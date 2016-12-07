@@ -286,7 +286,7 @@
     {
         self.hidesBottomBarWhenPushed = YES;
         _dialogId = dialogId;
-        CKDialogChatModel *chat = [[CKDialogChatModel alloc] initWithDialogId:dialogId];
+        CKDialogChatModel *chat = nil;//[[CKDialogChatModel alloc] initWithDialog:dialogId];
         self.chat = chat;
         @weakify(self);
         [[RACObserve(self.chat, attachements) takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {
@@ -304,7 +304,7 @@
     {
         self.hidesBottomBarWhenPushed = YES;
         _userId = userId;
-        CKDialogChatModel *chat = [[CKDialogChatModel alloc] initWithUserId:userId];
+        CKDialogChatModel *chat = nil;//[[CKDialogChatModel alloc] initWithUserId:userId];
         self.chat = chat;
         @weakify(self);
         [[RACObserve(self.chat, attachements) takeUntil:self.rac_willDeallocSignal] subscribeNext:^(id x) {

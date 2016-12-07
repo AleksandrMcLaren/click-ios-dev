@@ -2,9 +2,8 @@
 platform :ios, "8.0"
 
 target 'click' do
+    
 
-inhibit_all_warnings!
-use_frameworks!
 
 pod 'FMDB', '~> 2.4'
 pod 'Underscore.m', '~> 0.2.1'
@@ -21,5 +20,9 @@ pod 'Crashlytics'
 pod 'SAMKeychain'
 pod 'ProgressHUD'
 pod 'JSQMessagesViewController'
-
+pod 'RNGridMenu'
+pod 'IQAudioRecorderController'
+pod 'SinchRTC'
+pod 'SinchService'
+pod 'RNCryptor', '~> 3.0.1'
 end

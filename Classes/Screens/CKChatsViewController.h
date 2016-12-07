@@ -10,7 +10,7 @@
 #import "SelectSingleView.h"
 #import "SelectMultipleView.h"
 
-@interface CKChatsViewController : UIViewController<CKDialogsControllerProtocol, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface CKChatsViewController : UIViewController< UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
 

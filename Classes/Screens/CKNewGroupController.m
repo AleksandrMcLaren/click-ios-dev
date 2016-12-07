@@ -139,7 +139,7 @@
     if (!cell) {
         cell = [CKFriendCell new];
     }
-    CKUserModel *friend = (CKUserModel *)[_users objectAtIndex:indexPath.row-1];
+    CKUser *friend = (CKUser *)[_users objectAtIndex:indexPath.row-1];
     cell.isLast = [_users count]-2 == indexPath.row;
     cell.friend = friend;
     cell.isSelectable = NO;

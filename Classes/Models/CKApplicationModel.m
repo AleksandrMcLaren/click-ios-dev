@@ -7,16 +7,7 @@
 //
 
 #import "CKApplicationModel.h"
-#import "AppDelegate.h"
-#import <CoreLocation/CoreLocation.h>
-#import <Contacts/Contacts.h>
-#import <FMDB/FMDB.h>
-#import "CKServerConnection.h"
-#import "CKUserServerConnection.h"
-#import "CKMessageServerConnection.h"
-#import "Reachability.h"
-#import "CKCache.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "utilities.h"
 
 @implementation CKClusterModel
 
@@ -37,175 +28,6 @@
     }
     return clustermodel;
 }
-@end
-
-@implementation CKUserModel
-
--(void)initizlize{
-    self.id = nil;
-    self.login = @"";
-    self.name = @"";
-    self.surname = @"";
-    self.sex = @"";
-    self.avatarName = nil;
-    self.iso = -1;
-    self.countryId = 0;
-    self.countryName = nil;
-    self.city = 0;
-    self.cityName = nil;
-    self.status = 0;
-    self.invite = nil;
-    self.location = kCLLocationCoordinate2DInvalid;
-    self.distance = 0;
-    self.geoStatus = 0;
-    self.isFriend = NO;
-    self.likes = 0;
-    self.isLiked = NO;
-    self.age = 0;
-    self.birthDate = nil;
-    self.registeredDate = nil;
-    self.statusDate = nil;
-    self.avatar = nil;
-}
-
--(instancetype)init{
-    if (self = [super init]) {
-        [self initizlize];
-    }
-    return self;
-}
-
-- (RACSignal *)executeSearchSignal {
-    return [[[[RACSignal empty]
-              logAll]
-             delay:2.0]
-            logAll];
-}
-
-
-+ (instancetype)modelWithDictionary:(NSDictionary *)sourceDict
-{
-    CKUserModel *model = [CKUserModel new];
-    
-    @try {
-        model.id = [NSString stringWithFormat:@"%@", sourceDict[@"id"]];
-        model.login = sourceDict[@"login"];
-        model.name = sourceDict[@"name"];
-        model.surname = sourceDict[@"surname"];
-        model.sex = sourceDict[@"sex"];
-        model.avatarName = sourceDict[@"avatar"];
-        model.iso = [sourceDict[@"iso"] integerValue];
-        model.countryId = [sourceDict[@"country"] integerValue];
-        model.countryName = sourceDict[@"countryname"];
-        model.city = [sourceDict[@"city"] integerValue];
-        model.cityName = sourceDict[@"cityname"];
-        if (![sourceDict[@"avatar"] isKindOfClass:[NSNull class]] && [sourceDict[@"avatar"] length]) model.avatar = [UIImage imageWithData:[[NSData alloc] initWithBase64EncodedString:(NSString *)sourceDict[@"avatar"] options:0]];
-        model.status = [sourceDict[@"status"] integerValue];
-        model.invite = sourceDict[@"invite"];
-        model.location = CLLocationCoordinate2DMake([sourceDict[@"lat"] doubleValue], [sourceDict[@"lon"] doubleValue]);
-        model.distance = [sourceDict[@"distance"] doubleValue];
-        model.geoStatus = [sourceDict[@"geostatus"] integerValue];
-        model.isFriend = [sourceDict[@"isfriend"] boolValue];
-        model.likes = [sourceDict[@"likes"] integerValue];
-        model.isLiked = [sourceDict[@"isliked"] boolValue];
-        model.age = [sourceDict[@"age"] integerValue];
-        
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss"];
-        dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
-        
-        model.birthDate =  [sourceDict[@"birthdate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil : [dateFormatter dateFromString:sourceDict[@"birthdate"]];
-        model.registeredDate =  [sourceDict[@"registereddate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil :[dateFormatter dateFromString:sourceDict[@"registereddate"]];
-        model.statusDate =  [sourceDict[@"statusdate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil :[dateFormatter dateFromString:sourceDict[@"statusdate"]];
-    } @catch (NSException *exception) {
-        return nil; // bad model
-    }
-
-    return model;
-}
-
-- (NSString *)commonName
-{
-    NSMutableString *result = [NSMutableString new];
-    NSString *surname = self.surname;
-    NSString *name = self.name;
-    
-    if (!surname && !name) name = self.login;
-    
-    if (surname)
-    {
-        surname = name;
-        name = nil;
-    }
-    
-    if (name)
-    {
-        [result appendString:name];
-        if (surname) [result appendString:@" "];
-    }
-    if (surname)
-    {
-        [result appendString:surname];
-    }
-    
-    return result;
-}
-
-- (NSString *)letterName
-{
-    NSString *surname = self.surname;
-    NSString *name = self.name;
-    NSString *login = self.login;
-    
-    if (!surname && !name) name = login;
-    
-    if ([surname isEqual:@""] && [name isEqual:@""]) name = login;
-    
-    if (!surname)
-    {
-        surname = name;
-        name = nil;
-    }
-    if (name.length) return [name substringToIndex:1];
-    return nil;
-}
-
-- (BOOL)isEqual:(CKUserModel *)object
-{
-    if ([object isKindOfClass:[CKUserModel class]]) return NO;
-    return [self.id isEqual:object.id];
-}
-
-- (NSUInteger)hash
-{
-    return [self.id hash];
-}
-
--(NSString*)avatarURLString{
-    return [NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, self.avatarName];
-}
-
--(BOOL)isCreated{
-    return self.id != nil;
-}
-
--(void)setAvatar:(UIImage *)avatar{
-    
-    CGFloat maxSize = 300;
-    if (avatar) {
-        if (MIN(avatar.size.height, avatar.size.width) > maxSize) {
-            CGFloat k = maxSize / MAX(avatar.size.height, avatar.size.width);
-            
-            CGSize newSize = CGSizeMake(avatar.size.width*k, avatar.size.height*k);
-            UIGraphicsBeginImageContext(newSize);
-            [avatar drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-            avatar = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-        }
-    }
-    
-    _avatar = avatar;
-}
 
 @end
 
@@ -215,10 +37,11 @@
 
 @interface CKApplicationModel()<CLLocationManagerDelegate>{
     Reachability* _internetReachable;
+    CKChatModel* _currentChat;
 }
 
 @property (nonatomic, strong) NSString *token;
-@property (nonatomic, strong) CKUserModel *userProfile;
+@property (nonatomic, strong) CKUser* userProfile;
 
 @end
 
@@ -230,7 +53,7 @@
     CLAuthorizationStatus _locationAuthorizationStatus;
     CLLocation *_location;
     BOOL _isNewUser;
-    NSDictionary *_phoneContacts;
+    
     NSMutableDictionary *_chatPool;
     
     NSNumber *_nelat;
@@ -252,20 +75,19 @@
 {
     if (self = [super init])
     {
-        _token = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
-        _userPhone = [[NSUserDefaults standardUserDefaults] objectForKey:@"phoneNumber"];
+        _token = [UserDefaults  stringForKey:@"token"];
+        _userPhone = [UserDefaults stringForKey:@"phoneNumber"];
         _countryId = 2017370;
         _isNewUser = NO;
         _chatPool = [NSMutableDictionary new];
-        if (self.token) {
-            [CKUserServerConnection sharedInstance].token = self.token;
+        if (_token) {
+            [CKUserServerConnection sharedInstance].token = _token;
             [CKUserServerConnection sharedInstance].phoneNumber = _userPhone;
             
-            [CKMessageServerConnection sharedInstance].token = self.token;
+            [CKMessageServerConnection sharedInstance].token = _token;
             [CKMessageServerConnection sharedInstance].phoneNumber = _userPhone;
-
         }
-
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageResived:) name:CKMessageServerConnectionReceived object:nil];
     }
     return self;
 }
@@ -273,16 +95,15 @@
 - (void)setToken:(NSString *)token
 {
     _token = token;
-    [[NSUserDefaults standardUserDefaults] setObject:token forKey:@"token"];
-    [[NSUserDefaults standardUserDefaults] setObject:_userPhone forKey:@"phoneNumber"];
-
+    [UserDefaults setObject:_token forKey:@"token"];
+    [UserDefaults setObject:_userPhone forKey:@"phoneNumber"];
 }
 
-- (CKUserModel *)userProfile
+- (CKUser *)userProfile
 {
     if (!_userProfile)
     {
-        _userProfile = [CKUserModel new];
+        _userProfile = [CKUser new];
         NSDictionary *country = [[CKApplicationModel sharedInstance] countryWithId:self.countryId];
         _userProfile.iso = [country[@"iso"] integerValue];
         _userProfile.countryName = country[@"name"];
@@ -316,7 +137,7 @@
         [self showMainScreen];
         [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary* result) {
             if ([result socketMessageStatus] == S_OK){
-                CKUserModel* profile = [CKUserModel modelWithDictionary:[result socketMessageResult]];
+                CKUser* profile = [CKUser modelWithDictionary:[result socketMessageResult]];
                 self.userProfile = profile;
             }else{
                 [_mainController showAlertWithResult:result completion:nil];
@@ -390,8 +211,6 @@
     NSString* operation = @"user.checkuser";
     [_mainController beginOperation:operation];
     
-//    [self testInternetConnection:^(Reachability *reachability) {
-//        [_internetReachable stopNotifier];
         _userPhone = phone;
         _countryId = countryId;
         [CKUserServerConnection sharedInstance].phoneNumber = phone;
@@ -430,16 +249,6 @@
                 [_mainController showAlertWithResult:result completion:nil];
             }
         }];
-//    } unreachableBlock:^(Reachability *reachability) {
-//        [_internetReachable stopNotifier];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [_mainController endOperation:operation];
-//            [_mainController showAlertWithResult:nil completion:nil];
-//        });
-//
-//    }];
-    
-
 }
 
 - (void)sendPhoneAuthenticationCode:(NSString *)code
@@ -455,10 +264,10 @@
             
             [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary* result) {
                 
-                CKUserModel *profile;
+                CKUser *profile;
                 
                 if ([result socketMessageStatus] == S_OK ) {
-                    profile = [CKUserModel modelWithDictionary:[result socketMessageResult]];
+                    profile = [CKUser modelWithDictionary:[result socketMessageResult]];
                     if (![[CKApplicationModel sharedInstance] countryExistWithId:profile.countryId]) {
                         NSDictionary *country = [[CKApplicationModel sharedInstance] countryWithId:self.countryId];
                         profile.iso = [country[@"iso"] integerValue];
@@ -499,131 +308,30 @@
     }];
 }
 
-- (NSArray *)phoneContacts
-{
-    NSMutableDictionary *contactsByPhone = [NSMutableDictionary new];
-    for (CKPhoneContact *i in [_phoneContacts allValues])
-    {
-        contactsByPhone[i.phoneNumber] = i;
-    }
-    NSLog(@"%@", contactsByPhone);
-    for (CKUserModel *i in _friends)
-    {
-        NSLog(@"%@ %@", i.id, contactsByPhone[i.id]);
-        [contactsByPhone removeObjectForKey:i.id];
-    }
-    NSLog(@"%@", contactsByPhone);
-    return [contactsByPhone allValues];
-}
 
-- (NSArray *)contactPhoneList
-{
-    return [_phoneContacts allKeys];
-}
 
 - (void)showMainScreen
 {
     [self.mainController showMainScreen];
-    [[CKDialogsModel sharedInstance] setDialogsController:[self.mainController dialogsController]];
+    
     [[CKDialogsModel sharedInstance] run];
     
-    [self fetchContactsWithCompletion:^(NSMutableArray *arr) {
-        
-        NSMutableDictionary *d = [NSMutableDictionary new];
-        for (CKPhoneContact *i in arr)
-        {
-            d[i.phoneNumber] = i;
-        }
-        _phoneContacts = d;
-        NSMutableArray *cont = [NSMutableArray new];
-        [cont addObjectsFromArray:[_phoneContacts allValues]];
-        _fullContacts = cont;
-        [[CKMessageServerConnection sharedInstance] addFriends:[self contactPhoneList] callback:^(CKStatusCode status) {
-            [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithAllFriends] callback:^(NSDictionary *result) {
-                
-                NSMutableArray *friends = [NSMutableArray new];
-                for (NSDictionary *i in result[@"result"])
-                {
-                    CKUserModel *user = [CKUserModel modelWithDictionary:i];
-                    CKPhoneContact *contact;
-                    if ((contact = _phoneContacts[user.id]))
-                    {
-                        user.name = contact.name;
-                        user.surname = contact.surname;
-                    }
-                    [friends addObject:user];
-                }
-                _friends = friends;
-               
-
-            }];
-        }];
-        
-    }];
+    [[Users sharedInstance] run];
+    
 }
 
 - (void) updateUsers
 {
     [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithLocation] callback:^(NSDictionary *result) {
-        NSMutableArray<CKUserModel*> *userlist = [NSMutableArray new];
+        NSMutableArray<CKUser*> *userlist = [NSMutableArray new];
         for (NSDictionary *i in result[@"result"])
         {
-            CKUserModel *user1 = [CKUserModel modelWithDictionary:i];
+            CKUser *user1 = [CKUser modelWithDictionary:i];
             [userlist addObject:user1];
         }
         _userlistMain = userlist;
     }];
 }
-
-- (void) checkUserProfile: (NSString *)newFriendPhone
-{
-    __block BOOL isFriend = false;
-    [[CKUserServerConnection sharedInstance] getUserInfoWithId:newFriendPhone callback:^(NSDictionary *result) {
-        //CKUserModel *profile;
-        if ([result socketMessageStatus] == S_OK) {
-            CKUserModel *user = [CKUserModel new];
-            //   profile = [CKUserModel modelWithDictionary:[result socketMessageResult]];
-            
-            user = [CKUserModel modelWithDictionary:[result socketMessageResult]];
-            //user.isFriend = 1;
-            NSArray *friends1 = [[CKApplicationModel sharedInstance] friends];
-            for (CKUserModel *i in friends1)
-            {
-                if (![user.id isEqual:i.id])
-                {
-                    isFriend = true;
-                    break;
-                }
-            }
-            if (isFriend != true)
-            {
-                NSMutableArray *friends = [NSMutableArray new];
-                [friends addObjectsFromArray:_friends];
-                if (user !=nil && ![user.id isEqual:@"0"]) [friends addObject:user];
-                _friends = friends;
-            }
-        }
-        //[[CKApplicationModel sharedInstance] addNewContactToFriends:user];
-    }];
-}
-
-
-- (void) addNewContactToFriends
-{
-    [self fetchContactsWithCompletion:^(NSMutableArray *arr) {
-        
-        NSMutableDictionary *d = [NSMutableDictionary new];
-        for (CKPhoneContact *i in arr)
-        {
-            d[i.phoneNumber] = i;
-        }
-        _phoneContacts = d;
-    }];
-    NSMutableArray *cont = [NSMutableArray new];
-    [cont addObjectsFromArray:[_phoneContacts allValues]];
-    _fullContacts = cont;
-}
-
 
 - (void) restoreHistoryWithCallback:(CKServerConnectionExecuted)callback
 {
@@ -774,75 +482,6 @@
 }
 
 
-- (void) fetchContactsWithCompletion:(void(^)(NSMutableArray* arr))completion
-{
-    CNAuthorizationStatus status = [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts];
-    if (status == CNAuthorizationStatusDenied || status == CNAuthorizationStatusDenied) {
-        // error
-        return;
-    }
-    
-    CNContactStore *store = [[CNContactStore alloc] init];
-    [store requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        if (!granted) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"No permissions");
-            });
-            return;
-        }
-        NSMutableArray *phoneUsers = [NSMutableArray array];
-        
-        NSError *fetchError;
-        NSArray* keys = @[CNContactPhoneNumbersKey, CNContactGivenNameKey, CNContactFamilyNameKey, CNContactIdentifierKey, [CNContactFormatter descriptorForRequiredKeysForStyle:CNContactFormatterStyleFullName]];
-        CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:keys];
-        
-        CNContactFormatter *formatter = [[CNContactFormatter alloc] init];
-        BOOL success = [store enumerateContactsWithFetchRequest:request error:&fetchError usingBlock:^(CNContact *contact, BOOL *stop) {
-            
-            NSString *fullname = [formatter stringFromContact:contact];
-            NSArray *phones = contact.phoneNumbers;
-            if(fullname && phones.count) {
-                CNLabeledValue<CNPhoneNumber*> *first = [phones firstObject];
-                CNPhoneNumber* number = first.value;
-                NSString* digits = number.stringValue;
-                CKPhoneContact *phoneContact = [CKPhoneContact new];
-                phoneContact.phoneNumber = digits;
-                phoneContact.fullname = fullname;
-                phoneContact.name = contact.givenName;
-                phoneContact.surname = contact.familyName;
-                phoneContact.id = contact.identifier;
-                [phoneUsers addObject:phoneContact];
-            }
-            //
-        }];
-        if (!success) {
-            NSLog(@"error = %@", fetchError);
-        }
-        // get digits only
-        for(int i = 0; i < phoneUsers.count; i++) {
-            CKPhoneContact* contact = [phoneUsers objectAtIndex:i];
-            NSString* phone = contact.phoneNumber;
-            contact.phoneNumber = [[phone componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""];
-//            if([[contact.phoneNumber substringToIndex:1] isEqualToString:@"8"]) {
-//                contact.phoneNumber = [NSString stringWithFormat:@"%@%@", @"7", [contact.phoneNumber substringFromIndex:1]];
-//            }
-        }
-        // remove duplicates
-        NSMutableIndexSet* toRemove = [NSMutableIndexSet new];
-        for(int i = 0; i < phoneUsers.count; i++) {
-            for(int j = 0; j < i; j++) {
-                if([[(CKPhoneContact *)phoneUsers[i] phoneNumber] isEqualToString:[(CKPhoneContact *)phoneUsers[j] phoneNumber]]) {
-                    [toRemove addIndex:j];
-                }
-            }
-        }
-        [phoneUsers removeObjectsAtIndexes:toRemove];
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(phoneUsers);
-        });
-    }];
-}
 
 - (void)storeChat:(CKChatModel *)model withId:(NSString *)id
 {
@@ -914,5 +553,57 @@
     [_internetReachable startNotifier];
 }
 
+#pragma mark - chats
+
+
+-(void) startPrivateChat:(CKUser*) user{
+}
+
+-(void) startMultipleChat:(NSArray*) userIds{
+}
+
+-(void) startGroupChat:(CKGroupChatModel*) group{
+}
+
+-(void) restartRecentChat:(CKDialogModel*) dialog{
+    //необходимо в зависимости от типа возвращать модель
+    _currentChat = [[CKDialogChatModel alloc] initWithDialog:dialog];
+    [self.mainController startChat:_currentChat];
+}
+
+-(void)messageResived:(NSNotification *)notification{
+    [[CKDialogsModel sharedInstance] loadDialogList];
+    Message* message = [Message modelWithDictionary:notification.userInfo];
+    [[CKDB sharedInstance] updateTable:@"messages" withValues:notification.userInfo];
+    if ([_currentChat messageMatch:message]) {
+        [_currentChat reloadMessages];
+        //    [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead messages:@[messageId] callback:^(NSDictionary *result) {
+        //
+        //    }];i
+    }else{
+        NSString* title = @"Messme";
+        
+        UIAlertController * alert = [UIAlertController
+                                     alertControllerWithTitle:title
+                                     message:message.text
+                                     preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* okButton = [UIAlertAction
+                                   actionWithTitle:@"OK"
+                                   style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction * action) {
+                                       //Handle your yes please button action here
+                                   }];
+        UIAlertAction* cancelButton = [UIAlertAction
+                                       actionWithTitle:@"Cancel"
+                                       style:UIAlertActionStyleDefault
+                                       handler:^(UIAlertAction * action) {
+                                           //Handle your yes please button action here
+                                       }];
+        [alert addAction:okButton];
+        [alert addAction:cancelButton];
+        [self.mainController.currentController presentViewController:alert animated:YES completion:nil];
+    }
+}
 
 @end

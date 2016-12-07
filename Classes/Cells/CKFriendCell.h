@@ -16,7 +16,7 @@
 @property (nonatomic, readonly) UILabel *name;
 @property (nonatomic, readonly) UILabel *login;
 @property (nonatomic, assign) BOOL isLast;
-@property (nonatomic, strong) CKUserModel *friend;
+@property (nonatomic, strong) CKUser *friend;
 @property (nonatomic, assign) BOOL isSelectable;
 @property (nonatomic, assign) BOOL isSelected;
 

@@ -56,7 +56,7 @@
     _contacts = [NSMutableArray array];
     
     // fill with friends
-    NSMutableArray *sortedFriends = [[[CKApplicationModel sharedInstance] friends] sortedArrayUsingComparator:^NSComparisonResult(CKUserModel *obj1, CKUserModel *obj2) {
+    NSMutableArray *sortedFriends = [[[Users sharedInstance] users] sortedArrayUsingComparator:^NSComparisonResult(CKUser *obj1, CKUser *obj2) {
         NSString *str1 = obj1.surname.length?obj1.surname:obj1.name;
         NSString *str2 = obj2.surname.length?obj2.surname:obj2.name;
         return [str1 compare:str2 options: NSCaseInsensitiveSearch];
@@ -105,7 +105,7 @@
     if (!cell) {
         cell = [CKFriendCell new];
     }
-    CKUserModel *friend = (CKUserModel *)[_contacts objectAtIndex:indexPath.row];
+    CKUser *friend = (CKUser *)[_contacts objectAtIndex:indexPath.row];
     cell.isLast = [_contacts count]-1 == indexPath.row;
     cell.friend = friend;
     cell.isSelectable = self.multiselect;
@@ -115,7 +115,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CKUserModel *friend = (CKUserModel *)[_contacts objectAtIndex:indexPath.row];
+    CKUser *friend = (CKUser *)[_contacts objectAtIndex:indexPath.row];
     if (!self.multiselect)
     {
         [self.delegate didSelectFriend:friend];

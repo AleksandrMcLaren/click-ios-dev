@@ -34,7 +34,7 @@
     {
         self.title = @"Контакты";
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add)];
-        _phoneContacts = [[CKApplicationModel sharedInstance] phoneContacts];
+        _phoneContacts = [[Users sharedInstance] phoneContacts];
     }
     return self;
 }
@@ -70,19 +70,17 @@
 - (void)reloadData
 {
     _contacts = [NSMutableArray array];
-    _fullContacts = [[CKApplicationModel sharedInstance] fullContacts];
+    _fullContacts = [[Users sharedInstance] fullContacts];
     //    NSMutableArray *fc = [NSMutableArray new];
     //    [fc addObjectsFromArray:_fullContacts];
     
     // fill with friends
     NSMutableArray *unsortedFriends = [NSMutableArray new];
-    [unsortedFriends addObjectsFromArray:[[CKApplicationModel sharedInstance] friends]];
-    for (CKUserModel *i in unsortedFriends)
+    [unsortedFriends addObjectsFromArray:[[Users sharedInstance] users]];
+    for (CKUser *i in unsortedFriends)
     {
-        //        CKUserModel *friend = i;
         for (CKPhoneContact *p in _fullContacts)
         {
-            //            CKPhoneContact *contact = p;
             if ([i.id isEqual:p.phoneNumber])
             {
                 i.name = p.name;
@@ -91,7 +89,7 @@
             }
         }
     }
-    NSArray *sortedFriends = [unsortedFriends sortedArrayUsingComparator:^NSComparisonResult(CKUserModel *obj1, CKUserModel *obj2) {
+    NSArray *sortedFriends = [unsortedFriends sortedArrayUsingComparator:^NSComparisonResult(CKUser *obj1, CKUser *obj2) {
         NSString *str1 = obj1.surname.length?obj1.surname:obj1.name;
         NSString *str2 = obj2.surname.length?obj2.surname:obj2.name;
         return [str1 compare:str2 options: NSCaseInsensitiveSearch];
@@ -227,7 +225,7 @@
         if (!cell) {
             cell = [CKFriendCell new];
         }
-        CKUserModel *friend = (CKUserModel *)[arr objectAtIndex:indexPath.row];
+        CKUser *friend = (CKUser *)[arr objectAtIndex:indexPath.row];
         cell.isLast = [arr count]-1 == indexPath.row;
         cell.friend = friend;
         return cell;
@@ -248,7 +246,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
-    [[CKApplicationModel sharedInstance] addNewContactToFriends];
+    [[Users sharedInstance] addNewContactToFriends];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateScreenState)
                                                  name:UIApplicationWillEnterForegroundNotification
@@ -257,12 +255,12 @@
 
 - (void)updateScreenState
 {
-    [[CKApplicationModel sharedInstance] addNewContactToFriends];
+    [[Users sharedInstance] addNewContactToFriends];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [[CKApplicationModel sharedInstance] addNewContactToFriends];
+    [[Users sharedInstance] addNewContactToFriends];
 }
 
 -(void) viewWillDisappear:(BOOL)animated
@@ -310,7 +308,7 @@
             if (errorAdding !=true)
             {
                 //                NSArray *friends = [[CKApplicationModel sharedInstance] friends];
-                //                for (CKUserModel *i in friends)
+                //                for (CKUser *i in friends)
                 //                {
                 //                    if ([i.id isEqual:cleanedString])
                 //                    {
@@ -322,7 +320,7 @@
                 //                }
                 //                if (errorAdding !=true)
                 //                {
-                [[CKApplicationModel sharedInstance] checkUserProfile: cleanedString];
+                [[Users sharedInstance] checkUserProfile: cleanedString];
                 deletedWrongPerson = true;
                 //   }
             }

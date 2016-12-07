@@ -149,7 +149,7 @@
     _circle.hidden = !(_isSelectable && !_isSelected);
 }
 
-- (void)setFriend:(CKUserModel *)friend
+- (void)setFriend:(CKUser *)friend
 {
     _friend = friend;
     if (![friend.name isEqual: @""])

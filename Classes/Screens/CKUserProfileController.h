@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "CKActivityViewController.h"
+#import "utilities.h"
 
 @interface CKUserProfileController : CKActivityViewController
 
-@property (nonatomic, strong) CKUserModel *profile;
+@property (nonatomic, strong) CKUser *profile;
 @property (nonatomic, assign) BOOL restoreProfile;
 @end

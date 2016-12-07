@@ -866,7 +866,7 @@ typedef enum CKLoginState{
 }
 
 
--(void) setProfile:(CKUserModel *)profile{
+-(void) setProfile:(CKUser *)profile{
     _profile = profile;
     if (_profile.login.length) {
         _originalLogin = _profile.login;

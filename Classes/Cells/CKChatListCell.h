@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CKAvatarView.h"
 #import "SWTableViewCell.h"
-
+#import "utilities.h"
 
 @interface CKChatListCell : SWTableViewCell
 
@@ -21,7 +21,7 @@
 @property (nonatomic, readonly) UILabel *activity;
 @property (nonatomic, readonly) UILabel *unreadCount;
 
-@property (nonatomic, strong) CKDialogListEntryModel *model;
+@property (nonatomic, strong) CKDialogModel *model;
 @property (nonatomic, assign) BOOL isArchive;
 
 - (NSString *)letterNameWithName:(NSString *)name surname:(NSString *)surname login:(NSString *)login;

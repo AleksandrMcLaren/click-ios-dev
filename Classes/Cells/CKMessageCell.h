@@ -7,18 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CKChatModel.h"
+#import "utilities.h"
 
 @protocol CKMessageCellDelegate <NSObject>
 
-- (void)attachementButtonPressedWithModel:(CKMessageModel *)model attachNumber:(NSInteger)attachNumber;
+- (void)attachementButtonPressedWithModel:(Message *)model attachNumber:(NSInteger)attachNumber;
 
 @end
 
 @class CKBalloon;
 @interface CKMessageCell : UITableViewCell
 
-@property (nonatomic, strong) CKMessageModel *message;
+@property (nonatomic, strong) Message *message;
 @property (nonatomic, strong) CKBalloon *balloon;
 @property (nonatomic, strong) UIImageView *mask;
 @property (nonatomic, strong) UILabel *text;

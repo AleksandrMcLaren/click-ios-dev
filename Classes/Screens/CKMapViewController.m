@@ -41,7 +41,7 @@
     CGFloat _padding;
     NSArray *_data;
     NSArray *_friendlist;
-    NSArray<CKUserModel *> *_userlist;
+    NSArray<CKUser *> *_userlist;
     NSArray<CKClusterModel *> *_clusterlist;
     MKMapRect _mRect;
     NSMutableArray<CKCustomPointAnnotation *> *_annotations1;
@@ -288,7 +288,7 @@
     [_annotations2 removeAllObjects];
     _clusterlist = [[CKApplicationModel sharedInstance] clusterlist];
     _data = [[CKApplicationModel sharedInstance] userlistMain];
-    _friendlist = [[CKApplicationModel sharedInstance] friends];
+    _friendlist = [[Users sharedInstance] users];
     counter = 1;
     
     
@@ -298,7 +298,7 @@
         {
             if ([cluster.cnttotal intValue] == counter)
             {
-                for (CKUserModel *user in _data)
+                for (CKUser *user in _data)
                 {
                     if ([user.id isEqual: cluster.userid])
                     {
@@ -307,8 +307,8 @@
                         {
                             if (user.isFriend == 1)
                             {
-                                CKUserModel *friend = [[CKUserModel alloc] init];
-                                for (CKUserModel *friends in _friendlist)
+                                CKUser *friend = [[CKUser alloc] init];
+                                for (CKUser *friends in _friendlist)
                                 {
                                     if ([user.login isEqual:friends.login])
                                         friend = user;
@@ -363,8 +363,8 @@
                         {
                             if (user.isFriend == 1)
                             {
-                                CKUserModel *friend = [[CKUserModel alloc] init];
-                                for (CKUserModel *friends in _friendlist)
+                                CKUser *friend = [[CKUser alloc] init];
+                                for (CKUser *friends in _friendlist)
                                 {
                                     if ([user.login isEqual:friends.login])
                                         friend = user;

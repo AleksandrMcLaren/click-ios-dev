@@ -8,14 +8,23 @@
 
 
 #ifdef __OBJC__
+
+typedef enum CKDialogType
+{
+    CKDialogTypeChat,
+    CKMessageTypeGroup,
+    CKMessageTypeBroadcast
+} CKDialogType;
+
+
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+hex.h"
 #import "UILabel+utility.h"
 #import "NSMutableAttributedString+utility.h"
-#import "CKApplicationModel.h"
-#import "AppDelegate.h"
+//#import "CKApplicationModel.h"
+//#import "AppDelegate.h"
 #import "CKVisualSettings.h"
 #import "CKDB.h"
 #import "CKDate+utility.h"

@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
+#import "utilities.h"
 
 @interface CKCustomPointAnnotation : MKPointAnnotation
 
 @property (nonatomic, strong) NSURL *avatar;
 @property (nonatomic, copy) NSString *sex;
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) CKUserModel *profile;
+@property (nonatomic, strong) CKUser *profile;
 
 @end

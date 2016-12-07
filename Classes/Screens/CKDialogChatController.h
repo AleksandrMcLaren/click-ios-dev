@@ -14,7 +14,7 @@
 - (instancetype)initWithDialogId:(NSString *)dialogId;
 - (instancetype)initWithUserId:(NSString *)userId;
 
-@property (nonatomic, strong) CKUserModel *user;
+@property (nonatomic, strong) CKUser *user;
 @property (nonatomic, assign) BOOL wentFromTheMap;
 
 @end

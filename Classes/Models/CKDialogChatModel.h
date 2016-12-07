@@ -12,15 +12,10 @@
 @interface CKDialogChatModel : CKChatModel
 
 @property (nonatomic, readonly) NSString *userId;
-@property (nonatomic, readonly) NSString *dialogId;
 
-- (instancetype)initWithDialogId:(NSString *)dialogId;
-- (instancetype)initWithUserId:(NSString *)userId;
+//- (instancetype)initWithUserId:(NSString *)userId;
 
 - (void)sendMessage:(NSString *)message;
-
-@property (nonatomic, strong) NSArray *attachements;
-
 - (void)addAttachement:(CKAttachModel *)attach;
 - (void)deleteAttachementAt:(NSInteger)pos;
 

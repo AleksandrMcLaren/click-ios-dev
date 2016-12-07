@@ -248,7 +248,7 @@
     return s;
 }
 
-- (void)setMessage:(CKMessageModel *)message
+- (void)setMessage:(Message *)message
 {
     _message = message;
     NSMutableAttributedString *messageText = [NSMutableAttributedString withString:message.message];

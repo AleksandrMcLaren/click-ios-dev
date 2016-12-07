@@ -9,61 +9,37 @@
 #import "CKDialogChatModel.h"
 #import "CKMessageServerConnection.h"
 #import "CKAttachModel.h"
+#import "utilities.h"
 
-@interface CKDialogChatModel()
+@interface CKDialogChatModel(){
+
+}
 
 @end
 
 @implementation CKDialogChatModel
 
-- (instancetype)initWithDialogId:(NSString *)dialogId;
-{
-    if (self = [super init])
-    {
-        _dialogId = dialogId;
-        self.attachements = @[];
-        [[CKMessageServerConnection sharedInstance] getDialogWithId:dialogId page:1 pageSize:20 callback:^(NSDictionary *result) {
-            NSMutableArray *messages = [NSMutableArray new];
-            for (NSDictionary *i in result[@"result"])
-            {
-                [messages addObject:[CKReceivedMessageModel modelWithDictionary:i]];
-            }
-            [messages sortUsingComparator:^NSComparisonResult(CKReceivedMessageModel *obj1, CKReceivedMessageModel *obj2) {
-                return [obj1.date compare:obj2.date];
-            }];
-            self.messages = messages;
-        }];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageReceived:) name:CKMessageServerConnectionReceived object:nil];
+- (instancetype)initWithDialog:(CKDialogModel*) dialog{
+    self = [super initWithDialog:dialog];
+    if (self) {
+        _userId = self.dialog.userId;
     }
     return self;
 }
 
-- (instancetype)initWithUserId:(NSString *)userId;
-{
-    if (self = [super init])
-    {
-        _userId = userId;
-        _attachements = [NSMutableArray new];
-        [[CKMessageServerConnection sharedInstance] getDialogWithUser:userId page:1 pageSize:20 callback:^(NSDictionary *result) {
-            NSMutableArray *messages = [NSMutableArray new];
-            for (NSDictionary *i in result[@"result"])
-            {
-                [messages addObject:[CKReceivedMessageModel modelWithDictionary:i]];
-            }
-            [messages sortUsingComparator:^NSComparisonResult(CKReceivedMessageModel *obj1, CKReceivedMessageModel *obj2) {
-                return [obj1.date compare:obj2.date];
-            }];
-            self.messages = messages;
-        }];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageReceived:) name:CKMessageServerConnectionReceived object:nil];
-    }
-    return self;
+-(void)loadMessages{
+    [[CKMessageServerConnection sharedInstance] getDialogWithUser:self.dialog.userId page:1 pageSize:INSERT_MESSAGES callback:^(NSDictionary *result) {
+        for (NSDictionary *message in result[@"result"]){
+            [self saveMessage:message];
+        }
+        [self reloadMessages];
+    }];
 }
 
 - (void)messageReceived:(NSNotification *)notif
 {
-    CKReceivedMessageModel *message = [CKReceivedMessageModel modelWithDictionary:notif.userInfo];
-    if (![message.fromUserID isEqualToString:_userId]) return;
+    Message *message = [Message modelWithDictionary:notif.userInfo];
+    if (![message.userid isEqualToString:_userId]) return;
     self.messages = [self.messages arrayByAddingObject:message];
 }
 
@@ -77,17 +53,21 @@
     self.attachements = arr;
 }
 
-
-- (void)sendMessage:(NSString *)message
-{
-    [[CKMessageServerConnection sharedInstance] uploadAttachements:_attachements completion:^(NSDictionary *result) {
+- (void)sendMessage:(Message *)message
+{   self.messages = [self.messages arrayByAddingObject:message];
+    
+    [[CKMessageServerConnection sharedInstance] uploadAttachements:self.attachements completion:^(NSDictionary *result) {
         self.attachements = @[];
-        [[CKMessageServerConnection sharedInstance] sendMessage:message
+        [[CKMessageServerConnection sharedInstance] sendMessage:message.text
                                                    attachements:result[@"uuids"]
                                                          toUser:_userId
                                                        callback:^(NSDictionary *result) {
-            CKReceivedMessageModel *message = [CKReceivedMessageModel modelWithDictionary:result[@"result"]];
-            self.messages = [self.messages arrayByAddingObject:message];
+                                                           if (result.socketMessageStatus == S_OK) {
+                                                               Message *messageRecived = [Message modelWithDictionary:result[@"result"]];
+                                                               [message update:messageRecived];
+                                                           }else{
+                                                               [ProgressHUD showError:@"Message sending failed."];
+                                                           }
         }];
     }];
 }

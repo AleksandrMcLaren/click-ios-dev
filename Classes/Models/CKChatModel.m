@@ -7,65 +7,133 @@
 //
 
 #import "CKChatModel.h"
-#import "CKMessageServerConnection.h"
+#import "AppDelegate.h"
 
-@implementation CKSentMessageModel
-
-@end
-
-@implementation CKReceivedMessageModel
-
-+ (instancetype)modelWithDictionary:(NSDictionary *)dict
-{
-    CKReceivedMessageModel *model = [CKMessageServerConnection sharedInstance].messageModelCache[dict[@"id"]];
-    if (model) {
-        return model;
-    }
-    
-    model = [CKReceivedMessageModel new];
-    model.isOwner = [dict[@"owner"] boolValue];
-    model.message = dict[@"message"];
-    model.id = dict[@"id"];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
-    [dateFormatter setDateFormat:@"YYYY-MM-DDThh:mm:ss"];
-    model.date = [dateFormatter dateFromString:dict[@"date"]];
-    
-    model.fromUserID = [NSString stringWithFormat:@"%@", dict[@"userid"]];
-    NSMutableArray *attachements = [NSMutableArray new];
-    for (NSDictionary *i in dict[@"attach"])
-    {
-        CKAttachModel *attach = [CKAttachModel modelWithDictionary:i];
-        [attachements addObject:attach];
-        if (attach.preview) {
-            model.attachPreviewCounter++;
-        }
-    }
-    model.attachements = attachements;
-    model.timer = [dict[@"timer"] integerValue];
-    model.location = CLLocationCoordinate2DMake([dict[@"lat"] doubleValue], [dict[@"lng"] doubleValue]);
-    [CKMessageServerConnection sharedInstance].messageModelCache[model.id] = model;
-    return model;
+@interface CKChatModel(){
+    NSMutableArray* _messages;
+    CKDialogModel* _dialog;
 }
-
-- (void)setAttachements:(NSArray *)attachements {
-    [super setAttachements:attachements];
-    for (CKAttachModel *attach in attachements) {
-        @weakify(self);
-        [[RACObserve(attach, preview) skip:1] subscribeNext:^(id x) {
-            @strongify(self);
-            self.attachPreviewCounter++;
-        }];
-    }
-}
-
-@end
-
-@implementation CKMessageModel
-
 @end
 
 @implementation CKChatModel
 
+-(instancetype)init{
+    if (self = [super init]) {
+        _messages = [NSMutableArray new];
+        _messagesDidChanged = [RACObserve(self, messages) ignore:nil];
+    }
+    return self;
+}
+
+- (instancetype)initWithDialog:(CKDialogModel*) dialog;
+{
+    if (self = [self init])
+    {
+        _dialog = dialog;
+        self.attachements = @[];
+        [self loadMessages];
+    }
+    return self;
+}
+
+//fetch from local INSERT_MESSAGES
+- (void)reloadMessages
+{
+    NSString *query = @"select * from messages";
+    __block NSMutableArray *result = [NSMutableArray new];
+    [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *data = [db executeQuery:query];
+        while ([data next]){
+            NSDictionary* resultDictionary = [data resultDictionary];
+            Message *model = [Message modelWithDictionary:[resultDictionary prepared]];
+            [result addObject:model];
+        }
+    }];
+    [result sortUsingComparator:^NSComparisonResult(Message *obj1, Message *obj2) {
+        return [obj1.date compare:obj2.date];
+    }];
+    self.messages = result.copy;
+}
+
+//fetch from server
+-(void)loadMessages{
+}
+
+-(NSString*)dialogId{
+    return _dialog.dialogId;
+}
+
+-(NSArray*)messages{
+    return _messages.copy;
+}
+
+-(void)addMessage:(Message*)message{
+    [_messages addObject:message];
+}
+
+- (void)send:(NSString *)text Video:(NSURL *)video Picture:(UIImage *)picture Audio:(NSString *)audio
+
+{
+    Message *message = [MessageSent new];
+    
+    if (text != nil)	[self sendTextMessage:message Text:text];
+    if (picture != nil)	[self sendPictureMessage:message Picture:picture];
+    if (video != nil)	[self sendVideoMessage:message Video:video];
+    if (audio != nil)	[self sendAudioMessage:message Audio:audio];
+    if ((text == nil) && (picture == nil) && (video == nil) && (audio == nil)) [self sendLoactionMessage:message];
+}
+
+
+- (void)sendTextMessage:(Message *)message Text:(NSString *)text{
+    message.message = text;
+    [self sendMessage:message] ;
+}
+
+
+- (void)sendPictureMessage:(Message *)message Picture:(UIImage *)picture{
+}
+
+
+- (void)sendVideoMessage:(Message *)message Video:(NSURL *)video{
+}
+
+
+- (void)sendAudioMessage:(Message *)message Audio:(NSString *)audio{
+}
+
+
+- (void)sendLoactionMessage:(Message *)message
+{
+    AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication] delegate];
+    message.location = app.coordinate;
+    message.message = @"[Location message]";
+    message.type = CKMessageTypeNormal; 
+    [self sendMessage:message];
+}
+
+- (void)sendMessage:(Message *)message{
+}
+
+- (void)messageReceived:(NSNotification *)notif{
+
+}
+
+- (void)saveMessage:(NSDictionary*)message{
+    [[CKDB sharedInstance] updateTable:@"messages" withValues:message];
+}
+
+-(void)clearCounter{
+    [CKDialogModel clearCounter:self.dialogId];
+    [CKDialogModel updateDialog:self.dialogId withMessage:[self.messages lastObject]];
+}
+
+- (BOOL)messageMatch:(Message*)message{
+    if (message.dialogType == CKDialogTypeChat) {
+        return [message.userid isEqualToString:self.dialog.userId];
+    }else{
+        return [self.dialogId isEqualToString:message.entryid];
+    }
+    return NO;
+}
 @end
+

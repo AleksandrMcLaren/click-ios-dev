@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "utilities.h"
 
 @interface CKFriendProfileController : UITableViewController
 
-- (instancetype)initWithUser:(CKUserModel *)user;
+- (instancetype)initWithUser:(CKUser *)user;
 @property (nonatomic, assign) BOOL wentFromTheMap;
 
 @end

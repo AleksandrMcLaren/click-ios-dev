@@ -132,7 +132,7 @@
     BOOL _isVisible;
     BOOL _needReload;
     CKAttachModel *_selectedAttach;
-    CKMessageModel *_selectedMessage;
+    Message *_selectedMessage;
 }
 
 - (instancetype)init
@@ -188,7 +188,7 @@
 {
     NSInteger row = 0;
     if (self.messages.count == 0) _needReload = YES;
-    for (CKMessageModel *message in messages) {
+    for (Message *message in messages) {
         @weakify(self);
         
         [[RACObserve(message, attachPreviewCounter) skip:1] subscribeNext:^(NSString* text)
@@ -243,7 +243,7 @@
     view.disableStickyBottom = NO;
 }
 
-- (void)attachementButtonPressedWithModel:(CKMessageModel *)model attachNumber:(NSInteger)attachNumber {
+- (void)attachementButtonPressedWithModel:(Message *)model attachNumber:(NSInteger)attachNumber {
     _selectedMessage = model;
     _selectedAttach = _selectedMessage.attachements[attachNumber];
     if (_selectedAttach.type == CKAttachTypeImage) {

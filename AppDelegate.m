@@ -141,4 +141,43 @@
     }
 }
 
+#pragma mark - Location manager methods
+
+
+- (void)locationManagerStart
+
+{
+    if (self.locationManager == nil)
+    {
+        self.locationManager = [[CLLocationManager alloc] init];
+        [self.locationManager setDelegate:self];
+        [self.locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+    [self.locationManager startUpdatingLocation];
+}
+
+
+- (void)locationManagerStop
+
+{
+    [self.locationManager stopUpdatingLocation];
+}
+
+#pragma mark - CLLocationManagerDelegate
+
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+
+{
+    self.coordinate = newLocation.coordinate;
+}
+
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+
+{
+    
+}
+
 @end

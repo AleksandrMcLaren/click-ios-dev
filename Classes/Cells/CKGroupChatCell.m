@@ -33,7 +33,7 @@
     self.activity.text = [self.model.date readableMessageTimestampString];
 }
 
-- (void)setModel:(CKDialogListEntryModel *)model
+- (void)setModel:(CKDialogModel *)model
 {
     [super setModel:model];
     [_dateTimer invalidate];

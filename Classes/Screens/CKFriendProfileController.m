@@ -15,11 +15,11 @@
 
 @implementation CKFriendProfileController
 {
-    CKUserModel *_user;
+    CKUser *_user;
     CLGeocoder *_geocoder;
 }
 
-- (instancetype)initWithUser:(CKUserModel *)user
+- (instancetype)initWithUser:(CKUser *)user
 {
     if (self = [super initWithStyle:UITableViewStylePlain])
     {

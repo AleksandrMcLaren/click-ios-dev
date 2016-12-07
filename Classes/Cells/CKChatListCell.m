@@ -96,7 +96,7 @@
     return nil;
 }
 
-- (void)setModel:(CKDialogListEntryModel *)model
+- (void)setModel:(CKDialogModel *)model
 {
     _model = model;
     [self.avatar setAvatarFile:model.dialogAvatarId fallbackName:[self letterNameWithName:model.userName surname:model.userSurname login:model.userLogin]];

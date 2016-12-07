@@ -107,7 +107,7 @@
     _status.attributedText = statusString;
 }
 
-- (void)setFriend:(CKUserModel *)friend
+- (void)setFriend:(CKUser *)friend
 {
     _friend = friend;
     [self setNumberOfLikes:_friend.likes];

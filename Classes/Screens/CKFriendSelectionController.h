@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "utilities.h"
 
 @protocol CKFriendsSelectionDelegate <NSObject>
 
 @optional
 - (void) didSelectFriends:(NSSet *)friends;
-- (void) didSelectFriend: (CKUserModel *)friend;
+- (void) didSelectFriend: (CKUser *)friend;
 
 @end
 

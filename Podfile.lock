@@ -6,6 +6,8 @@ PODS:
   - FMDB (2.6.2):
     - FMDB/standard (= 2.6.2)
   - FMDB/standard (2.6.2)
+  - IQAudioRecorderController (1.2.0):
+    - SCSiriWaveformView
   - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
@@ -24,10 +26,17 @@ PODS:
   - ReactiveCocoa/no-arc (2.5)
   - ReactiveCocoa/UI (2.5):
     - ReactiveCocoa/Core
+  - RNCryptor (3.0.1)
+  - RNGridMenu (0.1.3)
   - SAMKeychain (1.5.2)
+  - SCSiriWaveformView (1.0.3)
   - SDWebImage (3.7.6):
     - SDWebImage/Core (= 3.7.6)
   - SDWebImage/Core (3.7.6)
+  - SinchRTC (3.9.7)
+  - SinchService (1.0.2):
+    - SinchService/SinchHeaders (= 1.0.2)
+  - SinchService/SinchHeaders (1.0.2)
   - SocketRocket (0.5.1)
   - SWTableViewCell (0.3.7)
   - UIActivityIndicator-for-SDWebImage (1.2):
@@ -38,14 +47,19 @@ DEPENDENCIES:
   - Crashlytics
   - Fabric
   - FMDB (~> 2.4)
+  - IQAudioRecorderController
   - JSQMessagesViewController
   - Masonry (~> 0.6.4)
   - MDHTMLLabel (~> 1.0.2)
   - MWPhotoBrowser
   - ProgressHUD
   - ReactiveCocoa (~> 2.5)
+  - RNCryptor (~> 3.0.1)
+  - RNGridMenu
   - SAMKeychain
   - SDWebImage (~> 3.7.1)
+  - SinchRTC
+  - SinchService
   - SocketRocket
   - SWTableViewCell (~> 0.3.7)
   - UIActivityIndicator-for-SDWebImage (~> 1.2)
@@ -56,6 +70,7 @@ SPEC CHECKSUMS:
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   Fabric: bc5bec42cef4bcf1ee3ce0e218fc518e4b44dfbb
   FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  IQAudioRecorderController: 1d46d99330cb2c9381568665d123cf435460a43e
   JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
@@ -64,13 +79,18 @@ SPEC CHECKSUMS:
   MWPhotoBrowser: 5836d7aa041dc05a13de380c246826578adc5ea5
   ProgressHUD: 0d2afb77bc41997dfff1aafb8617317d858834a9
   ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
+  RNCryptor: 761fc3ed94d1a0e409ba5b8e5dbef6a8f69352a7
+  RNGridMenu: c58db81f87b5473936bb1b675dc3e947c409b51d
   SAMKeychain: 1865333198217411f35327e8da61b43de79b635b
+  SCSiriWaveformView: b8b2756af42addcd31900c3945f24edafefb5395
   SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
+  SinchRTC: f77b1f6edd17b35af0f6f372be0d907e3bdc1fb9
+  SinchService: 3af981e6b9df04345788ca40a24dcd411eeb58ea
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   SWTableViewCell: 2a94aadc9d47b2b611fa064566bf57948b95b579
   UIActivityIndicator-for-SDWebImage: 7bf7ebbf0ed1747dedc0d6e949c4603a6d0f9e0c
   Underscore.m: b86ca364d60509a39eb9c7886443c063b793aaba
 
-PODFILE CHECKSUM: 41a53d45ba0e2ca85eb6f38d9d25edf7e5cc2275
+PODFILE CHECKSUM: 56ce4b5fde2b4a183ea2a079bdb72d0488e8c722
 
 COCOAPODS: 1.0.1

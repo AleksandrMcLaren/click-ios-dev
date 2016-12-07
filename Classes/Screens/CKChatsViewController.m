@@ -15,6 +15,7 @@
 #import "NoChatsView.h"
 #import "utilities.h"
 #import "NavigationController.h"
+#import "ChatView.h"
 
 @interface CKChatsViewController()<SWTableViewCellDelegate,SelectSingleDelegate,SelectMultipleDelegate>
 
@@ -113,6 +114,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [self loadRecents];
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
 }
 
@@ -138,7 +140,6 @@
         make.top.equalTo(0);
         make.left.equalTo(0);
     }];
-
 }
 
 #pragma mark - Cleanup methods
@@ -152,12 +153,12 @@
 
 - (void)loadRecents
 {
-    NSString *text = _searchBar.text;
+    __unused NSString *text = _searchBar.text;
 
     NSMutableArray *broadcasts = [NSMutableArray new];
     NSMutableArray *groupchats = [NSMutableArray new];
     NSMutableArray *personalchats = [NSMutableArray new];
-    for (CKDialogListEntryModel *i in [[CKDialogsModel sharedInstance] dialogs])
+    for (CKDialogModel *i in [[CKDialogsModel sharedInstance] dialogs])
     {
         switch (i.type)
         {
@@ -180,16 +181,6 @@
     
     [self refreshTableView];
 }
-
-//
-//- (void)archiveRecent:(DBRecent *)dbrecent
-//{
-//
-//}
-//
-//- (void)deleteRecent:(DBRecent *)dbrecent
-//{
-//}
 
 #pragma mark - Refresh methods
 
@@ -218,10 +209,12 @@
 
 #pragma mark - User actions
 
-- (void)actionChat:(CKDialogListEntryModel *)dialog{
-    CKDialogChatController *ctl = [[CKDialogChatController alloc] initWithUserId:dialog.userId];
-    [self.navigationController pushViewController:ctl animated:YES];
+- (void)startChat:(CKChatModel *)chat{
+    ChatView *chatView = [[ChatView alloc] initWithChat:chat];
+    chatView.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:chatView animated:YES];
 }
+
 
 - (void)actionCompose
 {
@@ -294,15 +287,13 @@
 
 - (void)didSelectSingleUser:(id)user
 {
-    [[CKDialogsModel sharedInstance] startPrivateChat:user];
+    [[CKApplicationModel sharedInstance] startPrivateChat:user];
 }
 
 #pragma mark - SelectMultipleDelegate
 
 - (void)didSelectMultipleUsers:(NSArray *)userIds
 {
-    [[CKDialogsModel sharedInstance] startMultipleChat:userIds];
-
 }
 
 #pragma mark - UITableViewDelegate
@@ -345,7 +336,7 @@
     {
         case 0:
         {
-            CKDialogListEntryModel *model = [_broadcasts objectAtIndex:indexPath.row];
+            CKDialogModel *model = [_broadcasts objectAtIndex:indexPath.row];
             cell = [tableView dequeueReusableCellWithIdentifier:@"CKGroupChatCell"];
             if (!cell)
             {
@@ -355,7 +346,7 @@
         }
         case 1:
         {
-            CKDialogListEntryModel *model = [_groupchats objectAtIndex:indexPath.row];
+            CKDialogModel *model = [_groupchats objectAtIndex:indexPath.row];
             cell = [tableView dequeueReusableCellWithIdentifier:@"CKGroupChatCell"];
             if (!cell)
             {
@@ -366,7 +357,7 @@
             break;
         case 2:
         {
-            CKDialogListEntryModel *model = [_personalchats objectAtIndex:indexPath.row];
+            CKDialogModel *model = [_personalchats objectAtIndex:indexPath.row];
             cell = [tableView dequeueReusableCellWithIdentifier:@"CKDialogChatCell"];
             if (!cell)
             {
@@ -424,8 +415,8 @@
                 break;
             case 2:
             {
-                CKDialogListEntryModel *model = [_personalchats objectAtIndex:indexPath.row];
-                [self actionChat:model];
+                CKDialogModel *dialog = [_personalchats objectAtIndex:indexPath.row];
+                [[CKApplicationModel sharedInstance] restartRecentChat:dialog];
             }
                 break;
         }
@@ -461,31 +452,6 @@
 {
     [_searchBar resignFirstResponder];
 }
-
-#pragma mark CKDialogsControllerProtocol
-
-- (void)startPrivateChat:(id)user{
-    if ([user isKindOfClass:[CKDialogListEntryModel class]]) {
-        CKDialogListEntryModel *model = (CKDialogListEntryModel*) user;
-        
-        CKDialogChatController *ctl = [[CKDialogChatController alloc] initWithUserId:model.userId];
-        [self.navigationController pushViewController:ctl animated:YES];
-    }
-}
-
-- (void)startMultipleChat:(NSArray *) userIds{
-    
-}
-
-- (void)restartRecentChat:(id)user{
-    if ([user isKindOfClass:[CKDialogListEntryModel class]]) {
-        CKDialogListEntryModel *model = (CKDialogListEntryModel*) user;
-        
-        CKDialogChatController *ctl = [[CKDialogChatController alloc] initWithUserId:model.userId];
-        [self.navigationController pushViewController:ctl animated:YES];
-    }
-}
-
 
 
 @end

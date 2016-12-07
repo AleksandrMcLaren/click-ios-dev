@@ -10,6 +10,7 @@
 #import "CKMapViewController.h"
 #import "CKCitySelectionController.h"
 #import "CKCountrySelectionController.h"
+#import "CKUser.h"
 
 @interface CKFiltersForMapViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate, UITextFieldDelegate, UINavigationControllerDelegate,CKCountrySelectionControllerDelegate, CKCitySelectionControllerDelegate>
 
@@ -26,7 +27,7 @@
 @property (nonatomic, assign) BOOL allUsers;
 @property (nonatomic, assign) NSInteger countryImageIso;
 @property (nonatomic, assign) BOOL endWithCancelFilters;
-@property (nonatomic, strong) CKUserModel *profile;
+@property (nonatomic, strong) CKUser *profile;
 
 
 @end

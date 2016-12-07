@@ -10,11 +10,11 @@
 #import "CKMessageServerConnection.h"
 #import "CKDialogChatController.h"
 
-@implementation CKDialogListEntryModel
+@implementation CKDialogModel
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dict
 {
-    CKDialogListEntryModel *model = [CKDialogListEntryModel new];
+    CKDialogModel *model = [CKDialogModel new];
     
     model.userAvatarId = dict[@"avatar"];
     model.attachCount = [dict[@"cntattach"] integerValue];
@@ -55,6 +55,28 @@
     return model;
 }
 
+#pragma mark - Clear methods
+
+
++ (void)clearCounter:(NSString *)dialogId{
+    [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
+        BOOL success =  [db executeUpdate:@"update dialogs set msgunread = 0 where entryid =?", dialogId];
+        if (!success) {
+            NSLog(@"%@", [db lastError]);
+        }
+    }];
+}
+
++ (void)updateDialog:(NSString *)dialogId withMessage:(Message*)message{
+    [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
+        BOOL success =  [db executeUpdate:@"update dialogs set message = ?, msgid = ?  where entryid =?", message.text, message.id ,dialogId];
+        if (!success) {
+            NSLog(@"%@", [db lastError]);
+        }
+    }];
+}
+
+
 @end
 
 @interface CKDialogsModel()
@@ -81,7 +103,6 @@
 {
     if (self = [super init])
     {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDialogList) name:CKMessageServerConnectionReceived object:nil];
         _dialogsDidChanged = [RACObserve(self, dialogs) ignore:nil];
     }
     return self;
@@ -103,7 +124,7 @@
         while ([data next])
         {
             NSDictionary* resultDictionary = [data resultDictionary];
-            CKDialogListEntryModel *model = [CKDialogListEntryModel modelWithDictionary:resultDictionary];
+            CKDialogModel *model = [CKDialogModel modelWithDictionary:[resultDictionary prepared]];
             [result addObject:model];
         }
     }];
@@ -114,10 +135,12 @@
     [[CKMessageServerConnection sharedInstance] getDialogListWithCallback:^(NSDictionary *result) {
         for (NSDictionary *i in result[@"result"]){
             [self saveDialog:i];
+            if ( [i[@"type"] integerValue ] == 0) {
+                [[Users sharedInstance] saveUserWithDialog:i];
+            }
         }
         [self reloadDialogList];
     }];
-    
 }
 
 - (void)dealloc {
@@ -128,19 +151,5 @@
     [[CKDB sharedInstance] updateTable:@"dialogs" withValues:dialog];
 }
 
--(void)startPrivateChat:(id)user{
-    [self.dialogsController startPrivateChat:user];
-    
-    
-}
-
-
--(void)startMultipleChat:(NSArray *) userIds{
-    
-}
-
--(void)restartRecentChat:(id)user{
-    [self.dialogsController restartRecentChat:user];
-}
 
 @end

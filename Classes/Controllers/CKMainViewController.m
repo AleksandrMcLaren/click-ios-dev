@@ -18,6 +18,7 @@
 #import "CKSettingsViewController.h"
 #import "CKLoginCodeViewController.h"
 #import "CKOperationsProtocol.h"
+#import "ChatView.h"
 
 @interface CKMapViewController()
 
@@ -71,11 +72,6 @@
             [(UINavigationController *)_currentController pushViewController:ctl animated:YES];
         }
     }
-}
-
-- (id<CKDialogsControllerProtocol>)dialogsController
-{
-    return _chatsViewController;
 }
 
 - (void) showMainScreen
@@ -161,5 +157,12 @@
     }
 }
 
+- (void)startChat:(CKChatModel *)chat{
+    ChatView *chatView = [[ChatView alloc] initWithChat:chat];
+    chatView.hidesBottomBarWhenPushed = YES;
+    
+    [_chatsViewController.navigationController popToRootViewControllerAnimated:NO];
+    [_chatsViewController.navigationController pushViewController:chatView animated:YES];
+}
 
 @end

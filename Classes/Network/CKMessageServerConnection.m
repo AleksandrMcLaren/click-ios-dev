@@ -5,7 +5,7 @@
 //  Created by Igor Tetyuev on 26.03.16.
 //  Copyright © 2016 Igor Tetyuev. All rights reserved.
 //
-
+#import "utilities.h"
 #import "CKMessageServerConnection.h"
 
 @implementation CKUserFilterModel
@@ -60,6 +60,14 @@
 
 @end
 
+ @interface CKMessageServerConnection(){
+    BOOL refreshUserInterface1;
+    BOOL refreshUserInterface2;
+    BOOL playMessageReceivedSound;
+}
+
+@end
+
 @implementation CKMessageServerConnection
 
 - (instancetype)init {
@@ -110,7 +118,7 @@
 
 - (void)getDialogWithId:(NSString *)dialogId page:(NSInteger)page pageSize:(NSInteger)pageSize callback:(CKServerConnectionExecuted)callback
 {
-    [self sendData:@{@"action":@"dialog.message", @"options":@{@"userid":@"", @"entryid":dialogId, @"page":@(page), @"size":@(pageSize), @"dialogtype":@0}} completion:^(NSDictionary *result) {
+    [self sendData:@{@"action":@"dialog.message", @"options":@{@"userid":@(0), @"entryid":dialogId, @"page":@(page), @"size":@(pageSize), @"dialogtype":@1}} completion:^(NSDictionary *result) {
         callback(result);
     }];
 }
@@ -219,6 +227,8 @@
     if ([eventData[@"action"] isEqualToString:@"onmessage"])
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:CKMessageServerConnectionReceived object:self userInfo:eventData[@"result"]];
+        NSString *messageId = eventData[@"result"][@"id"];
+        [Message updateIncoming:messageId];
     }
 }
 
@@ -227,6 +237,43 @@
         callback(result);
     }];
 }
+
+- (void)setMessagesStatus:(CKMessageStatus)status messages:(NSArray *)messages callback:(CKServerConnectionExecuted)callback
+{
+    [self sendData:@{@"action":@"message.setstatus", @"options":@{@"list":[messages componentsJoinedByString:@","], @"status":@(status)}} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+#pragma mark - Notification methods
+
+
+- (void)refreshUserInterface
+
+{
+    if (refreshUserInterface1)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [NotificationCenter post:NOTIFICATION_REFRESH_MESSAGES1];
+            refreshUserInterface1 = NO;
+        });
+    }
+    
+    if (refreshUserInterface2)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [NotificationCenter post:NOTIFICATION_REFRESH_MESSAGES2];
+            refreshUserInterface2 = NO;
+        });
+    }
+    
+    if (playMessageReceivedSound)
+    {
+        [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
+        playMessageReceivedSound = NO;
+    }
+}
+
+
 
 
 @end

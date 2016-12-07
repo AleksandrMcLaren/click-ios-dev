@@ -46,7 +46,7 @@
     _avatar = [[UIImageView alloc] init];
     _avatar.image = [[CKApplicationModel sharedInstance] userProfile].avatar;
     
-    CKUserModel* userProfile = [[CKApplicationModel sharedInstance] userProfile];
+    CKUser* userProfile = [[CKApplicationModel sharedInstance] userProfile];
     
     if (userProfile.avatarName && (userProfile.avatarName.length > 0)) {
         [_avatar sd_setImageWithURL:[NSURL URLWithString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
@@ -217,7 +217,7 @@
         NSMutableArray *dialogs = [NSMutableArray new];
         for (NSDictionary *dictionary in result[@"result"])
         {
-            CKDialogListEntryModel *model = [CKDialogListEntryModel modelWithDictionary:dictionary];
+            CKDialogModel *model = [CKDialogModel modelWithDictionary:dictionary];
             [dialogs addObject:model];
         }
         NSString* text;

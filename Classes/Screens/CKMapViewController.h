@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CKFiltersForMapViewController.h"
+#import "utilities.h"
 
 @interface CKMapViewController : UIViewController<MKMapViewDelegate>
 
@@ -16,7 +17,7 @@
 @property(nonatomic, strong) NSNumber *maxageT;
 @property(nonatomic, strong) NSString *nameT;
 @property(nonatomic, assign) BOOL allUsersT;
-@property (nonatomic, strong) CKUserModel *profile;
+@property (nonatomic, strong) CKUser *profile;
 @property (nonatomic, strong) NSNumber *countryIdT;
 @property (nonatomic, strong) NSNumber *cityIdT;
 

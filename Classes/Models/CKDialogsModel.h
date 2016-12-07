@@ -8,15 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import "Message.h"
 
-@protocol CKDialogsControllerProtocol <NSObject>
-- (void)startPrivateChat:(id)user;
-- (void)startMultipleChat:(NSArray *) userIds;
-- (void)restartRecentChat:(id)user;
-
-@end
-
-@interface CKDialogListEntryModel : NSObject
+@interface CKDialogModel : NSObject
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dict;
 
@@ -45,19 +39,22 @@
 @property (nonatomic, assign) NSUInteger type;
 @property (nonatomic, strong) NSString *userId;
 
+
+#pragma mark - Clear methods
+
++ (void)clearCounter:(NSString *)dialogId;
++ (void)updateDialog:(NSString *)dialogId withMessage:(Message*)message;
+
 @end
 
 @interface CKDialogsModel : NSObject
 
 + (instancetype)sharedInstance;
 
-@property (nonatomic, assign) id<CKDialogsControllerProtocol>dialogsController;
 @property (nonatomic, strong, readonly) RACSignal* dialogsDidChanged;
 @property (nonatomic, readonly) NSArray *dialogs;
 
 - (void)run;
-- (void)startPrivateChat:(id)user;
-- (void)startMultipleChat:(NSArray *) userIds;
-- (void)restartRecentChat:(id)user;
+- (void)loadDialogList;
 
 @end
