@@ -317,13 +317,13 @@
 
 - (NSString *)senderId
 {
-    return[[CKApplicationModel sharedInstance].userProfile objectId];
+    return[[Users sharedInstance].currentUser objectId];
 }
 
 
 - (NSString *)senderDisplayName
 {
-	return [[CKApplicationModel sharedInstance].userProfile fullname];
+	return [[Users sharedInstance].currentUser fullname];
 }
 
 
@@ -555,7 +555,7 @@
 	Message *dbmessage = [self dbmessage:indexPath];
 	NSString *userId = dbmessage.userid;
 	
-	if ([userId isEqualToString:[[CKApplicationModel sharedInstance].userProfile objectId]] == NO)
+	if ([userId isEqualToString:[[Users sharedInstance].currentUser objectId]] == NO)
 	{
 		ProfileView *profileView = [[ProfileView alloc] initWith:userId Chat:NO];
 		[self.navigationController pushViewController:profileView animated:YES];
@@ -662,7 +662,7 @@
 	{
 		for (NSString *userId in members)
 		{
-			if ([userId isEqualToString:[[CKApplicationModel sharedInstance].userProfile objectId]] == NO)
+			if ([userId isEqualToString:[[Users sharedInstance].currentUser objectId]] == NO)
 			{
 				ProfileView *profileView = [[ProfileView alloc] initWith:userId Chat:NO];
 				[self.navigationController pushViewController:profileView animated:YES];
@@ -900,7 +900,7 @@
 
 {
 	Message *dbmessage = [self dbmessage:indexPath];
-	return ([dbmessage.userid isEqualToString:[[CKApplicationModel sharedInstance].userProfile objectId]] == NO);
+	return ([dbmessage.userid isEqualToString:[[Users sharedInstance].currentUser objectId]] == NO);
 }
 
 
@@ -908,7 +908,7 @@
 
 {
 	Message *dbmessage = [self dbmessage:indexPath];
-	return ([dbmessage.userid isEqualToString:[[CKApplicationModel sharedInstance].userProfile objectId]] == YES);
+	return ([dbmessage.userid isEqualToString:[[Users sharedInstance].currentUser objectId]] == YES);
 }
 
 @end

@@ -44,13 +44,13 @@
     
     
     _avatar = [[UIImageView alloc] init];
-    _avatar.image = [[CKApplicationModel sharedInstance] userProfile].avatar;
+    _avatar.image = [[Users sharedInstance] currentUser].avatar;
     
-    CKUser* userProfile = [[CKApplicationModel sharedInstance] userProfile];
+    CKUser* userProfile = [[Users sharedInstance] currentUser];
     
     if (userProfile.avatarName && (userProfile.avatarName.length > 0)) {
-        [_avatar sd_setImageWithURL:[NSURL URLWithString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-            [[CKCache sharedInstance] putImage:image withURLString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString];
+        [_avatar sd_setImageWithURL:[NSURL URLWithString:[[Users sharedInstance] currentUser].avatarURLString] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [[CKCache sharedInstance] putImage:image withURLString:[[Users sharedInstance] currentUser].avatarURLString];
             userProfile.avatar = image;
         }];
     }else{
@@ -87,7 +87,7 @@
     
     [self.view addSubview:_avatar];
     
-    _nameLabel = [UILabel labelWithText:[[CKApplicationModel sharedInstance] userProfile].name font:CKButtonFont textColor:CKClickBlueColor textAlignment:NSTextAlignmentCenter];
+    _nameLabel = [UILabel labelWithText:[[Users sharedInstance] currentUser].name font:CKButtonFont textColor:CKClickBlueColor textAlignment:NSTextAlignmentCenter];
     _nameLabel.numberOfLines = 5;
     [self.view addSubview:_nameLabel];
     
@@ -95,9 +95,9 @@
     _nickPhoneLabel.numberOfLines = 5;
     NSMutableAttributedString *nickPhoneString = [NSMutableAttributedString new];
     [nickPhoneString appendAttributedString:[NSMutableAttributedString withImageName:@"person" geometry:CGRectMake(0, -2, 12, 12)]];
-    [nickPhoneString appendAttributedString:[NSMutableAttributedString withString:[NSString stringWithFormat:@" %@ | ", [[CKApplicationModel sharedInstance] userProfile].login]]];
+    [nickPhoneString appendAttributedString:[NSMutableAttributedString withString:[NSString stringWithFormat:@" %@ | ", [[Users sharedInstance] currentUser].login]]];
     [nickPhoneString appendAttributedString:[NSMutableAttributedString withImageName:@"phone" geometry:CGRectMake(0, -2, 12, 12)]];
-    [nickPhoneString appendAttributedString:[NSMutableAttributedString withString:[NSString stringWithFormat:@" +%@", [[CKApplicationModel sharedInstance] userProfile].id ? [[CKApplicationModel sharedInstance] userProfile].id : @""]]];
+    [nickPhoneString appendAttributedString:[NSMutableAttributedString withString:[NSString stringWithFormat:@" +%@", [[Users sharedInstance] currentUser].id ? [[Users sharedInstance] currentUser].id : @""]]];
     
     _nickPhoneLabel.attributedText = nickPhoneString;
     [self.view addSubview:_nickPhoneLabel];

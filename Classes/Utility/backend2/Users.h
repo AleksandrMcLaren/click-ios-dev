@@ -13,15 +13,18 @@
 @property (nonatomic, readonly) NSArray *fullContacts;
 @property (nonatomic, readonly) NSArray *users;
 
+@property (nonatomic, strong, readonly) NSString *currentId;
+@property (nonatomic, strong) CKUser *currentUser;
 
 + (Users *)sharedInstance;
 
 - (CKUser*)userWithId:(NSString*)userId;
 
+
 - (void) addNewContactToFriends;
 - (void) checkUserProfile: (NSString *)newFriendPhone;
 - (void) run;
 - (void) saveUserWithDialog:(NSDictionary*)dialog;
-
+- (void) reloadUserList;
 @end
 

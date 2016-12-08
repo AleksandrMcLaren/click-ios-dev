@@ -106,7 +106,7 @@ static void myLow(sqlite3_context *context, int argc, sqlite3_value **argv)
         `dlgavatar`	TEXT, \
         `dlgdesc`	TEXT, \
         `dlgname`	TEXT, \
-        `entryid`	TEXT NOT NULL UNIQUE, \
+        `entryid`	TEXT NOT NULL, \
         `inblacklist`	INTEGER, \
         `lat`	NUMERIC, \
         `lng`	NUMERIC, \
@@ -195,9 +195,21 @@ static void myLow(sqlite3_context *context, int argc, sqlite3_value **argv)
         )";
         BOOL success = [db executeUpdate:sql];
         if (!success) {
-            NSLog(@"users create messages %@", [db lastError]);
+            NSLog(@"messages create error %@", [db lastError]);
         }
     }];
+    
+    [_queue inDatabase:^(FMDatabase *db) {
+        NSString* sql = @"CREATE TABLE `chat_messages` ( \
+        userId TEXT, \
+        messageId TEXT \
+        )";
+        BOOL success = [db executeUpdate:sql];
+        if (!success) {
+            NSLog(@"chat_messages create error %@", [db lastError]);
+        }
+    }];
+    
 }
 
 -(void)updateTable:(NSString*)table withValues:(NSDictionary*)values{

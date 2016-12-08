@@ -67,6 +67,7 @@
 
 @property (nonatomic, assign) id<CKMainControllerProtocol>mainController;
 @property (nonatomic, strong, readonly) CLLocation* location;
+@property (nonatomic, strong, readonly) NSString* userPhone;
 
 + (instancetype)sharedInstance;
 
@@ -92,7 +93,7 @@
 
 
 // данные пользователя
-@property (nonatomic, readonly) CKUser* userProfile;
+//@property (nonatomic, readonly) CKUser* userProfile;
 
 @property (strong, nonatomic, readonly) NSArray<CKUser *> *userlistMain;
 @property (nonatomic, readonly) NSArray<CKClusterModel *> *clusterlist;

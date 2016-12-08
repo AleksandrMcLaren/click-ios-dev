@@ -41,7 +41,6 @@
 }
 
 @property (nonatomic, strong) NSString *token;
-@property (nonatomic, strong) CKUser* userProfile;
 
 @end
 
@@ -99,19 +98,6 @@
     [UserDefaults setObject:_userPhone forKey:@"phoneNumber"];
 }
 
-- (CKUser *)userProfile
-{
-    if (!_userProfile)
-    {
-        _userProfile = [CKUser new];
-        NSDictionary *country = [[CKApplicationModel sharedInstance] countryWithId:self.countryId];
-        _userProfile.iso = [country[@"iso"] integerValue];
-        _userProfile.countryName = country[@"name"];
-        _userProfile.countryId = self.countryId;
-    }
-    return _userProfile;
-}
-
 + (instancetype)sharedInstance
 {
     static CKApplicationModel *instance;
@@ -134,15 +120,15 @@
     {
         [self.mainController showWelcomeScreen];
     } else {
-        [self showMainScreen];
         [[CKUserServerConnection sharedInstance] getUserInfoWithId:_userPhone callback:^(NSDictionary* result) {
             if ([result socketMessageStatus] == S_OK){
-                CKUser* profile = [CKUser modelWithDictionary:[result socketMessageResult]];
-                self.userProfile = profile;
+                [CKUser update:[result socketMessageResult]];
+                [[Users sharedInstance] reloadUserList];
             }else{
                 [_mainController showAlertWithResult:result completion:nil];
             }
         }];
+        [self showMainScreen];
     }
 }
 
@@ -268,15 +254,16 @@
                 
                 if ([result socketMessageStatus] == S_OK ) {
                     profile = [CKUser modelWithDictionary:[result socketMessageResult]];
+                    [CKUser update:[result socketMessageResult]];
                     if (![[CKApplicationModel sharedInstance] countryExistWithId:profile.countryId]) {
                         NSDictionary *country = [[CKApplicationModel sharedInstance] countryWithId:self.countryId];
                         profile.iso = [country[@"iso"] integerValue];
                         profile.countryName = country[@"name"];
                         profile.countryId = self.countryId;
                     }
-                    self.userProfile = profile;
+                    [Users sharedInstance].currentUser = profile;
                 }else {
-                    profile = [[CKApplicationModel sharedInstance] userProfile];
+                    profile = [[Users sharedInstance] currentUser];
                 }
                 
                 if (profile) {
@@ -372,7 +359,8 @@
 {
     
     if (!restore) {
-        self.userProfile = nil;
+//        [Users sharedInstance].currentUser = nil;
+        
         NSString* operation = @"restore";
         [_mainController beginOperation:operation];
         
@@ -397,14 +385,16 @@
     NSString* operation = @"user.create";
     [_mainController beginOperation:operation];
     
-    [[CKUserServerConnection sharedInstance] createUserWithName:self.userProfile.name
-                                                        surname:self.userProfile.surname
-                                                          login:self.userProfile.login
-                                                         avatar:self.userProfile.avatar
-                                                      birthdate:[NSDate date2str:self.userProfile.birthDate ]
-                                                            sex:self.userProfile.sex
-                                                        country:self.userProfile.countryId
-                                                           city:self.userProfile.city callback:^(NSDictionary *result) {
+    CKUser* userProfile = [[Users sharedInstance] currentUser];
+    [userProfile save];
+    [[CKUserServerConnection sharedInstance] createUserWithName:userProfile.name
+                                                        surname:userProfile.surname
+                                                          login:userProfile.login
+                                                         avatar:userProfile.avatar
+                                                      birthdate:[NSDate date2str:userProfile.birthDate ]
+                                                            sex:userProfile.sex
+                                                        country:userProfile.countryId
+                                                           city:userProfile.city callback:^(NSDictionary *result) {
                                                                [_mainController endOperation:operation];
                                                                if ([result socketMessageStatus] == S_OK){
                                                                    [self showMainScreen];
@@ -574,7 +564,7 @@
 -(void)messageResived:(NSNotification *)notification{
     [[CKDialogsModel sharedInstance] loadDialogList];
     Message* message = [Message modelWithDictionary:notification.userInfo];
-    [[CKDB sharedInstance] updateTable:@"messages" withValues:notification.userInfo];
+    [Message update:notification.userInfo];
     if ([_currentChat messageMatch:message]) {
         [_currentChat reloadMessages];
         //    [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead messages:@[messageId] callback:^(NSDictionary *result) {
@@ -606,4 +596,7 @@
     }
 }
 
+-(NSString*)userPhone{
+    return _userPhone;
+}
 @end

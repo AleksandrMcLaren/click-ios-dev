@@ -69,7 +69,7 @@
     {
         self.title = @"Карта";
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"hamburger"] style:UIBarButtonItemStylePlain target:self action:@selector(filterButton)];
-        self.profile = [[CKApplicationModel sharedInstance] userProfile];
+        self.profile = [[Users sharedInstance] currentUser];
     }
     return self;
 }

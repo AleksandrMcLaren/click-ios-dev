@@ -36,13 +36,12 @@
     return self;
 }
 
-//fetch from local INSERT_MESSAGES
+//fetch from local
 - (void)reloadMessages
 {
-    NSString *query = @"select * from messages";
     __block NSMutableArray *result = [NSMutableArray new];
     [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
-        FMResultSet *data = [db executeQuery:query];
+        FMResultSet *data = [db executeQuery:[self query]];
         while ([data next]){
             NSDictionary* resultDictionary = [data resultDictionary];
             Message *model = [Message modelWithDictionary:[resultDictionary prepared]];
@@ -55,9 +54,7 @@
     self.messages = result.copy;
 }
 
-//fetch from server
--(void)loadMessages{
-}
+
 
 -(NSString*)dialogId{
     return _dialog.dialogId;
@@ -140,5 +137,16 @@
 -(Message*)newMessage{
     return nil;
 }
+
+//ovverite
+-(NSString*)query{
+    return nil;
+}
+
+//fetch from server
+-(void)loadMessages{
+}
+
+
 @end
 

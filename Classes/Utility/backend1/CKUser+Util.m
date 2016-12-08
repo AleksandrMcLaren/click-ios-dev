@@ -34,7 +34,7 @@
 
 
 - (NSString *)picture				{	return self.avatarURLString /*FUSER_PICTURE*/;								}
-- (NSString *)status				{	return [NSString stringWithFormat:@"%ld", (long)self.status] /*FUSER_STATUS*/;								}
+- (NSString *)status				{	return [NSString stringWithFormat:@"%ld", self.status] /*FUSER_STATUS*/;								}
 - (NSString *)loginMethod			{	return LOGIN_PHONE /*FUSER_LOGINMETHOD*/;							}
 
 - (NSInteger)keepMedia				{	return KEEPMEDIA_FOREVER /*FUSER_KEEPMEDIA*/;			}
@@ -53,9 +53,9 @@
     if (([self.firstname length] != 0) && ([self.lastname length] != 0))
         return [NSString stringWithFormat:@"%@%@", [self.firstname substringToIndex:1], [self.lastname substringToIndex:1]];
     if ([self.login length] != 0) {
-        return [self.firstname substringToIndex:1];
+        return [self.login substringToIndex:1];
     }
-    return nil;
+    return @"?";
 }
 
 @end

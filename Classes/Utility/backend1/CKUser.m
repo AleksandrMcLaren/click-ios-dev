@@ -60,6 +60,9 @@
     @try {
         model.id = [NSString stringWithFormat:@"%@", sourceDict[@"id"]];
         model.login = sourceDict[@"login"];
+        if (!model.login) {
+            model.login  = @"";
+        }
         model.name = sourceDict[@"name"];
         model.surname = sourceDict[@"surname"];
         model.sex = sourceDict[@"sex"];
@@ -114,6 +117,10 @@
     }
     
     return model;
+}
+
++(void)update:(NSDictionary *)dictionary{
+    [[CKDB sharedInstance] updateTable:@"users" withValues:dictionary];
 }
 
 - (NSString *)commonName
@@ -216,17 +223,84 @@
     return self.surname;
 }
 
+-(void)save{
+    NSMutableDictionary* dictionary = [NSMutableDictionary new];
+    
+    if (self.id) {
+        dictionary[@"id"] = self.id;
+    }
+    if (self.login) {
+        dictionary[@"login"] = self.login;
+    }
+    
+    if (self.name) {
+        dictionary[@"name"] = self.name;
+    }
+    if (self.surname) {
+        dictionary[@"surname"] = self.surname;
+    }
+    if (self.sex) {
+        dictionary[@"sex"] = self.sex ;
+    }
+    if (self.avatarName) {
+        dictionary[@"avatar"] = self.avatarName;
+    }
+    
+    dictionary[@"iso"] = @(self.iso);
+    dictionary[@"country"] = @(self.countryId);
+    if (self.countryName) {
+        dictionary[@"countryname"] = self.countryName;
+    }
+    dictionary[@"city"] = @(self.city);
+    if (self.cityName) {
+        dictionary[@"cityname"] = self.cityName;
+    }
+    
+//    model.invite = sourceDict[@"invite"];
+//    if ((sourceDict[@"lat"]) && (sourceDict[@"lon"]) ) {
+//        model.location = CLLocationCoordinate2DMake([sourceDict[@"lat"] doubleValue], [sourceDict[@"lon"] doubleValue]);
+//    }
+//    if (sourceDict[@"distance"]) {
+//        model.distance = [sourceDict[@"distance"] doubleValue];
+//    }
+//    if (sourceDict[@"geostatus"]) {
+//        model.geoStatus = [sourceDict[@"geostatus"] integerValue];
+//    }
+//    if (sourceDict[@"isfriend"]) {
+//        model.isFriend = [sourceDict[@"isfriend"] boolValue];
+//    }
+//    if (sourceDict[@"likes"]) {
+//        model.likes = [sourceDict[@"likes"] integerValue];
+//    }
+//    if (sourceDict[@"isliked"]) {
+//        model.isLiked = [sourceDict[@"isliked"] boolValue];
+//    }
+//    if (sourceDict[@"age"]) {
+//        model.age = [sourceDict[@"age"] integerValue];
+//    }
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss"];
+    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
+    
+  
+    dictionary[@"birthdate"] = self.birthDate ? [dateFormatter stringFromDate:self.birthDate] : @"0001-01-01T00:00:00";
+    dictionary[@"registereddate"] = self.registeredDate ? [dateFormatter stringFromDate:self.registeredDate] : @"0001-01-01T00:00:00";
+    dictionary[@"statusdate"] = self.statusDate ? [dateFormatter stringFromDate:self.statusDate] : @"0001-01-01T00:00:00";
+    
+    [CKUser update:dictionary];
+}
 
 #pragma mark - Class methods
 
 
 + (NSString *)currentId{
-    return [[CKApplicationModel sharedInstance].userProfile objectId];
+    return [[Users sharedInstance].currentUser objectId];
 }
 
 
 + (CKUser *)currentUser{
-    return  [CKApplicationModel sharedInstance].userProfile;
+    return  [Users sharedInstance].currentUser;
 }
 
 #pragma mark - Initialization methods

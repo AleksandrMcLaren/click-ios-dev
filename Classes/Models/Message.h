@@ -51,6 +51,7 @@ typedef enum CKMessageType
 + (void)updateStatus:(NSString *)groupId messageId:(NSString *)messageId;
 + (void)update:(NSDictionary*)dictionary;
 + (void)updateId:(NSString*)oldId withId:(NSString*)newId;
++ (void)saveLinkWithUserId:(NSString*)userId messageId:(NSString*)messageId;
 + (void)deleteItem:(NSString *)groupId messageId:(NSString *)messageId;
 
 + (void)deleteItem:(Message *)dbmessage;

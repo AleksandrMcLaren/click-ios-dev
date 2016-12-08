@@ -11,6 +11,7 @@
 	BOOL refreshUserInterface;
     NSMutableDictionary* _users;
     NSDictionary *_phoneContacts;
+    CKUser* _currentUser;
 }
 @end
 
@@ -32,8 +33,8 @@
 }
 
 -(CKUser*)userWithId:(NSString*)userId{
-    if ([[CKUser currentId] isEqualToString:userId]) {
-        return [CKUser currentUser];
+    if ([_currentUser.id isEqualToString:userId]) {
+        return _currentUser;
     }
     if ([_users objectForKey:userId]) {
         return [_users objectForKey:userId];
@@ -48,7 +49,6 @@
     }
     return nil;
 }
-
 
 - (id)init
 
@@ -105,7 +105,11 @@
                 user.name = contact.name;
                 user.surname = contact.surname;
             }
-            [result setObject:user forKey:user.id];
+            if ([user.id isEqualToString:[CKApplicationModel sharedInstance].userPhone]) {
+                _currentUser = user;
+            }else{
+                [result setObject:user forKey:user.id];
+            }
         }
     }];
     _users = result;
@@ -302,6 +306,28 @@
 
 
 }
+
+#pragma mark - Class methods
+
+
+- (NSString *)currentId{
+    return [_currentUser objectId];
+}
+
+
+-(CKUser *)currentUser{
+    if (!_currentUser)
+    {
+        _currentUser = [CKUser new];
+        NSDictionary *country = [[CKApplicationModel sharedInstance] countryWithId: [CKApplicationModel sharedInstance].countryId];
+        _currentUser.iso = [country[@"iso"] integerValue];
+        _currentUser.countryName = country[@"name"];
+        _currentUser.countryId = [CKApplicationModel sharedInstance].countryId;
+        _currentUser.id = [CKApplicationModel sharedInstance].userPhone;
+    }
+    return  _currentUser;
+}
+
 
 
 @end

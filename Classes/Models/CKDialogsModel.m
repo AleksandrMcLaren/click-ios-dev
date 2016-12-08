@@ -27,7 +27,8 @@
     else {
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
-        [dateFormatter setDateFormat:@"YYYY-MM-DDThh:mm:ss"];
+//        [dateFormatter setDateFormat:@"YYYY-MM-DDThh:mm:ss"];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"];
         model.date = [dateFormatter dateFromString:dict[@"date"]];
     }
     
@@ -37,7 +38,7 @@
     model.dialogId = dict[@"entryid"];
     model.location = CLLocationCoordinate2DMake([dict[@"lat"] doubleValue], [dict[@"lon"] doubleValue]);
     model.userLogin = dict[@"login"];
-    model.message = dict[@"message"];
+    model.message =  [NSString stringWithFormat:@"%@", dict[@"message"] ];
     model.messageId = dict[@"msgid"];
     model.messageStatus = [dict[@"msgstatus"] integerValue];
     model.messagesTotal = [dict[@"msgtotal"] integerValue];

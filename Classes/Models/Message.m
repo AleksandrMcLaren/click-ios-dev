@@ -191,6 +191,12 @@
 
 +(void)update:(NSDictionary *)dictionary{
     [[CKDB sharedInstance] updateTable:@"messages" withValues:dictionary];
+    if (dictionary[@"dialogtype"]) {
+        CKDialogType dialogType = (CKDialogType)[dictionary[@"dialogtype"] integerValue];
+        if (dialogType == CKDialogTypeChat) {
+            [Message saveLinkWithUserId:dictionary[@"userid"] messageId:dictionary[@"id"]];
+        }
+    }
 }
 
 + (void)updateId:(NSString*)oldId withId:(NSString*)newId{
@@ -199,6 +205,34 @@
     [ckdb.queue inDatabase:^(FMDatabase *db) {
         NSString* sql = @"update messages set id = ? where id = ?";
         BOOL success = [db executeUpdate:sql withArgumentsInArray:@[newId, oldId]];
+        if (!success) {
+            NSLog(@"%@", [db lastError]);
+        }
+    }];
+    
+    [ckdb.queue inDatabase:^(FMDatabase *db) {
+        NSString* sql = @"update chat_messages set messageId = ? where messageId = ?";
+        BOOL success = [db executeUpdate:sql withArgumentsInArray:@[newId, oldId]];
+        if (!success) {
+            NSLog(@"%@", [db lastError]);
+        }
+    }];
+}
+
++ (void)saveLinkWithUserId:(NSString*)userId messageId:(NSString*)messageId{
+    CKDB *ckdb = [CKDB sharedInstance];
+    
+    [ckdb.queue inDatabase:^(FMDatabase *db) {
+        NSString* sql = @"delete from chat_messages where userId = ? and messageId = ?";
+        BOOL success = [db executeUpdate:sql withArgumentsInArray:@[userId, messageId]];
+        if (!success) {
+            NSLog(@"%@", [db lastError]);
+        }
+    }];
+    
+    [ckdb.queue inDatabase:^(FMDatabase *db) {
+        NSString* sql = @"insert into chat_messages (userId, messageId) values (?, ?)";
+        BOOL success = [db executeUpdate:sql withArgumentsInArray:@[userId, messageId]];
         if (!success) {
             NSLog(@"%@", [db lastError]);
         }

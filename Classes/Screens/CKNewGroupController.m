@@ -32,7 +32,7 @@
         self.title = @"Новая группа";
         _pictureCapture = [CKPictureCaptureManager new];
         _pictureCapture.controller = self;
-        _users = [NSMutableArray arrayWithObject:[[CKApplicationModel sharedInstance] userProfile]];
+        _users = [NSMutableArray arrayWithObject:[[Users sharedInstance] currentUser]];
     }
     return self;
 }
@@ -150,7 +150,7 @@
 {
     if (indexPath.row == 0)
     {
-        NSMutableArray *exclude = [NSMutableArray arrayWithObject:[[CKApplicationModel sharedInstance] userProfile]];
+        NSMutableArray *exclude = [NSMutableArray arrayWithObject:[[Users sharedInstance] currentUser]];
         [exclude addObjectsFromArray:_users];
         CKFriendSelectionController *ctl = [[CKFriendSelectionController alloc] initWithExcludedFriends:exclude];
         ctl.delegate = self;

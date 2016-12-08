@@ -227,7 +227,7 @@ typedef enum CKLoginState{
         self.title = @"Профиль";
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
         self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
-        self.profile = [[CKApplicationModel sharedInstance] userProfile];
+        self.profile = [[Users sharedInstance] currentUser];
     }
     return self;
 }
@@ -296,9 +296,9 @@ typedef enum CKLoginState{
     if (self.profile.avatar) {
         [header.avatar setImage:self.profile.avatar forState:UIControlStateNormal];
     }else{
-        [header.avatar sd_setImageWithURL:[NSURL URLWithString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                [[CKCache sharedInstance] putImage:image withURLString:[[CKApplicationModel sharedInstance] userProfile].avatarURLString];
-                [[CKApplicationModel sharedInstance] userProfile].avatar = image;
+        [header.avatar sd_setImageWithURL:[NSURL URLWithString:[[Users sharedInstance] currentUser].avatarURLString] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                [[CKCache sharedInstance] putImage:image withURLString:[[Users sharedInstance] currentUser].avatarURLString];
+                [[Users sharedInstance] currentUser].avatar = image;
         }];
     }
     if([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)])
@@ -908,7 +908,7 @@ typedef enum CKLoginState{
     NSString *login = (NSString*)timer.userInfo;
     
     [[CKApplicationModel sharedInstance] checkUserLogin:login withCallback:^(id model) {
-        _loginCell.loginState = [model boolValue] ? CKLoginStateNotExist : CKLoginStateNotExist;
+        _loginCell.loginState = [model boolValue] ? CKLoginStateNotExist : CKLoginStateExist;
        
     }];
 }

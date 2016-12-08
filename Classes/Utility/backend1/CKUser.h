@@ -53,7 +53,7 @@
 //----------------------------------------------------------
 
 + (instancetype)modelWithDictionary:(NSDictionary *)sourceDict;
-
++ (void)update:(NSDictionary*)dictionary;
 @property (strong, nonatomic) RACCommand *executeSearch;
 
 #pragma mark - Class methods
@@ -69,6 +69,6 @@
 #pragma mark - Instance methods
 
 - (BOOL)isCurrent;
-
+- (void)save;
 
 @end

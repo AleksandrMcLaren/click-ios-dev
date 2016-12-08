@@ -257,12 +257,12 @@
 {
     NSLog(@"didFailWithError %@ %@", webSocket.url, error);
      _isConnected = NO;
-    if (_connection.readyState == SR_CLOSED) {
+//    if (_connection.readyState == SR_CLOSED) {
         //Error Domain=com.squareup.SocketRocket Code=504 "Timeout Connecting to Server" UserInfo={NSLocalizedDescription=Timeout Connecting to Server}
         if (error.code == 504) {
              [self runCallBackWithError];
         }
-    }
+//    }
 }
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean
 {
