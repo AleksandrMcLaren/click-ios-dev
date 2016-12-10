@@ -40,6 +40,8 @@ typedef enum CKMessageType
 @property (nonatomic, assign) NSInteger attachPreviewCounter;
 @property (nonatomic, strong) NSString* entryid;
 
+@property (nonatomic, strong) NSString* dialogIdentifier;
+
 @property (nonatomic, strong, readonly) NSString *senderName;
 @property (nonatomic, strong, readonly) NSString *statusName;
 @property (nonatomic, strong, readonly) NSString *text;

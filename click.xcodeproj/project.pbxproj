@@ -55,6 +55,7 @@
 		3D3AED1C1DE49D3800F745BE /* CallHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AED141DE49D3800F745BE /* CallHistory.m */; };
 		3D3AED1D1DE49D3800F745BE /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AED161DE49D3800F745BE /* Group.m */; };
 		3D3AED1F1DE49D3800F745BE /* Recent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3AED1A1DE49D3800F745BE /* Recent.m */; };
+		3D555BFE1DFBB33E00D0F86E /* Chats.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D555BFD1DFBB33E00D0F86E /* Chats.m */; };
 		3D72B40D1DE1F167001A4992 /* NotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B4081DE1F167001A4992 /* NotificationCenter.m */; };
 		3D72B40E1DE1F167001A4992 /* NSDictionary+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B40A1DE1F167001A4992 /* NSDictionary+Util.m */; };
 		3D72B40F1DE1F167001A4992 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D72B40C1DE1F167001A4992 /* UserDefaults.m */; };
@@ -289,6 +290,8 @@
 		3D3AED191DE49D3800F745BE /* Recent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Recent.h; sourceTree = "<group>"; };
 		3D3AED1A1DE49D3800F745BE /* Recent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Recent.m; sourceTree = "<group>"; };
 		3D3BD6711DAF9BB500997A0E /* CKStatusCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKStatusCode.h; sourceTree = "<group>"; };
+		3D555BFC1DFBB33E00D0F86E /* Chats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chats.h; sourceTree = "<group>"; };
+		3D555BFD1DFBB33E00D0F86E /* Chats.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chats.m; sourceTree = "<group>"; };
 		3D72B4051DE1F011001A4992 /* AppConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppConstant.h; sourceTree = "<group>"; };
 		3D72B4071DE1F167001A4992 /* NotificationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationCenter.h; sourceTree = "<group>"; };
 		3D72B4081DE1F167001A4992 /* NotificationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationCenter.m; sourceTree = "<group>"; };
@@ -708,7 +711,8 @@
 				3D3AECD91DE4974000F745BE /* CallsView.m */,
 				3D3AECDA1DE4974000F745BE /* CallsView.xib */,
 			);
-			path = 02_Calls;
+			name = 02_Calls;
+			path = ../02_Calls;
 			sourceTree = "<group>";
 		};
 		3D3AECD41DE4974000F745BE /* 01_Call */ = {
@@ -748,6 +752,7 @@
 		3D3AECE61DE4980D00F745BE /* 04_Groups */ = {
 			isa = PBXGroup;
 			children = (
+				3D3AECD31DE4974000F745BE /* 02_Calls */,
 				3D3AECE71DE4980D00F745BE /* 01_CreateGroup */,
 				3D3AECEB1DE4980D00F745BE /* 02_GroupDetails */,
 				3D3AECEF1DE4980D00F745BE /* GroupsCell.h */,
@@ -814,6 +819,8 @@
 				3D3AED161DE49D3800F745BE /* Group.m */,
 				3D3AED191DE49D3800F745BE /* Recent.h */,
 				3D3AED1A1DE49D3800F745BE /* Recent.m */,
+				3D555BFC1DFBB33E00D0F86E /* Chats.h */,
+				3D555BFD1DFBB33E00D0F86E /* Chats.m */,
 			);
 			path = backend3;
 			sourceTree = "<group>";
@@ -992,7 +999,6 @@
 			isa = PBXGroup;
 			children = (
 				3D3AECE61DE4980D00F745BE /* 04_Groups */,
-				3D3AECD31DE4974000F745BE /* 02_Calls */,
 				3D3AECAA1DE4923D00F745BE /* 01_Chat */,
 			);
 			name = Tabs;
@@ -1545,6 +1551,7 @@
 				D82EB8A51DCB6C50008E9035 /* CKCustomPointAnnotation.m in Sources */,
 				3D3AECC51DE494E400F745BE /* PictureView.m in Sources */,
 				7831EDE21C91EE6900319191 /* CKLoginCodeViewController.m in Sources */,
+				3D555BFE1DFBB33E00D0F86E /* Chats.m in Sources */,
 				3DACB1321DE5F26D004284D9 /* DownloadManager.m in Sources */,
 				78B524BC1C9DCE8C00502AA4 /* CKUserProfileController.m in Sources */,
 				7831EDAE1C90018500319191 /* UIColor+hex.m in Sources */,

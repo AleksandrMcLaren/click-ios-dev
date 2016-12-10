@@ -105,8 +105,9 @@
 
 - (void)openChat
 {
-    CKDialogChatController *ctl = [[CKDialogChatController alloc] initWithUserId:_user.id];
-    [self.navigationController pushViewController:ctl animated:YES];
+    [[CKApplicationModel sharedInstance] startPrivateChat:_user];
+//    CKDialogChatController *ctl = [[CKDialogChatController alloc] initWithUserId:_user.id];
+//    [self.navigationController pushViewController:ctl animated:YES];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

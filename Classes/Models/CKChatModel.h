@@ -8,14 +8,15 @@
 
 #import "CKDialogsModel.h"
 
+typedef void (^CKChatModelFetchedMessages)(NSArray* messages);
+
 @interface CKChatModel : NSObject
 
 @property (nonatomic, strong) NSArray *messages;
 @property (nonatomic, readonly) BOOL isReadonly;
 @property (nonatomic, strong) NSArray *attachements;
-@property (nonatomic, strong, readonly) NSString* dialogId;
+@property (nonatomic, strong, readonly) NSString* identifier;
 @property (nonatomic, strong, readonly) CKDialogModel* dialog;
-
 
 @property (nonatomic, strong, readonly) RACSignal* messagesDidChanged;
 
@@ -23,9 +24,6 @@
 
 - (void)send:(NSString *)text Video:(NSURL *)video Picture:(UIImage *)picture Audio:(NSString *)audio;
 
-//inherited
-- (void)saveMessage:(NSDictionary*)message;
-//ovverite
 - (void)reloadMessages;
 
 - (void)loadMessages;
@@ -33,4 +31,9 @@
 - (void)clearCounter;
 
 - (BOOL)messageMatch:(Message*)message;
+
+- (void)sendMessage:(Message *)message;
+
+-(void)recivedMesagesArray:(NSArray*)messages;
+
 @end

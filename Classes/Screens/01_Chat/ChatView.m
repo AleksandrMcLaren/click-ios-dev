@@ -680,8 +680,8 @@
 	{
 		if (group != nil)
 		{
-			GroupDetailsView *groupDetailsView = [[GroupDetailsView alloc] initWith:_chat.dialogId Chat:NO];
-			[self.navigationController pushViewController:groupDetailsView animated:YES];
+//			GroupDetailsView *groupDetailsView = [[GroupDetailsView alloc] initWith:_chat.dialogId Chat:NO];
+//			[self.navigationController pushViewController:groupDetailsView animated:YES];
 		}
 		else [ProgressHUD showError:@"This group seems to be deleted."];
 	}
@@ -699,7 +699,7 @@
 
 {
 	Message *dbmessage = [self dbmessage:indexPath];
-	NSString *text = [Cryptor decryptText:dbmessage.text groupId:_chat.dialogId];
+	NSString *text = [Cryptor decryptText:dbmessage.text groupId:_chat.identifier];
 	[[UIPasteboard generalPasteboard] setString:text];
 }
 

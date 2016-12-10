@@ -29,11 +29,7 @@
 
 -(void)loadMessages{
     [[CKMessageServerConnection sharedInstance] getDialogWithUser:self.dialog.userId page:1 pageSize:INSERT_MESSAGES callback:^(NSDictionary *result) {
-        for (NSDictionary *message in result[@"result"]){
-            [self saveMessage:message];
-            [self saveLinkWithMessageId:message[@"id"]];
-        }
-        [self reloadMessages];
+        [self recivedMesagesArray:result[@"result"]];
     }];
 }
 
@@ -55,9 +51,7 @@
 }
 
 - (void)sendMessage:(Message *)message{
-    [message save];
-    [self saveLinkWithMessageId:message.id];
-    [self reloadMessages];
+    [super sendMessage:message];
     
     [[CKMessageServerConnection sharedInstance] uploadAttachements:self.attachements completion:^(NSDictionary *result) {
         self.attachements = @[];
@@ -69,7 +63,7 @@
                                                                NSDictionary* dictionary = result[@"result"];
                                                                Message *messageRecived = [Message modelWithDictionary:dictionary];
                                                                [message updateWithMessage:messageRecived];
-                                                               [self saveLinkWithMessageId:message.id];
+                                                               [messageRecived save];
                                                                [self reloadMessages];
                                                            }else{
                                                                [ProgressHUD showError:@"Message sending failed."];
@@ -86,16 +80,12 @@
 -(Message*)newMessage{
     Message *message = [MessageSent new];
     message.dialogType = CKDialogTypeChat;
+    message.dialogIdentifier = self.dialog.userId;
     return message;
 }
 
-- (void)saveLinkWithMessageId:(NSString*)messageId{
-    [Message saveLinkWithUserId:self.dialog.userId messageId:messageId];
+-(void)saveMessage:(Message*)message{
+    message.dialogIdentifier = self.dialog.userId;
+    [message save];
 }
-
--(NSString*)query{
-    NSString *query = [NSString stringWithFormat:@"select * from messages where id in (select messageId from chat_messages where userId = '%@')", self.dialog.userId];
-    return query;
-}
-
 @end

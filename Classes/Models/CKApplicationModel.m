@@ -545,8 +545,11 @@
 
 #pragma mark - chats
 
-
+//или открытие сощуствующего или создание нового
 -(void) startPrivateChat:(CKUser*) user{
+    CKDialogModel* dialog = [[CKDialogsModel sharedInstance] getWithUser:user];
+    _currentChat = [[CKDialogChatModel alloc] initWithDialog:dialog];
+    [self.mainController startChat:_currentChat];
 }
 
 -(void) startMultipleChat:(NSArray*) userIds{
@@ -555,6 +558,7 @@
 -(void) startGroupChat:(CKGroupChatModel*) group{
 }
 
+//открытие уже существующего диалога
 -(void) restartRecentChat:(CKDialogModel*) dialog{
     //необходимо в зависимости от типа возвращать модель
     _currentChat = [[CKDialogChatModel alloc] initWithDialog:dialog];
@@ -564,7 +568,8 @@
 -(void)messageResived:(NSNotification *)notification{
     [[CKDialogsModel sharedInstance] loadDialogList];
     Message* message = [Message modelWithDictionary:notification.userInfo];
-    [Message update:notification.userInfo];
+    [message save];
+
     if ([_currentChat messageMatch:message]) {
         [_currentChat reloadMessages];
         //    [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead messages:@[messageId] callback:^(NSDictionary *result) {

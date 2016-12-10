@@ -176,7 +176,7 @@
     dictionary[@"userid"] = self.userid ;
     dictionary[@"userlogin"] = self.userlogin;
     
-    NSMutableArray *attachements = [NSMutableArray new];
+//    NSMutableArray *attachements = [NSMutableArray new];
     
 //TODO сохранять аттачмент
     dictionary[@"attach"] = @"";
@@ -187,16 +187,23 @@
     dictionary[@"lat"] = @(self.location.latitude);
     dictionary[@"lng"] = @(self.location.longitude);
     [Message update:dictionary];
+    
+    [Message saveLinkWithUserId:self.dialogIdentifier messageId:self.id];
+}
+
+-(NSString*)dialogIdentifier{
+    if (_dialogIdentifier) {
+        return _dialogIdentifier;
+    }
+    if (self.dialogType == CKDialogTypeChat) {
+        return self.userid;
+    }else{
+        return _entryid;
+    }
 }
 
 +(void)update:(NSDictionary *)dictionary{
     [[CKDB sharedInstance] updateTable:@"messages" withValues:dictionary];
-    if (dictionary[@"dialogtype"]) {
-        CKDialogType dialogType = (CKDialogType)[dictionary[@"dialogtype"] integerValue];
-        if (dialogType == CKDialogTypeChat) {
-            [Message saveLinkWithUserId:dictionary[@"userid"] messageId:dictionary[@"id"]];
-        }
-    }
 }
 
 + (void)updateId:(NSString*)oldId withId:(NSString*)newId{
@@ -211,7 +218,7 @@
     }];
     
     [ckdb.queue inDatabase:^(FMDatabase *db) {
-        NSString* sql = @"update chat_messages set messageId = ? where messageId = ?";
+        NSString* sql = @"update dialogs_messages set messageId = ? where messageId = ?";
         BOOL success = [db executeUpdate:sql withArgumentsInArray:@[newId, oldId]];
         if (!success) {
             NSLog(@"%@", [db lastError]);
@@ -223,7 +230,7 @@
     CKDB *ckdb = [CKDB sharedInstance];
     
     [ckdb.queue inDatabase:^(FMDatabase *db) {
-        NSString* sql = @"delete from chat_messages where userId = ? and messageId = ?";
+        NSString* sql = @"delete from dialogs_messages where dialogId = ? and messageId = ?";
         BOOL success = [db executeUpdate:sql withArgumentsInArray:@[userId, messageId]];
         if (!success) {
             NSLog(@"%@", [db lastError]);
@@ -231,7 +238,7 @@
     }];
     
     [ckdb.queue inDatabase:^(FMDatabase *db) {
-        NSString* sql = @"insert into chat_messages (userId, messageId) values (?, ?)";
+        NSString* sql = @"insert into dialogs_messages (dialogId, messageId) values (?, ?)";
         BOOL success = [db executeUpdate:sql withArgumentsInArray:@[userId, messageId]];
         if (!success) {
             NSLog(@"%@", [db lastError]);

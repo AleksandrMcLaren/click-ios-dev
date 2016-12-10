@@ -54,9 +54,7 @@
     self.messages = result.copy;
 }
 
-
-
--(NSString*)dialogId{
+-(NSString*)identifier{
     return _dialog.dialogId;
 }
 
@@ -108,27 +106,23 @@
     [self sendMessage:message];
 }
 
-- (void)sendMessage:(Message *)message{
-}
 
 - (void)messageReceived:(NSNotification *)notif{
 
 }
 
-- (void)saveMessage:(NSDictionary*)message{
-    [[CKDB sharedInstance] updateTable:@"messages" withValues:message];
-}
+
 
 -(void)clearCounter{
-    [CKDialogModel clearCounter:self.dialogId];
-    [CKDialogModel updateDialog:self.dialogId withMessage:[self.messages lastObject]];
+    [CKDialogModel clearCounter:_dialog.dialogId];
+    [CKDialogModel updateDialog:_dialog.dialogId withMessage:[self.messages lastObject]];
 }
 
 - (BOOL)messageMatch:(Message*)message{
     if (message.dialogType == CKDialogTypeChat) {
         return [message.userid isEqualToString:self.dialog.userId];
     }else{
-        return [self.dialogId isEqualToString:message.entryid];
+        return [_dialog.dialogId isEqualToString:message.entryid];
     }
     return NO;
 }
@@ -140,13 +134,29 @@
 
 //ovverite
 -(NSString*)query{
-    return nil;
+    NSString *query = [NSString stringWithFormat:@"select * from messages where id in (select messageId from dialogs_messages where dialogId = '%@')", _dialog.dialogidentifier];
+    return query;
 }
 
 //fetch from server
 -(void)loadMessages{
 }
 
+- (void)sendMessage:(Message *)message{
+    [message save];
+    [self reloadMessages];
+}
 
+-(void)recivedMesagesArray:(NSArray*)messages{
+    for (NSDictionary *diactionary in messages){
+        Message* message = [Message modelWithDictionary:diactionary];
+        [self saveMessage:message];
+    }
+    [self reloadMessages];
+}
+
+-(void)saveMessage:(Message*)message{
+    [message save];
+}
 @end
 

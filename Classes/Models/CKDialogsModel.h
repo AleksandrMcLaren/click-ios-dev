@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import "Message.h"
+#import "CKUser.h"
 
 @interface CKDialogModel : NSObject
 
@@ -39,6 +40,9 @@
 @property (nonatomic, assign) NSUInteger type;
 @property (nonatomic, strong) NSString *userId;
 
+@property (nonatomic, strong, readonly) NSString* dialogidentifier;
+//
+//+(NSString*)identifierWitType:(CKDialogType)type userId:(NSString*)userId;
 
 #pragma mark - Clear methods
 
@@ -57,4 +61,5 @@
 - (void)run;
 - (void)loadDialogList;
 
+- (CKDialogModel*)getWithUser:(CKUser*)user;
 @end

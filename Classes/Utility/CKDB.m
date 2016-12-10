@@ -200,13 +200,13 @@ static void myLow(sqlite3_context *context, int argc, sqlite3_value **argv)
     }];
     
     [_queue inDatabase:^(FMDatabase *db) {
-        NSString* sql = @"CREATE TABLE `chat_messages` ( \
-        userId TEXT, \
+        NSString* sql = @"CREATE TABLE `dialogs_messages` ( \
+        dialogId TEXT, \
         messageId TEXT \
         )";
         BOOL success = [db executeUpdate:sql];
         if (!success) {
-            NSLog(@"chat_messages create error %@", [db lastError]);
+            NSLog(@"dialogs_messages create error %@", [db lastError]);
         }
     }];
     

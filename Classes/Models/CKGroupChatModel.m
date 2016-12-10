@@ -13,9 +13,7 @@
 
 -(void)loadMessages{
     [[CKMessageServerConnection sharedInstance] getDialogWithId:self.dialog.dialogId page:1 pageSize:INSERT_MESSAGES callback:^(NSDictionary *result) {
-        for (NSDictionary *message in result[@"result"]){
-            [self saveMessage:message];
-        }
+        [self recivedMesagesArray:result[@"result"]];
     }];
 }
     

@@ -77,6 +77,12 @@
     }];
 }
 
+-(NSString*)dialogidentifier{
+    if (self.type == CKDialogTypeChat) {
+        return _userId;
+    }
+    return _dialogId;
+}
 
 @end
 
@@ -150,6 +156,20 @@
 
 -(void)saveDialog:(NSDictionary*)dialog{
     [[CKDB sharedInstance] updateTable:@"dialogs" withValues:dialog];
+}
+
+- (CKDialogModel*)getWithUser:(CKUser*)user{
+    CKDialogModel* result = nil;
+    for (CKDialogModel* model in self.dialogs) {
+        if ((model.type == CKDialogTypeChat) && ([model.userId isEqualToString:user.id])) {
+            result = model;
+        }
+    }
+    if (!result) {
+        result = [[CKDialogModel alloc] init];
+        
+    }
+    return result;
 }
 
 
