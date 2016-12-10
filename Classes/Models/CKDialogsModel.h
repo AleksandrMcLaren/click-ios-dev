@@ -46,8 +46,8 @@
 
 #pragma mark - Clear methods
 
-+ (void)clearCounter:(NSString *)dialogId;
-+ (void)updateDialog:(NSString *)dialogId withMessage:(Message*)message;
++ (void)clearCounter:(CKDialogModel *)dialog;
++ (void)updateDialog:(CKDialogModel *)dialog withMessage:(Message*)message;
 
 @end
 

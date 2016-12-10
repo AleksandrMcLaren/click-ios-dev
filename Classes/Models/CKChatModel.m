@@ -52,6 +52,7 @@
         return [obj1.date compare:obj2.date];
     }];
     self.messages = result.copy;
+    [CKDialogModel updateDialog:_dialog withMessage:[self.messages lastObject]];
 }
 
 -(NSString*)identifier{
@@ -114,8 +115,7 @@
 
 
 -(void)clearCounter{
-    [CKDialogModel clearCounter:_dialog.dialogId];
-    [CKDialogModel updateDialog:_dialog.dialogId withMessage:[self.messages lastObject]];
+    [CKDialogModel clearCounter:_dialog];
 }
 
 - (BOOL)messageMatch:(Message*)message{

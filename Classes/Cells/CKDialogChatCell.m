@@ -42,9 +42,9 @@
     [self.avatar setAvatarFile:model.userAvatarId fallbackName:[self letterNameWithName:model.userName surname:model.userSurname login:model.userLogin]];
     self.title.attributedText = [NSMutableAttributedString withName:model.userName surname:model.userSurname size:16.0];
 
-    self.subtitle.text = model.message;
+    self.subtitle.text = model.message ? model.message : @"";
     self.activity.text = [model.date readableMessageTimestampString];
-    
+
     if (model.messagesUnread == 0)
     {
         self.title.textColor = [UIColor blackColor];

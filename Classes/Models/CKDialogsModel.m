@@ -59,18 +59,31 @@
 #pragma mark - Clear methods
 
 
-+ (void)clearCounter:(NSString *)dialogId{
++ (void)clearCounter:(CKDialogModel *)dialog{
+    dialog.messagesUnread = 0;
     [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
-        BOOL success =  [db executeUpdate:@"update dialogs set msgunread = 0 where entryid =?", dialogId];
+        BOOL success =  [db executeUpdate:@"update dialogs set msgunread = 0 where entryid =?", dialog.dialogId];
         if (!success) {
             NSLog(@"%@", [db lastError]);
         }
     }];
 }
 
-+ (void)updateDialog:(NSString *)dialogId withMessage:(Message*)message{
++ (void)updateDialog:(CKDialogModel *)dialog withMessage:(Message*)message{
+    dialog.messageStatus = message.status;
+    dialog.messageType = message.type;
+    dialog.message = message.message;
+    dialog.messageId = message.id;
+    dialog.date = message.date;
+    
     [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
-        BOOL success =  [db executeUpdate:@"update dialogs set message = ?, msgid = ?  where entryid =?", message.text, message.id ,dialogId];
+        BOOL success =  [db executeUpdate:@"update dialogs set message = ?, msgid = ?, date = ?, msgstatus =?, msgtype = ? where entryid =?",
+                         message.text,
+                         message.id ,
+                         [NSDate stringWithDate:  message.date],
+                         @(message.status),
+                         @(message.type),
+                         dialog.dialogId];
         if (!success) {
             NSLog(@"%@", [db lastError]);
         }

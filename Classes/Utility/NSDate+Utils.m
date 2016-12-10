@@ -19,4 +19,20 @@
     return stringFromDate;
 }
 
++(NSDateFormatter*)dateFormatterFull{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"];
+    return dateFormatter;
+}
+
++(NSDate*)dateWithString:(NSString*)date{
+    NSDateFormatter* dateFormatter = [[self class] dateFormatterFull];
+    return [dateFormatter dateFromString:date];
+}
+
++(NSString*)stringWithDate:(NSDate*)date{
+    NSDateFormatter* dateFormatter = [[self class] dateFormatterFull];
+    return [dateFormatter stringFromDate:date];
+}
 @end
