@@ -160,7 +160,7 @@
 - (void)startChat:(CKChatModel *)chat{
     ChatView *chatView = [[ChatView alloc] initWithChat:chat];
     chatView.hidesBottomBarWhenPushed = YES;
-    
+    _tabBarController.selectedIndex = 0;
     [_chatsViewController.navigationController popToRootViewControllerAnimated:NO];
     [_chatsViewController.navigationController pushViewController:chatView animated:YES];
 }

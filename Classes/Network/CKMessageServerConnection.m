@@ -244,6 +244,14 @@
         callback(result);
     }];
 }
+
+- (void)clearhistory:(CKDialogModel*)dialog callback:(CKServerConnectionExecuted)callback
+{
+    [self sendData:@{@"action":@"dialog.clearhistory", @"options":@{@"dialogtype":@(dialog.type), @"entryid": dialog.dialogId, @"userid":dialog.userId}} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+
 #pragma mark - Notification methods
 
 

@@ -41,8 +41,9 @@
 @property (nonatomic, strong) NSString *userId;
 
 @property (nonatomic, strong, readonly) NSString* dialogidentifier;
-//
-//+(NSString*)identifierWitType:(CKDialogType)type userId:(NSString*)userId;
+
+-(instancetype)initWithUser:(CKUser*)user;
+-(void)delete;
 
 #pragma mark - Clear methods
 
@@ -60,6 +61,8 @@
 
 - (void)run;
 - (void)loadDialogList;
+- (void)saveDialogsWithDictionary:(NSDictionary*)result;
 
 - (CKDialogModel*)getWithUser:(CKUser*)user;
+- (void)deleteDialog:(CKDialogModel*)dialog;
 @end

@@ -32,6 +32,9 @@
 }
 
 +(NSString*)stringWithDate:(NSDate*)date{
+    if (!date) {
+        return @"0001-01-01T00:00:00";
+    }
     NSDateFormatter* dateFormatter = [[self class] dateFormatterFull];
     return [dateFormatter stringFromDate:date];
 }

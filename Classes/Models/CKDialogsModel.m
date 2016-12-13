@@ -56,6 +56,35 @@
     return model;
 }
 
+-(instancetype)initWithUser:(CKUser*)user{
+    if (self = [self init]) {
+        self.userAvatarId = user.avatarName;
+        self.attachCount = 0;
+        self.onlineUsersCount = 0;
+        self.userCount = 1;
+        self.date = [NSDate new];
+        self.dialogAvatarId = user.avatarName;
+        self.dialogDescription = @"";
+        self.dialogName = user.login;
+        self.dialogId = @"";
+        self.userLogin = user.login;
+        self.message =  @"";
+        self.messageId = @"";
+        self.messageStatus = 0;
+        self.messagesTotal = 0;
+        self.messageType = 0;
+        self.messagesUnread = 0;
+        self.userName = user.name;
+        self.userSurname = user.surname;
+        self.isOwner = NO;
+        self.state = 0;
+        self.status = 0;
+        self.type = CKDialogTypeChat;
+        self.userId = user.id;
+    }
+    return self;
+}
+
 #pragma mark - Clear methods
 
 
@@ -70,24 +99,27 @@
 }
 
 + (void)updateDialog:(CKDialogModel *)dialog withMessage:(Message*)message{
-    dialog.messageStatus = message.status;
-    dialog.messageType = message.type;
-    dialog.message = message.message;
-    dialog.messageId = message.id;
-    dialog.date = message.date;
+    if (message) {
+        dialog.messageStatus = message.status;
+        dialog.messageType = message.type;
+        dialog.message = message.message;
+        dialog.messageId = message.id;
+        dialog.date = message.date;
+        
+        [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
+            BOOL success =  [db executeUpdate:@"update dialogs set message = ?, msgid = ?, date = ?, msgstatus =?, msgtype = ? where entryid =?",
+                             message.text,
+                             message.id ,
+                             [NSDate stringWithDate:  message.date],
+                             @(message.status),
+                             @(message.type),
+                             dialog.dialogId];
+            if (!success) {
+                NSLog(@"%@", [db lastError]);
+            }
+        }];
+    }
     
-    [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
-        BOOL success =  [db executeUpdate:@"update dialogs set message = ?, msgid = ?, date = ?, msgstatus =?, msgtype = ? where entryid =?",
-                         message.text,
-                         message.id ,
-                         [NSDate stringWithDate:  message.date],
-                         @(message.status),
-                         @(message.type),
-                         dialog.dialogId];
-        if (!success) {
-            NSLog(@"%@", [db lastError]);
-        }
-    }];
 }
 
 -(NSString*)dialogidentifier{
@@ -97,6 +129,38 @@
     return _dialogId;
 }
 
+-(void)save{
+//    NSMutableDictionary* dictionary = [NSMutableDictionary new];
+//    [dictionary setObject:self.userAvatarId forKey:@"avatar"];
+//    [dictionary setObject:self.attachCount forKey:@"cntattach"];
+//    [dictionary setObject:self.onlineUsersCount forKey:@"cntonline"];
+//    [dictionary setObject:self.userCount forKey:@"cnttotal"];
+//    [dictionary setObject:[NSDate stringWithDate:self.date] forKey:@"date"];
+//    [dictionary setObject:self.dialogAvatarId forKey:@"dlgavatar"];
+//    [dictionary setObject:self.dialogDescription forKey:@"dlgdesc"];
+//    [dictionary setObject:self.dialogName forKey:@"dlgname"];
+//    [dictionary setObject:self.dialogName forKey:@"dlgname"];
+//    [dictionary setObject:self.dialogId forKey:@"entryid"];
+//    [dictionary setObject:self.location.latitude forKey:@"lat"];
+//    [dictionary setObject:self.location.longitude forKey:@"lon"];
+//    [dictionary setObject:self.message forKey:@"message"];
+//    [dictionary setObject:self.messageId forKey:@"msgid"];
+//    [dictionary setObject:self.messageStatus forKey:@"msgstatus"];
+//    [dictionary setObject:self.messagesTotal forKey:@"msgtotal"];
+//    [dictionary setObject:self.messageType forKey:@"msgtype"];
+//    [dictionary setObject:self.messagesUnread forKey:@"msgunread"];
+//    [dictionary setObject:self.userName forKey:@"name"];
+//    [dictionary setObject:self.userSurname forKey:@"surname"];
+//    [dictionary setObject:self.isOwner forKey:@"owner"];
+//    [dictionary setObject:self.state forKey:@"state"];
+//    [dictionary setObject:self.status forKey:@"status"];
+//    [dictionary setObject:self.type forKey:@"type"];
+//    [dictionary setObject:self.userId forKey:@"userid"];
+}
+
+-(void)delete{
+    
+}
 @end
 
 @interface CKDialogsModel()
@@ -137,7 +201,7 @@
 
 - (void)reloadDialogList
 {
-    NSString *query = @"select * from dialogs";
+    NSString *query = @"select * from dialogs where isDeleted = 0";
     __block NSMutableArray *result = [NSMutableArray new];
     [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
         FMResultSet *data = [db executeQuery:query];
@@ -153,22 +217,31 @@
 
 -(void)loadDialogList{
     [[CKMessageServerConnection sharedInstance] getDialogListWithCallback:^(NSDictionary *result) {
-        for (NSDictionary *i in result[@"result"]){
-            [self saveDialog:i];
-            if ( [i[@"type"] integerValue ] == 0) {
-                [[Users sharedInstance] saveUserWithDialog:i];
-            }
+        if ([result socketMessageStatus] == S_OK) {
+            [self saveDialogsWithDictionary:result];
         }
-        [self reloadDialogList];
     }];
 }
 
+-(void)saveDialogsWithDictionary:(NSDictionary*)result{
+    [self delete];
+    for (NSDictionary *i in result[@"result"]){
+        [self saveDialog:i];
+        if ( [i[@"type"] integerValue ] == 0) {
+            [[Users sharedInstance] saveUserWithDialog:i];
+        }
+    }
+    [self reloadDialogList];
+
+}
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)saveDialog:(NSDictionary*)dialog{
-    [[CKDB sharedInstance] updateTable:@"dialogs" withValues:dialog];
+    NSMutableDictionary* dictionary = dialog.mutableCopy;
+    [dictionary setObject:@"0" forKey:@"isDeleted"];
+    [[CKDB sharedInstance] updateTable:@"dialogs" withValues:dictionary];
 }
 
 - (CKDialogModel*)getWithUser:(CKUser*)user{
@@ -179,11 +252,25 @@
         }
     }
     if (!result) {
-        result = [[CKDialogModel alloc] init];
-        
+        result = [[CKDialogModel alloc] initWithUser:user];
+        self.dialogs = [self.dialogs arrayByAddingObject:result];
     }
     return result;
 }
 
+- (void)deleteDialog:(CKDialogModel*)dialog{
+    [[CKMessageServerConnection sharedInstance] cleanallHistory:^(NSDictionary *result) {
+         [self loadDialogList];
+    }];
+}
+
+-(void)delete{
+    [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
+        BOOL success =  [db executeUpdate:@"update dialogs set isDeleted = 1"];
+        if (!success) {
+            NSLog(@"%@", [db lastError]);
+        }
+    }];
+}
 
 @end

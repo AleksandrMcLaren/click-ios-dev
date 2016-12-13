@@ -214,12 +214,9 @@
         _abandonButton.tag = 1;
         
         [self endOperation:@"restoreHistory"];
-        NSMutableArray *dialogs = [NSMutableArray new];
-        for (NSDictionary *dictionary in result[@"result"])
-        {
-            CKDialogModel *model = [CKDialogModel modelWithDictionary:dictionary];
-            [dialogs addObject:model];
-        }
+        [[CKDialogsModel sharedInstance] saveDialogsWithDictionary:result];
+        NSArray *dialogs = [[CKDialogsModel sharedInstance] dialogs];
+        
         NSString* text;
         if (dialogs.count) {
             text = [NSString stringWithFormat:@"Поздаравляем!\nУспешно %@ %d %@",

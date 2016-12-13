@@ -124,6 +124,7 @@ static void myLow(sqlite3_context *context, int argc, sqlite3_value **argv)
         `surname`	TEXT, \
         `type`	INTEGER, \
         `userid`	INTEGER, \
+        `isDeleted`	INTEGER, \
         PRIMARY KEY(`entryid`) \
         ) ";
         BOOL success = [db executeUpdate:sql];

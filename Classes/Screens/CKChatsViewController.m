@@ -250,7 +250,7 @@
     [self.navigationController pushViewController:selectMultipleView animated:YES];
 }
 
-- (void)actionArchive:(NSInteger)index
+- (void)actionArchive:(NSIndexPath*) indexPath
 {
 //    DBRecent *dbrecent = dbrecents[index];
 //    NSString *recentId = dbrecent.objectId;
@@ -260,27 +260,24 @@
 //    [self performSelector:@selector(delayedArchive:) withObject:recentId afterDelay:0.25];
 }
 
-- (void)delayedArchive:(NSString *)recentId
+- (void)delayedArchive:(NSIndexPath*) indexPath
 {
     [self.tableView reloadData];
 //    [Recent archiveItem:recentId];
 }
 
 
-- (void)actionDelete:(NSInteger)index
+- (void)actionDelete:(NSIndexPath*) indexPath
 {
-//    DBRecent *dbrecent = dbrecents[index];
-//    NSString *recentId = dbrecent.objectId;
-//    [self deleteRecent:dbrecent];
     [self refreshTabCounter];
-    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-//    [self performSelector:@selector(delayedDelete:) withObject:recentId afterDelay:0.25];
+    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [self performSelector:@selector(delayedDelete:) withObject:indexPath afterDelay:0.25];
 }
 
-- (void)delayedDelete:(NSString *)recentId
+- (void)delayedDelete:(NSIndexPath*) indexPath
 {
-    [self.tableView reloadData];
-//    [Recent deleteItem:recentId];
+    CKDialogModel* dialog = [self dialogWithIndexPath:indexPath];
+    [[CKDialogsModel sharedInstance] deleteDialog:dialog];
 }
 
 #pragma mark - SelectSingleDelegate
@@ -380,9 +377,10 @@
 
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
 {
+    NSIndexPath* indexPath = [self.tableView indexPathForCell:cell];
     [cell hideUtilityButtonsAnimated:YES];
-    if (index == 0) [self actionArchive:cell.tag];
-    if (index == 1) [self actionDelete:cell.tag];
+    if (index == 0) [self actionArchive:indexPath];
+    if (index == 1) [self actionDelete:indexPath];
 }
 
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state
@@ -407,22 +405,26 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if ((lastCell == nil) || [lastCell isUtilityButtonsHidden]){
-        
-        switch (indexPath.section)
-        {
-            case 0:
-            case 1:
-                break;
-            case 2:
-            {
-                CKDialogModel *dialog = [_personalchats objectAtIndex:indexPath.row];
-                [[CKApplicationModel sharedInstance] restartRecentChat:dialog];
-            }
-                break;
-        }
+        CKDialogModel* dialog = [self dialogWithIndexPath:indexPath];
+        [[CKApplicationModel sharedInstance] restartRecentChat:dialog];
     }else [lastCell hideUtilityButtonsAnimated:YES];
 }
 
+-(CKDialogModel*)dialogWithIndexPath:(NSIndexPath *)indexPath{
+    CKDialogModel* result;
+    switch (indexPath.section)
+    {
+        case 0:
+        case 1:
+            break;
+        case 2:
+        {
+            result = [_personalchats objectAtIndex:indexPath.row];
+        }
+            break;
+    }
+    return result;
+}
 
 #pragma mark - UISearchBarDelegate
 
