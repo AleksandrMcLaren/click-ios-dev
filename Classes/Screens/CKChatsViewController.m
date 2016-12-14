@@ -270,13 +270,34 @@
 - (void)actionDelete:(NSIndexPath*) indexPath
 {
     [self refreshTabCounter];
+    [self deleteDialog:indexPath];
     [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    [self performSelector:@selector(delayedDelete:) withObject:indexPath afterDelay:0.25];
+   
 }
 
-- (void)delayedDelete:(NSIndexPath*) indexPath
+-(void)deleteDialog:(NSIndexPath*) indexPath{
+    NSMutableArray* array;
+    switch (indexPath.section)
+    {
+        case 0:
+        case 1:
+            break;
+        case 2:
+        {
+            array = _personalchats.mutableCopy;
+            if (array.count > indexPath.row) {
+                CKDialogModel* dialog = [self dialogWithIndexPath:indexPath];
+                [array removeObjectAtIndex:indexPath.row];
+                [self performSelector:@selector(delayedDelete:) withObject:dialog afterDelay:0.25];
+                 _personalchats = array;
+            }
+                   }
+            break;
+    }
+}
+
+- (void)delayedDelete:(CKDialogModel*) dialog
 {
-    CKDialogModel* dialog = [self dialogWithIndexPath:indexPath];
     [[CKDialogsModel sharedInstance] deleteDialog:dialog];
 }
 
