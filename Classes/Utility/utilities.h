@@ -10,6 +10,7 @@
 //#import "CKMessageServerConnection.h"
 //
 #import "CKAttachModel.h"
+#import "NSObject+JSON.h"
 
 
 

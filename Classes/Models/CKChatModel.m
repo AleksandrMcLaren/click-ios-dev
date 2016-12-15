@@ -8,6 +8,7 @@
 
 #import "CKChatModel.h"
 #import "AppDelegate.h"
+#import "utilities.h"
 
 @interface CKChatModel(){
     NSMutableArray* _messages;
@@ -107,14 +108,22 @@
     [self sendMessage:message];
 }
 
-
 - (void)messageReceived:(NSNotification *)notif{
 
 }
 
-
-
 -(void)clearCounter{
+    NSMutableArray* ids = [NSMutableArray new];
+    for (Message* message in self.messages) {
+        if ((message.status == CKMessageStatusSent) && (!message.isOwner)){
+            [ids addObject:message.id];
+        }
+    }
+    if (ids.count) {
+        [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead messagesIdents:ids  callback:^(NSDictionary *result) {
+        }];
+    }
+    
     [CKDialogModel clearCounter:_dialog];
 }
 

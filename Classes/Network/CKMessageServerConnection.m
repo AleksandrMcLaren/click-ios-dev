@@ -238,9 +238,25 @@
     }];
 }
 
-- (void)setMessagesStatus:(CKMessageStatus)status messages:(NSArray *)messages callback:(CKServerConnectionExecuted)callback
+
+/*
+ [15.12.16, 21:32:13] Егоров Александр: если лист пустой для dialogtype=0 установятся статусы для всех сообщений
+ [15.12.16, 21:32:21] Егоров Александр: dialogtype обязательно передавать надо
+ [15.12.16, 21:32:28] Егоров Александр: и entryid еще
+ [15.12.16, 21:32:37] Егоров Александр: вроде иил нет не помню
+ [15.12.16, 21:32:43] Егоров Александр: вроде нет... не надо
+ а это не тестили еще, седни только попросили сделать
+ */
+//- (void)setMessagesStatus:(CKMessageStatus)status dialogtype:(NSInteger*)dialogtype enteryId:(NSString*) callback:(CKServerConnectionExecuted)callback
+//{
+//    [self sendData:@{@"action":@"dialog.setstatus", @"options":@{@"list":messagesIdents, @"status":@(status)}} completion:^(NSDictionary *result) {
+//        callback(result);
+//    }];
+//}
+
+- (void)setMessagesStatus:(CKMessageStatus)status messagesIdents:(NSArray *)messagesIdents callback:(CKServerConnectionExecuted)callback
 {
-    [self sendData:@{@"action":@"message.setstatus", @"options":@{@"list":[messages componentsJoinedByString:@","], @"status":@(status)}} completion:^(NSDictionary *result) {
+    [self sendData:@{@"action":@"dialog.setstatus", @"options":@{@"list":messagesIdents, @"status":@(status)}} completion:^(NSDictionary *result) {
         callback(result);
     }];
 }

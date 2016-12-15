@@ -117,11 +117,11 @@
 	
 
 	
-	[_chat clearCounter];
+	
 	
 	[self loadMessages];
 	[self createTypingObservers];
-	
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -182,15 +182,14 @@
 
 
 - (void)refreshCollectionView1
-
 {
+    [_chat clearCounter];
 	[self refreshCollectionView2];
 	[self finishReceivingMessage];
 }
 
 
 - (void)refreshCollectionView2
-
 {
 	self.showLoadEarlierMessagesHeader = (insertCounter < [dbmessages count]);
 	
@@ -260,9 +259,8 @@
 
 - (void)createTypingObservers
 {
-//    			self.showTypingIndicator = typing;
-    //			if (typing) [self scrollToBottomAnimated:YES];
 
+    
 }
 
 
@@ -630,11 +628,8 @@
 
 
 - (void)actionBack
-
 {
-	
 	// This can be removed once JSQAudioMediaItem audioPlayer issue is fixed
-	
 	for (Message *dbmessage in dbmessages)
 	{
 //		if ([dbmessage.type isEqualToString:MESSAGE_AUDIO])
@@ -644,8 +639,6 @@
 //			[mediaItem stopAudioPlayer];
 //		}
 	}
-	
-
 	
 	[self actionCleanup];
     [_chat clearCounter];
@@ -833,13 +826,8 @@
 
 
 - (void)actionCleanup
-
 {
 	[NotificationCenter removeObserver:self];
-	
-//	[[CKMessageServerConnection sharedInstance] actionCleanup];
-	
-//	[firebase removeAllObservers]; firebase = nil;
 }
 
 #pragma mark - Helper methods

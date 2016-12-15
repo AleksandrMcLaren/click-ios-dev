@@ -96,6 +96,7 @@
 		3DC5D9D71DDF6141005823ED /* NoChatsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC5D9D61DDF6141005823ED /* NoChatsView.m */; };
 		3DC742441DBBC75000F47599 /* NSDate+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC742431DBBC75000F47599 /* NSDate+Utils.m */; };
 		3DCDBE391DC6F406001CA851 /* NSString+Verify.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCDBE381DC6F406001CA851 /* NSString+Verify.m */; };
+		3DCFBEC51E02E71600BC2FC8 /* NSObject+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCFBEC41E02E71600BC2FC8 /* NSObject+JSON.m */; };
 		60673FF2F4F098A555D5E963 /* libPods-click.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC7724C494AFD4568ED92B4 /* libPods-click.a */; };
 		7807CF6F1CC7E06700D9DF9B /* CKFriendSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807CF6E1CC7E06700D9DF9B /* CKFriendSelectionController.m */; };
 		7807CF711CC8C28700D9DF9B /* checkwhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7807CF701CC8C28700D9DF9B /* checkwhite@2x.png */; };
@@ -374,6 +375,8 @@
 		3DC742451DBC5F4400F47599 /* CKOperationsProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CKOperationsProtocol.h; sourceTree = "<group>"; };
 		3DCDBE371DC6F406001CA851 /* NSString+Verify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Verify.h"; sourceTree = "<group>"; };
 		3DCDBE381DC6F406001CA851 /* NSString+Verify.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Verify.m"; sourceTree = "<group>"; };
+		3DCFBEC31E02E71600BC2FC8 /* NSObject+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+JSON.h"; sourceTree = "<group>"; };
+		3DCFBEC41E02E71600BC2FC8 /* NSObject+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+JSON.m"; sourceTree = "<group>"; };
 		7807CF6D1CC7E06700D9DF9B /* CKFriendSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKFriendSelectionController.h; sourceTree = "<group>"; };
 		7807CF6E1CC7E06700D9DF9B /* CKFriendSelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKFriendSelectionController.m; sourceTree = "<group>"; };
 		7807CF701CC8C28700D9DF9B /* checkwhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkwhite@2x.png"; sourceTree = "<group>"; };
@@ -1141,6 +1144,8 @@
 				3DCDBE371DC6F406001CA851 /* NSString+Verify.h */,
 				3DCDBE381DC6F406001CA851 /* NSString+Verify.m */,
 				3D72B4101DE1F1FB001A4992 /* utilities.h */,
+				3DCFBEC31E02E71600BC2FC8 /* NSObject+JSON.h */,
+				3DCFBEC41E02E71600BC2FC8 /* NSObject+JSON.m */,
 			);
 			name = Utility;
 			path = Classes/Utility;
@@ -1600,6 +1605,7 @@
 				78BEA9401CAAA47D004E85DB /* NSString+URLParser.m in Sources */,
 				78BEA9941CAE5E04004E85DB /* CKUserAvatarView.m in Sources */,
 				7812508C1CB6C74F00D3BFBB /* CKDialogChatModel.m in Sources */,
+				3DCFBEC51E02E71600BC2FC8 /* NSObject+JSON.m in Sources */,
 				3DACB0FB1DE57DD4004284D9 /* Image.m in Sources */,
 				3D3AECBD1DE4923D00F745BE /* MapView.m in Sources */,
 				78B41EE91CB4B2E300417D3C /* CKDate+utility.m in Sources */,

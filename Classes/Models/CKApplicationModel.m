@@ -572,9 +572,6 @@
 
     if ([_currentChat messageMatch:message]) {
         [_currentChat reloadMessages];
-        //    [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead messages:@[messageId] callback:^(NSDictionary *result) {
-        //
-        //    }];i
     }else{
         NSString* title = @"Messme";
         

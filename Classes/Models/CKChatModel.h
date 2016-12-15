@@ -7,6 +7,7 @@
 //
 
 #import "CKDialogsModel.h"
+#import "CKMessageServerConnection.h"
 
 typedef void (^CKChatModelFetchedMessages)(NSArray* messages);
 
@@ -34,6 +35,6 @@ typedef void (^CKChatModelFetchedMessages)(NSArray* messages);
 
 - (void)sendMessage:(Message *)message;
 
--(void)recivedMesagesArray:(NSArray*)messages;
+- (void)recivedMesagesArray:(NSArray*)messages;
 
 @end

@@ -7,7 +7,6 @@
 //
 
 #import "CKDialogChatModel.h"
-#import "CKMessageServerConnection.h"
 #import "CKAttachModel.h"
 #import "utilities.h"
 
