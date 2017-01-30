@@ -18,7 +18,7 @@
 		3DBC3B491DCAF3810070F998 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBC3B481DCAF3810070F998 /* Reachability.m */; };
 		3DC742441DBBC75000F47599 /* NSDate+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC742431DBBC75000F47599 /* NSDate+Utils.m */; };
 		3DCDBE391DC6F406001CA851 /* NSString+Verify.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCDBE381DC6F406001CA851 /* NSString+Verify.m */; };
-		60673FF2F4F098A555D5E963 /* libPods-click.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC7724C494AFD4568ED92B4 /* libPods-click.a */; };
+		4519B4059ABF6A7536AF9002 /* Pods_click.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83F432E586C4988D6CF2D5C /* Pods_click.framework */; };
 		7807CF6F1CC7E06700D9DF9B /* CKFriendSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807CF6E1CC7E06700D9DF9B /* CKFriendSelectionController.m */; };
 		7807CF711CC8C28700D9DF9B /* checkwhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7807CF701CC8C28700D9DF9B /* checkwhite@2x.png */; };
 		7807CF741CCB5E7900D9DF9B /* CKGroupChatModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7807CF731CCB5E7900D9DF9B /* CKGroupChatModel.m */; };
@@ -132,7 +132,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0EC7724C494AFD4568ED92B4 /* libPods-click.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-click.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		243A3A1CA18A192D40BBE62C /* Pods-click.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-click.release.xcconfig"; path = "Pods/Target Support Files/Pods-click/Pods-click.release.xcconfig"; sourceTree = "<group>"; };
 		3D1A36531DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+CKSocketMessage.h"; sourceTree = "<group>"; };
 		3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CKSocketMessage.m"; sourceTree = "<group>"; };
@@ -345,6 +344,7 @@
 		D82F207B1DE5CC5E00310382 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		D83E838F1DDC1871003D9F81 /* CKContactWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKContactWrapper.h; sourceTree = "<group>"; };
 		D83E83901DDC1871003D9F81 /* CKContactWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContactWrapper.m; sourceTree = "<group>"; };
+		D83F432E586C4988D6CF2D5C /* Pods_click.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_click.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D87B5BE41DF13A6A0042E046 /* CKRemoveFriendCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKRemoveFriendCellTableViewCell.h; sourceTree = "<group>"; };
 		D87B5BE51DF13A6A0042E046 /* CKRemoveFriendCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKRemoveFriendCellTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -364,7 +364,7 @@
 				781250841CB66A5A00D3BFBB /* CoreText.framework in Frameworks */,
 				78BEA92E1CA70F5F004E85DB /* Contacts.framework in Frameworks */,
 				7831EDD71C9143EF00319191 /* libicucore.A.tbd in Frameworks */,
-				60673FF2F4F098A555D5E963 /* libPods-click.a in Frameworks */,
+				4519B4059ABF6A7536AF9002 /* Pods_click.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,7 +385,7 @@
 				78BEA92D1CA70F5F004E85DB /* Contacts.framework */,
 				7831EDD61C9143EF00319191 /* libicucore.A.tbd */,
 				A0FB7F40580CA9CAF95E0CB5 /* Pods.framework */,
-				0EC7724C494AFD4568ED92B4 /* libPods-click.a */,
+				D83F432E586C4988D6CF2D5C /* Pods_click.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -855,7 +855,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
