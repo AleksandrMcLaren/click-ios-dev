@@ -22,16 +22,16 @@
 //  https://github.com/jessesquires/JSQMessagesViewController/issues/237
 //  ********************************
 
-"load_earlier_messages" = "Загрузить ранние сообщения";
+"load_earlier_messages" = "Load Earlier Messages";
 
-"send" = "Отправить";
+"send" = "Send";
 
-"new_message" = "Новое сообщение";
+"new_message" = "New Message";
 
 "text_message_accessibility_label" = "%@: %@";
 
-"media_message_accessibility_label" = "%@: мультимедиа сообщение";
+"media_message_accessibility_label" = "%@: media message";
 
-"accessory_button_accessibility_label" = "Поделиться";
+"accessory_button_accessibility_label" = "Share media";
 
-"new_message_received_accessibility_announcement" = "Получено новое сообщение";
+"new_message_received_accessibility_announcement" = "New message received";
