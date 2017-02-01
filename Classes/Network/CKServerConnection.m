@@ -7,7 +7,7 @@
 //
 
 #import "CKServerConnection.h"
-#import "SAMKeychain.h"
+#import <SAMKeychain/SAMKeychain.h>
 
 #define CONNECTION_OPEN_CALLBACK_IDENTIFIER @"CONNECTION_OPEN_CALLBACK_IDENTIFIER"
 
