@@ -34,8 +34,8 @@
         self.textView.layer.cornerRadius = 4.0;
         self.textView.delegate = self;
         self.textView.scrollIndicatorInsets = UIEdgeInsetsMake(self.textView.layer.cornerRadius, 0.0f, self.textView.layer.cornerRadius, 0.0f);
-        self.textView.textContainerInset = UIEdgeInsetsMake(4.0f, 2.0f, 4.0f, 2.0f);
-        self.textView.contentInset = UIEdgeInsetsMake(1.0f, 0.0f, 1.0f, 0.0f);
+//        self.textView.textContainerInset = UIEdgeInsetsMake(4.0f, 2.0f, 4.0f, 2.0f);
+//        self.textView.contentInset = UIEdgeInsetsMake(1.0f, 0.0f, 1.0f, 0.0f);
         
         self.textView.contentMode = UIViewContentModeRedraw;
         self.textView.dataDetectorTypes = UIDataDetectorTypeNone;
@@ -100,31 +100,67 @@
         [self endEditing:NO];
 }
 
-- (void)textViewDidChange:(UITextView *)textView
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    CGFloat needsHeight = [self needsHeightTextView:textView] + 16.f;
+    NSMutableString *updatedText = [[NSMutableString alloc] initWithString:textView.text];
+    [updatedText replaceCharactersInRange:range withString:text];
     
-    if(self.previousHeight > 0 && self.previousHeight != needsHeight)
+    CGFloat needsHeight = [self heightTextViewText:updatedText] + 16.f;
+    
+    if(self.previousHeight != needsHeight)
     {
         [self.delegate chatMessageBarNeedsHeight:needsHeight];
+        self.previousHeight = needsHeight;
         
-        if(self.view.frame.size.height < needsHeight)
-            textView.scrollEnabled = YES;
-        else
-            textView.scrollEnabled = NO;
+//        if(self.view.frame.size.height < needsHeight)
+//            textView.scrollEnabled = YES;
+//        else
+//            textView.scrollEnabled = NO;
     }
     
-    self.previousHeight = needsHeight;
     
-    if(textView.text.length)
-        [self endEditing:NO];
-    else
-        [self endEditing:YES];
+    
+    return YES;
+}
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+    CGFloat needsHeight = [self heightTextViewText:textView.text] + 16.f;
+    
+    if(self.previousHeight != needsHeight)
+    {
+     //   [self.delegate chatMessageBarNeedsHeight:needsHeight];
+        
+//        if(self.view.frame.size.height < needsHeight)
+//            textView.scrollEnabled = YES;
+//        else
+//            textView.scrollEnabled = NO;
+    }
+    
+   // self.previousHeight = needsHeight;
+    
+//    if(textView.text.length)
+//        [self endEditing:NO];
+//    else
+//        [self endEditing:YES];
     
    // [self.delegate chatMessagePanelTextViewDidChange:textView];
 }
 
+
 #pragma mark -
+
+- (CGFloat)heightTextViewText:(NSString *)text
+{
+    CGFloat width = self.textView.bounds.size.width - 2.0 * self.textView.textContainer.lineFragmentPadding;
+    
+    NSDictionary *options = @{NSFontAttributeName:self.textView.font};
+    CGRect boundingRect = [text boundingRectWithSize:CGSizeMake(width, NSIntegerMax)
+                                             options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                          attributes:options context:nil];
+    
+    return self.textView.textContainerInset.top + boundingRect.size.height + self.textView.textContainerInset.bottom;
+}
 
 - (void)setNeedsHeight
 {

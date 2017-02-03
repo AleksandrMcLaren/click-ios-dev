@@ -32,7 +32,7 @@
     {
         self.chat = chat;
         
-        self.messageBarHeight = 54.f;
+        self.messageBarHeight = 51.f;
         
         self.messageVC = [[MLChatMessageListViewController alloc] init];
         
@@ -64,7 +64,7 @@
     [self.view addSubview:self.messageBarVC.view];
     
     [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
-
+        [self.messageVC addMessages:msgs];
     }];
     
     [self.view setNeedsUpdateConstraints];
@@ -76,7 +76,7 @@
     
     [self.messageBarVC.view updateConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view.left).offset(20);
-        make.right.equalTo(self.view.right).offset(20);
+        make.right.equalTo(self.view.right).offset(-20);
         make.bottom.equalTo(self.view.bottom).offset(-messageBarBottomOffset);
         make.height.equalTo(self.messageBarHeight);
     }];
@@ -105,7 +105,20 @@
     CGSize boundsSize = self.view.bounds.size;
     
     self.keyboardHeight = boundsSize.height - kbRect.origin.y;
-    [self.view setNeedsUpdateConstraints];
+    
+    CGRect messageBarFrame = self.messageBarVC.view.frame;
+    messageBarFrame.origin.y = boundsSize.height - self.keyboardHeight - messageBarFrame.size.height;
+    
+    CGRect messageListFrame = self.messageVC.view.frame;
+    messageListFrame.size.height = boundsSize.height - (boundsSize.height - messageBarFrame.origin.y);
+    
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         self.messageBarVC.view.frame = messageBarFrame;
+                         self.messageVC.view.frame = messageListFrame;
+                     } completion:^(BOOL finished) {
+                         [self.view setNeedsUpdateConstraints];
+                     }];
 }
 
 #pragma mark - MLChatMessageBarViewControllerDelegate

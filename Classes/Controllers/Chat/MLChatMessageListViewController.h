@@ -10,4 +10,6 @@
 
 @interface MLChatMessageListViewController : UITableViewController
 
+- (void)addMessages:(NSArray *)messages;
+
 @end
