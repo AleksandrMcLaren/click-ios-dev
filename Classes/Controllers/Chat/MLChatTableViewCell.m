@@ -30,6 +30,9 @@
         self.contentView.backgroundColor = [UIColor clearColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
+        self.avaVC = [[MLChatAvaViewController alloc] init];
+        [self.contentView addSubview:self.avaVC.view];
+        
         self.balloonView = [[MLChatBaloonView alloc] init];
         [self.contentView addSubview:self.balloonView];
     }
@@ -88,13 +91,12 @@
     
     if(self.balloonView.isFirst)
     {
-        if(!self.avaVC)
-        {
-            self.avaVC = [[MLChatAvaViewController alloc] init];
-            [self.contentView addSubview:self.avaVC.view];
-        }
-        
+        self.avaVC.view.hidden = NO;
         self.avaVC.imageUrl = self.message.imageUrl;
+    }
+    else
+    {
+        self.avaVC.view.hidden = YES;
     }
     
     [self setNeedsUpdateConstraints];
