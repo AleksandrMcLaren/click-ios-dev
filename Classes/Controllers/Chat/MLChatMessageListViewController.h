@@ -10,6 +10,9 @@
 
 @interface MLChatMessageListViewController : UITableViewController
 
+@property (nonatomic, assign) CGFloat contentOffSet;
+
 - (void)addMessages:(NSArray *)messages;
 
 @end
+

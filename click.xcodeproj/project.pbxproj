@@ -10,6 +10,8 @@
 		1F15829B1E43800200D265A8 /* MLChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F15829A1E43800200D265A8 /* MLChatViewController.m */; };
 		1F1582A71E43905900D265A8 /* MLChatMessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1582A61E43905900D265A8 /* MLChatMessageListViewController.m */; };
 		1F1582AA1E43924000D265A8 /* MLChatMessageBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1582A91E43924000D265A8 /* MLChatMessageBarViewController.m */; };
+		1F9B52791E48D52F00C37B12 /* MLChatAvaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B52781E48D52F00C37B12 /* MLChatAvaViewController.m */; };
+		1F9B527C1E48DECF00C37B12 /* MLChatBaloonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B527B1E48DECF00C37B12 /* MLChatBaloonView.m */; };
 		1F9B5E9A1E44E5180045DF7F /* MLChatTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B5E991E44E5180045DF7F /* MLChatTableViewCell.m */; };
 		1F9B5EA01E44E57B0045DF7F /* MLChatTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B5E9F1E44E57B0045DF7F /* MLChatTextCell.m */; };
 		3D1A36551DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */; };
@@ -221,6 +223,10 @@
 		1F1582A61E43905900D265A8 /* MLChatMessageListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatMessageListViewController.m; sourceTree = "<group>"; };
 		1F1582A81E43924000D265A8 /* MLChatMessageBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatMessageBarViewController.h; sourceTree = "<group>"; };
 		1F1582A91E43924000D265A8 /* MLChatMessageBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatMessageBarViewController.m; sourceTree = "<group>"; };
+		1F9B52771E48D52F00C37B12 /* MLChatAvaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatAvaViewController.h; sourceTree = "<group>"; };
+		1F9B52781E48D52F00C37B12 /* MLChatAvaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatAvaViewController.m; sourceTree = "<group>"; };
+		1F9B527A1E48DECF00C37B12 /* MLChatBaloonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatBaloonView.h; sourceTree = "<group>"; };
+		1F9B527B1E48DECF00C37B12 /* MLChatBaloonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatBaloonView.m; sourceTree = "<group>"; };
 		1F9B5E971E44E0550045DF7F /* Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Category.h; sourceTree = "<group>"; };
 		1F9B5E981E44E5180045DF7F /* MLChatTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatTableViewCell.h; sourceTree = "<group>"; };
 		1F9B5E991E44E5180045DF7F /* MLChatTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatTableViewCell.m; sourceTree = "<group>"; };
@@ -617,6 +623,10 @@
 				1F9B5E991E44E5180045DF7F /* MLChatTableViewCell.m */,
 				1F9B5E9E1E44E57B0045DF7F /* MLChatTextCell.h */,
 				1F9B5E9F1E44E57B0045DF7F /* MLChatTextCell.m */,
+				1F9B52771E48D52F00C37B12 /* MLChatAvaViewController.h */,
+				1F9B52781E48D52F00C37B12 /* MLChatAvaViewController.m */,
+				1F9B527A1E48DECF00C37B12 /* MLChatBaloonView.h */,
+				1F9B527B1E48DECF00C37B12 /* MLChatBaloonView.m */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1589,6 +1599,7 @@
 				3DACB0F71DE57DD4004284D9 /* Cryptor.m in Sources */,
 				7807CF6F1CC7E06700D9DF9B /* CKFriendSelectionController.m in Sources */,
 				3D3AECF71DE4980D00F745BE /* GroupDetailsView.m in Sources */,
+				1F9B52791E48D52F00C37B12 /* MLChatAvaViewController.m in Sources */,
 				3D1A36551DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m in Sources */,
 				78B524D81CA0239200502AA4 /* CKServerConnection.m in Sources */,
 				3D3AECE41DE497BC00F745BE /* MembersView.m in Sources */,
@@ -1614,6 +1625,7 @@
 				3D555BFE1DFBB33E00D0F86E /* Chats.m in Sources */,
 				3DACB1321DE5F26D004284D9 /* DownloadManager.m in Sources */,
 				78B524BC1C9DCE8C00502AA4 /* CKUserProfileController.m in Sources */,
+				1F9B527C1E48DECF00C37B12 /* MLChatBaloonView.m in Sources */,
 				7831EDAE1C90018500319191 /* UIColor+hex.m in Sources */,
 				3D3AED1C1DE49D3800F745BE /* CallHistory.m in Sources */,
 				3DACB0FA1DE57DD4004284D9 /* File.m in Sources */,

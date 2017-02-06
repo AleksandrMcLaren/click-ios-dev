@@ -10,6 +10,7 @@
 
 @interface MLChatMessageBarViewController () <UITextViewDelegate>
 
+@property (nonatomic, strong) UIView *lineView;
 @property (nonatomic, strong) UITextView *textView;
 @property (nonatomic, assign) CGFloat previousHeight;
 
@@ -23,13 +24,15 @@
     
     if(self)
     {
+        self.lineView = [[UIView alloc] init];
+        
         self.textView = [[UITextView alloc] init];
         self.textView.textColor = [UIColor blackColor];
       //  self.textView.scrollIndicatorInsets = UIEdgeInsetsMake(7, 7, 7, 7);
         self.textView.scrollsToTop = NO;
         self.textView.font = [UIFont systemFontOfSize:16.0];
         self.textView.text = @"";
-        self.textView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+        self.textView.layer.borderColor = [UIColor colorWithRed:0.84 green:0.84 blue:0.85 alpha:1.00].CGColor;
         self.textView.layer.borderWidth = 1.0;
         self.textView.layer.cornerRadius = 4.0;
         self.textView.delegate = self;
@@ -53,8 +56,10 @@
     [super viewDidLoad];
 
     self.view.backgroundColor = [UIColor colorFromHexString:@"#f8f8f8"];
+    self.lineView.backgroundColor = [UIColor colorWithRed:0.82 green:0.85 blue:0.86 alpha:1.00];
     self.textView.backgroundColor = [UIColor whiteColor];
     
+    [self.view addSubview:self.lineView];
     [self.view addSubview:self.textView];
     
     [self.view setNeedsUpdateConstraints];
@@ -62,6 +67,8 @@
 
 - (void)updateViewConstraints
 {
+    self.lineView.frame = CGRectMake(0, 0, self.view.bounds.size.width, 1);
+    
     [self.textView updateConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view.left).offset(32);
         make.right.equalTo(self.view.right).offset(-64);

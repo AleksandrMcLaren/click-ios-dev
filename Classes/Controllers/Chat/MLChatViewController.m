@@ -9,12 +9,14 @@
 #import "MLChatViewController.h"
 #import "MLChatMessageListViewController.h"
 #import "MLChatMessageBarViewController.h"
+#import "MLChatTableViewCell.h"
 
 @interface MLChatViewController () <MLChatMessageBarViewControllerDelegate>
 
 @property (nonatomic, strong) CKChatModel *chat;
 @property (nonatomic, strong) MLChatMessageListViewController *messageVC;
 @property (nonatomic, strong) MLChatMessageBarViewController *messageBarVC;
+@property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 
 @property (nonatomic) CGFloat keyboardHeight;
 @property (nonatomic) CGFloat messageBarHeight;
@@ -38,6 +40,8 @@
         
         self.messageBarVC = [[MLChatMessageBarViewController alloc] init];
         self.messageBarVC.delegate = self;
+        
+        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
     }
     
     return self;
@@ -56,16 +60,47 @@
                                              selector:@selector(keyboardWillChangeFrame:)
                                                  name:UIKeyboardWillChangeFrameNotification object:nil];
     
-    self.view.backgroundColor = [UIColor whiteColor];
-    
-    self.messageVC.view.backgroundColor = [UIColor grayColor];
-    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgwhite"]];
+
     [self.view addSubview:self.messageVC.view];
     [self.view addSubview:self.messageBarVC.view];
+    [self.view addGestureRecognizer:self.tapRecognizer];
+
+    MLChatMessageModel *msg = [[MLChatMessageModel alloc] init];
+    msg.isFirst = YES;
+    msg.isReceived = YES;
+    msg.imageUrl = @"sdfg";
     
-    [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
-        [self.messageVC addMessages:msgs];
-    }];
+    MLChatMessageModel *msg2 = [[MLChatMessageModel alloc] init];
+    msg2.isFirst = NO;
+    msg2.isReceived = YES;
+    msg2.imageUrl = @"sdfg";
+    
+    MLChatMessageModel *msg3 = [[MLChatMessageModel alloc] init];
+    msg3.isFirst = YES;
+    msg3.isReceived = NO;
+    msg2.imageUrl = @"sdfg";
+    
+    MLChatMessageModel *msg4 = [[MLChatMessageModel alloc] init];
+    msg4.isFirst = NO;
+    msg4.isReceived = NO;
+    msg4.imageUrl = @"sdfg";
+    
+    MLChatMessageModel *msg5 = [[MLChatMessageModel alloc] init];
+    msg5.isFirst = NO;
+    msg5.isReceived = NO;
+    msg5.imageUrl = @"sdfg";
+    
+    [self.messageVC addMessages:@[msg, msg2, msg3, msg4, msg5, msg3, msg4, msg5]];
+    
+//    [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
+//        
+//        MLChatMessageModel *msg = [[MLChatMessageModel alloc] init];
+//        msg.isFisrt = YES;
+//        msg.ava
+//        
+//        [self.messageVC addMessages:msgs];
+//    }];
     
     [self.view setNeedsUpdateConstraints];
 }
@@ -114,18 +149,37 @@
     
     [UIView animateWithDuration:0.3
                      animations:^{
+                         
                          self.messageBarVC.view.frame = messageBarFrame;
                          self.messageVC.view.frame = messageListFrame;
+                         
+//                         if(boundsSize.height != kbRect.origin.y)
+//                         {  // открывается
+//                             self.messageVC.contentOffSet = self.messageVC.contentOffSet + kbRect.origin.y;
+//                         }
+
+                         
                      } completion:^(BOOL finished) {
                          [self.view setNeedsUpdateConstraints];
                      }];
+}
+
+- (void)tapped
+{
+    [self.view endEditing:YES];
 }
 
 #pragma mark - MLChatMessageBarViewControllerDelegate
 
 - (void)chatMessageBarNeedsHeight:(CGFloat)height
 {
+    if(height > self.messageBarHeight)
+        self.messageVC.contentOffSet = self.messageVC.contentOffSet + (height - self.messageBarHeight);
+    else
+        self.messageVC.contentOffSet = self.messageVC.contentOffSet - (self.messageBarHeight - height);
+    
     self.messageBarHeight = height;
+    
     [self.view setNeedsUpdateConstraints];
 }
 
