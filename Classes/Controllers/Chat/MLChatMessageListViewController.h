@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MLChatCellContentViewController.h"
 
 @interface MLChatMessageListViewController : UITableViewController
 
 @property (nonatomic, assign) CGFloat contentOffSet;
+@property (nonatomic, assign, readonly) CGFloat contentMaxOrdinateOffSet;
 
 - (void)addMessages:(NSArray *)messages;
 

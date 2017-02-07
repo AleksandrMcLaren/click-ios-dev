@@ -13,7 +13,8 @@
 		1F9B52791E48D52F00C37B12 /* MLChatAvaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B52781E48D52F00C37B12 /* MLChatAvaViewController.m */; };
 		1F9B527C1E48DECF00C37B12 /* MLChatBaloonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B527B1E48DECF00C37B12 /* MLChatBaloonView.m */; };
 		1F9B5E9A1E44E5180045DF7F /* MLChatTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B5E991E44E5180045DF7F /* MLChatTableViewCell.m */; };
-		1F9B5EA01E44E57B0045DF7F /* MLChatTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9B5E9F1E44E57B0045DF7F /* MLChatTextCell.m */; };
+		1F9FFC731E4A3D1400C6DAC9 /* MLChatCellTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9FFC721E4A3D1400C6DAC9 /* MLChatCellTextViewController.m */; };
+		1F9FFC791E4A417A00C6DAC9 /* MLChatCellContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9FFC781E4A417A00C6DAC9 /* MLChatCellContentViewController.m */; };
 		3D1A36551DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */; };
 		3D1A36581DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36571DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m */; };
 		3D1A365A1DB2220F000A8CB7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */; };
@@ -230,8 +231,10 @@
 		1F9B5E971E44E0550045DF7F /* Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Category.h; sourceTree = "<group>"; };
 		1F9B5E981E44E5180045DF7F /* MLChatTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatTableViewCell.h; sourceTree = "<group>"; };
 		1F9B5E991E44E5180045DF7F /* MLChatTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatTableViewCell.m; sourceTree = "<group>"; };
-		1F9B5E9E1E44E57B0045DF7F /* MLChatTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatTextCell.h; sourceTree = "<group>"; };
-		1F9B5E9F1E44E57B0045DF7F /* MLChatTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatTextCell.m; sourceTree = "<group>"; };
+		1F9FFC711E4A3D1400C6DAC9 /* MLChatCellTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatCellTextViewController.h; sourceTree = "<group>"; };
+		1F9FFC721E4A3D1400C6DAC9 /* MLChatCellTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatCellTextViewController.m; sourceTree = "<group>"; };
+		1F9FFC771E4A417A00C6DAC9 /* MLChatCellContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatCellContentViewController.h; sourceTree = "<group>"; };
+		1F9FFC781E4A417A00C6DAC9 /* MLChatCellContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatCellContentViewController.m; sourceTree = "<group>"; };
 		243A3A1CA18A192D40BBE62C /* Pods-click.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-click.release.xcconfig"; path = "Pods/Target Support Files/Pods-click/Pods-click.release.xcconfig"; sourceTree = "<group>"; };
 		3D1A36531DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+CKSocketMessage.h"; sourceTree = "<group>"; };
 		3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CKSocketMessage.m"; sourceTree = "<group>"; };
@@ -621,8 +624,10 @@
 				1F1582A91E43924000D265A8 /* MLChatMessageBarViewController.m */,
 				1F9B5E981E44E5180045DF7F /* MLChatTableViewCell.h */,
 				1F9B5E991E44E5180045DF7F /* MLChatTableViewCell.m */,
-				1F9B5E9E1E44E57B0045DF7F /* MLChatTextCell.h */,
-				1F9B5E9F1E44E57B0045DF7F /* MLChatTextCell.m */,
+				1F9FFC771E4A417A00C6DAC9 /* MLChatCellContentViewController.h */,
+				1F9FFC781E4A417A00C6DAC9 /* MLChatCellContentViewController.m */,
+				1F9FFC711E4A3D1400C6DAC9 /* MLChatCellTextViewController.h */,
+				1F9FFC721E4A3D1400C6DAC9 /* MLChatCellTextViewController.m */,
 				1F9B52771E48D52F00C37B12 /* MLChatAvaViewController.h */,
 				1F9B52781E48D52F00C37B12 /* MLChatAvaViewController.m */,
 				1F9B527A1E48DECF00C37B12 /* MLChatBaloonView.h */,
@@ -1554,6 +1559,7 @@
 				7831EDBA1C90A24700319191 /* CKApplicationModel.m in Sources */,
 				3DACB1051DE58008004284D9 /* camera.m in Sources */,
 				78BF5F6C1CB18F670026475B /* CKChatListCell.m in Sources */,
+				1F9FFC731E4A3D1400C6DAC9 /* MLChatCellTextViewController.m in Sources */,
 				782A00031D0AB9EE00802097 /* CKAudioAttachModel.m in Sources */,
 				3DACB0D01DE57B85004284D9 /* Connection.m in Sources */,
 				1F9B5E9A1E44E5180045DF7F /* MLChatTableViewCell.m in Sources */,
@@ -1564,7 +1570,6 @@
 				7807CF741CCB5E7900D9DF9B /* CKGroupChatModel.m in Sources */,
 				3D29CB241DE4235600142830 /* SelectMultipleView.m in Sources */,
 				78BEA93E1CAAA47D004E85DB /* CKHTTPRequest.m in Sources */,
-				1F9B5EA01E44E57B0045DF7F /* MLChatTextCell.m in Sources */,
 				3D3AED0B1DE499EC00F745BE /* Groups.m in Sources */,
 				78BEA9761CAAF9E0004E85DB /* CKFriendProfileHeaderCell.m in Sources */,
 				782AFFFA1D0AB90300802097 /* CKAttachModel.m in Sources */,
@@ -1655,6 +1660,7 @@
 				78BEA9261CA6A052004E85DB /* CKUserServerConnection.m in Sources */,
 				78BEA9821CAB9942004E85DB /* CKFriendProfileLocationCell.m in Sources */,
 				781250801CB63E0B00D3BFBB /* CKMessageCell.m in Sources */,
+				1F9FFC791E4A417A00C6DAC9 /* MLChatCellContentViewController.m in Sources */,
 				1F15829B1E43800200D265A8 /* MLChatViewController.m in Sources */,
 				78B524D41C9FE40B00502AA4 /* CKSettingsViewController.m in Sources */,
 				3D1A36661DB4EC80000A8CB7 /* NSString+NumEncoding.m in Sources */,

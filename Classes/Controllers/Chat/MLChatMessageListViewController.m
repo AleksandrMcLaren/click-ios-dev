@@ -7,7 +7,7 @@
 //
 
 #import "MLChatMessageListViewController.h"
-#import "MLChatTextCell.h"
+#import "MLChatTableViewCell.h"
 
 @interface MLChatMessageListViewController ()
 
@@ -38,7 +38,7 @@
     
     self.tableView.backgroundColor = [UIColor clearColor];
     
-    [self.tableView registerClass:MLChatTextCell.class forCellReuseIdentifier:@"Cell"];
+    [self.tableView registerClass:MLChatTableViewCell.class forCellReuseIdentifier:@"Cell"];
 }
 
 - (void)addMessages:(NSArray *)messages
@@ -60,6 +60,11 @@
     [self.tableView setContentOffset:CGPointMake(0, contentOffset) animated:NO];
 }
 
+- (CGFloat)contentMaxOrdinateOffSet
+{
+    return (self.tableView.contentSize.height - self.tableView.frame.size.height);
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -70,7 +75,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellId = @"Cell";
-    MLChatTextCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
+    MLChatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     cell.message = self.messages[indexPath.row];
     
     return cell;

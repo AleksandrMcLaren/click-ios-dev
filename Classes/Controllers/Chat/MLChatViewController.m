@@ -9,7 +9,7 @@
 #import "MLChatViewController.h"
 #import "MLChatMessageListViewController.h"
 #import "MLChatMessageBarViewController.h"
-#import "MLChatTableViewCell.h"
+
 
 @interface MLChatViewController () <MLChatMessageBarViewControllerDelegate>
 
@@ -70,29 +70,35 @@
     msg.isFirst = YES;
     msg.isReceived = YES;
     msg.imageUrl = @"sdfg";
+    msg.text = @"sdlkgj lsdfkgj sdflgkj!!!";
     
     MLChatMessageModel *msg2 = [[MLChatMessageModel alloc] init];
     msg2.isFirst = NO;
     msg2.isReceived = YES;
     msg2.imageUrl = @"sdfg";
+    msg2.text = @"sdlkgj lsdfkgj sdflgkj!!!";
     
     MLChatMessageModel *msg3 = [[MLChatMessageModel alloc] init];
     msg3.isFirst = YES;
     msg3.isReceived = NO;
-    msg2.imageUrl = @"sdfg";
+    msg3.imageUrl = @"sdfg";
+    msg3.text = @"sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk !!!";
     
     MLChatMessageModel *msg4 = [[MLChatMessageModel alloc] init];
     msg4.isFirst = NO;
     msg4.isReceived = NO;
     msg4.imageUrl = @"sdfg";
+    msg4.text = @"sdlkgj lsdfkgj sdflgkj!!!";
     
     MLChatMessageModel *msg5 = [[MLChatMessageModel alloc] init];
     msg5.isFirst = NO;
     msg5.isReceived = NO;
     msg5.imageUrl = @"sdfg";
+    msg5.text = @"sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk!!!";
     
-    [self.messageVC addMessages:@[msg, msg2, msg3, msg4, msg5, msg3, msg4, msg5]];
-    
+   [self.messageVC addMessages:@[msg, msg2, msg3, msg4, msg5, msg3, msg4, msg5]];
+
+//     [self.messageVC addMessages:@[msg, msg2]];
 //    [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
 //        
 //        MLChatMessageModel *msg = [[MLChatMessageModel alloc] init];
@@ -147,17 +153,27 @@
     CGRect messageListFrame = self.messageVC.view.frame;
     messageListFrame.size.height = boundsSize.height - (boundsSize.height - messageBarFrame.origin.y);
     
+    CGFloat messageListOffset = 0;
+    
+    if(boundsSize.height != kbRect.origin.y)
+    {  // открывается
+        CGFloat diff = self.messageVC.view.frame.size.height - messageListFrame.size.height;
+        messageListOffset = self.messageVC.contentOffSet + diff;
+    }
+    else
+    {   // закрывается
+        CGFloat diff = messageListFrame.size.height - self.messageVC.view.frame.size.height;
+        messageListOffset = self.messageVC.contentOffSet - diff;
+    }
+    
     [UIView animateWithDuration:0.3
                      animations:^{
                          
+                         // offset присвоим до изменения фрейма
+                         self.messageVC.contentOffSet = messageListOffset;
+                         
                          self.messageBarVC.view.frame = messageBarFrame;
                          self.messageVC.view.frame = messageListFrame;
-                         
-//                         if(boundsSize.height != kbRect.origin.y)
-//                         {  // открывается
-//                             self.messageVC.contentOffSet = self.messageVC.contentOffSet + kbRect.origin.y;
-//                         }
-
                          
                      } completion:^(BOOL finished) {
                          [self.view setNeedsUpdateConstraints];
