@@ -11,7 +11,9 @@
 @interface MLChatCellTextViewController ()
 
 @property (nonatomic, strong) UILabel *label;
+
 @property (nonatomic) CGSize textSize;
+@property (nonatomic) UIEdgeInsets insets;
 
 @end
 
@@ -28,6 +30,8 @@
         self.label.textColor = [UIColor blackColor];
         self.label.font = [UIFont systemFontOfSize:16];
         self.label.numberOfLines = 0;
+        
+        self.insets = UIEdgeInsetsMake(15, 10, 15, 10);
     }
     
     return self;
@@ -44,7 +48,7 @@
 {
     [super viewDidLayoutSubviews];
     
-    self.label.frame = CGRectMake(0, 0, self.textSize.width, self.textSize.height);
+    self.label.frame = CGRectMake(self.insets.left, self.insets.top, self.textSize.width, self.textSize.height);
 }
 
 - (void)setMessage:(MLChatMessageModel *)message
@@ -59,7 +63,8 @@
                                                   context:nil].size;
     [self.view setNeedsLayout];
     
-    [self.delegate chatCellContentViewControllerNeedsSize:self.textSize];
+    CGSize size = CGSizeMake(self.insets.left + self.textSize.width + self.insets.right, self.insets.top + self.textSize.height + self.insets.bottom);
+    [self.delegate chatCellContentViewControllerNeedsSize:size];
 }
 
 @end

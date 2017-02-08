@@ -32,7 +32,7 @@
         self.backgroundColor = [UIColor clearColor];
         self.contentView.backgroundColor = [UIColor clearColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        
+    
         self.avaVC = [[MLChatAvaViewController alloc] init];
         [self.contentView addSubview:self.avaVC.view];
         
@@ -50,15 +50,13 @@
     CGFloat avaInsetLeft = 5.f;
     CGFloat blnInsetTop = avaInsetTop;
     CGFloat blnInsetLeft = avaInsetLeft;
-    CGFloat contentInsetTop = 10.f;
-    CGFloat contentInsetLeft = 10.f;
-    CGFloat blnWidth = self.contentSize.width + contentInsetLeft * 2;
-    CGFloat blnHeight = self.contentSize.height + contentInsetTop * 2;
+    CGFloat blnInsetBottom = 5.f;
+    CGFloat blnWidth = self.contentSize.width;
+    CGFloat blnHeight = self.contentSize.height;
     
-    
-    if(!self.message.isReceived)
+    if(self.message.isOwner)
     {
-        avaInsetLeft = boundsSize.width - self.avaVC.height - avaInsetLeft;
+        avaInsetLeft = boundsSize.width - self.avaVC.diameter - avaInsetLeft;
         blnInsetLeft = boundsSize.width - blnWidth - blnInsetLeft;
     }
     
@@ -67,23 +65,23 @@
         [self.avaVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(avaInsetTop);
             make.left.equalTo(avaInsetLeft);
-            make.width.equalTo(self.avaVC.height);
-            make.height.equalTo(self.avaVC.height);
+            make.width.equalTo(self.avaVC.diameter);
+            make.height.equalTo(self.avaVC.diameter);
         }];
 
-        blnInsetTop = self.avaVC.height + 2;
+        blnInsetTop = self.avaVC.diameter + 2;
     }
 
     [self.contentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(contentInsetTop);
-        make.left.equalTo(contentInsetLeft);
+        make.top.equalTo(0);
+        make.left.equalTo(0);
         make.width.equalTo(self.contentSize.width);
         make.height.equalTo(self.contentSize.height);
     }];
     
     UIEdgeInsets blnInset = UIEdgeInsetsMake(blnInsetTop,
                                              blnInsetLeft,
-                                             5.f,
+                                             blnInsetBottom,
                                              boundsSize.width - blnWidth - blnInsetLeft);
     
     [self.balloonView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -92,7 +90,6 @@
         make.height.equalTo(blnHeight);
     }];
 
-    
     [super updateConstraints];
 }
 
@@ -101,7 +98,7 @@
     _message = message;
 
     self.balloonView.isFirst = self.message.isFirst;
-    self.balloonView.isReceived = self.message.isReceived;
+    self.balloonView.isOwner = self.message.isOwner;
     
     if(self.balloonView.isFirst)
     {

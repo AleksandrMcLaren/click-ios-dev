@@ -571,7 +571,11 @@
     [message save];
 
     if ([_currentChat messageMatch:message]) {
-        [_currentChat reloadMessages];
+        
+        // TODO i
+        //[_currentChat reloadMessages];
+        _currentChat.lastMessage = message;
+        
     }else{
         NSString* title = @"Messme";
         

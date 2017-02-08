@@ -15,6 +15,7 @@
 @property (nonatomic, assign, readonly) CGFloat contentMaxOrdinateOffSet;
 
 - (void)addMessages:(NSArray *)messages;
+- (void)addMessage:(MLChatMessageModel *)message;
 
 @end
 

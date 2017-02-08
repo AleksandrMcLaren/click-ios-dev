@@ -259,7 +259,7 @@
         self.id = [[NSUUID UUID] UUIDString];
         self.userid = [CKUser currentUser].id;
         self.userlogin = [CKUser currentUser].login;
-        
+        self.isOwner = YES;
     }
     return self;
 }

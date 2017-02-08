@@ -24,20 +24,23 @@
     
     if(self)
     {
-
+    
     }
     
     return self;
 }
 
+
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
     self.mask.frame = self.bounds;
     
-    self.shadow.frame = self.frame;
+  //  self.shadow.frame = self.frame;
 }
+
 
 - (void)setIsFirst:(BOOL)isFirst
 {
@@ -48,55 +51,44 @@
         self.mask = [[UIImageView alloc] initWithImage:
                          [[UIImage imageNamed:@"cellMask"] resizableImageWithCapInsets:UIEdgeInsetsMake(21, 16, 16, 16)
                                                                           resizingMode:UIImageResizingModeStretch]];
-        
-//        
-//        self.shadow = [[UIImageView alloc] initWithImage:
-//                               [[UIImage imageNamed:@"cellMaskShadow"] resizableImageWithCapInsets:UIEdgeInsetsMake(25, 16, 20, 20)
-//                                                                                      resizingMode:UIImageResizingModeStretch]];
     }
     else
     {
         self.mask = [[UIImageView alloc] initWithImage:
                          [[UIImage imageNamed:@"secondaryCellMask"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 20, 16)
                                                                                    resizingMode:UIImageResizingModeStretch]];
-//        
-//        self.shadow = [[UIImageView alloc] initWithImage:
-//                               [[UIImage imageNamed:@"secondaryCellMaskShadow"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 20, 16)
-//                                                                                               resizingMode:UIImageResizingModeStretch]];
-        
     }
     
     self.mask.contentMode = UIViewContentModeScaleToFill;
     self.maskView = self.mask;
-    
-//    self.maskView.layer.masksToBounds = NO;
-//    self.maskView.layer.shadowColor = [UIColor blackColor].CGColor;
-//    self.maskView.layer.shadowOffset = CGSizeMake(10, 5); //Here your control your spread
-//    self.maskView.layer.shadowOpacity = 0.5;
-//    self.maskView.layer.shadowRadius = 5.0;
+    //self.clipsToBounds = YES;
+
+//    self.layer.masksToBounds = NO;
+//    self.layer.shadowColor = [UIColor blackColor].CGColor;
+//    self.layer.shadowOffset = CGSizeMake(10, 5); //Here your control your spread
+//    self.layer.shadowOpacity = 0.5;
+//    self.layer.shadowRadius = 5.0;
 //    self.shadow = UIViewContentModeScaleToFill;
 //    [self addSubview:self.shadow];
 
 }
 
-- (void)setIsReceived:(BOOL)isReceived
+- (void)setIsOwner:(BOOL)isOwner
 {
-    _isReceived = isReceived;
+    _isOwner = isOwner;
     
-    if (self.isReceived)
-    {
-        self.mask.transform = CGAffineTransformIdentity;
-      //  self.shadow.transform = CGAffineTransformIdentity;
-        self.backgroundColor = [UIColor whiteColor];
-    } else
+    if (self.isOwner)
     {
         self.mask.transform = CGAffineTransformMakeScale(-1, 1);
-      //  self.shadow.transform = CGAffineTransformMakeScale(-1, 1);
+        //  self.shadow.transform = CGAffineTransformMakeScale(-1, 1);
         self.backgroundColor = [UIColor colorWithRed:0.81 green:0.91 blue:0.98 alpha:1.00];
+        
+    } else
+    {
+        self.mask.transform = CGAffineTransformIdentity;
+        //  self.shadow.transform = CGAffineTransformIdentity;
+        self.backgroundColor = [UIColor whiteColor];
     }
-    
-   // self.layer.cornerRadius = 2
-    
 }
 
 @end

@@ -29,9 +29,10 @@
 
 @interface MLChatMessageModel : NSObject
 
+@property (nonatomic, strong) NSString *ident;
 @property (nonatomic, strong) NSString *imageUrl;
 @property (nonatomic, assign) BOOL isFirst;
-@property (nonatomic, assign) BOOL isReceived;
+@property (nonatomic, assign) BOOL isOwner;
 @property (nonatomic, assign) NSString *text;
 
 @end

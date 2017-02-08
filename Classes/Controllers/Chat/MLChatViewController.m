@@ -17,6 +17,8 @@
 @property (nonatomic, strong) MLChatMessageListViewController *messageVC;
 @property (nonatomic, strong) MLChatMessageBarViewController *messageBarVC;
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
+@property (nonatomic, strong) NSMutableArray *messages;
+@property (nonatomic, strong) MLChatMessageModel *lastMessage;
 
 @property (nonatomic) CGFloat keyboardHeight;
 @property (nonatomic) CGFloat messageBarHeight;
@@ -33,11 +35,11 @@
     if(self)
     {
         self.chat = chat;
-        
-        self.messageBarHeight = 51.f;
+        self.messages = [[NSMutableArray alloc] init];
         
         self.messageVC = [[MLChatMessageListViewController alloc] init];
         
+        self.messageBarHeight = 51.f;
         self.messageBarVC = [[MLChatMessageBarViewController alloc] init];
         self.messageBarVC.delegate = self;
         
@@ -68,47 +70,75 @@
 
     MLChatMessageModel *msg = [[MLChatMessageModel alloc] init];
     msg.isFirst = YES;
-    msg.isReceived = YES;
+   // msg.isReceived = YES;
     msg.imageUrl = @"sdfg";
     msg.text = @"sdlkgj lsdfkgj sdflgkj!!!";
     
     MLChatMessageModel *msg2 = [[MLChatMessageModel alloc] init];
     msg2.isFirst = NO;
-    msg2.isReceived = YES;
+  //  msg2.isReceived = YES;
     msg2.imageUrl = @"sdfg";
     msg2.text = @"sdlkgj lsdfkgj sdflgkj!!!";
     
     MLChatMessageModel *msg3 = [[MLChatMessageModel alloc] init];
     msg3.isFirst = YES;
-    msg3.isReceived = NO;
+  //  msg3.isReceived = NO;
     msg3.imageUrl = @"sdfg";
     msg3.text = @"sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk !!!";
     
     MLChatMessageModel *msg4 = [[MLChatMessageModel alloc] init];
     msg4.isFirst = NO;
-    msg4.isReceived = NO;
+   // msg4.isReceived = NO;
     msg4.imageUrl = @"sdfg";
     msg4.text = @"sdlkgj lsdfkgj sdflgkj!!!";
     
     MLChatMessageModel *msg5 = [[MLChatMessageModel alloc] init];
     msg5.isFirst = NO;
-    msg5.isReceived = NO;
+   // msg5.isReceived = NO;
     msg5.imageUrl = @"sdfg";
     msg5.text = @"sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk!!!";
     
-   [self.messageVC addMessages:@[msg, msg2, msg3, msg4, msg5, msg3, msg4, msg5]];
+  // [self.messageVC addMessages:@[msg, msg2, msg3, msg4, msg5, msg3, msg4, msg5]];
 
 //     [self.messageVC addMessages:@[msg, msg2]];
-//    [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
-//        
-//        MLChatMessageModel *msg = [[MLChatMessageModel alloc] init];
-//        msg.isFisrt = YES;
-//        msg.ava
-//        
-//        [self.messageVC addMessages:msgs];
-//    }];
+    [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
+
+        if(self.messages.count)
+            return;
+
+        for(Message *msg in msgs)
+        {
+            MLChatMessageModel *message = [self createFromMessage:msg];
+            [self.messages addObject:message];
+        }
+
+        [self.messageVC addMessages:self.messages];
+    }];
+    
+    [self.chat.lastMessageDidChanged subscribeNext:^(Message *msg) {
+        
+        MLChatMessageModel *message = [self createFromMessage:msg];
+        [self.messages addObject:message];
+        
+        [self.messageVC addMessage:message];
+    }];
     
     [self.view setNeedsUpdateConstraints];
+}
+
+- (MLChatMessageModel *)createFromMessage:(Message *)msg
+{
+    MLChatMessageModel *message = [[MLChatMessageModel alloc] init];
+    message.ident = msg.id;
+    message.isOwner = msg.isOwner;
+    message.text = msg.text;
+    
+    if(!self.lastMessage || self.lastMessage.isOwner != message.isOwner)
+        message.isFirst = YES;
+    
+    self.lastMessage = message;
+    
+    return message;
 }
 
 - (void)updateViewConstraints
@@ -116,8 +146,8 @@
     CGFloat messageBarBottomOffset = self.keyboardHeight;
     
     [self.messageBarVC.view updateConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.view.left).offset(20);
-        make.right.equalTo(self.view.right).offset(-20);
+        make.left.equalTo(self.view.left);
+        make.right.equalTo(self.view.right);
         make.bottom.equalTo(self.view.bottom).offset(-messageBarBottomOffset);
         make.height.equalTo(self.messageBarHeight);
     }];
@@ -187,7 +217,7 @@
 
 #pragma mark - MLChatMessageBarViewControllerDelegate
 
-- (void)chatMessageBarNeedsHeight:(CGFloat)height
+- (void)chatMessageBarViewControllerNeedsHeight:(CGFloat)height
 {
     if(height > self.messageBarHeight)
         self.messageVC.contentOffSet = self.messageVC.contentOffSet + (height - self.messageBarHeight);
@@ -197,6 +227,12 @@
     self.messageBarHeight = height;
     
     [self.view setNeedsUpdateConstraints];
+}
+
+- (void)chatMessageBarViewControllerTappedSend:(NSString *)text
+{
+    [self.messageBarVC clearText];
+    [self messageSend:text Video:nil Picture:nil Audio:nil];
 }
 
 @end

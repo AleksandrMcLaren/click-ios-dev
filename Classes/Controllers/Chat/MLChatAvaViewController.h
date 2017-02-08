@@ -12,6 +12,6 @@
 
 @property (nonatomic, strong) NSString *imageUrl;
 
-@property (nonatomic, readonly) CGFloat height;
+@property (nonatomic, readonly) CGFloat diameter;
 
 @end

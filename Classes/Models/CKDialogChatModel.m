@@ -50,7 +50,9 @@
 }
 
 - (void)sendMessage:(Message *)message{
-    [super sendMessage:message];
+    
+   // TODO i
+   // [super sendMessage:message];
     
     [[CKMessageServerConnection sharedInstance] uploadAttachements:self.attachements completion:^(NSDictionary *result) {
         self.attachements = @[];
@@ -63,7 +65,14 @@
                                                                Message *messageRecived = [Message modelWithDictionary:dictionary];
                                                                [message updateWithMessage:messageRecived];
                                                                [messageRecived save];
-                                                               [self reloadMessages];
+                                                               
+                                                              // TODO i:
+                                                              // [self reloadMessages];
+                                                               
+                                                               self.lastMessage = messageRecived;
+                                                               // надо сделать
+                                                               //[CKDialogModel updateDialog:_dialog withMessage:[self.messages lastObject]];
+                                                               
                                                            }else{
                                                                [ProgressHUD showError:@"Message sending failed."];
                                                            }

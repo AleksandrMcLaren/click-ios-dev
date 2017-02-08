@@ -25,6 +25,7 @@
     {
         self.tableView.estimatedRowHeight = 44.f;
         self.tableView.rowHeight = UITableViewAutomaticDimension;
+        self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
         
         self.messages = [[NSMutableArray alloc] init];
     }
@@ -37,7 +38,7 @@
     [super viewDidLoad];
     
     self.tableView.backgroundColor = [UIColor clearColor];
-    
+
     [self.tableView registerClass:MLChatTableViewCell.class forCellReuseIdentifier:@"Cell"];
 }
 
@@ -46,6 +47,15 @@
     [self.messages addObjectsFromArray:messages];
     
     [self.tableView reloadData];
+}
+
+- (void)addMessage:(MLChatMessageModel *)message
+{
+    [self.tableView beginUpdates];
+    NSIndexPath *rowPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
+    [self.messages addObject:message];
+    [self.tableView insertRowsAtIndexPaths:@[rowPath] withRowAnimation:UITableViewRowAnimationBottom];
+    [self.tableView endUpdates];
 }
 
 #pragma mark - tableView contentOffset

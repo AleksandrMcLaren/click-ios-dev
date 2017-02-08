@@ -14,8 +14,9 @@
 
 @property (nonatomic, weak) id <MLChatMessageBarViewControllerDelegate> delegate;
 
-- (void)endEditing:(BOOL)endEditing;
-- (void)setNeedsHeight;
+- (void)clearText;
+
+//- (void)endEditing:(BOOL)endEditing;
 
 @end
 
@@ -23,11 +24,12 @@
 @protocol MLChatMessageBarViewControllerDelegate <NSObject>
 
 @required
-- (void)chatMessageBarNeedsHeight:(CGFloat)height;
+- (void)chatMessageBarViewControllerNeedsHeight:(CGFloat)height;
+- (void)chatMessageBarViewControllerTappedSend:(NSString *)text;
+
 
 - (void)chatMessagePanelDidBeginEditingTextView:(UITextView *)textView;
 - (void)chatMessagePanelTextViewDidChange:(UITextView *)textView;
-- (void)chatMessagePanelTappedMessageButtonWithTextView:(UITextView *)textView;
 - (void)chatMessagePanelTappedPlusButton;
 
 @end

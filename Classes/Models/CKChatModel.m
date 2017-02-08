@@ -22,6 +22,7 @@
     if (self = [super init]) {
         _messages = [NSMutableArray new];
         _messagesDidChanged = [RACObserve(self, messages) ignore:nil];
+        _lastMessageDidChanged = [RACObserve(self, lastMessage) ignore:nil];
     }
     return self;
 }
@@ -152,15 +153,23 @@
 }
 
 - (void)sendMessage:(Message *)message{
+    
     [message save];
-    [self reloadMessages];
+    
+    // TODO i
+    // [self reloadMessages];
+    self.lastMessage = message;
 }
 
 -(void)recivedMesagesArray:(NSArray*)messages{
+    
+    // TODO i
+    // здесь получаем сообщения из словаря
     for (NSDictionary *diactionary in messages){
         Message* message = [Message modelWithDictionary:diactionary];
         [self saveMessage:message];
     }
+    
     [self reloadMessages];
 }
 

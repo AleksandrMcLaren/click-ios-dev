@@ -11,6 +11,6 @@
 @interface MLChatBaloonView : UIView
 
 @property (nonatomic, assign) BOOL isFirst;
-@property (nonatomic, assign) BOOL isReceived;
+@property (nonatomic, assign) BOOL isOwner;
 
 @end
