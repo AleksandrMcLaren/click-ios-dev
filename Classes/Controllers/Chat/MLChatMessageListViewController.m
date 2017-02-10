@@ -38,7 +38,6 @@
     [super viewDidLoad];
     
     self.tableView.backgroundColor = [UIColor clearColor];
-
     [self.tableView registerClass:MLChatTableViewCell.class forCellReuseIdentifier:@"Cell"];
 }
 
@@ -47,15 +46,37 @@
     [self.messages addObjectsFromArray:messages];
     
     [self.tableView reloadData];
+    
+    if(self.messages.count)
+    {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
+                         atScrollPosition:UITableViewScrollPositionBottom
+                                 animated:NO];
+    }
 }
 
 - (void)addMessage:(MLChatMessageModel *)message
 {
-    [self.tableView beginUpdates];
     NSIndexPath *rowPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
+    __weak typeof(self) weakSelf = self;
+    
+    [CATransaction begin];
+    
+    [CATransaction setCompletionBlock:^{
+      //  dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView scrollToRowAtIndexPath:rowPath
+                                  atScrollPosition:UITableViewScrollPositionTop
+                                          animated:YES];
+      //  });
+    }];
+    
+    
+    [self.tableView beginUpdates];
     [self.messages addObject:message];
-    [self.tableView insertRowsAtIndexPaths:@[rowPath] withRowAnimation:UITableViewRowAnimationBottom];
+    [self.tableView insertRowsAtIndexPaths:@[rowPath] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
+    
+    [CATransaction commit];
 }
 
 #pragma mark - tableView contentOffset

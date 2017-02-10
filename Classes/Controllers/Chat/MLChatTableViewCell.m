@@ -79,13 +79,16 @@
         make.height.equalTo(self.contentSize.height);
     }];
     
-    UIEdgeInsets blnInset = UIEdgeInsetsMake(blnInsetTop,
-                                             blnInsetLeft,
-                                             blnInsetBottom,
-                                             boundsSize.width - blnWidth - blnInsetLeft);
+//    UIEdgeInsets blnInset = UIEdgeInsetsMake(blnInsetTop,
+//                                             blnInsetLeft,
+//                                             blnInsetBottom,
+//                                             boundsSize.width - blnWidth - blnInsetLeft);
     
     [self.balloonView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).with.insets(blnInset);
+      //  make.edges.equalTo(self.contentView).with.insets(blnInset);
+        make.top.equalTo(blnInsetTop);
+        make.bottom.equalTo(-blnInsetBottom);
+        make.left.equalTo(blnInsetLeft);
         make.width.equalTo(blnWidth);
         make.height.equalTo(blnHeight);
     }];

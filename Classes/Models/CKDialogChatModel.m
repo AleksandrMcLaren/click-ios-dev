@@ -52,7 +52,8 @@
 - (void)sendMessage:(Message *)message{
     
    // TODO i
-   // [super sendMessage:message];
+   [super sendMessage:message];
+    return;
     
     [[CKMessageServerConnection sharedInstance] uploadAttachements:self.attachements completion:^(NSDictionary *result) {
         self.attachements = @[];

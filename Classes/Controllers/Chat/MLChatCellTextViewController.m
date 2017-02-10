@@ -55,6 +55,8 @@
 {
     [super setMessage:message];
     
+  //  NSLog(@"---- %@ | %@ | %@", self, self.label.text, self.message);
+    
     self.label.text = self.message.text;
     
     self.textSize = [self.label.text boundingRectWithSize:CGSizeMake(250, CGFLOAT_MAX)
