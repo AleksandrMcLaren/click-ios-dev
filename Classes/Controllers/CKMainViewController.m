@@ -20,6 +20,8 @@
 #import "CKOperationsProtocol.h"
 #import "ChatView.h"
 
+#import "MLChatViewController.h"
+
 @interface CKMapViewController()
 
 @property (nonatomic, strong, readonly) UIViewController* topViewController;
@@ -158,11 +160,13 @@
 }
 
 - (void)startChat:(CKChatModel *)chat{
-    ChatView *chatView = [[ChatView alloc] initWithChat:chat];
-    chatView.hidesBottomBarWhenPushed = YES;
+   // ChatView *chatView = [[ChatView alloc] initWithChat:chat];
+    
+    MLChatViewController *chatVC = [[MLChatViewController alloc] initWithChat:chat];
+    chatVC.hidesBottomBarWhenPushed = YES;
     _tabBarController.selectedIndex = 0;
     [_chatsViewController.navigationController popToRootViewControllerAnimated:NO];
-    [_chatsViewController.navigationController pushViewController:chatView animated:YES];
+    [_chatsViewController.navigationController pushViewController:chatVC animated:YES];
 }
 
 @end

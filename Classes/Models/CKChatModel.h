@@ -14,12 +14,14 @@ typedef void (^CKChatModelFetchedMessages)(NSArray* messages);
 @interface CKChatModel : NSObject
 
 @property (nonatomic, strong) NSArray *messages;
+@property (nonatomic, strong) Message *lastMessage;
 @property (nonatomic, readonly) BOOL isReadonly;
 @property (nonatomic, strong) NSArray *attachements;
 @property (nonatomic, strong, readonly) NSString* identifier;
 @property (nonatomic, strong, readonly) CKDialogModel* dialog;
 
 @property (nonatomic, strong, readonly) RACSignal* messagesDidChanged;
+@property (nonatomic, strong, readonly) RACSignal* lastMessageDidChanged;
 
 - (instancetype)initWithDialog:(CKDialogModel*) dialog;
 
