@@ -140,8 +140,16 @@
     message.text = msg.text;
     message.date = msg.date;
     message.status = (NSInteger)msg.status;
+    message.userLogin = msg.userlogin;
     
-    NSLog(@"qqq %u", msg.status);
+    /*
+    if(message.isOwner)
+        ;
+    else
+        message.avatarUrl = self.chat.dialog.userAvatarId;
+    */
+    
+    NSLog(@"qqq %@", message.userLogin);
     
     
     if(!self.lastMessage || self.lastMessage.isOwner != message.isOwner)

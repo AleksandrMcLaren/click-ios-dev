@@ -6,11 +6,11 @@
 //  Copyright © 2017 Click. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "MLChatMessage.h"
 
 @interface MLChatAvaViewController : UIViewController
 
-@property (nonatomic, strong) NSString *imageUrl;
+@property (nonatomic, strong) MLChatMessage *message;
 
 @property (nonatomic, readonly) CGFloat diameter;
 

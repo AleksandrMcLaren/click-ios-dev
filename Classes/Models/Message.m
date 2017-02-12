@@ -59,7 +59,7 @@
     
     model.userid = [NSString stringWithFormat:@"%@", dict[@"userid"]];
     model.userlogin = [NSString stringWithFormat:@"%@", dict[@"userlogin"]];
-    
+  
     NSMutableArray *attachements = [NSMutableArray new];
     
     id attach = dict[@"attach"];
@@ -155,6 +155,8 @@
     self.date = message.date;
     self.userid = message.userid;
     self.userlogin = message.userlogin;
+
+    NSLog(@"111 - %@", self.userlogin);
     
     self.attachements = message.attachements;
     self.timer = message.timer;

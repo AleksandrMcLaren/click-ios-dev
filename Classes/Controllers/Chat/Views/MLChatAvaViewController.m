@@ -7,10 +7,12 @@
 //
 
 #import "MLChatAvaViewController.h"
+#import "MLChatLib.h"
 
 @interface MLChatAvaViewController ()
 
 @property (nonatomic, strong) UIImageView *imView;
+@property (nonatomic, strong) UILabel *nameLabel;
 
 @end
 
@@ -23,11 +25,12 @@
     
     if(self)
     {
-        self.view.layer.masksToBounds = YES;
-        
-        UIImage *image = [UIImage imageNamed:@"ic_photo_contact"];
-        self.imView = [[UIImageView alloc] initWithImage:image];
+        self.imView = [[UIImageView alloc] init];
         self.imView.contentMode = UIViewContentModeScaleAspectFit;
+        
+        self.nameLabel = [[UILabel alloc] init];
+        self.nameLabel.font = [UIFont systemFontOfSize:20.0];
+        self.nameLabel.textColor = [UIColor whiteColor];
         
         self.diameter = 30;
     }
@@ -39,8 +42,10 @@
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor blueColor];
+    self.view.layer.masksToBounds = YES;
+    self.view.backgroundColor = [UIColor colorFromHexString:@"#008ce1"];
     
+    [self.view addSubview:self.nameLabel];
     [self.view addSubview:self.imView];
 }
 
@@ -51,11 +56,25 @@
     self.view.layer.cornerRadius = self.view.bounds.size.width / 2;
     
     self.imView.frame = self.view.bounds;
+    
+    if(!self.nameLabel.hidden)
+    {
+        CGSize boundsSize = self.view.bounds.size;
+        CGSize textSize = [MLChatLib textSizeLabel:self.nameLabel withWidth:boundsSize.width];
+        self.nameLabel.frame = CGRectMake((boundsSize.width - textSize.width) / 2, (boundsSize.height - textSize.height) / 2, textSize.width, textSize.height);
+    }
 }
 
-- (void)setImageUrl:(NSString *)imageUrl
+- (void)setMessage:(MLChatMessage *)message
 {
-    _imageUrl = imageUrl;
+    _message = message;
+    
+    if(self.message.userLogin && self.message.userLogin.length > 1)
+        self.nameLabel.text = [self.message.userLogin substringToIndex:1];
+    else
+        self.nameLabel.text = nil;
+    
+    [self.view setNeedsLayout];
 }
 
 - (void)setDiameter:(CGFloat)diameter

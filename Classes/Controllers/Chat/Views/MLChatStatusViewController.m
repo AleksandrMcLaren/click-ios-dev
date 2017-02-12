@@ -27,8 +27,7 @@
     if(self)
     {
         self.timeLabel = [[UILabel alloc] init];
-        self.timeLabel.font = [UIFont systemFontOfSize:11];
-        self.timeLabel.textColor = [UIColor colorWithHue:0.63 saturation:0.24 brightness:0.34 alpha:1.00];
+        self.timeLabel.font = [UIFont italicSystemFontOfSize:12];
         
         self.imageView = [[UIImageView alloc] init];
         
@@ -59,13 +58,13 @@
     CGSize boundsSize = self.view.bounds.size;
     CGSize timeSize = self.timeLabel.frame.size;
     CGSize imageSize = (self.imageView.image ? self.imageView.image.size : CGSizeZero);
-    CGFloat allWidth = timeSize.width + 3 + imageSize.width;
+    CGFloat allWidth = timeSize.width + imageSize.width;
     CGFloat xTime = (boundsSize.width - allWidth) / 2;
     
     self.timeLabel.frame = CGRectMake(xTime, (boundsSize.height - timeSize.height) / 2, timeSize.width, timeSize.height);
     
-    CGFloat xImage = xTime + timeSize.width + 3;
-    CGFloat yImage = self.timeLabel.frame.origin.y + timeSize.height - imageSize.height;
+    CGFloat xImage = xTime + timeSize.width;
+    CGFloat yImage = self.timeLabel.frame.origin.y + timeSize.height - imageSize.height - 1;
     self.imageView.frame = CGRectMake(xImage, yImage, imageSize.width, imageSize.height);
 }
 
@@ -73,12 +72,20 @@
 {
     _message = message;
     
+    [self updateTime];
+    [self reloadStatus];
+    [self.view setNeedsLayout];
+}
+
+- (void)updateTime
+{
     self.timeLabel.text = [[MLChatLib formatterDate_HH_mm] stringFromDate:self.message.date];
     [self.timeLabel sizeToFit];
     
-    [self reloadStatus];
-    
-    [self.view setNeedsLayout];
+    if(self.message.isOwner)
+        self.timeLabel.textColor = [UIColor colorWithHue:0.63 saturation:0.24 brightness:0.34 alpha:1.00];
+    else
+        self.timeLabel.textColor = [UIColor grayColor];
 }
 
 #pragma mark - Status
@@ -89,6 +96,7 @@
     {
         self.imageView.image = nil;
         self.imageView.hidden = YES;
+        self.tapRecognizer.enabled = NO;
         
         return;
     }
@@ -125,9 +133,6 @@
 
 - (void)addPossibleResend
 {
-    if(!self.message.isOwner)
-        return;
-    
     NSDate *currentTime = [NSDate date];
     NSTimeInterval seconds = [currentTime timeIntervalSinceDate:self.message.date];
     
@@ -168,7 +173,7 @@
     static dispatch_once_t once;
     static UIImage *_image;
     dispatch_once(&once, ^{
-        _image = [UIImage imageNamed:@"tick_gray"];
+        _image = [UIImage imageNamed:@"tick_black"];
     });
     
     return _image;
@@ -179,7 +184,7 @@
     static dispatch_once_t once;
     static UIImage *_image;
     dispatch_once(&once, ^{
-        _image = [UIImage imageNamed:@"tick_gray_multiple"];
+        _image = [UIImage imageNamed:@"tick_black_multiple"];
     });
     
     return _image;
@@ -190,7 +195,7 @@
     static dispatch_once_t once;
     static UIImage *_image;
     dispatch_once(&once, ^{
-        _image = [UIImage imageNamed:@"arrows_circle_strike_gray"];
+        _image = [UIImage imageNamed:@"arrows_circle_strike_black"];
     });
     
     return _image;

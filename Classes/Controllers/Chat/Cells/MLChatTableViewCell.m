@@ -101,7 +101,7 @@
 
     [self.statusVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.balloonView).offset(-5);
-        make.bottom.equalTo(self.balloonView).offset(-13);
+        make.bottom.equalTo(self.balloonView).offset(-13.5);
         make.width.equalTo(statusSize.width);
         make.height.equalTo(statusSize.height);
     }];
@@ -133,11 +133,12 @@
     //if(self.message.isFirst)
     {
         self.avaVC.view.hidden = NO;
-        self.avaVC.imageUrl = self.message.imageUrl;
+        self.avaVC.message = self.message;
     }
     else
     {
         self.avaVC.view.hidden = YES;
+        self.avaVC.message = nil;
     }
 }
 
