@@ -65,12 +65,12 @@
     self.textSize = [MLChatLib textSizeLabel:self.label withWidth:maxTextWidth];
     CGSize size = CGSizeMake(self.insets.left + self.textSize.width + self.insets.right, self.insets.top + self.textSize.height + self.insets.bottom);
     
-    CGFloat statusЦшвер = 0;
+    CGFloat statusWidth = 0;
     
     if(self.message.isOwner)
-       statusЦшвер = 60;
+       statusWidth = 50;
     else
-        statusЦшвер = 48;
+       statusWidth = 35;
     
     // если нужно увеличим высоту для вьюхи статуса
     NSArray *lines = [self getLinesArrayOfStringInLabel:self.label withWidth:self.textSize.width];
@@ -79,10 +79,10 @@
     {
         if(lines.count == 1)
         {
-            if(size.width + statusЦшвер > self.maxWidth)
+            if(size.width + statusWidth > self.maxWidth)
                 size = CGSizeMake(size.width, size.height + self.label.font.lineHeight);
             else
-                size = CGSizeMake(size.width + statusЦшвер, size.height);
+                size = CGSizeMake(size.width + statusWidth, size.height);
         }
         else
         {
@@ -92,8 +92,8 @@
                                                       attributes:@{NSFontAttributeName:self.label.font}
                                                          context:nil].size;
             
-            if(size.width + statusЦшвер > maxTextWidth &&
-               self.insets.left + self.insets.right + lastLineSize.width + statusЦшвер < size.width)
+            if(size.width + statusWidth > maxTextWidth &&
+               self.insets.left + self.insets.right + lastLineSize.width + statusWidth < size.width)
             {
                 // статус вмещается под строкой
             }
@@ -105,11 +105,11 @@
     }
     else
     {
-        size = CGSizeMake(size.width + statusЦшвер, size.height + self.label.font.lineHeight);
+        size = CGSizeMake(size.width + statusWidth, size.height + self.label.font.lineHeight);
     }
     
-    if(size.width < statusЦшвер)
-        size = CGSizeMake(self.insets.left + statusЦшвер, size.height);
+    if(size.width < statusWidth)
+        size = CGSizeMake(self.insets.left + statusWidth, size.height);
     
     [self.view setNeedsLayout];
     [self.delegate chatCellContentViewControllerNeedsSize:size];

@@ -125,6 +125,9 @@
 
 - (void)addPossibleResend
 {
+    if(!self.message.isOwner)
+        return;
+    
     NSDate *currentTime = [NSDate date];
     NSTimeInterval seconds = [currentTime timeIntervalSinceDate:self.message.date];
     

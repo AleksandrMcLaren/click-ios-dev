@@ -82,17 +82,20 @@
 {
     self.lineView.frame = CGRectMake(0, 0, self.view.bounds.size.width, 1);
     
+    CGFloat buttonWidth = 50.f;
+    
     [self.textView updateConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.view.left).offset(32);
-        make.right.equalTo(self.view.right).offset(-64);
+        make.left.equalTo(self.view.left).offset(buttonWidth);
+        make.right.equalTo(self.view.right).offset(-buttonWidth);
         make.top.equalTo(self.view.top).offset(8);
         make.bottom.equalTo(self.view.bottom).offset(-8);
     }];
     
     [self.sendButton makeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(buttonWidth);
         make.height.equalTo(32);
         make.bottom.equalTo(self.view.bottom).offset(-8);
-        make.right.equalTo(self.view.right).offset(-16);
+        make.right.equalTo(self.view.right);
     }];
     
     [super updateViewConstraints];
