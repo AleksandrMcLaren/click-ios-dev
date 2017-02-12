@@ -12,7 +12,7 @@
 @interface MLChatMessageListViewController ()
 
 @property (nonatomic, strong) NSMutableArray *messages;
-@property (nonatomic, strong) NSMutableDictionary *heightAtIndexPath;
+@property (nonatomic, strong) NSMutableDictionary *heightCellAtIndexPath;
 
 @end
 
@@ -27,8 +27,11 @@
         self.tableView.estimatedRowHeight = 44.f;
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
+        self.tableView.separatorColor = [UIColor clearColor];
         
-        self.heightAtIndexPath = [[NSMutableDictionary alloc] init];
+        self.refreshControl = [[UIRefreshControl alloc] init];
+        
+        self.heightCellAtIndexPath = [[NSMutableDictionary alloc] init];
         self.messages = [[NSMutableArray alloc] init];
     }
     
@@ -43,16 +46,42 @@
     [self.tableView registerClass:MLChatTableViewCell.class forCellReuseIdentifier:@"Cell"];
 }
 
+- (void)viewDidLayoutSubviews
+{
+    if(!self.tableView.tableHeaderView)
+    {
+        self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 25)];
+        
+        if(!self.messages.count)
+        {
+            [UIView animateWithDuration:0.25
+                                  delay:0
+                                options:UIViewAnimationOptionBeginFromCurrentState
+                             animations:^(void){
+                                 self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y - self.refreshControl.frame.size.height);
+                             } completion:^(BOOL finished){
+                                 [self.refreshControl beginRefreshing];
+                             }];
+        }
+    }
+}
+
 - (void)addMessages:(NSArray *)messages
 {
     if(messages.count)
     {
-        [self.messages addObjectsFromArray:messages];
-        [self.tableView reloadData];
-        
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
-                              atScrollPosition:UITableViewScrollPositionBottom
-                                      animated:NO];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            
+            [self.messages addObjectsFromArray:messages];
+            [self.tableView reloadData];
+            
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
+                                  atScrollPosition:UITableViewScrollPositionBottom
+                                          animated:NO];
+            
+            [self.refreshControl endRefreshing];
+            self.refreshControl = nil;
+        });
     }
 }
 
@@ -61,23 +90,25 @@
     NSIndexPath *rowPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
 //    __weak typeof(self) weakSelf = self;
     
-    [CATransaction begin];
-    
-    [CATransaction setCompletionBlock:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView scrollToRowAtIndexPath:rowPath
-                                  atScrollPosition:UITableViewScrollPositionTop
-                                          animated:YES];
-        });
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [CATransaction begin];
+        
+        [CATransaction setCompletionBlock:^{
+            
+                [self.tableView scrollToRowAtIndexPath:rowPath
+                                      atScrollPosition:UITableViewScrollPositionTop
+                                              animated:YES];
+            
+        }];
 
-    [self.tableView beginUpdates];
-    [self.messages addObject:message];
-    [self.tableView insertRowsAtIndexPaths:@[rowPath] withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
-    
-    [CATransaction commit];
-
+        [self.tableView beginUpdates];
+        [self.messages addObject:message];
+        [self.tableView insertRowsAtIndexPaths:@[rowPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+        
+        [CATransaction commit];
+    });
 }
 
 #pragma mark - tableView contentOffset
@@ -90,11 +121,6 @@
 - (void)setContentOffSet:(CGFloat)contentOffset
 {
     [self.tableView setContentOffset:CGPointMake(0, contentOffset) animated:NO];
-}
-
-- (CGFloat)contentMaxOrdinateOffSet
-{
-    return (self.tableView.contentSize.height - self.tableView.frame.size.height);
 }
 
 #pragma mark - Table view data source
@@ -115,7 +141,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSNumber *height = [self.heightAtIndexPath objectForKey:indexPath];
+    NSNumber *height = self.heightCellAtIndexPath[indexPath];
     
     if(height)
         return height.floatValue;
@@ -125,8 +151,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSNumber *height = @(cell.frame.size.height);
-    [self.heightAtIndexPath setObject:height forKey:indexPath];
+    self.heightCellAtIndexPath[indexPath] = @(cell.frame.size.height);
 }
 
 @end

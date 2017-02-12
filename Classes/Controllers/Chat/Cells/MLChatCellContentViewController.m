@@ -32,8 +32,3 @@
 }
 
 @end
-
-
-@implementation MLChatMessage
-
-@end

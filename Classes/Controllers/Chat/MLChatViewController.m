@@ -61,6 +61,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillChangeFrame:)
                                                  name:UIKeyboardWillChangeFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resendMessage:)
+                                                 name:mlchat_message_needs_resend
+                                               object:nil];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgwhite"]];
 
@@ -134,6 +138,11 @@
     message.ident = msg.id;
     message.isOwner = msg.isOwner;
     message.text = msg.text;
+    message.date = msg.date;
+    message.status = (NSInteger)msg.status;
+    
+    NSLog(@"qqq %u", msg.status);
+    
     
     if(!self.lastMessage || self.lastMessage.isOwner != message.isOwner)
         message.isFirst = YES;
@@ -169,7 +178,7 @@
     [self.chat send:text Video:video Picture:picture Audio:audio];
 }
 
-#pragma mark - Actions
+#pragma mark - NSNotification
 
 - (void)keyboardWillChangeFrame:(NSNotification *)notification
 {
@@ -211,6 +220,16 @@
                          [self.view setNeedsUpdateConstraints];
                      }];
 }
+
+- (void)resendMessage:(NSNotification *)notification
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MLChatMessage *message = notification.object;
+        [self messageSend:message.text Video:nil Picture:nil Audio:nil];
+    });
+}
+
+#pragma mark - NSNotification Actions
 
 - (void)tapped
 {

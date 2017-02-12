@@ -12,7 +12,6 @@
 @interface MLChatMessageListViewController : UITableViewController
 
 @property (nonatomic, assign) CGFloat contentOffSet;
-@property (nonatomic, assign, readonly) CGFloat contentMaxOrdinateOffSet;
 
 - (void)addMessages:(NSArray *)messages;
 - (void)addMessage:(MLChatMessage *)message;

@@ -6,7 +6,7 @@
 //  Copyright © 2017 Click. All rights reserved.
 //
 
-@class MLChatMessage;
+#import "MLChatMessage.h"
 
 @protocol MLChatCellContentViewControllerDelegate;
 
@@ -28,12 +28,4 @@
 @end
 
 
-@interface MLChatMessage : NSObject
 
-@property (nonatomic, strong) NSString *ident;
-@property (nonatomic, strong) NSString *imageUrl;
-@property (nonatomic, assign) BOOL isFirst;
-@property (nonatomic, assign) BOOL isOwner;
-@property (nonatomic, assign) NSString *text;
-
-@end

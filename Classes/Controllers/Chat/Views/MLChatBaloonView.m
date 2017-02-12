@@ -30,8 +30,6 @@
     return self;
 }
 
-
-
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -40,7 +38,6 @@
     
   //  self.shadow.frame = self.frame;
 }
-
 
 - (void)setIsFirst:(BOOL)isFirst
 {

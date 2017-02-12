@@ -8,8 +8,6 @@
 
 #import "MLChatAvaViewController.h"
 
-static UIImage *defaultImage = nil;
-
 @interface MLChatAvaViewController ()
 
 @property (nonatomic, strong) UIImageView *imView;
@@ -27,13 +25,11 @@ static UIImage *defaultImage = nil;
     {
         self.view.layer.masksToBounds = YES;
         
-        if(!defaultImage)
-            defaultImage = [UIImage imageNamed:@"ic_photo_contact"];
-        
-        self.imView = [[UIImageView alloc] initWithImage:defaultImage];
+        UIImage *image = [UIImage imageNamed:@"ic_photo_contact"];
+        self.imView = [[UIImageView alloc] initWithImage:image];
         self.imView.contentMode = UIViewContentModeScaleAspectFit;
         
-        self.diameter = 36;
+        self.diameter = 30;
     }
     
     return self;

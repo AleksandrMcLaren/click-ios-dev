@@ -10,12 +10,14 @@
 #import "MLChatAvaViewController.h"
 #import "MLChatBaloonView.h"
 #import "MLChatCellTextViewController.h"
+#import "MLChatStatusViewController.h"
 
 @interface MLChatTableViewCell () <MLChatCellContentViewControllerDelegate>
 
 @property (nonatomic, strong) MLChatAvaViewController *avaVC;
 @property (nonatomic, strong) MLChatBaloonView *balloonView;
 @property (nonatomic, strong) MLChatCellContentViewController *contentVC;
+@property (nonatomic, strong) MLChatStatusViewController *statusVC;
 
 @property (nonatomic) CGSize contentSize;
 
@@ -32,12 +34,15 @@
         self.backgroundColor = [UIColor clearColor];
         self.contentView.backgroundColor = [UIColor clearColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-    
+        
         self.avaVC = [[MLChatAvaViewController alloc] init];
         [self.contentView addSubview:self.avaVC.view];
         
         self.balloonView = [[MLChatBaloonView alloc] init];
         [self.contentView addSubview:self.balloonView];
+
+        self.statusVC = [[MLChatStatusViewController alloc] init];
+        [self.contentView addSubview:self.statusVC.view];
     }
     
     return self;
@@ -46,64 +51,86 @@
 - (void)updateConstraints
 {
     CGSize boundsSize = self.contentView.frame.size;
-    CGFloat avaInsetTop = 5.f;
-    CGFloat avaInsetLeft = 5.f;
-    CGFloat blnInsetTop = avaInsetTop;
-    CGFloat blnInsetLeft = avaInsetLeft;
-    CGFloat blnInsetBottom = 5.f;
-    CGFloat blnWidth = self.contentSize.width;
-    CGFloat blnHeight = self.contentSize.height;
+    CGFloat insetLeft = 5.f;
+    
+    CGFloat avaInsetTop = 0;
+    CGFloat avaInsetLeft = insetLeft;
+    
+    CGFloat blnInsetTop = 2;
+    CGFloat blnInsetLeft = insetLeft;
+    CGFloat blnInsetBottom = 0.f;
+    CGSize blnSize = CGSizeMake(self.contentSize.width, self.contentSize.height);
+    
+    CGSize statusSize = CGSizeMake(self.message.isOwner ? 60 : 48, 20);
     
     if(self.message.isOwner)
+        blnInsetLeft = boundsSize.width - blnSize.width - blnInsetLeft;
+    
+    if(!self.avaVC.view.hidden)
     {
-        avaInsetLeft = boundsSize.width - self.avaVC.diameter - avaInsetLeft;
-        blnInsetLeft = boundsSize.width - blnWidth - blnInsetLeft;
+            blnInsetTop = avaInsetTop + self.avaVC.diameter - 3;
+        
+            if(self.message.isOwner)
+                avaInsetLeft = boundsSize.width - insetLeft - self.avaVC.diameter;
+                
+            [self.avaVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(avaInsetTop);
+                make.left.equalTo(avaInsetLeft);
+                make.width.equalTo(self.avaVC.diameter);
+                make.height.equalTo(self.avaVC.diameter);
+            }];
     }
     
-    if(self.message.isFirst)
-    {
-        [self.avaVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(avaInsetTop);
-            make.left.equalTo(avaInsetLeft);
-            make.width.equalTo(self.avaVC.diameter);
-            make.height.equalTo(self.avaVC.diameter);
-        }];
-
-        blnInsetTop = self.avaVC.diameter + 2;
-    }
-
     [self.contentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(0);
         make.left.equalTo(0);
         make.width.equalTo(self.contentSize.width);
         make.height.equalTo(self.contentSize.height);
     }];
-    
+
     UIEdgeInsets blnInset = UIEdgeInsetsMake(blnInsetTop,
                                              blnInsetLeft,
                                              blnInsetBottom,
-                                             boundsSize.width - blnWidth - blnInsetLeft);
+                                             boundsSize.width - blnSize.width - blnInsetLeft);
     
     [self.balloonView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.contentView).with.insets(blnInset);
-//        make.top.equalTo(blnInsetTop);
-//        make.bottom.equalTo(-blnInsetBottom);
-//        make.left.equalTo(blnInsetLeft);
-        make.width.equalTo(blnWidth);
-        make.height.equalTo(blnHeight);
+        make.width.equalTo(blnSize.width);
+        make.height.equalTo(blnSize.height);
     }];
 
+    [self.statusVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.balloonView).offset(-5);
+        make.bottom.equalTo(self.balloonView).offset(-13);
+        make.width.equalTo(statusSize.width);
+        make.height.equalTo(statusSize.height);
+    }];
+    
     [super updateConstraints];
 }
+
+#pragma mark -
 
 - (void)setMessage:(MLChatMessage *)message
 {
     _message = message;
 
+    [self updateBaloon];
+    [self updateAvatar];
+    [self updateContent];
+    [self updateStatus];
+}
+
+- (void)updateBaloon
+{
     self.balloonView.isFirst = self.message.isFirst;
     self.balloonView.isOwner = self.message.isOwner;
-    
-    if(self.balloonView.isFirst)
+}
+
+- (void)updateAvatar
+{
+    if(self.message.isFirst && !self.message.isOwner)
+    //if(self.message.isFirst)
     {
         self.avaVC.view.hidden = NO;
         self.avaVC.imageUrl = self.message.imageUrl;
@@ -112,7 +139,10 @@
     {
         self.avaVC.view.hidden = YES;
     }
-    
+}
+
+- (void)updateContent
+{
     [self.contentVC.view removeFromSuperview];
     self.contentVC = nil;
     
@@ -121,6 +151,11 @@
     [self.balloonView addSubview:self.contentVC.view];
     
     self.contentVC.message = self.message;
+}
+
+- (void)updateStatus
+{
+    self.statusVC.message = self.message;
 }
 
 #pragma mark - MLChatCellContentViewControllerDelegate
