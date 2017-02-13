@@ -80,8 +80,11 @@
                                   atScrollPosition:UITableViewScrollPositionBottom
                                           animated:NO];
             
-            [self.refreshControl endRefreshing];
-            self.refreshControl = nil;
+            if(self.refreshControl)
+            {
+                [self.refreshControl endRefreshing];
+                self.refreshControl = nil;
+            }
         });
     }
 }
@@ -89,7 +92,7 @@
 - (void)addMessage:(MLChatMessage *)message
 {
     NSIndexPath *rowPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
-//    __weak typeof(self) weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -97,7 +100,7 @@
         
         [CATransaction setCompletionBlock:^{
             
-                [self.tableView scrollToRowAtIndexPath:rowPath
+                [weakSelf.tableView scrollToRowAtIndexPath:rowPath
                                       atScrollPosition:UITableViewScrollPositionTop
                                               animated:YES];
             
