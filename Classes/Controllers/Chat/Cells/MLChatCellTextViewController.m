@@ -52,7 +52,7 @@
 {
     [super viewDidLayoutSubviews];
     
-    self.label.frame = CGRectMake(self.insets.left, self.insets.top, self.textSize.width, self.textSize.height);
+    self.label.frame = CGRectMake(self.insets.left, self.message.isFirst ? self.insets.top + 3 : self.insets.top, self.textSize.width, self.textSize.height);
 }
 
 - (void)setMessage:(MLChatMessage *)message
@@ -60,6 +60,9 @@
     [super setMessage:message];
     
     self.label.text = self.message.text;
+    
+    if(!self.message.isFirst)
+        self.insets = UIEdgeInsetsMake(10, 15, 12, 15);
     
     CGFloat maxTextWidth = self.maxWidth - self.insets.left - self.insets.right;
     self.textSize = [MLChatLib textSizeLabel:self.label withWidth:maxTextWidth];
@@ -108,8 +111,8 @@
         size = CGSizeMake(size.width + statusWidth, size.height + self.label.font.lineHeight);
     }
     
-    if(size.width < statusWidth)
-        size = CGSizeMake(self.insets.left + statusWidth, size.height);
+    if(size.width < statusWidth + self.insets.left + self.insets.right)
+        size = CGSizeMake(self.insets.left + statusWidth + self.insets.right, size.height);
     
     [self.view setNeedsLayout];
     [self.delegate chatCellContentViewControllerNeedsSize:size];

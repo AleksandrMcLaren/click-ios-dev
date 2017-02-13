@@ -43,7 +43,7 @@
 }
 
 -(void) initialize{
-    self.title = @"Сообщения";
+    self.title = @"Чаты";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(actionCompose)];
     
     [NotificationCenter addObserver:self selector:@selector(actionCleanup) name:NOTIFICATION_USER_LOGGED_OUT];

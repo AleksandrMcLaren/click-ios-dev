@@ -19,6 +19,7 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (nonatomic, strong) MLChatMessage *lastMessage;
+@property (nonatomic, strong) UILabel *chatNameLabel;
 
 @property (nonatomic) CGFloat keyboardHeight;
 @property (nonatomic) CGFloat messageBarHeight;
@@ -35,6 +36,9 @@
     if(self)
     {
         self.chat = chat;
+        
+        self.title = self.chat.dialog.userName;
+        
         self.messages = [[NSMutableArray alloc] init];
         
         self.messageVC = [[MLChatMessageListViewController alloc] init];
@@ -44,6 +48,12 @@
         self.messageBarVC.delegate = self;
         
         self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
+        
+//        self.chatNameLabel = [[UILabel alloc] init];
+//        self.chatNameLabel.textColor = [UIColor blackColor];
+//        self.chatNameLabel.text = self.chat.dialog.userName;
+//        self.chatNameLabel.font = [UIFont systemFontOfSize:16];
+//        [self.chatNameLabel sizeToFit];
     }
     
     return self;
@@ -71,42 +81,8 @@
     [self.view addSubview:self.messageVC.view];
     [self.view addSubview:self.messageBarVC.view];
     [self.view addGestureRecognizer:self.tapRecognizer];
-/*
-    MLChatMessageModel *msg = [[MLChatMessageModel alloc] init];
-    msg.isFirst = YES;
-   // msg.isReceived = YES;
-    msg.imageUrl = @"sdfg";
-    msg.text = @"sdlkgj lsdfkgj sdflgkj!!!";
-    
-    MLChatMessageModel *msg2 = [[MLChatMessageModel alloc] init];
-    msg2.isFirst = NO;
-  //  msg2.isReceived = YES;
-    msg2.imageUrl = @"sdfg";
-    msg2.text = @"sdlkgj lsdfkgj sdflgkj!!!";
-    
-    MLChatMessageModel *msg3 = [[MLChatMessageModel alloc] init];
-    msg3.isFirst = YES;
-  //  msg3.isReceived = NO;
-    msg3.imageUrl = @"sdfg";
-    msg3.text = @"sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk !!!";
-    
-    MLChatMessageModel *msg4 = [[MLChatMessageModel alloc] init];
-    msg4.isFirst = NO;
-   // msg4.isReceived = NO;
-    msg4.imageUrl = @"sdfg";
-    msg4.text = @"sdlkgj lsdfkgj sdflgkj!!!";
-    
-    MLChatMessageModel *msg5 = [[MLChatMessageModel alloc] init];
-    msg5.isFirst = NO;
-   // msg5.isReceived = NO;
-    msg5.imageUrl = @"sdfg";
-    msg5.text = @"sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk sdlkgj lsdfkgj sdflgkj sdlfkjha;sdif a;dskflgj as;ldfgjk!!!";
-    
-  // [self.messageVC addMessages:@[msg, msg2, msg3, msg4, msg5, msg3, msg4, msg5]];
+   // [self.navigationController.view addSubview:self.chatNameLabel];
 
-//     [self.messageVC addMessages:@[msg, msg2]];
- */
-    
     [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
 
         if(self.messages.count)
@@ -140,7 +116,7 @@
     message.text = msg.text;
     message.date = msg.date;
     message.status = (NSInteger)msg.status;
-    message.userLogin = msg.userlogin;
+    message.userLogin = msg.senderName;
     
     /*
     if(message.isOwner)
@@ -162,6 +138,15 @@
 
 - (void)updateViewConstraints
 {
+//    CGSize boundsSize = self.navigationController.view.bounds.size;
+//
+//    [self.chatNameLabel updateConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo((boundsSize.width - self.chatNameLabel.frame.size.width) / 2);
+//        make.top.equalTo((boundsSize.height - self.chatNameLabel.frame.size.height) / 2);
+////        make.bottom.equalTo(self.view.bottom).offset(-messageBarBottomOffset);
+////        make.height.equalTo(self.messageBarHeight);
+//    }];
+    
     CGFloat messageBarBottomOffset = self.keyboardHeight;
     
     [self.messageBarVC.view updateConstraints:^(MASConstraintMaker *make) {

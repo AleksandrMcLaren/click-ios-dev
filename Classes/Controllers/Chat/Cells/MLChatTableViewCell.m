@@ -99,9 +99,11 @@
         make.height.equalTo(blnSize.height);
     }];
 
+  //  CGFloat bottom = self.message.isFirst ? 10.5 : 13.5;
+    
     [self.statusVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.balloonView).offset(-5);
-        make.bottom.equalTo(self.balloonView).offset(-13.5);
+        make.bottom.equalTo(self.balloonView).offset(-10.5);
         make.width.equalTo(statusSize.width);
         make.height.equalTo(statusSize.height);
     }];
@@ -123,8 +125,7 @@
 
 - (void)updateBaloon
 {
-    self.balloonView.isFirst = self.message.isFirst;
-    self.balloonView.isOwner = self.message.isOwner;
+    self.balloonView.message = self.message;
 }
 
 - (void)updateAvatar

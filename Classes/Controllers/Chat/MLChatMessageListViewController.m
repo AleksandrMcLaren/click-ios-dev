@@ -28,6 +28,7 @@
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
         self.tableView.separatorColor = [UIColor clearColor];
+        self.tableView.showsVerticalScrollIndicator = NO;
         
         self.refreshControl = [[UIRefreshControl alloc] init];
         

@@ -27,7 +27,7 @@
     if(self)
     {
         self.timeLabel = [[UILabel alloc] init];
-        self.timeLabel.font = [UIFont italicSystemFontOfSize:12];
+        self.timeLabel.font = [UIFont systemFontOfSize:12];
         
         self.imageView = [[UIImageView alloc] init];
         
