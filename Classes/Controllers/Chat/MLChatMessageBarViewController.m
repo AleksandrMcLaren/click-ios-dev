@@ -33,7 +33,6 @@
         
         self.textView = [[UITextView alloc] init];
         self.textView.textColor = [UIColor blackColor];
-      //  self.textView.scrollIndicatorInsets = UIEdgeInsetsMake(7, 7, 7, 7);
         self.textView.scrollsToTop = NO;
         self.textView.font = [UIFont systemFontOfSize:16.0];
         self.textView.text = @"";
@@ -41,10 +40,7 @@
         self.textView.layer.borderWidth = 1.0;
         self.textView.layer.cornerRadius = 4.0;
         self.textView.delegate = self;
-       // self.textView.scrollIndicatorInsets = UIEdgeInsetsMake(self.textView.layer.cornerRadius, 0.0f, self.textView.layer.cornerRadius, 0.0f);
-//        self.textView.textContainerInset = UIEdgeInsetsMake(4.0f, 2.0f, 4.0f, 2.0f);
-//        self.textView.contentInset = UIEdgeInsetsMake(1.0f, 0.0f, 1.0f, 0.0f);
-        
+
         self.textView.contentMode = UIViewContentModeRedraw;
         self.textView.dataDetectorTypes = UIDataDetectorTypeNone;
         self.textView.keyboardAppearance = UIKeyboardAppearanceDefault;
@@ -144,10 +140,6 @@
     
     self.photoButton.hidden = !self.sendButton.hidden;
 }
-//- (void)endEditing:(BOOL)endEditing
-//{
-//    [self updateHeightIfNeededWithText:self.textView.text];
-//}
 
 #pragma mark - UITextViewDelegate
 

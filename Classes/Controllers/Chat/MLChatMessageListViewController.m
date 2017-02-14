@@ -80,36 +80,52 @@
                                   atScrollPosition:UITableViewScrollPositionBottom
                                           animated:NO];
             
-            [self.refreshControl endRefreshing];
-            self.refreshControl = nil;
+            if(self.refreshControl)
+            {
+                [self.refreshControl endRefreshing];
+                self.refreshControl = nil;
+            }
         });
     }
 }
 
 - (void)addMessage:(MLChatMessage *)message
 {
-    NSIndexPath *rowPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
-//    __weak typeof(self) weakSelf = self;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
+    void (^addMessage)() = ^() {
         
-        [CATransaction begin];
+        NSIndexPath *rowPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
+        __weak typeof(self) weakSelf = self;
         
-        [CATransaction setCompletionBlock:^{
+       // dispatch_async(dispatch_get_main_queue(), ^{
             
-                [self.tableView scrollToRowAtIndexPath:rowPath
-                                      atScrollPosition:UITableViewScrollPositionTop
-                                              animated:YES];
+            [CATransaction begin];
             
-        }];
+            [CATransaction setCompletionBlock:^{
+                
+                    [weakSelf.tableView scrollToRowAtIndexPath:rowPath
+                                          atScrollPosition:UITableViewScrollPositionTop
+                                                  animated:YES];
+            }];
 
-        [self.tableView beginUpdates];
-        [self.messages addObject:message];
-        [self.tableView insertRowsAtIndexPaths:@[rowPath] withRowAnimation:UITableViewRowAnimationNone];
-        [self.tableView endUpdates];
-        
-        [CATransaction commit];
+            [weakSelf.tableView beginUpdates];
+            [weakSelf.messages addObject:message];
+            [weakSelf.tableView insertRowsAtIndexPaths:@[rowPath]
+                                  withRowAnimation:UITableViewRowAnimationNone];
+            [weakSelf.tableView endUpdates];
+            
+            [CATransaction commit];
+       // });
+    };
+    
+    addMessage();
+    
+    /*
+    NSDate* newDate = [oldDate dateByAddingTimeInterval:0.3];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        addMessage();
     });
+     */
 }
 
 #pragma mark - tableView contentOffset

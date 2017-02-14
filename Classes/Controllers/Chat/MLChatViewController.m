@@ -19,7 +19,6 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (nonatomic, strong) MLChatMessage *lastMessage;
-@property (nonatomic, strong) UILabel *chatNameLabel;
 
 @property (nonatomic) CGFloat keyboardHeight;
 @property (nonatomic) CGFloat messageBarHeight;
@@ -48,12 +47,6 @@
         self.messageBarVC.delegate = self;
         
         self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
-        
-//        self.chatNameLabel = [[UILabel alloc] init];
-//        self.chatNameLabel.textColor = [UIColor blackColor];
-//        self.chatNameLabel.text = self.chat.dialog.userName;
-//        self.chatNameLabel.font = [UIFont systemFontOfSize:16];
-//        [self.chatNameLabel sizeToFit];
     }
     
     return self;
@@ -81,7 +74,6 @@
     [self.view addSubview:self.messageVC.view];
     [self.view addSubview:self.messageBarVC.view];
     [self.view addGestureRecognizer:self.tapRecognizer];
-   // [self.navigationController.view addSubview:self.chatNameLabel];
 
     [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
 
@@ -99,54 +91,28 @@
     
     [self.chat.lastMessageDidChanged subscribeNext:^(Message *msg) {
         
-        MLChatMessage *message = [self createFromMessage:msg];
-        [self.messages addObject:message];
+        NSPredicate *pred = [NSPredicate predicateWithFormat:@"ident = %@", msg.id];
+        MLChatMessage *existMessage = [self.messages filteredArrayUsingPredicate:pred].firstObject;
         
-        [self.messageVC addMessage:message];
+        if(existMessage)
+        {
+            existMessage.status = (NSInteger)msg.status;
+            [self updateStatusMessage:existMessage];
+        }
+        else
+        {
+            MLChatMessage *message = [self createFromMessage:msg];
+            [self.messages addObject:message];
+            
+            [self.messageVC addMessage:message];
+        }
     }];
     
     [self.view setNeedsUpdateConstraints];
 }
 
-- (MLChatMessage *)createFromMessage:(Message *)msg
-{
-    MLChatMessage *message = [[MLChatMessage alloc] init];
-    message.ident = msg.id;
-    message.isOwner = msg.isOwner;
-    message.text = msg.text;
-    message.date = msg.date;
-    message.status = (NSInteger)msg.status;
-    message.userLogin = msg.senderName;
-    
-    /*
-    if(message.isOwner)
-        ;
-    else
-        message.avatarUrl = self.chat.dialog.userAvatarId;
-    */
-    
-    NSLog(@"qqq %@", message.userLogin);
-    
-    
-    if(!self.lastMessage || self.lastMessage.isOwner != message.isOwner)
-        message.isFirst = YES;
-    
-    self.lastMessage = message;
-    
-    return message;
-}
-
 - (void)updateViewConstraints
 {
-//    CGSize boundsSize = self.navigationController.view.bounds.size;
-//
-//    [self.chatNameLabel updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo((boundsSize.width - self.chatNameLabel.frame.size.width) / 2);
-//        make.top.equalTo((boundsSize.height - self.chatNameLabel.frame.size.height) / 2);
-////        make.bottom.equalTo(self.view.bottom).offset(-messageBarBottomOffset);
-////        make.height.equalTo(self.messageBarHeight);
-//    }];
-    
     CGFloat messageBarBottomOffset = self.keyboardHeight;
     
     [self.messageBarVC.view updateConstraints:^(MASConstraintMaker *make) {
@@ -166,9 +132,44 @@
     [super updateViewConstraints];
 }
 
+#pragma mark - Message
+
+- (MLChatMessage *)createFromMessage:(Message *)msg
+{
+    MLChatMessage *message = [[MLChatMessage alloc] init];
+    message.ident = msg.id;
+    message.isOwner = msg.isOwner;
+    message.text = msg.text;
+    message.date = msg.date;
+    message.status = (NSInteger)msg.status;
+    message.userLogin = msg.senderName;
+    
+    if(!self.lastMessage || self.lastMessage.isOwner != message.isOwner)
+        message.isFirst = YES;
+    
+    self.lastMessage = message;
+    
+    return message;
+}
+
 - (void)messageSend:(NSString *)text Video:(NSURL *)video Picture:(UIImage *)picture Audio:(NSString *)audio
 {
     [self.chat send:text Video:video Picture:picture Audio:audio];
+}
+
+- (void)updateStatusMessage:(MLChatMessage *)message
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:mlchat_message_update_status(message.ident)
+                                                        object:message
+                                                      userInfo:nil];
+}
+
+- (void)resendMessage:(NSNotification *)notification
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MLChatMessage *message = notification.object;
+        [self messageSend:message.text Video:nil Picture:nil Audio:nil];
+    });
 }
 
 #pragma mark - NSNotification
@@ -214,15 +215,7 @@
                      }];
 }
 
-- (void)resendMessage:(NSNotification *)notification
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        MLChatMessage *message = notification.object;
-        [self messageSend:message.text Video:nil Picture:nil Audio:nil];
-    });
-}
-
-#pragma mark - NSNotification Actions
+#pragma mark - Actions
 
 - (void)tapped
 {
@@ -247,6 +240,11 @@
 {
     [self.messageBarVC clearText];
     [self messageSend:text Video:nil Picture:nil Audio:nil];
+}
+
+- (void)chatMessagePanelTappedPlusButton
+{
+    
 }
 
 @end
