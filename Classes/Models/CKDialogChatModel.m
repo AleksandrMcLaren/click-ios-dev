@@ -49,12 +49,11 @@
     self.attachements = arr;
 }
 
-- (void)sendMessage:(Message *)message{
-    
-   // TODO i
-  // [super sendMessage:message];
-  //  return;
-    
+- (void)sendMessage:(Message *)message
+{
+    // TODO i
+  //  [super sendMessage:message];
+
     [[CKMessageServerConnection sharedInstance] uploadAttachements:self.attachements completion:^(NSDictionary *result) {
         self.attachements = @[];
         [[CKMessageServerConnection sharedInstance] sendMessage:message.text
@@ -90,6 +89,7 @@
     Message *message = [MessageSent new];
     message.dialogType = CKDialogTypeChat;
     message.dialogIdentifier = self.dialog.userId;
+    message.date = [NSDate date];
     return message;
 }
 
