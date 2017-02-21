@@ -60,7 +60,7 @@
     {
         if(self.message.isFirst)
         {
-            self.mask.image = [[UIImage imageNamed:@"baloon_in_tick"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 22)
+            self.mask.image = [[UIImage imageNamed:@"baloon_in_tick"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 16, 16, 16)
                                                                                   resizingMode:UIImageResizingModeStretch];
         }
         else
