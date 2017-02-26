@@ -13,6 +13,7 @@
 
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (nonatomic, strong) NSMutableDictionary *heightCellAtIndexPath;
+@property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 
 @end
 
@@ -24,16 +25,13 @@
     
     if(self)
     {
-        self.tableView.estimatedRowHeight = 44.f;
-        self.tableView.rowHeight = UITableViewAutomaticDimension;
-        self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
-        self.tableView.separatorColor = [UIColor clearColor];
-        self.tableView.showsVerticalScrollIndicator = NO;
-        
-        self.refreshControl = [[UIRefreshControl alloc] init];
-        
         self.heightCellAtIndexPath = [[NSMutableDictionary alloc] init];
         self.messages = [[NSMutableArray alloc] init];
+        
+        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                     action:@selector(tapped)];
+        
+        self.refreshControl = [[UIRefreshControl alloc] init];
     }
     
     return self;
@@ -43,8 +41,15 @@
 {
     [super viewDidLoad];
     
+    self.tableView.estimatedRowHeight = 44.f;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
+    self.tableView.separatorColor = [UIColor clearColor];
+    self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.backgroundColor = [UIColor clearColor];
     [self.tableView registerClass:MLChatTableViewCell.class forCellReuseIdentifier:@"Cell"];
+    
+    [self.view addGestureRecognizer:self.tapRecognizer];
 }
 
 - (void)viewDidLayoutSubviews
@@ -169,6 +174,13 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.heightCellAtIndexPath[indexPath] = @(cell.frame.size.height);
+}
+
+#pragma mark - Actions
+
+- (void)tapped
+{
+    [self.delegate chatMessageListViewControllerTapped];
 }
 
 @end

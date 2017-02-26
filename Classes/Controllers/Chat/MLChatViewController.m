@@ -9,19 +9,20 @@
 #import "MLChatViewController.h"
 #import "MLChatMessageListViewController.h"
 #import "MLChatMessageBarViewController.h"
+#import "MLChatMenuAttachViewController.h"
 
-
-@interface MLChatViewController () <MLChatMessageBarViewControllerDelegate>
+@interface MLChatViewController () <MLChatMessageBarViewControllerDelegate, MLChatMessageListViewControllerDelegate>
 
 @property (nonatomic, strong) CKChatModel *chat;
 @property (nonatomic, strong) MLChatMessageListViewController *messageVC;
 @property (nonatomic, strong) MLChatMessageBarViewController *messageBarVC;
-@property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
+@property (nonatomic, strong) MLChatMenuAttachViewController *menuAttachVC;
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (nonatomic, strong) MLChatMessage *lastMessage;
 
-@property (nonatomic) CGFloat keyboardHeight;
+@property (nonatomic) CGFloat addedViewHeight;
 @property (nonatomic) CGFloat messageBarHeight;
+@property (nonatomic) BOOL lockChangeFrame;
 
 @end
 
@@ -41,12 +42,13 @@
         self.messages = [[NSMutableArray alloc] init];
         
         self.messageVC = [[MLChatMessageListViewController alloc] init];
+        self.messageVC.delegate = self;
         
         self.messageBarHeight = 51.f;
         self.messageBarVC = [[MLChatMessageBarViewController alloc] init];
         self.messageBarVC.delegate = self;
         
-        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
+        self.menuAttachVC = [[MLChatMenuAttachViewController alloc] init];
     }
     
     return self;
@@ -72,9 +74,9 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgwhite"]];
 
     [self.view addSubview:self.messageVC.view];
+    [self.view addSubview:self.menuAttachVC.view];
     [self.view addSubview:self.messageBarVC.view];
-    [self.view addGestureRecognizer:self.tapRecognizer];
-
+    
     [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
 
         if(self.messages.count)
@@ -113,7 +115,7 @@
 
 - (void)updateViewConstraints
 {
-    CGFloat messageBarBottomOffset = self.keyboardHeight;
+    CGFloat messageBarBottomOffset = self.addedViewHeight;
     
     [self.messageBarVC.view updateConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view.left);
@@ -127,6 +129,13 @@
         make.right.equalTo(self.view.right);
         make.top.equalTo(self.view.top);
         make.bottom.equalTo(self.messageBarVC.view.top);
+    }];
+    
+    [self.menuAttachVC.view updateConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view.left);
+        make.right.equalTo(self.view.right);
+        make.top.equalTo(self.messageBarVC.view.bottom);
+        make.height.equalTo(self.addedViewHeight);
     }];
     
     [super updateViewConstraints];
@@ -178,19 +187,35 @@
 {
     NSDictionary *info = [notification userInfo];
     CGRect kbRect = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGSize boundsSize = self.view.bounds.size;
+    [self changeViewFramesWithAddedViewTop:kbRect.origin.y];
+}
+
+- (void)changeViewFramesWithAddedViewTop:(CGFloat)top
+{
+    if(self.lockChangeFrame)
+    {
+        self.lockChangeFrame = NO;
+        return;
+    }
     
-    self.keyboardHeight = boundsSize.height - kbRect.origin.y;
+    CGSize boundsSize = self.view.bounds.size;
+    self.addedViewHeight = boundsSize.height - top;
     
     CGRect messageBarFrame = self.messageBarVC.view.frame;
-    messageBarFrame.origin.y = boundsSize.height - self.keyboardHeight - messageBarFrame.size.height;
+    messageBarFrame.origin.y = boundsSize.height - self.addedViewHeight - messageBarFrame.size.height;
     
     CGRect messageListFrame = self.messageVC.view.frame;
     messageListFrame.size.height = boundsSize.height - (boundsSize.height - messageBarFrame.origin.y);
     
+    CGRect menuAttachFrame = self.menuAttachVC.view.frame;
+    menuAttachFrame.origin.y = messageBarFrame.origin.y + messageBarFrame.size.height;
+    
+    if(self.addedViewHeight)
+        menuAttachFrame.size.height = self.addedViewHeight;
+    
     CGFloat messageListOffset = 0;
     
-    if(boundsSize.height != kbRect.origin.y)
+    if(boundsSize.height != top)
     {  // открывается
         CGFloat diff = self.messageVC.view.frame.size.height - messageListFrame.size.height;
         messageListOffset = self.messageVC.contentOffSet + diff;
@@ -200,26 +225,21 @@
         CGFloat diff = messageListFrame.size.height - self.messageVC.view.frame.size.height;
         messageListOffset = self.messageVC.contentOffSet - diff;
     }
-    
+
     [UIView animateWithDuration:0.3
                      animations:^{
-                         
-                         // offset присвоим до изменения фрейма
+
                          self.messageVC.contentOffSet = messageListOffset;
                          
-                         self.messageBarVC.view.frame = messageBarFrame;
                          self.messageVC.view.frame = messageListFrame;
                          
+                         self.messageBarVC.view.frame = messageBarFrame;
+                         self.menuAttachVC.view.frame = menuAttachFrame;
+
                      } completion:^(BOOL finished) {
                          [self.view setNeedsUpdateConstraints];
                      }];
-}
 
-#pragma mark - Actions
-
-- (void)tapped
-{
-    [self.view endEditing:YES];
 }
 
 #pragma mark - MLChatMessageBarViewControllerDelegate
@@ -242,9 +262,38 @@
     [self messageSend:text Video:nil Picture:nil Audio:nil];
 }
 
-- (void)chatMessagePanelTappedPlusButton
+- (void)chatMessageBarTappedAttachButton
 {
-    
+    [self openMenuAttach];
+}
+
+#pragma mark - Menu Attach
+
+- (void)openMenuAttach
+{
+    if(self.addedViewHeight)
+    {   // клавиатура открыта, закроется из messageBarVC, под ней должно быть меню
+        self.lockChangeFrame = YES;
+        [self.view setNeedsUpdateConstraints];
+    }
+    else
+    {
+        [self changeViewFramesWithAddedViewTop:self.view.bounds.size.height - 258.f];
+    }
+}
+
+- (void)closeMenuAttach
+{
+    [self changeViewFramesWithAddedViewTop:self.view.bounds.size.height];
+}
+
+#pragma mark - MLChatMessageListViewControllerDelegate
+
+- (void)chatMessageListViewControllerTapped
+{
+    [self.view endEditing:YES];
+    [self closeMenuAttach];
+    [self.messageBarVC endEditing];
 }
 
 @end
