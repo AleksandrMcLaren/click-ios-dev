@@ -11,7 +11,6 @@
 @interface MLChatBaloonView ()
 
 @property (nonatomic, strong) UIImageView *mask;
-@property (nonatomic, strong) UIImageView *shadow;
 
 @end
 
@@ -25,11 +24,9 @@
     if(self)
     {
         self.mask = [[UIImageView alloc] init];
-        self.mask.contentMode = UIViewContentModeScaleToFill;
-        
+      //  self.mask.contentMode = UIViewContentModeScaleToFill;
         [self addSubview:self.mask];
-        
-      //  self.maskView = self.mask;
+
     }
     
     return self;
@@ -40,11 +37,8 @@
     [super layoutSubviews];
 
     self.mask.frame = self.bounds;
-    
-  //  self.shadow.frame = self.frame;
 }
 
-/*
 - (void)setMessage:(MLChatMessage *)message
 {
     _message = message;
@@ -53,32 +47,32 @@
     {
         if(self.message.isFirst)
         {
-            self.mask.image = [[UIImage imageNamed:@"bubble_my"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)
-                                                                                resizingMode:UIImageResizingModeStretch];
+            self.mask.image = [[UIImage imageNamed:@"baloon_out_tick"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 16, 16, 16)
+                                                                                      resizingMode:UIImageResizingModeStretch];
         }
         else
         {
-            self.mask.image = [[UIImage imageNamed:@"secondaryCellMask"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 20, 16)];
-            self.mask.backgroundColor = [UIColor colorWithRed:0.81 green:0.91 blue:0.98 alpha:1.00];
+            self.mask.image = [[UIImage imageNamed:@"baloon_out"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)
+                                                                                 resizingMode:UIImageResizingModeStretch];
         }
     }
     else
     {
         if(self.message.isFirst)
         {
-            self.mask.image = [[UIImage imageNamed:@"bubble_your"] resizableImageWithCapInsets:UIEdgeInsetsMake(21, 16, 16, 16)
+            self.mask.image = [[UIImage imageNamed:@"baloon_in_tick"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 16, 16, 16)
                                                                                   resizingMode:UIImageResizingModeStretch];
         }
         else
         {
-            self.mask.image = [[UIImage imageNamed:@"secondaryCellMask"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 20, 16)];
-            self.mask.backgroundColor = [UIColor whiteColor];
+            self.mask.image = [[UIImage imageNamed:@"baloon_in"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)
+                                                                                resizingMode:UIImageResizingModeStretch];
         }
     }
 }
-*/
 
 
+/*
 - (void)setMessage:(MLChatMessage *)message
 {
     _message = message;
@@ -125,6 +119,6 @@
         self.backgroundColor = [UIColor whiteColor];
     }
 }
-
+*/
 
 @end

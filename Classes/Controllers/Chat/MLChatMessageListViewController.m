@@ -96,7 +96,7 @@
         NSIndexPath *rowPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
         __weak typeof(self) weakSelf = self;
         
-       // dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             
             [CATransaction begin];
             
@@ -114,7 +114,7 @@
             [weakSelf.tableView endUpdates];
             
             [CATransaction commit];
-       // });
+        });
     };
     
     addMessage();

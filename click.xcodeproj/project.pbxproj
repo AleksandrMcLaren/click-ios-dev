@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F20C1AD1E5C8A3E00C6D973 /* baloon_in@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F20C1A51E5C8A3E00C6D973 /* baloon_in@2x.png */; };
+		1F20C1AE1E5C8A3E00C6D973 /* baloon_in@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F20C1A61E5C8A3E00C6D973 /* baloon_in@3x.png */; };
+		1F20C1AF1E5C8A3E00C6D973 /* baloon_out_tick@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F20C1A71E5C8A3E00C6D973 /* baloon_out_tick@2x.png */; };
+		1F20C1B01E5C8A3E00C6D973 /* baloon_out_tick@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F20C1A81E5C8A3E00C6D973 /* baloon_out_tick@3x.png */; };
+		1F20C1B11E5C8A3E00C6D973 /* baloon_out@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F20C1A91E5C8A3E00C6D973 /* baloon_out@2x.png */; };
+		1F20C1B21E5C8A3E00C6D973 /* baloon_out@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F20C1AA1E5C8A3E00C6D973 /* baloon_out@3x.png */; };
+		1F20C1B51E5C8E8B00C6D973 /* baloon_in_tick@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F20C1B31E5C8E8B00C6D973 /* baloon_in_tick@2x.png */; };
+		1F20C1B81E5C8F6A00C6D973 /* baloon_in_tick@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F20C1B71E5C8F6A00C6D973 /* baloon_in_tick@3x.png */; };
 		1FD8EF721E5223CC0082AFFD /* MLChatCellContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD8EF5C1E5223CC0082AFFD /* MLChatCellContentViewController.m */; };
 		1FD8EF731E5223CC0082AFFD /* MLChatCellTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD8EF5E1E5223CC0082AFFD /* MLChatCellTextViewController.m */; };
 		1FD8EF741E5223CC0082AFFD /* MLChatTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD8EF601E5223CC0082AFFD /* MLChatTableViewCell.m */; };
@@ -221,6 +229,14 @@
 
 /* Begin PBXFileReference section */
 		0EC7724C494AFD4568ED92B4 /* libPods-click.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-click.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F20C1A51E5C8A3E00C6D973 /* baloon_in@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baloon_in@2x.png"; sourceTree = "<group>"; };
+		1F20C1A61E5C8A3E00C6D973 /* baloon_in@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baloon_in@3x.png"; sourceTree = "<group>"; };
+		1F20C1A71E5C8A3E00C6D973 /* baloon_out_tick@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baloon_out_tick@2x.png"; sourceTree = "<group>"; };
+		1F20C1A81E5C8A3E00C6D973 /* baloon_out_tick@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baloon_out_tick@3x.png"; sourceTree = "<group>"; };
+		1F20C1A91E5C8A3E00C6D973 /* baloon_out@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baloon_out@2x.png"; sourceTree = "<group>"; };
+		1F20C1AA1E5C8A3E00C6D973 /* baloon_out@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baloon_out@3x.png"; sourceTree = "<group>"; };
+		1F20C1B31E5C8E8B00C6D973 /* baloon_in_tick@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baloon_in_tick@2x.png"; sourceTree = "<group>"; };
+		1F20C1B71E5C8F6A00C6D973 /* baloon_in_tick@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "baloon_in_tick@3x.png"; sourceTree = "<group>"; };
 		1F9B5E971E44E0550045DF7F /* Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Category.h; sourceTree = "<group>"; };
 		1FD8EF5B1E5223CC0082AFFD /* MLChatCellContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatCellContentViewController.h; sourceTree = "<group>"; };
 		1FD8EF5C1E5223CC0082AFFD /* MLChatCellContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatCellContentViewController.m; sourceTree = "<group>"; };
@@ -622,6 +638,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F20C1A21E5C889B00C6D973 /* images_chat */ = {
+			isa = PBXGroup;
+			children = (
+				1F20C1B31E5C8E8B00C6D973 /* baloon_in_tick@2x.png */,
+				1F20C1B71E5C8F6A00C6D973 /* baloon_in_tick@3x.png */,
+				1F20C1A51E5C8A3E00C6D973 /* baloon_in@2x.png */,
+				1F20C1A61E5C8A3E00C6D973 /* baloon_in@3x.png */,
+				1F20C1A71E5C8A3E00C6D973 /* baloon_out_tick@2x.png */,
+				1F20C1A81E5C8A3E00C6D973 /* baloon_out_tick@3x.png */,
+				1F20C1A91E5C8A3E00C6D973 /* baloon_out@2x.png */,
+				1F20C1AA1E5C8A3E00C6D973 /* baloon_out@3x.png */,
+			);
+			path = images_chat;
+			sourceTree = "<group>";
+		};
 		1F9B5E8E1E44E00F0045DF7F /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -1359,6 +1390,7 @@
 		784FE8591C8E7490006469D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1F20C1A21E5C889B00C6D973 /* images_chat */,
 				782AFFF61D099A4B00802097 /* attachaudio@2x.png */,
 				782AFFEE1D09595A00802097 /* Assets.xcassets */,
 				782AFFE01D09562000802097 /* attachcamera@2x.png */,
@@ -1472,7 +1504,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D3AECF61DE4980D00F745BE /* CreateGroupView.xib in Resources */,
+				1F20C1B21E5C8A3E00C6D973 /* baloon_out@3x.png in Resources */,
 				3D3AECE51DE497BC00F745BE /* MembersView.xib in Resources */,
+				1F20C1AD1E5C8A3E00C6D973 /* baloon_in@2x.png in Resources */,
 				781250861CB6802A00D3BFBB /* secondaryCellMask@2x.png in Resources */,
 				7807CF711CC8C28700D9DF9B /* checkwhite@2x.png in Resources */,
 				3D29CB251DE4235600142830 /* SelectMultipleView.xib in Resources */,
@@ -1484,6 +1518,7 @@
 				3D29CB271DE4235600142830 /* SelectSingleView.xib in Resources */,
 				3D3AECBA1DE4923D00F745BE /* StickersCell.xib in Resources */,
 				781250911CB7A7EB00D3BFBB /* cellMaskShadow@2x.png in Resources */,
+				1F20C1AF1E5C8A3E00C6D973 /* baloon_out_tick@2x.png in Resources */,
 				783BFAAE1CDBA6360067CEDE /* circleplus@2x.png in Resources */,
 				781250971CB7AFBE00D3BFBB /* bg@2x.png in Resources */,
 				781250991CB7B07A00D3BFBB /* bgwhite@2x.png in Resources */,
@@ -1499,6 +1534,8 @@
 				3D3AECDC1DE4974000F745BE /* CallView.xib in Resources */,
 				782AFFEA1D09562000802097 /* attachhide@2x.png in Resources */,
 				78BEA97A1CAAFFAC004E85DB /* profileOpenDialog@2x.png in Resources */,
+				1F20C1AE1E5C8A3E00C6D973 /* baloon_in@3x.png in Resources */,
+				1F20C1B01E5C8A3E00C6D973 /* baloon_out_tick@3x.png in Resources */,
 				3D3AECBE1DE4923D00F745BE /* MapView.xib in Resources */,
 				782AFFE91D09562000802097 /* attachcontact@2x.png in Resources */,
 				3D3AECFC1DE4980D00F745BE /* GroupsView.xib in Resources */,
@@ -1506,14 +1543,17 @@
 				787DB83B1CFD412F00395676 /* mediabuttons@2x.png in Resources */,
 				782AFFEC1D09562000802097 /* attachphotos@2x.png in Resources */,
 				7831EDB11C9021F600319191 /* terms.html in Resources */,
+				1F20C1B81E5C8F6A00C6D973 /* baloon_in_tick@3x.png in Resources */,
 				782AFFE71D09562000802097 /* attachcamera@2x.png in Resources */,
 				78BEA9791CAAFFAC004E85DB /* profileCalendar@2x.png in Resources */,
 				3D3AECBC1DE4923D00F745BE /* StickersView.xib in Resources */,
 				3D3AECD21DE4966E00F745BE /* ProfileView.xib in Resources */,
 				782AFFED1D09562000802097 /* attachrecording@2x.png in Resources */,
+				1F20C1B11E5C8A3E00C6D973 /* baloon_out@2x.png in Resources */,
 				3D3AECF81DE4980D00F745BE /* GroupDetailsView.xib in Resources */,
 				782AFFE81D09562000802097 /* attachcloud@2x.png in Resources */,
 				782AFFEF1D09595A00802097 /* Assets.xcassets in Resources */,
+				1F20C1B51E5C8E8B00C6D973 /* baloon_in_tick@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1575,7 +1615,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
