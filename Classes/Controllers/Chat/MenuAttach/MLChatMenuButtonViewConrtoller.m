@@ -57,11 +57,12 @@
     CGSize boundsSize = self.view.bounds.size;
     
     CGFloat indent = 5.f;
-    self.button.frame = CGRectMake(indent, 0, boundsSize.width - indent * 2, boundsSize.width - indent * 2);
-    self.button.layer.cornerRadius = self.button.frame.size.width / 2;
+    self.button.frame = CGRectMake(0, 0, boundsSize.width, boundsSize.width);
+    self.button.layer.cornerRadius = self.button.frame.size.width / 4;
     
     self.titleLabel.frame = CGRectMake(0, boundsSize.height - self.titleLabel.font.lineHeight, boundsSize.width, self.titleLabel.font.lineHeight);
 }
+
 - (void)setImageName:(NSString *)imageName
 {
     _imageName = imageName;

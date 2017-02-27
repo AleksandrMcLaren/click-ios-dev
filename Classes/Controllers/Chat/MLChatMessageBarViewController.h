@@ -14,6 +14,8 @@
 
 @property (nonatomic, weak) id <MLChatMessageBarViewControllerDelegate> delegate;
 
+@property (nonatomic, readonly) BOOL textEditing;
+
 - (void)clearText;
 - (void)endEditing;
 

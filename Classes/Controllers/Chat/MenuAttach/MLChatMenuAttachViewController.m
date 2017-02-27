@@ -75,17 +75,27 @@
     self.lineBottomView.frame = CGRectMake(0, 35, self.view.bounds.size.width, 1);
     
     CGFloat topButtonWidth = 40.f;
-    CGFloat topButtonIndent = 70.f;
+    CGFloat topButtonIndent = 50.f;
     CGFloat left = (boundsSize.width - topButtonWidth * 2 - topButtonIndent) / 2;
     self.timerButton.frame = CGRectMake(left, 0, topButtonWidth, topButtonWidth);
     self.geoButton.frame = CGRectMake(left + topButtonWidth + topButtonIndent, 0, topButtonWidth, topButtonWidth);
     
-    CGFloat btnTopIndent = 12.f;
-    CGFloat btnIndent = 10.f;
-    CGFloat x = btnIndent;
-    CGFloat y = self.lineBottomView.frame.origin.y + self.lineBottomView.frame.size.height + btnTopIndent;
+    
+    
+/*
+ CGFloat btnTopIndent = 12.f;
+ CGFloat btnIndent = 10.f;
+ CGFloat y = self.lineBottomView.frame.origin.y + self.lineBottomView.frame.size.height + btnTopIndent;
     CGFloat btnWidth = (boundsSize.width - btnIndent * 5) / 4;
     CGFloat btnHeigth = (boundsSize.height - y - btnTopIndent * 2) / 2;
+  */
+    
+    CGFloat btnIndent = 15.f;
+    CGFloat btnWidth = (boundsSize.width - btnIndent * 5) / 4;
+    CGFloat btnHeigth = btnWidth + 20;
+    CGFloat btnTopIndent = ((boundsSize.height - self.lineBottomView.frame.origin.y + self.lineBottomView.frame.size.height) - btnHeigth * 2) / 3;
+    CGFloat x = btnIndent;
+    CGFloat y = self.lineBottomView.frame.origin.y + self.lineBottomView.frame.size.height + btnTopIndent;
     
     for(NSInteger i = 0; i < self.buttons.count; i++)
     {

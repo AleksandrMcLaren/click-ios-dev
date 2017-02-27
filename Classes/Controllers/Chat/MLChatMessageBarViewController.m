@@ -161,6 +161,11 @@
     self.photoButton.hidden = !self.sendButton.hidden;
 }
 
+- (BOOL)textEditing
+{
+    return self.textView.isFirstResponder;
+}
+
 - (void)endEditing
 {
     [self showAttachButton:YES];
