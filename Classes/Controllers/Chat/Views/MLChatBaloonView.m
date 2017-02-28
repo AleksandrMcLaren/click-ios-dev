@@ -79,20 +79,20 @@
 
 -(void)handleLongPress:(UILongPressGestureRecognizer *)longPressRecognizer {
     /*When a LongPress is recognized, the copy-menu will be displayed.*/
-    if (longPressRecognizer.state == UIGestureRecognizerStateBegan) {
-        [self updateSelectedBackground];
-    } else {
-        [self updateBackground];
-    }
+//    if (longPressRecognizer.state == UIGestureRecognizerStateBegan) {
+//        [self updateSelectedBackground];
+//    } else {
+//        [self updateBackground];
+//    }
     
     if ([self becomeFirstResponder] == NO) {
         return;
     }
     
     /*Display UIMenuController.*/
-    UIMenuController * menu = [UIMenuController sharedMenuController];
-    [menu setTargetRect:self.balloonView.frame inView:self];
-    [menu setMenuVisible:YES animated:YES];
+  //  UIMenuController * menu = [UIMenuController sharedMenuController];
+   // [menu setTargetRect:self.balloonView.frame inView:self];
+   // [menu setMenuVisible:YES animated:YES];
 }
 
 -(BOOL)canBecomeFirstResponder {
