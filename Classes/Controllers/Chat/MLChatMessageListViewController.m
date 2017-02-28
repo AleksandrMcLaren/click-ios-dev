@@ -60,7 +60,7 @@
     
     if(!self.tableView.tableHeaderView)
     {
-        self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 10)];
+        self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 5)];
     }
     
     if(!self.alreadyOpened)
@@ -82,7 +82,7 @@
 {
     if(messages.count)
     {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             
             [self.messages addObjectsFromArray:messages];
             [self.tableView reloadData];
