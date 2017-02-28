@@ -26,7 +26,10 @@
         self.mask = [[UIImageView alloc] init];
       //  self.mask.contentMode = UIViewContentModeScaleToFill;
         [self addSubview:self.mask];
-
+        
+        UILongPressGestureRecognizer * recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+        [recognizer setMinimumPressDuration:1.0f];
+        [self addGestureRecognizer:recognizer];
     }
     
     return self;
@@ -69,6 +72,51 @@
                                                                                 resizingMode:UIImageResizingModeStretch];
         }
     }
+}
+
+#pragma mark -
+#pragma mark UIGestureRecognizer-Handling
+
+-(void)handleLongPress:(UILongPressGestureRecognizer *)longPressRecognizer {
+    /*When a LongPress is recognized, the copy-menu will be displayed.*/
+//    if (longPressRecognizer.state == UIGestureRecognizerStateBegan) {
+//        [self updateSelectedBackground];
+//    } else {
+//        [self updateBackground];
+//    }
+    
+    if ([self becomeFirstResponder] == NO) {
+        return;
+    }
+    
+    /*Display UIMenuController.*/
+  //  UIMenuController * menu = [UIMenuController sharedMenuController];
+   // [menu setTargetRect:self.balloonView.frame inView:self];
+   // [menu setMenuVisible:YES animated:YES];
+}
+
+-(BOOL)canBecomeFirstResponder {
+    /*This cell can become first-responder*/
+    return YES;
+}
+
+
+#pragma mark -
+#pragma mark Action-Handler
+
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    /*Allows the copy-Action on this cell.*/
+    if (action == @selector(copy:)) {
+        return YES;
+    } else {
+        return [super canPerformAction:action withSender:sender];
+    }
+}
+
+-(void)copy:(id)sender {
+    /**Copys the messageString to the clipboard.*/
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    [pasteboard setString:@"la la la"];
 }
 
 

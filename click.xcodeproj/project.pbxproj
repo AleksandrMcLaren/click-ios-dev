@@ -31,7 +31,6 @@
 		1FC42B861E631F5C00586FD3 /* keyboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC42B6D1E631F5C00586FD3 /* keyboard@2x.png */; };
 		1FC42B871E631F5C00586FD3 /* keyboard@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC42B6E1E631F5C00586FD3 /* keyboard@3x.png */; };
 		1FC42B881E631F5C00586FD3 /* keypad_gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC42B6F1E631F5C00586FD3 /* keypad_gray@2x.png */; };
-		1FC42B891E631F5C00586FD3 /* keypad_gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC42B701E631F5C00586FD3 /* keypad_gray@3x.png */; };
 		1FC42B8A1E631F5C00586FD3 /* location@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC42B711E631F5C00586FD3 /* location@2x.png */; };
 		1FC42B8B1E631F5C00586FD3 /* location@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC42B721E631F5C00586FD3 /* location@3x.png */; };
 		1FC42B8C1E631F5C00586FD3 /* menu_gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC42B731E631F5C00586FD3 /* menu_gray@2x.png */; };
@@ -282,7 +281,6 @@
 		1FC42B6D1E631F5C00586FD3 /* keyboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "keyboard@2x.png"; sourceTree = "<group>"; };
 		1FC42B6E1E631F5C00586FD3 /* keyboard@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "keyboard@3x.png"; sourceTree = "<group>"; };
 		1FC42B6F1E631F5C00586FD3 /* keypad_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "keypad_gray@2x.png"; sourceTree = "<group>"; };
-		1FC42B701E631F5C00586FD3 /* keypad_gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "keypad_gray@3x.png"; sourceTree = "<group>"; };
 		1FC42B711E631F5C00586FD3 /* location@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location@2x.png"; sourceTree = "<group>"; };
 		1FC42B721E631F5C00586FD3 /* location@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location@3x.png"; sourceTree = "<group>"; };
 		1FC42B731E631F5C00586FD3 /* menu_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_gray@2x.png"; sourceTree = "<group>"; };
@@ -756,7 +754,6 @@
 				1FC42B6D1E631F5C00586FD3 /* keyboard@2x.png */,
 				1FC42B6E1E631F5C00586FD3 /* keyboard@3x.png */,
 				1FC42B6F1E631F5C00586FD3 /* keypad_gray@2x.png */,
-				1FC42B701E631F5C00586FD3 /* keypad_gray@3x.png */,
 				1FC42B711E631F5C00586FD3 /* location@2x.png */,
 				1FC42B721E631F5C00586FD3 /* location@3x.png */,
 				1FC42B731E631F5C00586FD3 /* menu_gray@2x.png */,
@@ -1668,7 +1665,6 @@
 				3D3AECD21DE4966E00F745BE /* ProfileView.xib in Resources */,
 				782AFFED1D09562000802097 /* attachrecording@2x.png in Resources */,
 				1FC42B811E631F5C00586FD3 /* contact@3x.png in Resources */,
-				1FC42B891E631F5C00586FD3 /* keypad_gray@3x.png in Resources */,
 				1F20C1B11E5C8A3E00C6D973 /* baloon_out@2x.png in Resources */,
 				1FC42B7C1E631F5C00586FD3 /* audio@2x.png in Resources */,
 				1FC42B8A1E631F5C00586FD3 /* location@2x.png in Resources */,
@@ -1741,7 +1737,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
