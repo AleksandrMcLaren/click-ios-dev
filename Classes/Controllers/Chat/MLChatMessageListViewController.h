@@ -9,12 +9,23 @@
 #import <UIKit/UIKit.h>
 #import "MLChatCellContentViewController.h"
 
+@protocol MLChatMessageListViewControllerDelegate;
+
 @interface MLChatMessageListViewController : UITableViewController
 
+@property (nonatomic, weak) id <MLChatMessageListViewControllerDelegate> delegate;
 @property (nonatomic, assign) CGFloat contentOffSet;
 
 - (void)addMessages:(NSArray *)messages;
 - (void)addMessage:(MLChatMessage *)message;
+
+@end
+
+
+@protocol MLChatMessageListViewControllerDelegate <NSObject>
+
+@required
+- (void)chatMessageListViewControllerTapped;
 
 @end
 

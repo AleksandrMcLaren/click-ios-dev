@@ -15,6 +15,7 @@
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UIButton *photoButton;
 @property (nonatomic, strong) UIButton *attachButton;
+@property (nonatomic, strong) UIButton *keyboardButton;
 
 @property (nonatomic) CGFloat previousHeight;
 @property (nonatomic) CGFloat maxHeight;
@@ -47,6 +48,7 @@
         self.textView.keyboardType = UIKeyboardTypeDefault;
         self.textView.returnKeyType = UIReturnKeyDefault;
         self.textView.textAlignment = NSTextAlignmentNatural;
+      //  self.textView.scrollIndicatorInsets = UIEdgeInsetsMake(self.textView.textContainerInset.top, self.textView.scrollIndicatorInsets.left, self.textView.textContainerInset.bottom, self.textView.scrollIndicatorInsets.right);
         
         self.maxHeight = self.textView.font.lineHeight * 4 + self.textView.textContainerInset.top + self.textView.textContainerInset.bottom + 16;
         
@@ -65,11 +67,18 @@
                   forControlEvents:UIControlEventTouchUpInside];
         
         self.attachButton = [[UIButton alloc] init];
-        [self.attachButton setImage:[UIImage imageNamed:@"tab_clip"]
+        [self.attachButton setImage:[UIImage imageNamed:@"menu_gray"]
                           forState:UIControlStateNormal];
         [self.attachButton addTarget:self
                              action:@selector(attachTapped)
                    forControlEvents:UIControlEventTouchUpInside];
+        
+        self.keyboardButton = [[UIButton alloc] init];
+        [self.keyboardButton setImage:[UIImage imageNamed:@"keypad_gray"]
+                           forState:UIControlStateNormal];
+        [self.keyboardButton addTarget:self
+                              action:@selector(keyboardTapped)
+                    forControlEvents:UIControlEventTouchUpInside];
     }
     
     return self;
@@ -79,7 +88,7 @@
 {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [UIColor colorFromHexString:@"#f8f8f8"];
+    self.view.backgroundColor = [UIColor colorWithHue:0.50 saturation:0.00 brightness:0.94 alpha:1.00];
     self.lineView.backgroundColor = [UIColor colorWithRed:0.82 green:0.85 blue:0.86 alpha:1.00];
     self.textView.backgroundColor = [UIColor whiteColor];
     
@@ -88,8 +97,11 @@
     [self.view addSubview:self.sendButton];
     [self.view addSubview:self.photoButton];
     [self.view addSubview:self.attachButton];
+    [self.view addSubview:self.keyboardButton];
     
+    self.keyboardButton.hidden = YES;
     [self updateSendButton];
+    
     [self.view setNeedsUpdateConstraints];
 }
 
@@ -98,33 +110,41 @@
     self.lineView.frame = CGRectMake(0, 0, self.view.bounds.size.width, 1);
     
     CGFloat buttonWidth = 50.f;
-    CGFloat buttonHeight = 32.f;
+    CGFloat buttonHeight = 48.f;
+    CGFloat top = 8.f;
     
     [self.textView updateConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view.left).offset(buttonWidth);
         make.right.equalTo(self.view.right).offset(-buttonWidth);
-        make.top.equalTo(self.view.top).offset(8);
-        make.bottom.equalTo(self.view.bottom).offset(-8);
+        make.top.equalTo(self.view.top).offset(top);
+        make.bottom.equalTo(self.view.bottom).offset(-top);
     }];
     
     [self.sendButton makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(buttonWidth);
         make.height.equalTo(buttonHeight);
-        make.bottom.equalTo(self.view.bottom).offset(-8);
+        make.bottom.equalTo(self.view.bottom);
         make.right.equalTo(self.view.right);
     }];
     
     [self.photoButton makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(buttonWidth);
         make.height.equalTo(buttonHeight);
-        make.bottom.equalTo(self.view.bottom).offset(-8);
+        make.bottom.equalTo(self.view.bottom);
         make.right.equalTo(self.view.right);
     }];
     
     [self.attachButton makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(buttonWidth);
         make.height.equalTo(buttonHeight);
-        make.bottom.equalTo(self.view.bottom).offset(-8);
+        make.bottom.equalTo(self.view.bottom);
+        make.left.equalTo(self.view.left);
+    }];
+    
+    [self.keyboardButton makeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(buttonWidth);
+        make.height.equalTo(buttonHeight);
+        make.bottom.equalTo(self.view.bottom);
         make.left.equalTo(self.view.left);
     }];
     
@@ -141,7 +161,37 @@
     self.photoButton.hidden = !self.sendButton.hidden;
 }
 
+- (BOOL)textEditing
+{
+    return self.textView.isFirstResponder;
+}
+
+- (void)endEditing
+{
+    [self showAttachButton:YES];
+}
+
+- (void)showAttachButton:(BOOL)show
+{
+    self.attachButton.hidden = !show;
+    self.keyboardButton.hidden = show;
+}
+
+- (void)clearText
+{
+    self.textView.text = @"";
+    [self updateHeightIfNeeded:self.textView.text];
+    [self updateSendButton];
+}
+
 #pragma mark - UITextViewDelegate
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    [self showAttachButton:YES];
+    
+    return YES;
+}
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
@@ -169,11 +219,11 @@
         if(needsHeight <= self.maxHeight)
         {
             [self.delegate chatMessageBarViewControllerNeedsHeight:needsHeight];
-            // textView.scrollEnabled = NO;
+          //  self.textView.scrollEnabled = NO;
         }
         else
         {
-            // textView.scrollEnabled = YES;
+          //  self.textView.scrollEnabled = YES;
         }
         
         self.previousHeight = needsHeight;
@@ -187,7 +237,8 @@
     NSDictionary *options = @{NSFontAttributeName:self.textView.font};
     CGRect boundingRect = [text boundingRectWithSize:CGSizeMake(width, NSIntegerMax)
                                              options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                          attributes:options context:nil];
+                                          attributes:options
+                                             context:nil];
     
     return self.textView.textContainerInset.top + boundingRect.size.height + self.textView.textContainerInset.bottom;
 }
@@ -212,18 +263,15 @@
 
 - (void)attachTapped
 {
-    
+    [self showAttachButton:NO];
+    [self.delegate chatMessageBarTappedAttachButton];
+    [self.textView resignFirstResponder];
 }
 
-- (void)chatButtonsTappedPlus
+- (void)keyboardTapped
 {
-    [self.delegate chatMessagePanelTappedPlusButton];
-}
-
-- (void)clearText
-{
-    self.textView.text = @"";
-    [self updateHeightIfNeeded:self.textView.text];
+    [self showAttachButton:YES];
+    [self.textView becomeFirstResponder];
 }
 
 @end

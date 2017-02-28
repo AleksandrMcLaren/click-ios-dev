@@ -75,7 +75,7 @@
     else
        statusWidth = 35;
     
-    // если нужно увеличим высоту для вьюхи статуса
+    // если нужно, увеличим высоту для вьюхи статуса
     NSArray *lines = [self getLinesArrayOfStringInLabel:self.label withWidth:self.textSize.width];
     
     if(lines.count)
