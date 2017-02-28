@@ -50,8 +50,8 @@
 {
     [super viewDidLoad];
  
-    self.view.backgroundColor = [UIColor colorWithHue:0.50 saturation:0.00 brightness:0.94 alpha:1.00];
-    self.lineTopView.backgroundColor = [UIColor colorWithHue:0.57 saturation:0.08 brightness:0.56 alpha:0.6];
+    self.view.backgroundColor = [UIColor colorWithHue:0.00 saturation:0.00 brightness:0.97 alpha:1.00];
+    self.lineTopView.backgroundColor = [UIColor colorWithHue:0.00 saturation:0.00 brightness:0.60 alpha:0.4];
     self.lineBottomView.backgroundColor = self.lineTopView.backgroundColor;
     
     [self.view addSubview:self.lineTopView];

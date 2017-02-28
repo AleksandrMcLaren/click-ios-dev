@@ -29,7 +29,7 @@
         self.button.imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
         self.button.layer.masksToBounds = YES;
         self.button.layer.borderColor = [UIColor colorWithHue:0.58 saturation:0.02 brightness:0.86 alpha:1.00].CGColor;
-        self.button.layer.borderWidth = 1.f;
+        self.button.layer.borderWidth = 0.5f;
         
         self.titleLabel = [[UILabel alloc] init];
         self.titleLabel.textColor = [UIColor blackColor];
@@ -55,8 +55,7 @@
     [super viewWillLayoutSubviews];
     
     CGSize boundsSize = self.view.bounds.size;
-    
-    CGFloat indent = 5.f;
+
     self.button.frame = CGRectMake(0, 0, boundsSize.width, boundsSize.width);
     self.button.layer.cornerRadius = self.button.frame.size.width / 4;
     

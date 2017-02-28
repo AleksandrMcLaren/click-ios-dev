@@ -44,7 +44,7 @@
         self.messageVC = [[MLChatMessageListViewController alloc] init];
         self.messageVC.delegate = self;
         
-        self.messageBarHeight = 51.f;
+        self.messageBarHeight = 46.f;
         self.messageBarVC = [[MLChatMessageBarViewController alloc] init];
         self.messageBarVC.delegate = self;
         
@@ -130,7 +130,7 @@
         make.right.equalTo(self.view.right);
         make.top.equalTo(self.view.top);
         make.height.equalTo(boundsSize.height - messageBarBottomOffset - self.messageBarHeight);
-      //  make.bottom.equalTo(self.messageBarVC.view.top);
+       // make.bottom.equalTo(self.messageBarVC.view.top);
     }];
 
 
@@ -228,6 +228,7 @@
         messageListOffset = self.messageVC.contentOffSet - diff;
     }
     
+    NSLog(@"%@", NSStringFromCGRect(self.view.frame));
     NSLog(@"%@", NSStringFromCGRect(messageBarFrame));
     NSLog(@"%@", NSStringFromCGRect(messageListFrame));
     NSLog(@"%@", NSStringFromCGRect(menuAttachFrame));
@@ -238,7 +239,8 @@
     
     self.messageVC.contentOffSet = messageListOffset;
     self.messageVC.view.frame = messageListFrame;
-    
+  
+
     return;
     
     [UIView animateWithDuration:0.3

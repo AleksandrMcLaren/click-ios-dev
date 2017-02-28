@@ -114,6 +114,8 @@
     if(size.width < statusWidth + self.insets.left + self.insets.right)
         size = CGSizeMake(self.insets.left + statusWidth + self.insets.right, size.height);
     
+    size = CGSizeMake(ceilf(size.width), ceilf(size.height));
+    
     [self.view setNeedsLayout];
     [self.delegate chatCellContentViewControllerNeedsSize:size];
 }

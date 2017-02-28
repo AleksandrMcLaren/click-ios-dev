@@ -37,9 +37,8 @@
         self.textView.scrollsToTop = NO;
         self.textView.font = [UIFont systemFontOfSize:16.0];
         self.textView.text = @"";
-        self.textView.layer.borderColor = [UIColor colorWithRed:0.84 green:0.84 blue:0.85 alpha:1.00].CGColor;
-        self.textView.layer.borderWidth = 1.0;
-        self.textView.layer.cornerRadius = 4.0;
+        self.textView.layer.borderWidth = 0.54;
+        self.textView.layer.cornerRadius = 5.0;
         self.textView.delegate = self;
 
         self.textView.contentMode = UIViewContentModeRedraw;
@@ -48,9 +47,9 @@
         self.textView.keyboardType = UIKeyboardTypeDefault;
         self.textView.returnKeyType = UIReturnKeyDefault;
         self.textView.textAlignment = NSTextAlignmentNatural;
-      //  self.textView.scrollIndicatorInsets = UIEdgeInsetsMake(self.textView.textContainerInset.top, self.textView.scrollIndicatorInsets.left, self.textView.textContainerInset.bottom, self.textView.scrollIndicatorInsets.right);
+        self.textView.textContainerInset = UIEdgeInsetsMake(6, self.textView.textContainerInset.left, 6, self.textView.textContainerInset.right);
         
-        self.maxHeight = self.textView.font.lineHeight * 4 + self.textView.textContainerInset.top + self.textView.textContainerInset.bottom + 16;
+        self.maxHeight = self.textView.font.lineHeight * 4 + self.textView.textContainerInset.top + self.textView.textContainerInset.bottom + 14;
         
         self.sendButton = [[UIButton alloc] init];
         [self.sendButton setImage:[UIImage imageNamed:@"plane"]
@@ -88,9 +87,11 @@
 {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [UIColor colorWithHue:0.50 saturation:0.00 brightness:0.94 alpha:1.00];
-    self.lineView.backgroundColor = [UIColor colorWithRed:0.82 green:0.85 blue:0.86 alpha:1.00];
+    self.view.backgroundColor = [UIColor colorWithHue:0.00 saturation:0.00 brightness:0.97 alpha:1.00];
+    self.lineView.backgroundColor = [UIColor colorWithHue:0.00 saturation:0.00 brightness:0.66 alpha:1.00];
+    
     self.textView.backgroundColor = [UIColor whiteColor];
+    self.textView.layer.borderColor = [UIColor colorWithHue:0.67 saturation:0.02 brightness:0.80 alpha:1.00].CGColor;
     
     [self.view addSubview:self.lineView];
     [self.view addSubview:self.textView];
@@ -107,11 +108,11 @@
 
 - (void)updateViewConstraints
 {
-    self.lineView.frame = CGRectMake(0, 0, self.view.bounds.size.width, 1);
+    self.lineView.frame = CGRectMake(0, 0, self.view.bounds.size.width, 0.5);
     
     CGFloat buttonWidth = 50.f;
-    CGFloat buttonHeight = 48.f;
-    CGFloat top = 8.f;
+    CGFloat buttonHeight = 45;
+    CGFloat top = 7.f;
     
     [self.textView updateConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view.left).offset(buttonWidth);
@@ -212,7 +213,7 @@
 
 - (void)updateHeightIfNeeded:(NSString *)text
 {
-    CGFloat needsHeight = [self heightTextViewText:text] + 16.f;
+    CGFloat needsHeight = [self heightTextViewText:text] + 14.f;
     
     if(self.previousHeight != needsHeight)
     {
@@ -239,8 +240,8 @@
                                              options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                           attributes:options
                                              context:nil];
-    
-    return self.textView.textContainerInset.top + boundingRect.size.height + self.textView.textContainerInset.bottom;
+
+    return self.textView.textContainerInset.top + boundingRect.size.height + self.textView.textContainerInset.bottom + 1;
 }
 
 
