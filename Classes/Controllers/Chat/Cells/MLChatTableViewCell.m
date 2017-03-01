@@ -68,17 +68,17 @@
     
     if(!self.avaVC.view.hidden)
     {
-            blnInsetTop = avaInsetTop + self.avaVC.diameter - 3;
-        
-            if(self.message.isOwner)
-                avaInsetLeft = boundsSize.width - insetLeft - self.avaVC.diameter;
-                
-            [self.avaVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(avaInsetTop);
-                make.left.equalTo(avaInsetLeft);
-                make.width.equalTo(self.avaVC.diameter);
-                make.height.equalTo(self.avaVC.diameter);
-            }];
+        blnInsetTop = avaInsetTop + self.avaVC.diameter - 3;
+    
+        if(self.message.isOwner)
+            avaInsetLeft = boundsSize.width - insetLeft - self.avaVC.diameter;
+            
+        [self.avaVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(avaInsetTop);
+            make.left.equalTo(avaInsetLeft);
+            make.width.equalTo(self.avaVC.diameter);
+            make.height.equalTo(self.avaVC.diameter);
+        }];
     }
     
     [self.contentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -90,7 +90,7 @@
 
     UIEdgeInsets blnInset = UIEdgeInsetsMake(blnInsetTop,
                                              blnInsetLeft,
-                                             blnInsetBottom,
+                                             -blnInsetBottom,
                                              boundsSize.width - blnSize.width - blnInsetLeft);
     
     [self.balloonView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -99,8 +99,6 @@
         make.height.equalTo(blnSize.height);
     }];
 
-  //  CGFloat bottom = self.message.isFirst ? 10.5 : 13.5;
-    
     [self.statusVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.balloonView).offset(-5);
         make.bottom.equalTo(self.balloonView).offset(-10.5);

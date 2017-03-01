@@ -15,6 +15,8 @@
 @property (nonatomic, strong) NSMutableDictionary *heightCellAtIndexPath;
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 
+@property (nonatomic) BOOL alreadyOpened;
+
 @end
 
 @implementation MLChatMessageListViewController
@@ -54,21 +56,25 @@
 
 - (void)viewDidLayoutSubviews
 {
+    [super viewDidLayoutSubviews];
+    
     if(!self.tableView.tableHeaderView)
     {
-        self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 25)];
+        self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 5)];
+    }
+    
+    if(!self.alreadyOpened)
+    {
+        self.alreadyOpened = YES;
         
-        if(!self.messages.count)
-        {
-            [UIView animateWithDuration:0.25
-                                  delay:0
-                                options:UIViewAnimationOptionBeginFromCurrentState
-                             animations:^(void){
-                                 self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y - self.refreshControl.frame.size.height);
-                             } completion:^(BOOL finished){
-                                 [self.refreshControl beginRefreshing];
-                             }];
-        }
+        [UIView animateWithDuration:0.25
+                              delay:0
+                            options:UIViewAnimationOptionBeginFromCurrentState
+                         animations:^(void){
+                             self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y - self.refreshControl.frame.size.height);
+                         } completion:^(BOOL finished){
+                             [self.refreshControl beginRefreshing];
+                         }];
     }
 }
 
@@ -76,7 +82,7 @@
 {
     if(messages.count)
     {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             
             [self.messages addObjectsFromArray:messages];
             [self.tableView reloadData];
