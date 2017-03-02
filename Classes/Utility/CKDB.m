@@ -220,16 +220,24 @@ static void myLow(sqlite3_context *context, int argc, sqlite3_value **argv)
         NSMutableArray* vals = [[NSMutableArray alloc] init];
         for (id key in preparedValues) {
             [cols addObject:key];
-//            NSJSONSerialization
+
             id value = [preparedValues objectForKey:key];
             if ([value isKindOfClass:[NSArray class]]) {
                 NSData* innerJson = [NSJSONSerialization dataWithJSONObject:value options:0 error:NULL];
                 value = [[NSString alloc] initWithData:innerJson encoding:NSUTF8StringEncoding];
             }
+            else if([value isKindOfClass:NSString.class])
+            {
+                value = [value stringByReplacingOccurrencesOfString:@"'"
+                                                         withString:@"''"];
+            }
+            
             [vals addObject:value];
         }
+
         NSMutableArray* newCols = [[NSMutableArray alloc] init];
         NSMutableArray* newVals = [[NSMutableArray alloc] init];
+
         for (int i = 0; i<[cols count]; i++) {
             [newCols addObject:[NSString stringWithFormat:@"'%@'", [cols objectAtIndex:i]]];
             [newVals addObject:[NSString stringWithFormat:@"'%@'", [vals objectAtIndex:i]]];

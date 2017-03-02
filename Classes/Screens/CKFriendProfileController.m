@@ -127,11 +127,16 @@
                     CKFriendProfileDetailCell *cell = [CKFriendProfileDetailCell new];
                     
                     NSMutableString *stringts = [NSMutableString stringWithString:_user.id];
-                    [stringts insertString:@"+" atIndex:0];
-                    [stringts insertString:@" (" atIndex:2];
-                    [stringts insertString:@") " atIndex:7];
-                    [stringts insertString:@"-" atIndex:12];
-                    [stringts insertString:@"-" atIndex:15];
+                    
+                    if(stringts.length > 14)
+                    {   // TODO i
+                        [stringts insertString:@"+" atIndex:0];
+                        [stringts insertString:@" (" atIndex:2];
+                        [stringts insertString:@") " atIndex:7];
+                        [stringts insertString:@"-" atIndex:12];
+                        [stringts insertString:@"-" atIndex:15];
+                    }
+                    
                     
                     cell.detailLabel.text = stringts;
                     
