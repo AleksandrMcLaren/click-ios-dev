@@ -116,36 +116,31 @@
 - (void)updateViewConstraints
 {
     CGSize boundsSize = self.view.bounds.size;
-  //  CGFloat messageBarBottomOffset = self.addedViewHeight;
+    CGFloat messageBarBottomOffset = self.addedViewHeight;
+    
+    [self.messageBarVC.view updateConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view.left);
+        make.right.equalTo(self.view.right);
+        make.bottom.equalTo(self.view.bottom).offset(-messageBarBottomOffset);
+        make.height.equalTo(self.messageBarHeight);
+    }];
     
     [self.messageVC.view updateConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view.left);
+        make.right.equalTo(self.view.right);
         make.top.equalTo(self.view.top);
-        make.left.equalTo(self.view.left);
-        make.right.equalTo(self.view.right);
-        make.height.equalTo(boundsSize.height - self.addedViewHeight - self.messageBarHeight);
-        // make.bottom.equalTo(self.messageBarVC.view.top);
+        make.height.equalTo(boundsSize.height - messageBarBottomOffset - self.messageBarHeight);
+        //  make.bottom.equalTo(self.messageBarVC.view.top);
     }];
     
-    [self.messageBarVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).with.insets(UIEdgeInsetsMake(self.messageVC.view.frame.size.height, 0, boundsSize.height - (boundsSize.height - self.addedViewHeight + self.messageBarHeight), 0));
-        make.width.equalTo(self.view.width);
-        make.height.equalTo(self.view.height);
-    }];
     
-//    [self.messageBarVC.view updateConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(self.messageVC.view.bottom);
-//        make.left.equalTo(self.view.left);
-//        make.right.equalTo(self.view.right);
-//        make.height.equalTo(self.messageBarHeight);
-//    }];
-
     [self.menuAttachVC.view updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.messageBarVC.view.bottom);
         make.left.equalTo(self.view.left);
         make.right.equalTo(self.view.right);
-        make.height.equalTo(self.addedViewHeight); // ?
+        make.top.equalTo(self.messageBarVC.view.bottom);
+        make.height.equalTo(self.addedViewHeight);
     }];
-
+    
     [super updateViewConstraints];
 }
 
@@ -239,8 +234,8 @@
     NSLog(@"%@", NSStringFromCGRect(menuAttachFrame));
     NSLog(@"%f", self.messageVC.contentOffSet);
 
-   // self.messageBarVC.view.frame = messageBarFrame;
-   // self.menuAttachVC.view.frame = menuAttachFrame;
+    self.messageBarVC.view.frame = messageBarFrame;
+    self.menuAttachVC.view.frame = menuAttachFrame;
     
     self.messageVC.contentOffSet = messageListOffset;
     self.messageVC.view.frame = messageListFrame;

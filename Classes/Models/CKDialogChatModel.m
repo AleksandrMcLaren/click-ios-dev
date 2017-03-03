@@ -71,7 +71,7 @@
                                                                
                                                                self.lastMessage = messageRecived;
                                                                // надо сделать
-                                                               //[CKDialogModel updateDialog:_dialog withMessage:[self.messages lastObject]];
+                                                             //  [self updateDialog:_dialog withMessage:message];
                                                                
                                                            }else{
                                                                [ProgressHUD showError:@"Message sending failed."];

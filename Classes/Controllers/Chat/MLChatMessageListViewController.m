@@ -130,6 +130,12 @@
     
     addMessage();
     
+    if(self.refreshControl)
+    {
+        [self.refreshControl endRefreshing];
+        self.refreshControl = nil;
+    }
+    
     /*
     NSDate* newDate = [oldDate dateByAddingTimeInterval:0.3];
     

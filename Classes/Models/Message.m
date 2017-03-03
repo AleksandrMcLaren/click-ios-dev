@@ -156,8 +156,6 @@
     self.userid = message.userid;
     self.userlogin = message.userlogin;
 
-    NSLog(@"111 - %@", self.userlogin);
-    
     self.attachements = message.attachements;
     self.timer = message.timer;
     self.location = message.location;

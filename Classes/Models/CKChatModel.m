@@ -162,9 +162,7 @@
 }
 
 -(void)recivedMesagesArray:(NSArray*)messages{
-    
-    // TODO i
-    // здесь получаем сообщения из словаря
+
     for (NSDictionary *diactionary in messages){
         Message* message = [Message modelWithDictionary:diactionary];
         [self saveMessage:message];
