@@ -260,13 +260,16 @@
 
     if(newBottom > bottom)
     {
-        CGFloat contentSizeHeight = self.messageVC.tableView.contentSize.height;
-        CGFloat viewHeight = self.messageVC.tableView.frame.size.height - self.messageVC.tableView.contentInset.top - self.messageVC.tableView.contentInset.bottom;
+        self.messageVC.contentOffSet += (newBottom - bottom);
         
-        if(contentSizeHeight >= viewHeight)
-        {
-           self.messageVC.contentOffSet += (newBottom - bottom);
-        }
+//        CGFloat contentSizeHeight = self.messageVC.tableView.contentSize.height;
+//        CGFloat viewHeight = self.messageVC.tableView.frame.size.height - self.messageVC.tableView.contentInset.top - self.messageVC.tableView.contentInset.bottom;
+//        
+//        if(contentSizeHeight >= viewHeight)
+//        {
+//        NSLog(@"%f", newBottom - bottom)
+//           self.messageVC.contentOffSet += (newBottom - bottom);
+//        }
     }
     
     [self.view setNeedsUpdateConstraints];
