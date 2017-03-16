@@ -43,9 +43,12 @@ typedef enum CKMessageType
 @property (nonatomic, strong) NSString* dialogIdentifier;
 
 @property (nonatomic, strong, readonly) NSString *senderName;
+@property (nonatomic, strong, readonly) NSString *senderLogin;
 @property (nonatomic, strong, readonly) NSString *statusName;
 @property (nonatomic, strong, readonly) NSString *text;
 @property (nonatomic, strong, readonly) NSString *senderInitials;
+
+@property (copy) void (^setIdentifier)(NSString *identifier);
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dict;
 

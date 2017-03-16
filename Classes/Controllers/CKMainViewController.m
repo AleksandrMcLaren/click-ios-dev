@@ -19,8 +19,7 @@
 #import "CKLoginCodeViewController.h"
 #import "CKOperationsProtocol.h"
 #import "ChatView.h"
-
-#import "MLChatViewController.h"
+#import "ClickChatViewController.h"
 
 @interface CKMapViewController()
 
@@ -83,7 +82,7 @@
                        @[@"Чаты", @"tab_messages_active", [CKChatsViewController class]],
                        @[@"Контакты", @"tab_contacts_active", [CKContactsViewController class]],
                        @[@"Карта", @"tab_map_active", [CKMapViewController class]],
-                       @[@"Эфир", @"tab_air_active", [CKBlogViewController class]],
+                     //  @[@"Эфир", @"tab_air_active", [CKBlogViewController class]],
                        @[@"Настройки", @"tab_settings_active", [CKSettingsViewController class]]
                        ];
     NSInteger *n = 0;
@@ -162,7 +161,7 @@
 - (void)startChat:(CKChatModel *)chat{
    // ChatView *chatView = [[ChatView alloc] initWithChat:chat];
     
-    MLChatViewController *chatVC = [[MLChatViewController alloc] initWithChat:chat];
+    ClickChatViewController *chatVC = [[ClickChatViewController alloc] initWithChat:chat];
     chatVC.hidesBottomBarWhenPushed = YES;
     _tabBarController.selectedIndex = 0;
     [_chatsViewController.navigationController popToRootViewControllerAnimated:NO];

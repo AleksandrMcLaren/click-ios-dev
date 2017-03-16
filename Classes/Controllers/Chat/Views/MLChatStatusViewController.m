@@ -106,7 +106,8 @@
     switch (self.message.status)
     {
         case MLChatMessageStatusSent:
-            [self addPossibleResend];
+            self.imageView.image = nil;
+            self.tapRecognizer.enabled = NO;
             break;
         case MLChatMessageStatusDelivered:
             self.imageView.image = [MLChatStatusViewController imageDelivered];
@@ -115,6 +116,10 @@
         case MLChatMessageStatusRead:
             self.imageView.image = [MLChatStatusViewController imageRead];
             self.tapRecognizer.enabled = NO;
+            break;
+        case MLChatMessageStatusNotSent:
+            self.imageView.image = [MLChatStatusViewController imageResent];
+            self.tapRecognizer.enabled = YES;
             break;
         default:
             self.imageView.image = nil;
@@ -129,18 +134,6 @@
                                                      name:mlchat_message_update_status(self.message.ident)
                                                    object:nil];
     }
-}
-
-- (void)addPossibleResend
-{
-    NSDate *currentTime = [NSDate date];
-    NSTimeInterval seconds = [currentTime timeIntervalSinceDate:self.message.date];
-    
-    if(seconds < 5)
-        return;
-    
-    self.imageView.image = [MLChatStatusViewController imageResent];
-    self.tapRecognizer.enabled = YES;
 }
 
 -(void)updateStatus:(NSNotification *)notification
@@ -173,7 +166,7 @@
     static dispatch_once_t once;
     static UIImage *_image;
     dispatch_once(&once, ^{
-        _image = [UIImage imageNamed:@"tick_black"];
+        _image = [UIImage imageNamed:@"status_tick_gray"];
     });
     
     return _image;
@@ -184,7 +177,7 @@
     static dispatch_once_t once;
     static UIImage *_image;
     dispatch_once(&once, ^{
-        _image = [UIImage imageNamed:@"tick_black_multiple"];
+        _image = [UIImage imageNamed:@"status_tick_multiple_gray"];
     });
     
     return _image;
@@ -195,7 +188,7 @@
     static dispatch_once_t once;
     static UIImage *_image;
     dispatch_once(&once, ^{
-        _image = [UIImage imageNamed:@"arrows_circle_strike_black"];
+        _image = [UIImage imageNamed:@"status_send_gray"];
     });
     
     return _image;

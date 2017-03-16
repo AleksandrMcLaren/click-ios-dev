@@ -56,10 +56,16 @@
     CGFloat avaInsetTop = 0;
     CGFloat avaInsetLeft = insetLeft;
     
-    CGFloat blnInsetTop = 2;
+    CGFloat blnInsetTop = 2.f;
     CGFloat blnInsetLeft = insetLeft;
     CGFloat blnInsetBottom = 0.f;
     CGSize blnSize = CGSizeMake(self.contentSize.width, self.contentSize.height);
+    CGFloat tailHeight = 6.f;
+    
+    if(self.message.isFirst)
+    {   // учтем хвостик
+        blnSize.height += tailHeight;
+    }
     
     CGSize statusSize = CGSizeMake(self.message.isOwner ? 60 : 48, 20);
     
@@ -80,9 +86,9 @@
             make.height.equalTo(self.avaVC.diameter);
         }];
     }
-    
+
     [self.contentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(0);
+        make.top.equalTo(self.message.isFirst ? tailHeight / 2 : 0);
         make.left.equalTo(0);
         make.width.equalTo(self.contentSize.width);
         make.height.equalTo(self.contentSize.height);
@@ -101,7 +107,7 @@
 
     [self.statusVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.balloonView).offset(-5);
-        make.bottom.equalTo(self.balloonView).offset(-10.5);
+        make.bottom.equalTo(self.balloonView).offset(-9);
         make.width.equalTo(statusSize.width);
         make.height.equalTo(statusSize.height);
     }];

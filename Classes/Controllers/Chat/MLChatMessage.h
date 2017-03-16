@@ -16,18 +16,20 @@ typedef NS_ENUM(NSInteger, MLChatMessageStatus)
 {
     MLChatMessageStatusSent,
     MLChatMessageStatusDelivered,
-    MLChatMessageStatusRead
+    MLChatMessageStatusRead,
+    MLChatMessageStatusNotSent
 };
 
 @interface MLChatMessage : NSObject
 
 @property (nonatomic, strong) NSString *ident;
 @property (nonatomic, strong) NSString *avatarUrl;
-@property (nonatomic, assign) BOOL isFirst;
-@property (nonatomic, assign) BOOL isOwner;
-@property (nonatomic, assign) NSString *text;
-@property (nonatomic, strong) NSDate *date;
-@property (nonatomic, assign) MLChatMessageStatus status;
 @property (nonatomic, strong) NSString *userLogin;
+@property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) NSDate *date;
+
+@property (nonatomic) BOOL isFirst;
+@property (nonatomic) BOOL isOwner;
+@property (nonatomic) MLChatMessageStatus status;
 
 @end

@@ -29,7 +29,7 @@
     
     if(self)
     {
-        self.insets = UIEdgeInsetsMake(15, 15, 15, 15);
+        self.insets = UIEdgeInsetsMake(10, 15, 10, 15);
         self.minWidth = 120;
         
         self.label = [[UILabel alloc] init];
@@ -60,10 +60,7 @@
     [super setMessage:message];
     
     self.label.text = self.message.text;
-    
-    if(!self.message.isFirst)
-        self.insets = UIEdgeInsetsMake(10, 15, 12, 15);
-    
+
     CGFloat maxTextWidth = self.maxWidth - self.insets.left - self.insets.right;
     self.textSize = [MLChatLib textSizeLabel:self.label withWidth:maxTextWidth];
     CGSize size = CGSizeMake(self.insets.left + self.textSize.width + self.insets.right, self.insets.top + self.textSize.height + self.insets.bottom);

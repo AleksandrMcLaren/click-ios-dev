@@ -59,21 +59,21 @@
                   forControlEvents:UIControlEventTouchUpInside];
         
         self.photoButton = [[UIButton alloc] init];
-        [self.photoButton setImage:[UIImage imageNamed:@"tab_camera"]
+        [self.photoButton setImage:[UIImage imageNamed:@"menu_cam_gray"]
                          forState:UIControlStateNormal];
         [self.photoButton addTarget:self
                             action:@selector(photoTapped)
                   forControlEvents:UIControlEventTouchUpInside];
         
         self.attachButton = [[UIButton alloc] init];
-        [self.attachButton setImage:[UIImage imageNamed:@"menu_gray"]
+        [self.attachButton setImage:[UIImage imageNamed:@"menu_menu_gray"]
                           forState:UIControlStateNormal];
         [self.attachButton addTarget:self
                              action:@selector(attachTapped)
                    forControlEvents:UIControlEventTouchUpInside];
         
         self.keyboardButton = [[UIButton alloc] init];
-        [self.keyboardButton setImage:[UIImage imageNamed:@"keypad_gray"]
+        [self.keyboardButton setImage:[UIImage imageNamed:@"menu_keypad_gray"]
                            forState:UIControlStateNormal];
         [self.keyboardButton addTarget:self
                               action:@selector(keyboardTapped)

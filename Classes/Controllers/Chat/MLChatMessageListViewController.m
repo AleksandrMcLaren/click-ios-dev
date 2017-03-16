@@ -130,6 +130,12 @@
     
     addMessage();
     
+    if(self.refreshControl)
+    {
+        [self.refreshControl endRefreshing];
+        self.refreshControl = nil;
+    }
+    
     /*
     NSDate* newDate = [oldDate dateByAddingTimeInterval:0.3];
     
@@ -149,6 +155,16 @@
 - (void)setContentOffSet:(CGFloat)contentOffset
 {
     [self.tableView setContentOffset:CGPointMake(0, contentOffset) animated:NO];
+}
+
+- (CGFloat)contentInsetBottom
+{
+    return self.tableView.contentInset.bottom;
+}
+
+- (void)setContentInsetBottom:(CGFloat)contentInsetBottom
+{
+    self.tableView.contentInset = UIEdgeInsetsMake(self.tableView.contentInset.top, 0, contentInsetBottom, 0);
 }
 
 #pragma mark - Table view data source

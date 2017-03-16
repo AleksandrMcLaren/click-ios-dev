@@ -21,7 +21,7 @@ typedef void (^CKChatModelFetchedMessages)(NSArray* messages);
 @property (nonatomic, strong, readonly) CKDialogModel* dialog;
 
 @property (nonatomic, strong, readonly) RACSignal* messagesDidChanged;
-@property (nonatomic, strong, readonly) RACSignal* lastMessageDidChanged;
+@property (nonatomic, strong, readonly) RACSignal* messageDidChanged;
 
 - (instancetype)initWithDialog:(CKDialogModel*) dialog;
 

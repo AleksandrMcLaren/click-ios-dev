@@ -34,7 +34,7 @@
     {
         self.title = @"Контакты";
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add)];
-        _phoneContacts = [[Users sharedInstance] phoneContacts];
+        _phoneContacts = [[Users sharedInstance] fullContacts]; //[[CKApplicationModel sharedInstance] phoneContacts];
     }
     return self;
 }

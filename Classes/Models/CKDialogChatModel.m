@@ -51,30 +51,27 @@
 
 - (void)sendMessage:(Message *)message
 {
-    // TODO i
-  //  [super sendMessage:message];
+    [super sendMessage:message];
 
     [[CKMessageServerConnection sharedInstance] uploadAttachements:self.attachements completion:^(NSDictionary *result) {
+        
         self.attachements = @[];
         [[CKMessageServerConnection sharedInstance] sendMessage:message.text
                                                    attachements:result[@"uuids"]
                                                          toUser:_userId
                                                        callback:^(NSDictionary *result) {
+                                                           
                                                            if (result.socketMessageStatus == S_OK) {
                                                                NSDictionary* dictionary = result[@"result"];
                                                                Message *messageRecived = [Message modelWithDictionary:dictionary];
                                                                [message updateWithMessage:messageRecived];
                                                                [messageRecived save];
                                                                
-                                                              // TODO i:
-                                                              // [self reloadMessages];
-                                                               
-                                                               self.lastMessage = messageRecived;
-                                                               // надо сделать
-                                                               //[CKDialogModel updateDialog:_dialog withMessage:[self.messages lastObject]];
+                                                               message.setIdentifier(message.id);
+                                                               [CKDialogModel updateDialog:self.dialog withMessage:message];
                                                                
                                                            }else{
-                                                               [ProgressHUD showError:@"Message sending failed."];
+                                                                [ProgressHUD showError:@"Message sending failed."];
                                                            }
         }];
     }];

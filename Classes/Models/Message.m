@@ -24,6 +24,11 @@
     return self.sender.name;
 }
 
+- (NSString *)senderLogin
+{
+    return self.sender.login;
+}
+
 -(NSString*)senderInitials{
     return self.sender.initials;
 }
@@ -51,10 +56,11 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"]; //2016-11-22T13:42:38.46505+00:00
-    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
+    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+    NSTimeInterval timeZoneSeconds = [[NSTimeZone localTimeZone] secondsFromGMT];
     
     NSString* date = dict[@"date"];
-    NSDate* dt = [dateFormatter dateFromString:date];
+    NSDate* dt = [[dateFormatter dateFromString:date] dateByAddingTimeInterval:timeZoneSeconds];
     model.date = dt;
     
     model.userid = [NSString stringWithFormat:@"%@", dict[@"userid"]];
@@ -156,8 +162,6 @@
     self.userid = message.userid;
     self.userlogin = message.userlogin;
 
-    NSLog(@"111 - %@", self.userlogin);
-    
     self.attachements = message.attachements;
     self.timer = message.timer;
     self.location = message.location;
@@ -172,7 +176,7 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"]; //2016-11-22T13:42:38.46505+00:00
-    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
+  //  dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
     
     dictionary[@"date"] = [dateFormatter stringFromDate:self.date];
     dictionary[@"userid"] = self.userid ;
