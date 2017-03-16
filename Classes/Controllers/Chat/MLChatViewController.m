@@ -71,7 +71,7 @@
                                                  name:mlchat_message_needs_resend
                                                object:nil];
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgwhite"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"pbg"]];
 
     [self.view addSubview:self.messageVC.view];
     [self.view addSubview:self.menuAttachVC.view];

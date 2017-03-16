@@ -16,7 +16,8 @@ typedef NS_ENUM(NSInteger, MLChatMessageStatus)
 {
     MLChatMessageStatusSent,
     MLChatMessageStatusDelivered,
-    MLChatMessageStatusRead
+    MLChatMessageStatusRead,
+    MLChatMessageStatusNotSent
 };
 
 @interface MLChatMessage : NSObject

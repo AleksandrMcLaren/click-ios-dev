@@ -50,12 +50,12 @@
     {
         if(self.message.isFirst)
         {
-            self.mask.image = [[UIImage imageNamed:@"baloon_out_tick"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 16, 16, 16)
+            self.mask.image = [[UIImage imageNamed:@"balloon_out_tail"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 16, 16, 16)
                                                                                       resizingMode:UIImageResizingModeStretch];
         }
         else
         {
-            self.mask.image = [[UIImage imageNamed:@"baloon_out"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)
+            self.mask.image = [[UIImage imageNamed:@"balloon_out"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)
                                                                                  resizingMode:UIImageResizingModeStretch];
         }
     }
@@ -63,12 +63,12 @@
     {
         if(self.message.isFirst)
         {
-            self.mask.image = [[UIImage imageNamed:@"baloon_in_tick"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 16, 16, 16)
+            self.mask.image = [[UIImage imageNamed:@"balloon_in_tail"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 16, 16, 16)
                                                                                   resizingMode:UIImageResizingModeStretch];
         }
         else
         {
-            self.mask.image = [[UIImage imageNamed:@"baloon_in"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)
+            self.mask.image = [[UIImage imageNamed:@"balloon_in"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)
                                                                                 resizingMode:UIImageResizingModeStretch];
         }
     }

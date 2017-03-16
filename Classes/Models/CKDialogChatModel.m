@@ -60,6 +60,7 @@
                                                    attachements:result[@"uuids"]
                                                          toUser:_userId
                                                        callback:^(NSDictionary *result) {
+                                                           
                                                            if (result.socketMessageStatus == S_OK) {
                                                                NSDictionary* dictionary = result[@"result"];
                                                                Message *messageRecived = [Message modelWithDictionary:dictionary];

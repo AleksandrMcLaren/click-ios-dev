@@ -51,10 +51,11 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"]; //2016-11-22T13:42:38.46505+00:00
-    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
+    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+    NSTimeInterval timeZoneSeconds = [[NSTimeZone localTimeZone] secondsFromGMT];
     
     NSString* date = dict[@"date"];
-    NSDate* dt = [dateFormatter dateFromString:date];
+    NSDate* dt = [[dateFormatter dateFromString:date] dateByAddingTimeInterval:timeZoneSeconds];
     model.date = dt;
     
     model.userid = [NSString stringWithFormat:@"%@", dict[@"userid"]];
@@ -170,7 +171,7 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"]; //2016-11-22T13:42:38.46505+00:00
-    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
+  //  dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
     
     dictionary[@"date"] = [dateFormatter stringFromDate:self.date];
     dictionary[@"userid"] = self.userid ;
