@@ -15,7 +15,6 @@
 
 - (void)addMessages:(NSArray <MLChatMessage *> *)messages;
 - (void)addMessage:(MLChatMessage *)message;
-- (void)updateStatusMessage:(MLChatMessage *)message;
 
 @property (copy) void (^sendMessage)(NSString *text);
 

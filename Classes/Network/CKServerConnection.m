@@ -200,7 +200,7 @@
     NSDictionary* dict = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
     NSLog(@"\n[Socket Response]\n%@", dict);
     if([[dict objectForKey:@"action"] isEqualToString:@"onopen"]) {
-        [self processIncomingEvent:dict];
+  
         CKServerConnectionExecuted callback = [_callbacks objectForKey:CONNECTION_OPEN_CALLBACK_IDENTIFIER];
         if (callback){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -209,9 +209,11 @@
             [_callbacks removeObjectForKey:CONNECTION_OPEN_CALLBACK_IDENTIFIER];
         }
     }
-    if([[dict objectForKey:@"action"] isEqualToString:@"onmessage"]) {
+    else
+    {
         [self processIncomingEvent:dict];
     }
+    
     NSString *mid = [dict objectForKey:@"mid"];
     if (mid)
     {

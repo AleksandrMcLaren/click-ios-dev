@@ -230,6 +230,10 @@
         NSString *messageId = eventData[@"result"][@"id"];
         [Message updateIncoming:messageId];
     }
+    else if ([eventData[@"action"] isEqualToString:@"onmessagestatus"])
+    {
+        [Message updateStatusWithDictionary:eventData];
+    }
 }
 
 - (void)cleanallHistory:(CKServerConnectionExecuted)callback{

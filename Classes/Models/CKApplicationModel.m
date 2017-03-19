@@ -552,6 +552,11 @@
     [self.mainController startChat:_currentChat];
 }
 
+- (void)stopChat
+{
+    _currentChat = nil;
+}
+
 -(void) startMultipleChat:(NSArray*) userIds{
 }
 
@@ -568,15 +573,19 @@
 -(void)messageResived:(NSNotification *)notification{
     [[CKDialogsModel sharedInstance] loadDialogList];
     Message* message = [Message modelWithDictionary:notification.userInfo];
-    [message save];
-
-    if ([_currentChat messageMatch:message]) {
+    
+    if (_currentChat && [_currentChat messageMatch:message]) {
         
-        // TODO i
-        //[_currentChat reloadMessages];
+        message.status = CKMessageStatusRead;
+        [message save];
+
         _currentChat.lastMessage = message;
         
     }else{
+        
+        message.status = CKMessageStatusDelivered;
+        [message save];
+
         NSString* title = @"Messme";
         
         UIAlertController * alert = [UIAlertController
@@ -600,6 +609,12 @@
         [alert addAction:cancelButton];
         [self.mainController.currentController presentViewController:alert animated:YES completion:nil];
     }
+    
+    [[CKMessageServerConnection sharedInstance] setMessagesStatus:message.status
+                                                   messagesIdents:@[message.id]
+                                                         callback:^(NSDictionary *result){
+                                                             
+                                                         }];
 }
 
 -(NSString*)userPhone{

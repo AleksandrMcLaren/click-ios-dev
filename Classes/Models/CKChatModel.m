@@ -33,8 +33,6 @@
     {
         _dialog = dialog;
         self.attachements = @[];
-        [self loadMessages];
-        [self clearCounter];
     }
     return self;
 }
@@ -56,6 +54,8 @@
     }];
     self.messages = result.copy;
     [CKDialogModel updateDialog:_dialog withMessage:[self.messages lastObject]];
+    
+    [self clearCounter];
 }
 
 -(NSString*)identifier{
@@ -118,13 +118,17 @@
     
     for (Message* message in self.messages) {
         
-        if ((message.status == CKMessageStatusSent) && (!message.isOwner)){
+        if ((message.status != CKMessageStatusSent) && (!message.isOwner)){
             [ids addObject:message.id];
         }
     }
     
     if (ids.count) {
-        [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead messagesIdents:ids  callback:^(NSDictionary *result) {
+        
+        [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead
+                                                       messagesIdents:ids
+                                                             callback:^(NSDictionary *result){
+            
         }];
     }
     
@@ -153,7 +157,7 @@
 
 //fetch from server
 -(void)loadMessages{
-    
+
 }
 
 - (void)sendMessage:(Message *)message{

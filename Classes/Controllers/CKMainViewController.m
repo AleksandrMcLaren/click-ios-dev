@@ -159,8 +159,7 @@
 }
 
 - (void)startChat:(CKChatModel *)chat{
-   // ChatView *chatView = [[ChatView alloc] initWithChat:chat];
-    
+
     ClickChatViewController *chatVC = [[ClickChatViewController alloc] initWithChat:chat];
     chatVC.hidesBottomBarWhenPushed = YES;
     _tabBarController.selectedIndex = 0;

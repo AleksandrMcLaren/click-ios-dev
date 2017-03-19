@@ -23,7 +23,6 @@
 
 @end
 
-
 @implementation MLChatViewController
 
 - (id)init
@@ -118,13 +117,6 @@
 - (void)addMessage:(MLChatMessage *)message
 {
     [self.messageVC addMessage:message];
-}
-
-- (void)updateStatusMessage:(MLChatMessage *)message
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:mlchat_message_update_status(message.ident)
-                                                        object:message
-                                                      userInfo:nil];
 }
 
 - (void)resendMessage:(NSNotification *)notification

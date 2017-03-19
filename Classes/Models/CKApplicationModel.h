@@ -104,7 +104,8 @@
 -(void) startMultipleChat:(NSArray*) userIds;
 -(void) startGroupChat:(CKGroupChatModel*) group;
 -(void) restartRecentChat:(CKDialogModel*) dialog;
- 
+- (void)stopChat;
+
 // пул чатов
 - (void)storeChat:(CKChatModel *)model withId:(NSString *)id;
 - (CKChatModel *)getChatModelWithId:(NSString *)id;

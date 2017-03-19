@@ -57,14 +57,18 @@
  
     CGSize boundsSize = self.view.bounds.size;
     CGSize timeSize = self.timeLabel.frame.size;
-    CGSize imageSize = (self.imageView.image ? self.imageView.image.size : CGSizeZero);
+    CGSize imageSize = (self.imageView.image ? self.imageView.image.size : CGSizeMake(12, 12));
+    
+    if(!self.message.isOwner)
+        imageSize = CGSizeZero;
+
     CGFloat allWidth = timeSize.width + imageSize.width;
     CGFloat xTime = (boundsSize.width - allWidth) / 2;
     
     self.timeLabel.frame = CGRectMake(xTime, (boundsSize.height - timeSize.height) / 2, timeSize.width, timeSize.height);
     
     CGFloat xImage = xTime + timeSize.width;
-    CGFloat yImage = self.timeLabel.frame.origin.y + timeSize.height - imageSize.height - 1;
+    CGFloat yImage = self.timeLabel.frame.origin.y + timeSize.height - imageSize.height;
     self.imageView.frame = CGRectMake(xImage, yImage, imageSize.width, imageSize.height);
 }
 
@@ -72,13 +76,33 @@
 {
     _message = message;
     
+    __weak typeof(self) _weakSelf = self;
+    self.message.updatedStatus = ^(){
+        
+        if(_weakSelf)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_weakSelf reloadStatus];
+                [_weakSelf.view setNeedsLayout];
+            });
+        }
+    };
+    
     [self updateTime];
     [self reloadStatus];
+    
     [self.view setNeedsLayout];
 }
 
 - (void)updateTime
 {
+    /*
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+    NSTimeInterval timeZoneSeconds = [[NSTimeZone localTimeZone] secondsFromGMT];
+    NSDate *date = [self.message.date dateByAddingTimeInterval:timeZoneSeconds];
+    */
+    
     self.timeLabel.text = [[MLChatLib formatterDate_HH_mm] stringFromDate:self.message.date];
     [self.timeLabel sizeToFit];
     
@@ -125,28 +149,6 @@
             self.imageView.image = nil;
             self.tapRecognizer.enabled = NO;
             break;
-    }
-    
-    if(self.message.status != MLChatMessageStatusRead)
-    {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(updateStatus:)
-                                                     name:mlchat_message_update_status(self.message.ident)
-                                                   object:nil];
-    }
-}
-
--(void)updateStatus:(NSNotification *)notification
-{
-    NSNumber *status = notification.object;
-    
-    if(status)
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.message.status = status.integerValue;
-            [self reloadStatus];
-            [self.view setNeedsLayout];
-        });
     }
 }
 

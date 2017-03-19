@@ -65,9 +65,12 @@
                                                                NSDictionary* dictionary = result[@"result"];
                                                                Message *messageRecived = [Message modelWithDictionary:dictionary];
                                                                [message updateWithMessage:messageRecived];
-                                                               [messageRecived save];
+                                                               [CKMessageServerConnection sharedInstance].messageModelCache[message.id] = message;
+                                                               [message save];
                                                                
-                                                               message.setIdentifier(message.id);
+                                                               if(message.updatedIdentifier)
+                                                                   message.updatedIdentifier();
+    
                                                                [CKDialogModel updateDialog:self.dialog withMessage:message];
                                                                
                                                            }else{
@@ -86,7 +89,6 @@
     Message *message = [MessageSent new];
     message.dialogType = CKDialogTypeChat;
     message.dialogIdentifier = self.dialog.userId;
-    message.date = [NSDate date];
     return message;
 }
 

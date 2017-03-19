@@ -119,6 +119,9 @@
 
 -(NSArray *)getLinesArrayOfStringInLabel:(UILabel *)label withWidth:(CGFloat)width
 {
+    if(!label.text)
+        return @[];
+    
     NSString *text = [label text];
     UIFont   *font = [label font];
     

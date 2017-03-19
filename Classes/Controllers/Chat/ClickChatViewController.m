@@ -7,6 +7,7 @@
 //
 
 #import "ClickChatViewController.h"
+#import "CKApplicationModel.h"
 
 @interface ClickChatViewController ()
 
@@ -43,6 +44,9 @@
 {
     [super viewDidLoad];
     
+    [self.chat reloadMessages];
+    [self.chat loadMessages];
+    
     [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
         
         if(self.messages.count)
@@ -57,17 +61,13 @@
         [self addMessages:self.messages];
     }];
     
+    
     [self.chat.messageDidChanged subscribeNext:^(Message *msg) {
         
         NSPredicate *pred = [NSPredicate predicateWithFormat:@"ident = %@", msg.id];
         MLChatMessage *existMessage = [self.messages filteredArrayUsingPredicate:pred].firstObject;
         
-        if(existMessage)
-        {
-            existMessage.status = (NSInteger)msg.status;
-            [self updateStatusMessage:existMessage];
-        }
-        else
+        if(!existMessage)
         {
             MLChatMessage *message = [self createFromMessage:msg];
             [self.messages addObject:message];
@@ -75,6 +75,13 @@
             [self addMessage:message];
         }
     }];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+
+    [[CKApplicationModel sharedInstance] stopChat];
 }
 
 #pragma mark - Message
@@ -93,10 +100,23 @@
         message.isFirst = YES;
     
     __weak typeof(message) _weakMessage = message;
-    msg.setIdentifier = ^(NSString *identifier){
+    __weak typeof(msg) _weakMsg = msg;
+    msg.updatedIdentifier = ^(){
         
-        if(_weakMessage)
-            _weakMessage.ident = identifier;
+        if(_weakMessage && _weakMsg)
+            _weakMessage.ident = _weakMsg.id;
+    };
+    
+    __weak typeof(self) _weakSelf = self;
+    msg.updatedStatus = ^(){
+        
+        if(_weakMessage && msg && _weakSelf)
+        {
+            _weakMessage.status = (int)_weakMsg.status;
+            
+            if(_weakMessage.updatedStatus)
+                _weakMessage.updatedStatus();
+        }
     };
     
     self.lastMessage = message;
