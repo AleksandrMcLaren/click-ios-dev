@@ -10,8 +10,6 @@
 
 static NSString *mlchat_message_needs_resend = @"mlchat_message_needs_resend";
 
-#define mlchat_message_update_status(v) [NSString stringWithFormat:@"mlchat_message_update_status_%@", v]
-
 typedef NS_ENUM(NSInteger, MLChatMessageStatus)
 {
     MLChatMessageStatusSent,
@@ -24,11 +22,14 @@ typedef NS_ENUM(NSInteger, MLChatMessageStatus)
 
 @property (nonatomic, strong) NSString *ident;
 @property (nonatomic, strong) NSString *avatarUrl;
-@property (nonatomic, assign) BOOL isFirst;
-@property (nonatomic, assign) BOOL isOwner;
-@property (nonatomic, assign) NSString *text;
-@property (nonatomic, strong) NSDate *date;
-@property (nonatomic, assign) MLChatMessageStatus status;
 @property (nonatomic, strong) NSString *userLogin;
+@property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) NSDate *date;
+
+@property (nonatomic) BOOL isFirst;
+@property (nonatomic) BOOL isOwner;
+@property (nonatomic) MLChatMessageStatus status;
+
+@property (copy) void (^updatedStatus)();
 
 @end

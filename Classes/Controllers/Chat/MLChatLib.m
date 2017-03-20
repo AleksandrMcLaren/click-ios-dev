@@ -19,7 +19,6 @@
     dispatch_once(&once, ^{
         _dateFormatter = [[NSDateFormatter alloc] init];
         _dateFormatter.calendar = [NSCalendar currentCalendar];
-        _dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         _dateFormatter.dateFormat = @"HH:mm";
     });
     

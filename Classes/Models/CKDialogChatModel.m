@@ -51,10 +51,10 @@
 
 - (void)sendMessage:(Message *)message
 {
-    // TODO i
-  //  [super sendMessage:message];
+    [super sendMessage:message];
 
     [[CKMessageServerConnection sharedInstance] uploadAttachements:self.attachements completion:^(NSDictionary *result) {
+        
         self.attachements = @[];
         [[CKMessageServerConnection sharedInstance] sendMessage:message.text
                                                    attachements:result[@"uuids"]
@@ -65,17 +65,16 @@
                                                                NSDictionary* dictionary = result[@"result"];
                                                                Message *messageRecived = [Message modelWithDictionary:dictionary];
                                                                [message updateWithMessage:messageRecived];
-                                                               [messageRecived save];
+                                                               [CKMessageServerConnection sharedInstance].messageModelCache[message.id] = message;
+                                                               [message save];
                                                                
-                                                              // TODO i:
-                                                              // [self reloadMessages];
-                                                               
-                                                               self.lastMessage = messageRecived;
-                                                               // надо сделать
-                                                             //  [self updateDialog:_dialog withMessage:message];
+                                                               if(message.updatedIdentifier)
+                                                                   message.updatedIdentifier();
+    
+                                                               [CKDialogModel updateDialog:self.dialog withMessage:message];
                                                                
                                                            }else{
-                                                               [ProgressHUD showError:@"Message sending failed."];
+                                                                [ProgressHUD showError:@"Message sending failed."];
                                                            }
         }];
     }];
@@ -90,7 +89,6 @@
     Message *message = [MessageSent new];
     message.dialogType = CKDialogTypeChat;
     message.dialogIdentifier = self.dialog.userId;
-    message.date = [NSDate date];
     return message;
 }
 

@@ -70,11 +70,11 @@
     _message = message;
     
     if(self.message.userLogin && self.message.userLogin.length > 1)
-        self.nameLabel.text = [self.message.userLogin substringToIndex:1];
+        self.nameLabel.text = [[self.message.userLogin substringToIndex:1] uppercaseString];
     else
         self.nameLabel.text = nil;
     
-    //self.view.backgroundColor = [MLChatAvaViewController getColorForAvatar:self.nameLabel.text];
+    self.view.backgroundColor = [MLChatAvaViewController getColorForAvatar:self.nameLabel.text];
     
     [self.view setNeedsLayout];
 }
@@ -378,7 +378,7 @@
         return [UIColor orangeColor];
     }
     
-    return color;
+    return [color colorWithAlphaComponent:0.6];
 }
 
 @end

@@ -14,7 +14,7 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 
-@interface AppDelegate ()
+@interface AppDelegate () <CLLocationManagerDelegate>
 
 @end
 

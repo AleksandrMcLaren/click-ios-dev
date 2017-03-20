@@ -24,6 +24,11 @@
     return self.sender.name;
 }
 
+- (NSString *)senderLogin
+{
+    return self.sender.login;
+}
+
 -(NSString*)senderInitials{
     return self.sender.initials;
 }
@@ -47,15 +52,12 @@
     model.isOwner = [dict[@"owner"] boolValue];
     model.message = dict[@"message"];
     model.id = dict[@"id"];
+    model.status = [dict[@"status"] integerValue];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"]; //2016-11-22T13:42:38.46505+00:00
-    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-    NSTimeInterval timeZoneSeconds = [[NSTimeZone localTimeZone] secondsFromGMT];
-    
     NSString* date = dict[@"date"];
-    NSDate* dt = [[dateFormatter dateFromString:date] dateByAddingTimeInterval:timeZoneSeconds];
+    NSDate* dt = [dateFormatter dateFromString:date];
     model.date = dt;
     
     model.userid = [NSString stringWithFormat:@"%@", dict[@"userid"]];
@@ -111,12 +113,20 @@
 
 + (void)updateIncoming:(NSString *)messageId{
     [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-    
-//    [Message updateStatus:@"-" messageId:messageId];
 }
 
-+ (void)updateStatus:(NSString *)groupId messageId:(NSString *)messageId
++ (void)updateStatusWithDictionary:(NSDictionary *)dict
 {
+    NSDictionary *result = dict[@"result"];
+    Message *message = [Message modelWithDictionary:result];
+    message.status = [result[@"status"] integerValue];
+    [message save];
+    
+    if(message.isOwner)
+    {
+        if(message.updatedStatus)
+            message.updatedStatus();
+    }
 }
 
 + (void)deleteItem:(NSString *)groupId messageId:(NSString *)messageId
@@ -153,13 +163,14 @@
     
     self.id = message.id;
     self.status = message.status;
-    self.date = message.date;
     self.userid = message.userid;
     self.userlogin = message.userlogin;
 
     self.attachements = message.attachements;
     self.timer = message.timer;
     self.location = message.location;
+
+    self.date = message.date;
 }
 
 - (void)save{
@@ -167,12 +178,11 @@
     dictionary[@"owner"] = @(self.isOwner);
     dictionary[@"message"] = self.message;
     dictionary[@"id"] = self.id;
+    dictionary[@"status"] = @(self.status);
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"]; //2016-11-22T13:42:38.46505+00:00
-  //  dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
-    
+
     dictionary[@"date"] = [dateFormatter stringFromDate:self.date];
     dictionary[@"userid"] = self.userid ;
     dictionary[@"userlogin"] = self.userlogin;
@@ -261,6 +271,11 @@
         self.userid = [CKUser currentUser].id;
         self.userlogin = [CKUser currentUser].login;
         self.isOwner = YES;
+
+       // NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+       // dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+       // NSTimeInterval timeZoneSeconds = [[NSTimeZone localTimeZone] secondsFromGMT];
+       // self.date = [[NSDate date] dateByAddingTimeInterval:timeZoneSeconds];
     }
     return self;
 }

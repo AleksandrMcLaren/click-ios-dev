@@ -13,12 +13,9 @@
 
 @interface MLChatViewController () <MLChatMessageBarViewControllerDelegate, MLChatMessageListViewControllerDelegate>
 
-@property (nonatomic, strong) CKChatModel *chat;
 @property (nonatomic, strong) MLChatMessageListViewController *messageVC;
 @property (nonatomic, strong) MLChatMessageBarViewController *messageBarVC;
 @property (nonatomic, strong) MLChatMenuAttachViewController *menuAttachVC;
-@property (nonatomic, strong) NSMutableArray *messages;
-@property (nonatomic, strong) MLChatMessage *lastMessage;
 
 @property (nonatomic) CGFloat addedViewHeight;
 @property (nonatomic) CGFloat messageBarHeight;
@@ -26,21 +23,14 @@
 
 @end
 
-
 @implementation MLChatViewController
 
-- (id)initWithChat:(CKChatModel *)chat
+- (id)init
 {
     self = [super init];
     
     if(self)
     {
-        self.chat = chat;
-        
-        self.title = self.chat.dialog.userName;
-        
-        self.messages = [[NSMutableArray alloc] init];
-        
         self.messageVC = [[MLChatMessageListViewController alloc] init];
         self.messageVC.delegate = self;
         
@@ -76,39 +66,6 @@
     [self.view addSubview:self.messageVC.view];
     [self.view addSubview:self.menuAttachVC.view];
     [self.view addSubview:self.messageBarVC.view];
-    
-    [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
-
-        if(self.messages.count)
-            return;
-
-        for(Message *msg in msgs)
-        {
-            MLChatMessage *message = [self createFromMessage:msg];
-            [self.messages addObject:message];
-        }
-
-        [self.messageVC addMessages:self.messages];
-    }];
-    
-    [self.chat.lastMessageDidChanged subscribeNext:^(Message *msg) {
-        
-        NSPredicate *pred = [NSPredicate predicateWithFormat:@"ident = %@", msg.id];
-        MLChatMessage *existMessage = [self.messages filteredArrayUsingPredicate:pred].firstObject;
-        
-        if(existMessage)
-        {
-            existMessage.status = (NSInteger)msg.status;
-            [self updateStatusMessage:existMessage];
-        }
-        else
-        {
-            MLChatMessage *message = [self createFromMessage:msg];
-            [self.messages addObject:message];
-            
-            [self.messageVC addMessage:message];
-        }
-    }];
     
     [self.view setNeedsUpdateConstraints];
 }
@@ -150,43 +107,23 @@
     _messageBarHeight = messageBarHeight;
 }
 
-#pragma mark - Message
+#pragma mark -
 
-- (MLChatMessage *)createFromMessage:(Message *)msg
+- (void)addMessages:(NSArray *)messages
 {
-    MLChatMessage *message = [[MLChatMessage alloc] init];
-    message.ident = msg.id;
-    message.isOwner = msg.isOwner;
-    message.text = msg.text;
-    message.date = msg.date;
-    message.status = (NSInteger)msg.status;
-    message.userLogin = msg.senderName;
-    
-    if(!self.lastMessage || self.lastMessage.isOwner != message.isOwner)
-        message.isFirst = YES;
-    
-    self.lastMessage = message;
-    
-    return message;
+    [self.messageVC addMessages:messages];
 }
 
-- (void)messageSend:(NSString *)text Video:(NSURL *)video Picture:(UIImage *)picture Audio:(NSString *)audio
+- (void)addMessage:(MLChatMessage *)message
 {
-    [self.chat send:text Video:video Picture:picture Audio:audio];
-}
-
-- (void)updateStatusMessage:(MLChatMessage *)message
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:mlchat_message_update_status(message.ident)
-                                                        object:message
-                                                      userInfo:nil];
+    [self.messageVC addMessage:message];
 }
 
 - (void)resendMessage:(NSNotification *)notification
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         MLChatMessage *message = notification.object;
-        [self messageSend:message.text Video:nil Picture:nil Audio:nil];
+        self.sendMessage(message.text);
     });
 }
 
@@ -307,7 +244,7 @@
 - (void)chatMessageBarViewControllerTappedSend:(NSString *)text
 {
     [self.messageBarVC clearText];
-    [self messageSend:text Video:nil Picture:nil Audio:nil];
+    self.sendMessage(text);
 }
 
 - (void)chatMessageBarTappedAttachButton

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F30DE7B1E7B0FE100723047 /* ClickChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F30DE7A1E7B0FE100723047 /* ClickChatViewController.m */; };
 		1F37D3021E7A704E00EB0496 /* balloon_in_tail.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F37D3011E7A704E00EB0496 /* balloon_in_tail.png */; };
 		1F37D3101E7A9A2D00EB0496 /* status_send_gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F37D3061E7A9A2D00EB0496 /* status_send_gray@2x.png */; };
 		1F37D3111E7A9A2D00EB0496 /* status_send_gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F37D3071E7A9A2D00EB0496 /* status_send_gray@3x.png */; };
@@ -264,9 +265,9 @@
 
 /* Begin PBXFileReference section */
 		0EC7724C494AFD4568ED92B4 /* libPods-click.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-click.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F30DE791E7B0FE100723047 /* ClickChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClickChatViewController.h; sourceTree = "<group>"; };
+		1F30DE7A1E7B0FE100723047 /* ClickChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClickChatViewController.m; sourceTree = "<group>"; };
 		1F37D3011E7A704E00EB0496 /* balloon_in_tail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = balloon_in_tail.png; sourceTree = "<group>"; };
-		1F37D3041E7A9A2D00EB0496 /* edit_blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "edit_blue@2x.png"; sourceTree = "<group>"; };
-		1F37D3051E7A9A2D00EB0496 /* edit_blue@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "edit_blue@3x.png"; sourceTree = "<group>"; };
 		1F37D3061E7A9A2D00EB0496 /* status_send_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "status_send_gray@2x.png"; sourceTree = "<group>"; };
 		1F37D3071E7A9A2D00EB0496 /* status_send_gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "status_send_gray@3x.png"; sourceTree = "<group>"; };
 		1F37D3081E7A9A2D00EB0496 /* status_send_strike_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "status_send_strike_gray@2x.png"; sourceTree = "<group>"; };
@@ -715,8 +716,6 @@
 		1F37D3031E7A9A2D00EB0496 /* status */ = {
 			isa = PBXGroup;
 			children = (
-				1F37D3041E7A9A2D00EB0496 /* edit_blue@2x.png */,
-				1F37D3051E7A9A2D00EB0496 /* edit_blue@3x.png */,
 				1F37D3061E7A9A2D00EB0496 /* status_send_gray@2x.png */,
 				1F37D3071E7A9A2D00EB0496 /* status_send_gray@3x.png */,
 				1F37D3081E7A9A2D00EB0496 /* status_send_strike_gray@2x.png */,
@@ -818,6 +817,8 @@
 		1FD8EF591E5223CC0082AFFD /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				1F30DE791E7B0FE100723047 /* ClickChatViewController.h */,
+				1F30DE7A1E7B0FE100723047 /* ClickChatViewController.m */,
 				1FD8EF611E5223CC0082AFFD /* MLChatLib.h */,
 				1FD8EF621E5223CC0082AFFD /* MLChatLib.m */,
 				1FD8EF631E5223CC0082AFFD /* MLChatMessage.h */,
@@ -1793,7 +1794,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1876,6 +1877,7 @@
 				1FD8EF7B1E5223CC0082AFFD /* MLChatBaloonView.m in Sources */,
 				78BEA98E1CADC9DC004E85DB /* CKDialogChatCell.m in Sources */,
 				3D3AED0D1DE499EC00F745BE /* Recents.m in Sources */,
+				1F30DE7B1E7B0FE100723047 /* ClickChatViewController.m in Sources */,
 				3DC742441DBBC75000F47599 /* NSDate+Utils.m in Sources */,
 				3DACB0FC1DE57DD4004284D9 /* Password.m in Sources */,
 				3D3AECFB1DE4980D00F745BE /* GroupsView.m in Sources */,

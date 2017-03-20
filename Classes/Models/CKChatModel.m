@@ -22,7 +22,7 @@
     if (self = [super init]) {
         _messages = [NSMutableArray new];
         _messagesDidChanged = [RACObserve(self, messages) ignore:nil];
-        _lastMessageDidChanged = [RACObserve(self, lastMessage) ignore:nil];
+        _messageDidChanged = [RACObserve(self, lastMessage) ignore:nil];
     }
     return self;
 }
@@ -33,7 +33,6 @@
     {
         _dialog = dialog;
         self.attachements = @[];
-        [self loadMessages];
     }
     return self;
 }
@@ -55,6 +54,8 @@
     }];
     self.messages = result.copy;
     [CKDialogModel updateDialog:_dialog withMessage:[self.messages lastObject]];
+    
+    [self clearCounter];
 }
 
 -(NSString*)identifier{
@@ -70,10 +71,9 @@
 }
 
 - (void)send:(NSString *)text Video:(NSURL *)video Picture:(UIImage *)picture Audio:(NSString *)audio
-
 {
     Message *message = [self newMessage];
-    
+
     if (text != nil)	[self sendTextMessage:message Text:text];
     if (picture != nil)	[self sendPictureMessage:message Picture:picture];
     if (video != nil)	[self sendVideoMessage:message Video:video];
@@ -84,7 +84,7 @@
 
 - (void)sendTextMessage:(Message *)message Text:(NSString *)text{
     message.message = text;
-    [self sendMessage:message] ;
+    [self sendMessage:message];
 }
 
 
@@ -115,13 +115,20 @@
 
 -(void)clearCounter{
     NSMutableArray* ids = [NSMutableArray new];
+    
     for (Message* message in self.messages) {
-        if ((message.status == CKMessageStatusSent) && (!message.isOwner)){
+        
+        if ((message.status != CKMessageStatusSent) && (!message.isOwner)){
             [ids addObject:message.id];
         }
     }
+    
     if (ids.count) {
-        [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead messagesIdents:ids  callback:^(NSDictionary *result) {
+        
+        [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead
+                                                       messagesIdents:ids
+                                                             callback:^(NSDictionary *result){
+            
         }];
     }
     
@@ -150,14 +157,13 @@
 
 //fetch from server
 -(void)loadMessages{
+
 }
 
 - (void)sendMessage:(Message *)message{
     
     [message save];
-    
-    // TODO i
-    // [self reloadMessages];
+
     self.lastMessage = message;
 }
 

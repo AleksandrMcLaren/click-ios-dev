@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 
 //0 не доставлено, 1 доставлено, 2 прочитано
-typedef enum CKMessageStatus
+typedef NS_ENUM(NSInteger, CKMessageStatus)
 {
     CKMessageStatusSent,
     CKMessageStatusDelivered,
     CKMessageStatusRead
-} CKMessageStatus;
+};
 
 typedef enum CKMessageType
 {
@@ -43,14 +43,18 @@ typedef enum CKMessageType
 @property (nonatomic, strong) NSString* dialogIdentifier;
 
 @property (nonatomic, strong, readonly) NSString *senderName;
+@property (nonatomic, strong, readonly) NSString *senderLogin;
 @property (nonatomic, strong, readonly) NSString *statusName;
 @property (nonatomic, strong, readonly) NSString *text;
 @property (nonatomic, strong, readonly) NSString *senderInitials;
 
+@property (copy) void (^updatedIdentifier)();
+@property (copy) void (^updatedStatus)();
+
 + (instancetype)modelWithDictionary:(NSDictionary *)dict;
 
 + (void)updateIncoming:(NSString *)messageId;
-+ (void)updateStatus:(NSString *)groupId messageId:(NSString *)messageId;
++ (void)updateStatusWithDictionary:(NSDictionary *)dict;
 + (void)update:(NSDictionary*)dictionary;
 + (void)updateId:(NSString*)oldId withId:(NSString*)newId;
 + (void)saveLinkWithUserId:(NSString*)userId messageId:(NSString*)messageId;

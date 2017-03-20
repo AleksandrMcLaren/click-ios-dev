@@ -7,10 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CKChatModel.h"
+#import "MLChatMessage.h"
 
 @interface MLChatViewController : UIViewController
 
-- (id)initWithChat:(CKChatModel *)chat;
+- (id)init;
+
+- (void)addMessages:(NSArray <MLChatMessage *> *)messages;
+- (void)addMessage:(MLChatMessage *)message;
+
+@property (copy) void (^sendMessage)(NSString *text);
 
 @end

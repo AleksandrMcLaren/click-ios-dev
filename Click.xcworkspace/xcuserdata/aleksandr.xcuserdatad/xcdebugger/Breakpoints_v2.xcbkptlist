@@ -73,7 +73,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "153"
             endingLineNumber = "153"
-            landmarkName = "-updateWithMessage:"
+            landmarkName = "-updateWithSender:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
