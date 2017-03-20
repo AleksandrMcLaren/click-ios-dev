@@ -47,12 +47,7 @@
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.backgroundColor = [UIColor clearColor];
     [self.tableView registerClass:MLChatTableViewCell.class forCellReuseIdentifier:@"Cell"];
-    
-    self.refreshControl = [[UIRefreshControl alloc] init];
-//    [self.refreshControl addTarget:self
-//                            action:@selector(reloadData)
-//                  forControlEvents:UIControlEventValueChanged];
-    
+
     [self.view addGestureRecognizer:self.tapRecognizer];
 }
 
@@ -123,12 +118,17 @@
 
 - (void)beginRefreshing
 {
+    self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl beginRefreshing];
 }
 
 - (void)endRefreshing
 {
-    [self.refreshControl endRefreshing];
+    if(self.refreshControl)
+    {
+        [self.refreshControl endRefreshing];
+        self.refreshControl = nil;
+    }
 }
 
 #pragma mark - tableView contentOffset
