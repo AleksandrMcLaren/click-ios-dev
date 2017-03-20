@@ -209,28 +209,30 @@
     
     [self beginOperation:@"restoreHistory"];
     [[CKApplicationModel sharedInstance] restoreHistoryWithCallback:^(NSDictionary *result) {
-        _abandonButton.enabled = YES;
-        _restoreButton.enabled = YES;
-        _abandonButton.tag = 1;
         
-        [self endOperation:@"restoreHistory"];
-        [[CKDialogsModel sharedInstance] saveDialogsWithDictionary:result];
-        NSArray *dialogs = [[CKDialogsModel sharedInstance] dialogs];
-        
-        NSString* text;
-        if (dialogs.count) {
-            text = [NSString stringWithFormat:@"Поздаравляем!\nУспешно %@ %d %@",
-                    [NSString terminationForValue:(int)dialogs.count withWords: @[@"восстановлено", @"восстановлено", @"восстановлен"]],
-                    (int)dialogs.count,
-                    [NSString terminationForValue:(int)dialogs.count withWords: @[@"чатов", @"чата", @"чат"]]];
-        }else{
-            text = @"Нет доступных для восстановления чатов";
-        }
-        _restoreLabel.text =  text;
-        
-        [_abandonButton setTitleColor:[UIColor whiteColor]  forState:UIControlStateNormal];
-        _abandonButton.backgroundColor = CKClickBlueColor;
-        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _abandonButton.enabled = YES;
+            _restoreButton.enabled = YES;
+            _abandonButton.tag = 1;
+            
+            [self endOperation:@"restoreHistory"];
+            [[CKDialogsModel sharedInstance] saveDialogsWithDictionary:result];
+            NSArray *dialogs = [[CKDialogsModel sharedInstance] dialogs];
+            
+            NSString* text;
+            if (dialogs.count) {
+                text = [NSString stringWithFormat:@"Поздаравляем!\nУспешно %@ %d %@",
+                        [NSString terminationForValue:(int)dialogs.count withWords: @[@"восстановлено", @"восстановлено", @"восстановлен"]],
+                        (int)dialogs.count,
+                        [NSString terminationForValue:(int)dialogs.count withWords: @[@"чатов", @"чата", @"чат"]]];
+            }else{
+                text = @"Нет доступных для восстановления чатов";
+            }
+            _restoreLabel.text =  text;
+            
+            [_abandonButton setTitleColor:[UIColor whiteColor]  forState:UIControlStateNormal];
+            _abandonButton.backgroundColor = CKClickBlueColor;
+        });
     }];
 }
 

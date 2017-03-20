@@ -35,6 +35,13 @@
             if(_weakChat)
                 [_weakChat send:text Video:nil Picture:nil Audio:nil];
         };
+        
+        __weak typeof(self) _weakSelf = self;
+        self.reloadMessages = ^{
+           
+            if(_weakSelf)
+                [_weakChat loadMessages];
+        };
     }
     
     return self;
@@ -43,14 +50,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self.chat reloadMessages];
-    [self.chat loadMessages];
-    
+
     [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
-        
-        if(self.messages.count)
-            return;
+
+        [self endRefreshing];
+        [self.messages removeAllObjects];
         
         for(Message *msg in msgs)
         {
@@ -58,7 +62,7 @@
             [self.messages addObject:message];
         }
         
-        [self addMessages:self.messages];
+        [self reloadMessages:self.messages];
     }];
     
     
@@ -75,6 +79,8 @@
             [self addMessage:message];
         }
     }];
+
+    [self reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -82,6 +88,27 @@
     [super viewDidDisappear:animated];
 
     [[CKApplicationModel sharedInstance] stopChat];
+}
+
+- (void)reloadData
+{
+    NSArray *messages = [self.chat getMessages];
+    
+    if(messages.count)
+    {
+        for(Message *msg in messages)
+        {
+            MLChatMessage *message = [self createFromMessage:msg];
+            [self.messages addObject:message];
+        }
+        
+        [self reloadMessages:self.messages];
+    }
+    else
+    {
+        [self beginRefreshing];
+        [self.chat loadMessages];
+    }
 }
 
 #pragma mark - Message
@@ -94,7 +121,10 @@
     message.text = msg.text;
     message.date = msg.date;
     message.status = (NSInteger)msg.status;
-    message.userLogin = msg.senderLogin;
+    message.userLogin = msg.senderName;
+    
+    if(!message.userLogin || !message.userLogin.length)
+        message.userLogin = msg.senderLogin;
     
     if(!self.lastMessage || self.lastMessage.isOwner != message.isOwner)
         message.isFirst = YES;

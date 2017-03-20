@@ -397,7 +397,10 @@
                                                            city:userProfile.city callback:^(NSDictionary *result) {
                                                                [_mainController endOperation:operation];
                                                                if ([result socketMessageStatus] == S_OK){
-                                                                   [self showMainScreen];
+                                                                   
+                                                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                                                       [self showMainScreen];
+                                                                   });
                                                                }else{
                                                                    [_mainController showAlertWithResult:result completion:nil];
                                                                }

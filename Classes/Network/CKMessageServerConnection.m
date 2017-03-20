@@ -224,13 +224,18 @@
 
 - (void)processIncomingEvent:(NSDictionary *)eventData
 {
-    if ([eventData[@"action"] isEqualToString:@"onmessage"])
+    NSString *action = eventData[@"action"];
+    
+    if(!action)
+        return;
+    
+    if ([action isEqualToString:@"onmessage"])
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:CKMessageServerConnectionReceived object:self userInfo:eventData[@"result"]];
         NSString *messageId = eventData[@"result"][@"id"];
         [Message updateIncoming:messageId];
     }
-    else if ([eventData[@"action"] isEqualToString:@"onmessagestatus"])
+    else if ([action isEqualToString:@"onmessagestatus"])
     {
         [Message updateStatusWithDictionary:eventData];
     }

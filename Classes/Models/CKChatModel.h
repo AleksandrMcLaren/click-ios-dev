@@ -27,7 +27,7 @@ typedef void (^CKChatModelFetchedMessages)(NSArray* messages);
 
 - (void)send:(NSString *)text Video:(NSURL *)video Picture:(UIImage *)picture Audio:(NSString *)audio;
 
-- (void)reloadMessages;
+- (NSArray *)getMessages;
 
 - (void)loadMessages;
 

@@ -14,6 +14,7 @@
 @interface CKServerConnection()
 
 @property (nonatomic, strong, readonly) NSString* entryPoint;
+@property (nonatomic, strong) dispatch_queue_t queueReceiveMessage;
 
 @end
 
@@ -33,6 +34,7 @@
     {
         _callbacks = [NSMutableDictionary new];
         _udid = [CKServerConnection getUniqueDeviceIdentifierAsString];
+        self.queueReceiveMessage = dispatch_queue_create("queueReceiveMessage", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
@@ -197,38 +199,42 @@
 #pragma mark SRWebSocket delegate
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message
 {
-    NSDictionary* dict = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-    NSLog(@"\n[Socket Response]\n%@", dict);
-    if([[dict objectForKey:@"action"] isEqualToString:@"onopen"]) {
-  
-        CKServerConnectionExecuted callback = [_callbacks objectForKey:CONNECTION_OPEN_CALLBACK_IDENTIFIER];
-        if (callback){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                callback(dict);
-            });
-            [_callbacks removeObjectForKey:CONNECTION_OPEN_CALLBACK_IDENTIFIER];
+    dispatch_async(self.queueReceiveMessage, ^{
+        
+        NSDictionary* dict = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+        NSLog(@"\n[Socket Response]\n%@", dict);
+        if([[dict objectForKey:@"action"] isEqualToString:@"onopen"]) {
+      
+            CKServerConnectionExecuted callback = [_callbacks objectForKey:CONNECTION_OPEN_CALLBACK_IDENTIFIER];
+            if (callback){
+                //dispatch_async(dispatch_get_main_queue(), ^{
+                    callback(dict);
+               // });
+                [_callbacks removeObjectForKey:CONNECTION_OPEN_CALLBACK_IDENTIFIER];
+            }
         }
-    }
-    else
-    {
-        [self processIncomingEvent:dict];
-    }
-    
-    NSString *mid = [dict objectForKey:@"mid"];
-    if (mid)
-    {
-        [self runCallBack:[_callbacks objectForKey:mid] withValue:dict];
-        [_callbacks removeObjectForKey:mid];
-    }
+        else
+        {
+            [self processIncomingEvent:dict];
+        }
+        
+        NSString *mid = [dict objectForKey:@"mid"];
+        if (mid)
+        {
+            [self runCallBack:[_callbacks objectForKey:mid] withValue:dict];
+            [_callbacks removeObjectForKey:mid];
+        }
+        
+    });
 }
 
 -(void)runCallBack:(id)callBack withValue:(id) value{
     CKServerConnectionExecuted block = callBack;
     if (block)
     {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        //dispatch_async(dispatch_get_main_queue(), ^{
             block(value);
-        });
+        //});
     }
 }
 

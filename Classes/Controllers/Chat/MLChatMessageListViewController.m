@@ -15,7 +15,6 @@
 @property (nonatomic, strong) NSMutableDictionary *heightCellAtIndexPath;
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 
-@property (nonatomic) BOOL alreadyOpened;
 
 @end
 
@@ -32,8 +31,6 @@
         
         self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                      action:@selector(tapped)];
-        
-        self.refreshControl = [[UIRefreshControl alloc] init];
     }
     
     return self;
@@ -51,6 +48,11 @@
     self.tableView.backgroundColor = [UIColor clearColor];
     [self.tableView registerClass:MLChatTableViewCell.class forCellReuseIdentifier:@"Cell"];
     
+    self.refreshControl = [[UIRefreshControl alloc] init];
+//    [self.refreshControl addTarget:self
+//                            action:@selector(reloadData)
+//                  forControlEvents:UIControlEventValueChanged];
+    
     [self.view addGestureRecognizer:self.tapRecognizer];
 }
 
@@ -62,40 +64,30 @@
     {
         self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 5)];
     }
-
-    if(!self.messages.count && !self.alreadyOpened)
-    {
-        self.alreadyOpened = YES;
-        
-        [UIView animateWithDuration:0.25
-                              delay:0
-                            options:UIViewAnimationOptionBeginFromCurrentState
-                         animations:^(void){
-                             self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y - self.refreshControl.frame.size.height);
-                         } completion:^(BOOL finished){
-                             [self.refreshControl beginRefreshing];
-                         }];
-    }
- 
 }
 
-- (void)addMessages:(NSArray *)messages
+#pragma mark - Data
+
+- (void)reloadData
 {
-    if(messages.count)
-    {
+    [self.delegate chatMessageListViewControllerNeedsReloadData];
+}
+
+- (void)reloadMessages:(NSArray *)messages
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self.messages removeAllObjects];
         [self.messages addObjectsFromArray:messages];
         [self.tableView reloadData];
         
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
-                              atScrollPosition:UITableViewScrollPositionBottom
-                                      animated:NO];
-        
-        if(self.refreshControl)
+        if(self.messages.count)
         {
-            [self.refreshControl endRefreshing];
-            self.refreshControl = nil;
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
+                                  atScrollPosition:UITableViewScrollPositionBottom
+                                          animated:NO];
         }
-    }
+    });
 }
 
 - (void)addMessage:(MLChatMessage *)message
@@ -127,20 +119,16 @@
     };
     
     addMessage();
-    
-    if(self.refreshControl)
-    {
-        [self.refreshControl endRefreshing];
-        self.refreshControl = nil;
-    }
-    
-    /*
-    NSDate* newDate = [oldDate dateByAddingTimeInterval:0.3];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        addMessage();
-    });
-     */
+}
+
+- (void)beginRefreshing
+{
+    [self.refreshControl beginRefreshing];
+}
+
+- (void)endRefreshing
+{
+    [self.refreshControl endRefreshing];
 }
 
 #pragma mark - tableView contentOffset

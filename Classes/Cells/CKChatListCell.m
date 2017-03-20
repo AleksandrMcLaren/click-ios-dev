@@ -85,13 +85,16 @@
 
 - (NSString *)letterNameWithName:(NSString *)name surname:(NSString *)surname login:(NSString *)login
 {
-    if (!surname && !name) name = login;
-    
-    if (!surname)
+    if (!name.length && surname.length)
     {
-        surname = name;
-        name = nil;
+        name = surname;
     }
+    
+    if (!surname.length && !name.length)
+    {
+        name = login;
+    }
+    
     if (name.length) return [name substringToIndex:1];
     return nil;
 }

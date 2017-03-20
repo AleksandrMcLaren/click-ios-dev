@@ -66,40 +66,22 @@
     [self.view addSubview:self.messageVC.view];
     [self.view addSubview:self.menuAttachVC.view];
     [self.view addSubview:self.messageBarVC.view];
-    
-    [self.view setNeedsUpdateConstraints];
 }
 
-- (void)updateViewConstraints
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self updateViewFrames];
+}
+
+- (void)updateViewFrames
 {
     CGSize boundsSize = self.view.bounds.size;
     
-//    [self.messageVC.view updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(self.view.left);
-//        make.right.equalTo(self.view.right);
-//        make.top.equalTo(self.view.top);
-//        make.height.equalTo(boundsSize.height);
-//       // make.height.equalTo(boundsSize.height - self.messageBarHeight - self.addedViewHeight);
-//        //  make.bottom.equalTo(self.messageBarVC.view.top);
-//    }];
-    
-    [self.messageBarVC.view updateConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.view.left);
-        make.right.equalTo(self.view.right);
-        make.bottom.equalTo(self.view.bottom).offset(-self.addedViewHeight);
-        make.height.equalTo(self.messageBarHeight);
-    }];
-    
-    [self.menuAttachVC.view updateConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.view.left);
-        make.right.equalTo(self.view.right);
-        make.top.equalTo(self.messageBarVC.view.bottom);
-        make.height.equalTo(self.addedViewHeight);
-    }];
-    
-    self.messageVC.contentInsetBottom = self.messageBarHeight + self.addedViewHeight;
-    
-    [super updateViewConstraints];
+    self.messageVC.view.frame = CGRectMake(0, 0, boundsSize.width, boundsSize.height - self.messageBarHeight - self.addedViewHeight);
+    self.messageBarVC.view.frame = CGRectMake(0, boundsSize.height - self.messageBarHeight - self.addedViewHeight, boundsSize.width, self.messageBarHeight);
+    self.menuAttachVC.view.frame = CGRectMake(0, boundsSize.height - self.addedViewHeight, boundsSize.width, 258.f);
 }
 
 - (void)setMessageBarHeight:(CGFloat)messageBarHeight
@@ -109,9 +91,9 @@
 
 #pragma mark -
 
-- (void)addMessages:(NSArray *)messages
+- (void)reloadMessages:(NSArray *)messages
 {
-    [self.messageVC addMessages:messages];
+    [self.messageVC reloadMessages:messages];
 }
 
 - (void)addMessage:(MLChatMessage *)message
@@ -125,6 +107,16 @@
         MLChatMessage *message = notification.object;
         self.sendMessage(message.text);
     });
+}
+
+- (void)beginRefreshing
+{
+    [self.messageVC beginRefreshing];
+}
+
+- (void)endRefreshing
+{
+    [self.messageVC endRefreshing];
 }
 
 #pragma mark - NSNotification
@@ -150,81 +142,40 @@
     CGRect messageBarFrame = self.messageBarVC.view.frame;
     messageBarFrame.origin.y = boundsSize.height - self.addedViewHeight - messageBarFrame.size.height;
     
-//    CGRect messageListFrame = self.messageVC.view.frame;
-//    messageListFrame.size.height = boundsSize.height - (boundsSize.height - messageBarFrame.origin.y);
+    CGRect messageListFrame = self.messageVC.view.frame;
+    messageListFrame.size.height = boundsSize.height - (boundsSize.height - messageBarFrame.origin.y);
     
     CGRect menuAttachFrame = self.menuAttachVC.view.frame;
     menuAttachFrame.origin.y = messageBarFrame.origin.y + messageBarFrame.size.height;
-
-  //  CGFloat messageListOffset = 0;
+    
+    CGFloat messageListOffset = 0;
     
     if(boundsSize.height != top)
     {  // открывается
-      //  CGFloat diff = self.messageVC.view.frame.size.height - messageListFrame.size.height;
-      //  messageListOffset = self.messageVC.contentOffSet + diff;
+        CGFloat diff = self.messageVC.view.frame.size.height - messageListFrame.size.height;
+        messageListOffset = self.messageVC.contentOffSet + diff;
         
         menuAttachFrame.size.height = self.addedViewHeight;
     }
     else
     {   // закрывается
-      //  CGFloat diff = messageListFrame.size.height - self.messageVC.view.frame.size.height;
-      //  messageListOffset = self.messageVC.contentOffSet - diff;
+        CGFloat diff = messageListFrame.size.height - self.messageVC.view.frame.size.height;
+        messageListOffset = self.messageVC.contentOffSet - diff;
     }
 
-    self.messageBarVC.view.frame = messageBarFrame;
-    self.menuAttachVC.view.frame = menuAttachFrame;
-    
-  //  self.messageVC.contentOffSet = messageListOffset;
-  //  self.messageVC.view.frame = messageListFrame;
-    
-    
-  //  CGFloat newBottom = messageBarFrame.size.height + self.addedViewHeight;
-   // CGFloat contentOffSet = messageBarFrame.size.height + self.addedViewHeight;
-    
-//    if(newBottom < bottom)
-//    {
-//        contentOffSet *= -1;
-//        
-////        CGFloat contentInsetHeight = self.messageVC.tableView.contentSize.height;
-////        
-////        if(contentInsetHeight < (self.messageVC.view.frame.size.height - messageBarFrame.size.height))
-////            contentOffSet += (self.messageVC.view.frame.size.height - messageBarFrame.size.height) - contentInsetHeight;
-//    }
-    
-    CGFloat bottom = self.messageVC.contentInsetBottom;
-    self.messageVC.contentInsetBottom = self.messageBarHeight + self.addedViewHeight;
-    CGFloat newBottom = self.messageVC.contentInsetBottom;
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         
+                         self.messageBarVC.view.frame = messageBarFrame;
+                         self.menuAttachVC.view.frame = menuAttachFrame;
+                         
+                         self.messageVC.contentOffSet = messageListOffset;
+                         self.messageVC.view.frame = messageListFrame;
+                         
+                     } completion:^(BOOL finished) {
 
-    if(newBottom > bottom)
-    {
-        self.messageVC.contentOffSet += (newBottom - bottom);
-        
-//        CGFloat contentSizeHeight = self.messageVC.tableView.contentSize.height;
-//        CGFloat viewHeight = self.messageVC.tableView.frame.size.height - self.messageVC.tableView.contentInset.top - self.messageVC.tableView.contentInset.bottom;
-//        
-//        if(contentSizeHeight >= viewHeight)
-//        {
-//        NSLog(@"%f", newBottom - bottom)
-//           self.messageVC.contentOffSet += (newBottom - bottom);
-//        }
-    }
-    
-    [self.view setNeedsUpdateConstraints];
-//    else
-//    {
-////        CGFloat offset = bottom - newBottom;
-//        CGFloat contentSizeHeight = self.messageVC.tableView.contentSize.height;
-//       
-////        if(offset > maxOffset)
-////            offset = maxOffset;
-//        
-//        NSLog(@"%f %f %f %f", newBottom, bottom, self.messageVC.contentOffSet, contentSizeHeight);
-//        self.messageVC.contentOffSet += 100;
-//        
-//    }
-
-  //  self.messageVC.contentOffSet = contentOffSet;
-    
+                         [self updateViewFrames];
+                     }];
 }
 
 #pragma mark - MLChatMessageBarViewControllerDelegate
@@ -237,8 +188,8 @@
         self.messageVC.contentOffSet = self.messageVC.contentOffSet - (self.messageBarHeight - height);
     
     self.messageBarHeight = height;
-    
-    [self.view setNeedsUpdateConstraints];
+
+    [self updateViewFrames];
 }
 
 - (void)chatMessageBarViewControllerTappedSend:(NSString *)text
@@ -259,7 +210,7 @@
     if(self.addedViewHeight)
     {   // клавиатура открыта, закроется из messageBarVC, под ней должно быть меню
         self.lockChangeFrame = YES;
-        [self.view setNeedsUpdateConstraints];
+        [self updateViewFrames];
     }
     else
     {
@@ -267,7 +218,7 @@
                          animations:^{
                              [self changeViewFramesWithAddedViewTop:self.view.bounds.size.height - 258.f];
                          } completion:^(BOOL finished) {
-                             [self.view setNeedsUpdateConstraints];
+                             [self updateViewFrames];
                          }];
     }
 }
@@ -278,7 +229,7 @@
                      animations:^{
                          [self changeViewFramesWithAddedViewTop:self.view.bounds.size.height];
                      } completion:^(BOOL finished) {
-                         [self.view setNeedsUpdateConstraints];
+                         [self updateViewFrames];
                      }];
     
 }
@@ -296,6 +247,12 @@
         [self closeMenuAttach];
     
     [self.messageBarVC endEditing];
+}
+
+- (void)chatMessageListViewControllerNeedsReloadData
+{
+    if(self.reloadMessages)
+        self.reloadMessages();
 }
 
 @end

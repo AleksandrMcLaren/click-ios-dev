@@ -54,7 +54,9 @@
         _noChatsView.hidden = dialogs.count != 0;
         
         if (dialogs.count) {
-            [self loadRecents];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self loadRecents];
+            });
         }
     }];
     

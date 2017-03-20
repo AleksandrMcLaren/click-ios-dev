@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CKSettingsViewController : UITableViewController
+@interface CKSettingsViewController : UIViewController
 
 @end

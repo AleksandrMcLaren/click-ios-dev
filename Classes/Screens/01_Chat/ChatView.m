@@ -126,7 +126,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [_chat reloadMessages];
+   // [_chat reloadMessages];
 	[super viewWillAppear:animated];
 	[self fetchGroup];
 }

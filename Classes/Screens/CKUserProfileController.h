@@ -14,4 +14,5 @@
 
 @property (nonatomic, strong) CKUser *profile;
 @property (nonatomic, assign) BOOL restoreProfile;
+
 @end

@@ -118,14 +118,28 @@
 + (void)updateStatusWithDictionary:(NSDictionary *)dict
 {
     NSDictionary *result = dict[@"result"];
-    Message *message = [Message modelWithDictionary:result];
-    message.status = [result[@"status"] integerValue];
-    [message save];
+    NSString *ident = result[@"id"];
+    NSString *query = [NSString stringWithFormat:@"select * from messages where id='%@'", ident];
+    __block Message *message = nil;
     
-    if(message.isOwner)
+    [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *data = [db executeQuery:query];
+        while ([data next]){
+            NSDictionary *resultDictionary = [data resultDictionary];
+            message = [Message modelWithDictionary:[resultDictionary prepared]];
+        }
+    }];
+    
+    if(message)
     {
-        if(message.updatedStatus)
-            message.updatedStatus();
+        message.status = [result[@"status"] integerValue];
+        [message save];
+
+        if(message.isOwner)
+        {
+            if(message.updatedStatus)
+                message.updatedStatus();
+        }
     }
 }
 

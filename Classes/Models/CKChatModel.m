@@ -38,7 +38,7 @@
 }
 
 //fetch from local
-- (void)reloadMessages
+- (NSArray *)getMessages
 {
     __block NSMutableArray *result = [NSMutableArray new];
     [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
@@ -52,10 +52,11 @@
     [result sortUsingComparator:^NSComparisonResult(Message *obj1, Message *obj2) {
         return [obj1.date compare:obj2.date];
     }];
-    self.messages = result.copy;
-    [CKDialogModel updateDialog:_dialog withMessage:[self.messages lastObject]];
     
+    [CKDialogModel updateDialog:_dialog withMessage:[self.messages lastObject]];
     [self clearCounter];
+    
+    return result.copy;
 }
 
 -(NSString*)identifier{
@@ -118,7 +119,7 @@
     
     for (Message* message in self.messages) {
         
-        if ((message.status != CKMessageStatusSent) && (!message.isOwner)){
+        if ((message.status != CKMessageStatusRead) && (!message.isOwner)){
             [ids addObject:message.id];
         }
     }
@@ -174,7 +175,7 @@
         [self saveMessage:message];
     }
     
-    [self reloadMessages];
+    self.messages = [self getMessages];
 }
 
 -(void)saveMessage:(Message*)message{

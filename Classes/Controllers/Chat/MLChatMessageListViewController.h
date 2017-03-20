@@ -17,8 +17,11 @@
 @property (nonatomic, assign) CGFloat contentOffSet;
 @property (nonatomic, assign) CGFloat contentInsetBottom;
 
-- (void)addMessages:(NSArray *)messages;
+- (void)reloadMessages:(NSArray *)messages;
 - (void)addMessage:(MLChatMessage *)message;
+
+- (void)beginRefreshing;
+- (void)endRefreshing;
 
 @end
 
@@ -27,6 +30,7 @@
 
 @required
 - (void)chatMessageListViewControllerTapped;
+- (void)chatMessageListViewControllerNeedsReloadData;
 
 @end
 

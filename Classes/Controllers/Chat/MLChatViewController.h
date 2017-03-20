@@ -13,9 +13,13 @@
 
 - (id)init;
 
-- (void)addMessages:(NSArray <MLChatMessage *> *)messages;
+- (void)reloadMessages:(NSArray <MLChatMessage *> *)messages;
 - (void)addMessage:(MLChatMessage *)message;
 
+- (void)beginRefreshing;
+- (void)endRefreshing;
+
 @property (copy) void (^sendMessage)(NSString *text);
+@property (copy) void (^reloadMessages)();
 
 @end
