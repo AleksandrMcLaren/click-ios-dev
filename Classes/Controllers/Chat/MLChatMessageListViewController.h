@@ -17,7 +17,7 @@
 @property (nonatomic, assign) CGFloat contentOffSet;
 @property (nonatomic, assign) CGFloat contentInsetBottom;
 
-- (void)reloadMessages:(NSArray *)messages;
+- (void)reloadMessages:(NSArray *)messages animated:(BOOL)animated;
 - (void)addMessage:(MLChatMessage *)message;
 
 - (void)beginRefreshing;

@@ -91,9 +91,9 @@
 
 #pragma mark -
 
-- (void)reloadMessages:(NSArray *)messages
+- (void)reloadMessages:(NSArray *)messages animated:(BOOL)animated
 {
-    [self.messageVC reloadMessages:messages];
+    [self.messageVC reloadMessages:messages animated:animated];
 }
 
 - (void)addMessage:(MLChatMessage *)message

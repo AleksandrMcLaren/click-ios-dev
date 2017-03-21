@@ -68,7 +68,7 @@
     [self.delegate chatMessageListViewControllerNeedsReloadData];
 }
 
-- (void)reloadMessages:(NSArray *)messages
+- (void)reloadMessages:(NSArray *)messages animated:(BOOL)animated
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -80,7 +80,7 @@
         {
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
                                   atScrollPosition:UITableViewScrollPositionBottom
-                                          animated:NO];
+                                          animated:animated];
         }
     });
 }

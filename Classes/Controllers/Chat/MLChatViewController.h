@@ -13,7 +13,7 @@
 
 - (id)init;
 
-- (void)reloadMessages:(NSArray <MLChatMessage *> *)messages;
+- (void)reloadMessages:(NSArray <MLChatMessage *> *)messages animated:(BOOL)animated;
 - (void)addMessage:(MLChatMessage *)message;
 
 - (void)beginRefreshing;

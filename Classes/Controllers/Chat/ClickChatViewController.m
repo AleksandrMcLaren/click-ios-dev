@@ -51,32 +51,43 @@
 {
     [super viewDidLoad];
 
+    __weak typeof(self) _weakSelf = self;
     [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
-
-        [self endRefreshing];
-        [self.messages removeAllObjects];
         
-        for(Message *msg in msgs)
+        if(_weakSelf)
         {
-            MLChatMessage *message = [self createFromMessage:msg];
-            [self.messages addObject:message];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_weakSelf endRefreshing];
+            });
+            
+            BOOL animated = !self.messages.count;
+            
+            [_weakSelf.messages removeAllObjects];
+            
+            for(Message *msg in msgs)
+            {
+                MLChatMessage *message = [self createFromMessage:msg];
+                [_weakSelf.messages addObject:message];
+            }
+            
+            [_weakSelf reloadMessages:self.messages animated:animated];
         }
-        
-        [self reloadMessages:self.messages];
     }];
-    
-    
+
     [self.chat.messageDidChanged subscribeNext:^(Message *msg) {
         
-        NSPredicate *pred = [NSPredicate predicateWithFormat:@"ident = %@", msg.id];
-        MLChatMessage *existMessage = [self.messages filteredArrayUsingPredicate:pred].firstObject;
-        
-        if(!existMessage)
+        if(_weakSelf)
         {
-            MLChatMessage *message = [self createFromMessage:msg];
-            [self.messages addObject:message];
+            NSPredicate *pred = [NSPredicate predicateWithFormat:@"ident = %@", msg.id];
+            MLChatMessage *existMessage = [_weakSelf.messages filteredArrayUsingPredicate:pred].firstObject;
             
-            [self addMessage:message];
+            if(!existMessage)
+            {
+                MLChatMessage *message = [_weakSelf createFromMessage:msg];
+                [_weakSelf.messages addObject:message];
+                
+                [_weakSelf addMessage:message];
+            }
         }
     }];
 
@@ -102,7 +113,7 @@
             [self.messages addObject:message];
         }
         
-        [self reloadMessages:self.messages];
+        [self reloadMessages:self.messages animated:NO];
     }
     else
     {
