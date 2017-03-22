@@ -86,6 +86,16 @@
     CGFloat btnTopIndent = ((boundsSize.height - self.lineBottomView.frame.origin.y + self.lineBottomView.frame.size.height) - btnHeigth * 2) / 3;
     CGFloat x = btnIndent;
     CGFloat y = self.lineBottomView.frame.origin.y + self.lineBottomView.frame.size.height + btnTopIndent;
+
+    if(btnTopIndent < 5)
+    {   // у клавиатуры закрыт автокомплит, высота кнопок расчитанная относительно ширины не влезает по высоте, расчитаем ширину кнопок относительно высоты
+        btnTopIndent = 13.f;
+        btnHeigth = (boundsSize.height - (self.lineBottomView.frame.origin.y + self.lineBottomView.frame.size.height) - btnTopIndent * 3) / 2;
+        btnWidth -= 20;
+        btnIndent = (boundsSize.width - btnWidth * 4) / 5;
+        x = btnIndent;
+        y = self.lineBottomView.frame.origin.y + self.lineBottomView.frame.size.height + btnTopIndent;
+    }
     
     for(NSInteger i = 0; i < self.buttons.count; i++)
     {

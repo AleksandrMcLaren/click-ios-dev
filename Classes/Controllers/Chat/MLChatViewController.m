@@ -11,6 +11,9 @@
 #import "MLChatMessageBarViewController.h"
 #import "MLChatMenuAttachViewController.h"
 
+// высота клавиатуры с выключенным автокомплитом
+static CGFloat keyboardLastHeight = 224.f;
+
 @interface MLChatViewController () <MLChatMessageBarViewControllerDelegate, MLChatMessageListViewControllerDelegate>
 
 @property (nonatomic, strong) MLChatMessageListViewController *messageVC;
@@ -81,7 +84,7 @@
     
     self.messageVC.view.frame = CGRectMake(0, 0, boundsSize.width, boundsSize.height - self.messageBarHeight - self.addedViewHeight);
     self.messageBarVC.view.frame = CGRectMake(0, boundsSize.height - self.messageBarHeight - self.addedViewHeight, boundsSize.width, self.messageBarHeight);
-    self.menuAttachVC.view.frame = CGRectMake(0, boundsSize.height - self.addedViewHeight, boundsSize.width, 258.f);
+    self.menuAttachVC.view.frame = CGRectMake(0, boundsSize.height - self.addedViewHeight, boundsSize.width, self.addedViewHeight ? self.addedViewHeight : keyboardLastHeight);
 }
 
 - (void)setMessageBarHeight:(CGFloat)messageBarHeight
@@ -125,6 +128,11 @@
 {
     NSDictionary *info = [notification userInfo];
     CGRect kbRect = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGSize boundsSize = self.view.bounds.size;
+    
+    if(kbRect.origin.y != boundsSize.height)
+        keyboardLastHeight = boundsSize.height - kbRect.origin.y;
+    
     [self changeViewFramesWithAddedViewTop:kbRect.origin.y];
 }
 
@@ -216,7 +224,7 @@
     {
         [UIView animateWithDuration:0.3
                          animations:^{
-                             [self changeViewFramesWithAddedViewTop:self.view.bounds.size.height - 258.f];
+                             [self changeViewFramesWithAddedViewTop:self.view.bounds.size.height - keyboardLastHeight];
                          } completion:^(BOOL finished) {
                              [self updateViewFrames];
                          }];
