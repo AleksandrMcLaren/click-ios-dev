@@ -15,7 +15,6 @@
 
 @property (nonatomic, weak) id <MLChatMessageListViewControllerDelegate> delegate;
 @property (nonatomic, assign) CGFloat contentOffSet;
-@property (nonatomic, assign) CGFloat contentInsetBottom;
 
 - (void)reloadMessages:(NSArray *)messages animated:(BOOL)animated;
 - (void)addMessage:(MLChatMessage *)message;

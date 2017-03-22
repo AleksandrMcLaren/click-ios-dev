@@ -36,6 +36,7 @@ typedef enum CKMessageType
 @property (nonatomic, strong) NSString *toUserID;
 @property (nonatomic, strong) NSString *userid;
 @property (nonatomic, strong) NSString *userlogin;
+@property (nonatomic, strong) NSString *avatar;
 @property (nonatomic, assign) NSInteger timer;
 @property (nonatomic, assign) NSInteger attachPreviewCounter;
 @property (nonatomic, strong) NSString* entryid;

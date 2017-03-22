@@ -27,6 +27,7 @@
     {
         self.imView = [[UIImageView alloc] init];
         self.imView.contentMode = UIViewContentModeScaleAspectFit;
+        self.imView.layer.masksToBounds = YES;
         
         self.nameLabel = [[UILabel alloc] init];
         self.nameLabel.font = [UIFont systemFontOfSize:18.0];

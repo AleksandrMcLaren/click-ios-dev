@@ -220,11 +220,6 @@
         if(needsHeight <= self.maxHeight)
         {
             [self.delegate chatMessageBarViewControllerNeedsHeight:needsHeight];
-          //  self.textView.scrollEnabled = NO;
-        }
-        else
-        {
-          //  self.textView.scrollEnabled = YES;
         }
         
         self.previousHeight = needsHeight;

@@ -96,13 +96,6 @@
 
 - (void)updateTime
 {
-    /*
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    //dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-    NSTimeInterval timeZoneSeconds = [[NSTimeZone localTimeZone] secondsFromGMT];
-    NSDate *date = [self.message.date dateByAddingTimeInterval:timeZoneSeconds];
-    */
-    
     self.timeLabel.text = [[MLChatLib formatterDate_HH_mm] stringFromDate:self.message.date];
     [self.timeLabel sizeToFit];
     

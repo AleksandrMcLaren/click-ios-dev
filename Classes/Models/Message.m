@@ -62,7 +62,8 @@
     
     model.userid = [NSString stringWithFormat:@"%@", dict[@"userid"]];
     model.userlogin = [NSString stringWithFormat:@"%@", dict[@"userlogin"]];
-  
+    model.avatar = [NSString stringWithFormat:@"%@", dict[@"avatar"]];
+    
     NSMutableArray *attachements = [NSMutableArray new];
     
     id attach = dict[@"attach"];
@@ -126,7 +127,9 @@
         FMResultSet *data = [db executeQuery:query];
         while ([data next]){
             NSDictionary *resultDictionary = [data resultDictionary];
-            message = [Message modelWithDictionary:[resultDictionary prepared]];
+            
+            if(resultDictionary)
+                message = [Message modelWithDictionary:[resultDictionary prepared]];
         }
     }];
     
@@ -179,7 +182,8 @@
     self.status = message.status;
     self.userid = message.userid;
     self.userlogin = message.userlogin;
-
+    self.avatar = message.avatar;
+    
     self.attachements = message.attachements;
     self.timer = message.timer;
     self.location = message.location;
@@ -200,6 +204,7 @@
     dictionary[@"date"] = [dateFormatter stringFromDate:self.date];
     dictionary[@"userid"] = self.userid ;
     dictionary[@"userlogin"] = self.userlogin;
+    dictionary[@"avatar"] = self.avatar;
     
 //    NSMutableArray *attachements = [NSMutableArray new];
     
@@ -285,11 +290,6 @@
         self.userid = [CKUser currentUser].id;
         self.userlogin = [CKUser currentUser].login;
         self.isOwner = YES;
-
-       // NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-       // dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-       // NSTimeInterval timeZoneSeconds = [[NSTimeZone localTimeZone] secondsFromGMT];
-       // self.date = [[NSDate date] dateByAddingTimeInterval:timeZoneSeconds];
     }
     return self;
 }

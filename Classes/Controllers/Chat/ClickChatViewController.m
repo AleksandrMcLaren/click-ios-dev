@@ -51,6 +51,21 @@
 {
     [super viewDidLoad];
 
+    [self addBackendSubscribes];
+    [self reloadData];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+
+    [[CKApplicationModel sharedInstance] stopChat];
+}
+
+#pragma mark -
+
+- (void)addBackendSubscribes
+{
     __weak typeof(self) _weakSelf = self;
     [self.chat.messagesDidChanged subscribeNext:^(NSArray *msgs) {
         
@@ -73,7 +88,7 @@
             [_weakSelf reloadMessages:self.messages animated:animated];
         }
     }];
-
+    
     [self.chat.messageDidChanged subscribeNext:^(Message *msg) {
         
         if(_weakSelf)
@@ -91,14 +106,6 @@
         }
     }];
 
-    [self reloadData];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-
-    [[CKApplicationModel sharedInstance] stopChat];
 }
 
 - (void)reloadData
@@ -133,6 +140,7 @@
     message.date = msg.date;
     message.status = (NSInteger)msg.status;
     message.userLogin = msg.senderName;
+    message.avatarUrl = msg.avatar;
     
     if(!message.userLogin || !message.userLogin.length)
         message.userLogin = msg.senderLogin;
