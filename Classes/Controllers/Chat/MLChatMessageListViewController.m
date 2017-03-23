@@ -70,47 +70,45 @@
 
 - (void)reloadMessages:(NSArray *)messages animated:(BOOL)animated
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        [self.messages removeAllObjects];
-        [self.messages addObjectsFromArray:messages];
-        [self.tableView reloadData];
-        
-        if(self.messages.count)
-        {
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
-                                  atScrollPosition:UITableViewScrollPositionBottom
-                                          animated:animated];
-        }
-    });
+    [self.messages removeAllObjects];
+    [self.messages addObjectsFromArray:messages];
+    [self.tableView reloadData];
+    
+    if(self.messages.count)
+    {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
+                              atScrollPosition:UITableViewScrollPositionBottom
+                                      animated:animated];
+    }
 }
 
 - (void)addMessage:(MLChatMessage *)message
 {
+    __weak typeof(self) weakSelf = self;
+    
     void (^addMessage)() = ^() {
         
-        NSIndexPath *rowPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
-        __weak typeof(self) weakSelf = self;
+        if(!weakSelf)
+            return;
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+        NSIndexPath *rowPath = [NSIndexPath indexPathForRow:weakSelf.messages.count inSection:0];
+        
+        [CATransaction begin];
+        
+        [CATransaction setCompletionBlock:^{
             
-            [CATransaction begin];
-            
-            [CATransaction setCompletionBlock:^{
-                
-                    [weakSelf.tableView scrollToRowAtIndexPath:rowPath
-                                          atScrollPosition:UITableViewScrollPositionTop
-                                                  animated:YES];
-            }];
+                [weakSelf.tableView scrollToRowAtIndexPath:rowPath
+                                      atScrollPosition:UITableViewScrollPositionTop
+                                              animated:YES];
+        }];
 
-            [weakSelf.tableView beginUpdates];
-            [weakSelf.messages addObject:message];
-            [weakSelf.tableView insertRowsAtIndexPaths:@[rowPath]
-                                  withRowAnimation:UITableViewRowAnimationNone];
-            [weakSelf.tableView endUpdates];
-            
-            [CATransaction commit];
-        });
+        [weakSelf.tableView beginUpdates];
+        [weakSelf.messages addObject:message];
+        [weakSelf.tableView insertRowsAtIndexPaths:@[rowPath]
+                              withRowAnimation:UITableViewRowAnimationNone];
+        [weakSelf.tableView endUpdates];
+        
+        [CATransaction commit];
     };
     
     addMessage();
@@ -118,17 +116,32 @@
 
 - (void)beginRefreshing
 {
+    if(self.refreshControl)
+        return;
+    
     self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl layoutIfNeeded];
     [self.refreshControl beginRefreshing];
+    
+    [UIView animateWithDuration:0.25
+                          delay:0
+                        options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^(void){
+                         self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y - self.refreshControl.frame.size.height);
+                     } completion:^(BOOL finished){
+           
+                     }];
 }
 
 - (void)endRefreshing
 {
-    if(self.refreshControl)
-    {
-        [self.refreshControl endRefreshing];
-        self.refreshControl = nil;
-    }
+    if(!self.refreshControl)
+        return;
+    
+    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + self.refreshControl.frame.size.height);
+    
+    [self.refreshControl endRefreshing];
+    self.refreshControl = nil;
 }
 
 #pragma mark - tableView contentOffset

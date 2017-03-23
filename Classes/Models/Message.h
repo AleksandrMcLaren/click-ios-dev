@@ -36,7 +36,7 @@ typedef enum CKMessageType
 @property (nonatomic, strong) NSString *toUserID;
 @property (nonatomic, strong) NSString *userid;
 @property (nonatomic, strong) NSString *userlogin;
-@property (nonatomic, strong) NSString *avatar;
+@property (nonatomic, strong) NSString *useravatar;
 @property (nonatomic, assign) NSInteger timer;
 @property (nonatomic, assign) NSInteger attachPreviewCounter;
 @property (nonatomic, strong) NSString* entryid;
@@ -53,6 +53,7 @@ typedef enum CKMessageType
 @property (copy) void (^updatedStatus)();
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dict;
++ (instancetype)fromCacheWithId:(NSString *)ident;
 
 + (void)updateIncoming:(NSString *)messageId;
 + (void)updateStatusWithDictionary:(NSDictionary *)dict;
@@ -65,6 +66,7 @@ typedef enum CKMessageType
 
 //- (void)updateWithSender:(CKUser*)user;
 - (void)updateWithMessage:(Message*)message;
+- (void)updateWithDictionary:(NSDictionary *)dict;
 - (void)save;
 @end
 

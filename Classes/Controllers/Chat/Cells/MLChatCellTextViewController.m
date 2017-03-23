@@ -52,7 +52,7 @@
 {
     [super viewDidLayoutSubviews];
     
-    self.label.frame = CGRectMake(self.insets.left, self.message.isFirst ? self.insets.top + 3 : self.insets.top, self.textSize.width, self.textSize.height);
+    self.label.frame = CGRectMake(self.insets.left, self.message.showBalloonTail ? self.insets.top + 3 : self.insets.top, self.textSize.width, self.textSize.height);
 }
 
 - (void)setMessage:(MLChatMessage *)message

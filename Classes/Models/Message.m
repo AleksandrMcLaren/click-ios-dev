@@ -43,26 +43,39 @@
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dict
 {
-    Message *model = [CKMessageServerConnection sharedInstance].messageModelCache[dict[@"id"]];
+    Message *model = [Message fromCacheWithId:dict[@"id"]];
     if (model) {
         return model;
     }
     
     model = [Message new];
-    model.isOwner = [dict[@"owner"] boolValue];
-    model.message = dict[@"message"];
-    model.id = dict[@"id"];
-    model.status = [dict[@"status"] integerValue];
+    [model updateWithDictionary:dict];
+    [CKMessageServerConnection sharedInstance].messageModelCache[model.id] = model;
+    
+    return model;
+}
+
++ (instancetype)fromCacheWithId:(NSString *)ident
+{
+    return [CKMessageServerConnection sharedInstance].messageModelCache[ident];
+}
+
+- (void)updateWithDictionary:(NSDictionary *)dict
+{
+    self.isOwner = [dict[@"owner"] boolValue];
+    self.message = dict[@"message"];
+    self.id = dict[@"id"];
+    self.status = [dict[@"status"] integerValue];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"]; //2016-11-22T13:42:38.46505+00:00
     NSString* date = dict[@"date"];
     NSDate* dt = [dateFormatter dateFromString:date];
-    model.date = dt;
+    self.date = dt;
     
-    model.userid = [NSString stringWithFormat:@"%@", dict[@"userid"]];
-    model.userlogin = [NSString stringWithFormat:@"%@", dict[@"userlogin"]];
-    model.avatar = [NSString stringWithFormat:@"%@", dict[@"avatar"]];
+    self.userid = [NSString stringWithFormat:@"%@", dict[@"userid"]];
+    self.userlogin = [NSString stringWithFormat:@"%@", dict[@"userlogin"]];
+    self.useravatar = [NSString stringWithFormat:@"%@", dict[@"useravatar"]];
     
     NSMutableArray *attachements = [NSMutableArray new];
     
@@ -75,30 +88,28 @@
         NSData *JSONData = [attach dataUsingEncoding:NSUTF8StringEncoding];
         
         attachments = [NSJSONSerialization JSONObjectWithData:JSONData
-                                                             options:kNilOptions
-                                                               error:nil];
+                                                      options:kNilOptions
+                                                        error:nil];
     }
     if (attachments){
         for (NSDictionary *i in attachments){
             CKAttachModel *attach = [CKAttachModel modelWithDictionary:i];
             [attachements addObject:attach];
             if (attach.preview) {
-                model.attachPreviewCounter++;
+                self.attachPreviewCounter++;
             }
         }
     }
     if (dict[@"entryid"]) {
-        model.entryid = dict[@"entryid"];
+        self.entryid = dict[@"entryid"];
     }
     if (dict[@"dialogtype"]) {
-        model.dialogType = (CKDialogType)[dict[@"dialogtype"] integerValue];
+        self.dialogType = (CKDialogType)[dict[@"dialogtype"] integerValue];
     }
-  
-    model.attachements = attachements;
-    model.timer = [dict[@"timer"] integerValue];
-    model.location = CLLocationCoordinate2DMake([dict[@"lat"] doubleValue], [dict[@"lng"] doubleValue]);
-    [CKMessageServerConnection sharedInstance].messageModelCache[model.id] = model;
-    return model;
+    
+    self.attachements = attachements;
+    self.timer = [dict[@"timer"] integerValue];
+    self.location = CLLocationCoordinate2DMake([dict[@"lat"] doubleValue], [dict[@"lng"] doubleValue]);
 }
 
 - (void)setAttachements:(NSArray *)attachements {
@@ -182,7 +193,7 @@
     self.status = message.status;
     self.userid = message.userid;
     self.userlogin = message.userlogin;
-    self.avatar = message.avatar;
+    self.useravatar = message.useravatar;
     
     self.attachements = message.attachements;
     self.timer = message.timer;
@@ -204,7 +215,7 @@
     dictionary[@"date"] = [dateFormatter stringFromDate:self.date];
     dictionary[@"userid"] = self.userid ;
     dictionary[@"userlogin"] = self.userlogin;
-    dictionary[@"avatar"] = self.avatar;
+    dictionary[@"useravatar"] = self.useravatar;
     
 //    NSMutableArray *attachements = [NSMutableArray new];
     
@@ -287,6 +298,7 @@
         self.status = CKMessageStatusSent;
         self.date = [NSDate new];
         self.id = [[NSUUID UUID] UUIDString];
+        self.useravatar = [CKUser currentUser].avatarName;
         self.userid = [CKUser currentUser].id;
         self.userlogin = [CKUser currentUser].login;
         self.isOwner = YES;

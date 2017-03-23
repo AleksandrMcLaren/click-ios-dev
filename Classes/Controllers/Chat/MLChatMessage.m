@@ -16,7 +16,7 @@
     
     if(self)
     {
-        
+        self.ident = @"";
     }
     
     return self;

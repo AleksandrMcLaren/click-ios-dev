@@ -51,13 +51,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Classes/Screens/CKUserProfileController.m"
-            timestampString = "511883190.956336"
+            filePath = "Classes/Controllers/Chat/ClickChatViewController.m"
+            timestampString = "511971567.534141"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "295"
-            endingLineNumber = "295"
-            landmarkName = "-viewDidLoad"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "-initWithChat:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

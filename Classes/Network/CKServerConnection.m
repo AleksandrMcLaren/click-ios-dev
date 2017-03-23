@@ -207,9 +207,7 @@
       
             CKServerConnectionExecuted callback = [_callbacks objectForKey:CONNECTION_OPEN_CALLBACK_IDENTIFIER];
             if (callback){
-                //dispatch_async(dispatch_get_main_queue(), ^{
                     callback(dict);
-               // });
                 [_callbacks removeObjectForKey:CONNECTION_OPEN_CALLBACK_IDENTIFIER];
             }
         }
@@ -232,9 +230,7 @@
     CKServerConnectionExecuted block = callBack;
     if (block)
     {
-        //dispatch_async(dispatch_get_main_queue(), ^{
-            block(value);
-        //});
+        block(value);
     }
 }
 

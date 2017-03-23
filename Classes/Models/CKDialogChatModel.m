@@ -26,9 +26,16 @@
     return self;
 }
 
--(void)loadMessages{
+-(void)loadMessagesWithSuccess:(void (^)(NSArray *messages))success
+{
     [[CKMessageServerConnection sharedInstance] getDialogWithUser:self.dialog.userId page:1 pageSize:INSERT_MESSAGES callback:^(NSDictionary *result) {
-        [self recivedMesagesArray:result[@"result"]];
+        
+        [self recivedMesages:result[@"result"]
+                     success:^(NSArray *messages) {
+                         
+                         if(success)
+                             success(messages);
+                     }];
     }];
 }
 
@@ -96,4 +103,5 @@
     message.dialogIdentifier = self.dialog.userId;
     [message save];
 }
+
 @end

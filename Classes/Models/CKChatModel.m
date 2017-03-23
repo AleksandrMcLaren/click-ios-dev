@@ -157,8 +157,8 @@
 }
 
 //fetch from server
--(void)loadMessages{
-
+- (void)loadMessagesWithSuccess:(void (^)(NSArray *messages))success
+{
 }
 
 - (void)sendMessage:(Message *)message{
@@ -168,14 +168,24 @@
     self.lastMessage = message;
 }
 
--(void)recivedMesagesArray:(NSArray*)messages{
 
-    for (NSDictionary *diactionary in messages){
-        Message* message = [Message modelWithDictionary:diactionary];
+-(void)recivedMesages:(NSArray*)messages
+              success:(void (^)(NSArray *messages))success
+{
+    for (NSDictionary *dictionary in messages){
+        
+        Message* message = [Message fromCacheWithId:dictionary[@"id"]];
+        
+        if(message)
+            [message updateWithDictionary:dictionary];
+        else
+            message = [Message modelWithDictionary:dictionary];
+
         [self saveMessage:message];
     }
     
-    self.messages = [self getMessages];
+    if(success)
+        success([self getMessages]);
 }
 
 -(void)saveMessage:(Message*)message{

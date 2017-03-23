@@ -13,6 +13,7 @@
 
 @property (nonatomic, strong) UIImageView *imView;
 @property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) NSString *currentImageUrl;
 
 @end
 
@@ -26,12 +27,14 @@
     if(self)
     {
         self.imView = [[UIImageView alloc] init];
-        self.imView.contentMode = UIViewContentModeScaleAspectFit;
+        self.imView.contentMode = UIViewContentModeScaleAspectFill;
         self.imView.layer.masksToBounds = YES;
+        self.imView.hidden = YES;
         
         self.nameLabel = [[UILabel alloc] init];
         self.nameLabel.font = [UIFont systemFontOfSize:18.0];
         self.nameLabel.textColor = [UIColor whiteColor];
+        self.nameLabel.hidden = YES;
         
         self.diameter = 30;
     }
@@ -44,8 +47,7 @@
     [super viewDidLoad];
     
     self.view.layer.masksToBounds = YES;
-    self.view.backgroundColor = [UIColor colorFromHexString:@"#008ce1"];
-    
+
     [self.view addSubview:self.nameLabel];
     [self.view addSubview:self.imView];
 }
@@ -69,21 +71,103 @@
 - (void)setMessage:(MLChatMessage *)message
 {
     _message = message;
-    
-    if(self.message.userLogin && self.message.userLogin.length > 1)
-        self.nameLabel.text = [[self.message.userLogin substringToIndex:1] uppercaseString];
+
+    if(self.message.avatarUrl && self.message.avatarUrl.length)
+    {
+        [self loadImage];
+        [self hideNameLabel];
+    }
     else
-        self.nameLabel.text = nil;
-    
-    self.view.backgroundColor = [MLChatAvaViewController getColorForAvatar:self.nameLabel.text];
-    
-    [self.view setNeedsLayout];
+    {
+        [self unloadImage];
+        [self showNameLabel];
+    }
 }
 
 - (void)setDiameter:(CGFloat)diameter
 {
     _diameter = diameter;
 }
+
+#pragma mark - 
+
+- (void)showNameLabel
+{
+    if(self.message.userLogin && self.message.userLogin.length)
+        self.nameLabel.text = [[self.message.userLogin substringToIndex:1] uppercaseString];
+    else
+        self.nameLabel.text = nil;
+
+    self.view.backgroundColor = [MLChatAvaViewController getColorForAvatar:self.nameLabel.text];
+    
+    self.nameLabel.hidden = NO;
+    [self.view setNeedsLayout];
+}
+
+- (void)hideNameLabel
+{
+    self.view.backgroundColor = [UIColor clearColor];
+    self.nameLabel.hidden = YES;
+    [self.view setNeedsLayout];
+}
+
+- (void)loadImage
+{
+    self.imView.hidden = NO;
+    
+    if(self.currentImageUrl && [self.currentImageUrl isEqualToString:self.message.avatarUrl])
+    {
+        return;
+    }
+    
+    self.currentImageUrl = self.message.avatarUrl;
+    
+    __weak typeof(self) _weakSelf = self;
+    [[SDWebImageDownloader sharedDownloader] imageWithURL:self.message.avatarUrl
+                                               completion:^(UIImage *image, BOOL isCache) {
+                                                   
+                                                   if(_weakSelf)
+                                                   {
+                                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                                           
+                                                           if(isCache)
+                                                           {
+                                                               _weakSelf.imView.image = image;
+                                                           }
+                                                           else
+                                                           {
+                                                               [UIView transitionWithView:_weakSelf.imView
+                                                                                 duration:0.2f
+                                                                                  options:UIViewAnimationOptionTransitionCrossDissolve
+                                                                               animations:^{
+                                                                                   _weakSelf.imView.image = image;
+                                                                               } completion:nil];
+                                                           }
+                                                       });
+                                                   }
+                                                   
+                                               } failure:^(NSError *error) {
+                                                   
+                                                   if(_weakSelf)
+                                                   {
+                                                       self.currentImageUrl = nil;
+                                                       
+                                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                                           [_weakSelf showNameLabel];
+                                                       });
+                                                   }
+                                               }];
+
+}
+
+- (void)unloadImage
+{
+    self.imView.image = nil;
+    self.imView.hidden = YES;
+    self.currentImageUrl = nil;
+}
+
+#pragma mark -
 
 + (UIColor *)getColorForAvatar:(NSString *)name
 {

@@ -62,7 +62,7 @@
     CGSize blnSize = CGSizeMake(self.contentSize.width, self.contentSize.height);
     CGFloat tailHeight = 6.f;
     
-    if(self.message.isFirst)
+    if(self.message.showBalloonTail)
     {   // учтем хвостик
         blnSize.height += tailHeight;
     }
@@ -88,7 +88,7 @@
     }
 
     [self.contentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.message.isFirst ? tailHeight / 2 : 0);
+        make.top.equalTo(self.message.showBalloonTail ? tailHeight / 2 : 0);
         make.left.equalTo(0);
         make.width.equalTo(self.contentSize.width);
         make.height.equalTo(self.contentSize.height);
@@ -134,8 +134,7 @@
 
 - (void)updateAvatar
 {
-    if(self.message.isFirst && !self.message.isOwner)
-    //if(self.message.isFirst)
+    if(self.message.showAvatar)
     {
         self.avaVC.view.hidden = NO;
         self.avaVC.message = self.message;

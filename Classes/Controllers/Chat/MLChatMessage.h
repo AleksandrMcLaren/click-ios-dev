@@ -26,8 +26,9 @@ typedef NS_ENUM(NSInteger, MLChatMessageStatus)
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, strong) NSDate *date;
 
-@property (nonatomic) BOOL isFirst;
 @property (nonatomic) BOOL isOwner;
+@property (nonatomic) BOOL showBalloonTail;
+@property (nonatomic) BOOL showAvatar;
 @property (nonatomic) MLChatMessageStatus status;
 
 @property (copy) void (^updatedStatus)();

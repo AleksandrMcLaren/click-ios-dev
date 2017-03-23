@@ -9,6 +9,6 @@
 #ifndef Category_h
 #define Category_h
 
-
+#import "SDWebImageDownloader+Completion.h"
 
 #endif /* Category_h */

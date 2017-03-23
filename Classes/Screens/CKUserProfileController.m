@@ -344,7 +344,6 @@ typedef enum CKLoginState{
         picker.allowsEditing = YES;
         [self presentViewController:picker animated:YES completion:nil];
     }
-    
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info

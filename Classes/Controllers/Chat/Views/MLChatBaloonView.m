@@ -48,7 +48,7 @@
     
     if(self.message.isOwner)
     {
-        if(self.message.isFirst)
+        if(self.message.showBalloonTail)
         {
             self.mask.image = [[UIImage imageNamed:@"balloon_out_tail"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 16, 16, 16)
                                                                                       resizingMode:UIImageResizingModeStretch];
@@ -61,7 +61,7 @@
     }
     else
     {
-        if(self.message.isFirst)
+        if(self.message.showBalloonTail)
         {
             self.mask.image = [[UIImage imageNamed:@"balloon_in_tail"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 16, 16, 16)
                                                                                   resizingMode:UIImageResizingModeStretch];

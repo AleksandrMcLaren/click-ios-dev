@@ -96,12 +96,16 @@ static CGFloat keyboardLastHeight = 224.f;
 
 - (void)reloadMessages:(NSArray *)messages animated:(BOOL)animated
 {
-    [self.messageVC reloadMessages:messages animated:animated];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.messageVC reloadMessages:messages animated:animated];
+    });
 }
 
 - (void)addMessage:(MLChatMessage *)message
 {
-    [self.messageVC addMessage:message];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.messageVC addMessage:message];
+    });
 }
 
 - (void)resendMessage:(NSNotification *)notification
@@ -114,12 +118,16 @@ static CGFloat keyboardLastHeight = 224.f;
 
 - (void)beginRefreshing
 {
-    [self.messageVC beginRefreshing];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.messageVC beginRefreshing];
+    });
 }
 
 - (void)endRefreshing
 {
-    [self.messageVC endRefreshing];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.messageVC endRefreshing];
+    });
 }
 
 #pragma mark - NSNotification
