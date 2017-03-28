@@ -123,7 +123,7 @@
     switch (self.message.status)
     {
         case MLChatMessageStatusSent:
-            self.imageView.image = nil;
+            self.imageView.image = [MLChatStatusViewController imageSent];
             self.tapRecognizer.enabled = NO;
             break;
         case MLChatMessageStatusDelivered:
@@ -156,7 +156,7 @@
 
 #pragma mark - Images
 
-+ (UIImage *)imageDelivered
++ (UIImage *)imageSent
 {
     static dispatch_once_t once;
     static UIImage *_image;
@@ -167,7 +167,7 @@
     return _image;
 }
 
-+ (UIImage *)imageRead
++ (UIImage *)imageDelivered
 {
     static dispatch_once_t once;
     static UIImage *_image;
@@ -178,12 +178,23 @@
     return _image;
 }
 
++ (UIImage *)imageRead
+{
+    static dispatch_once_t once;
+    static UIImage *_image;
+    dispatch_once(&once, ^{
+        _image = [UIImage imageNamed:@"status_tick_multiple_blue"];
+    });
+    
+    return _image;
+}
+
 + (UIImage *)imageResent
 {
     static dispatch_once_t once;
     static UIImage *_image;
     dispatch_once(&once, ^{
-        _image = [UIImage imageNamed:@"status_send_gray"];
+        _image = [UIImage imageNamed:@"status_send_strike_gray"];
     });
     
     return _image;
