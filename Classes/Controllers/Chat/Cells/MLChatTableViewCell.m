@@ -137,12 +137,12 @@
     if(self.message.showAvatar)
     {
         self.avaVC.view.hidden = NO;
-        self.avaVC.message = self.message;
+        [self.avaVC setImageUrl:self.message.avatarUrl name:self.message.userLogin];
     }
     else
     {
         self.avaVC.view.hidden = YES;
-        self.avaVC.message = nil;
+        [self.avaVC setImageUrl:nil name:nil];
     }
 }
 

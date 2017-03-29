@@ -183,7 +183,7 @@
 
 - (void)refreshCollectionView1
 {
-    [_chat clearCounter];
+  //  [_chat clearCounter];
 	[self refreshCollectionView2];
 	[self finishReceivingMessage];
 }
@@ -641,7 +641,7 @@
 	}
 	
 	[self actionCleanup];
-    [_chat clearCounter];
+  //  [_chat clearCounter];
 	
 	
 	[self.navigationController popViewControllerAnimated:YES];

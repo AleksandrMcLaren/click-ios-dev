@@ -589,28 +589,30 @@
         message.status = CKMessageStatusDelivered;
         [message save];
 
-        NSString* title = @"Messme";
-        
-        UIAlertController * alert = [UIAlertController
-                                     alertControllerWithTitle:title
-                                     message:message.text
-                                     preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction* okButton = [UIAlertAction
-                                   actionWithTitle:@"OK"
-                                   style:UIAlertActionStyleDefault
-                                   handler:^(UIAlertAction * action) {
-                                       //Handle your yes please button action here
-                                   }];
-        UIAlertAction* cancelButton = [UIAlertAction
-                                       actionWithTitle:@"Cancel"
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString* title = @"Messme";
+            
+            UIAlertController * alert = [UIAlertController
+                                         alertControllerWithTitle:title
+                                         message:message.text
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* okButton = [UIAlertAction
+                                       actionWithTitle:@"OK"
                                        style:UIAlertActionStyleDefault
                                        handler:^(UIAlertAction * action) {
                                            //Handle your yes please button action here
                                        }];
-        [alert addAction:okButton];
-        [alert addAction:cancelButton];
-        [self.mainController.currentController presentViewController:alert animated:YES completion:nil];
+            UIAlertAction* cancelButton = [UIAlertAction
+                                           actionWithTitle:@"Cancel"
+                                           style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction * action) {
+                                               //Handle your yes please button action here
+                                           }];
+            [alert addAction:okButton];
+            [alert addAction:cancelButton];
+            [self.mainController.currentController presentViewController:alert animated:YES completion:nil];
+        });
     }
     
     [[CKMessageServerConnection sharedInstance] setMessagesStatus:message.status

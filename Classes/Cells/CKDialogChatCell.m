@@ -40,8 +40,12 @@
     if (model) _dateTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerEvent) userInfo:nil repeats:YES];
     
     [self.avatar setAvatarFile:model.userAvatarId fallbackName:[self letterNameWithName:model.userName surname:model.userSurname login:model.userLogin]];
-    self.title.attributedText = [NSMutableAttributedString withName:model.userName surname:model.userSurname size:16.0];
-
+    
+    if(!model.userName.length && !model.userSurname.length)
+        self.title.attributedText = [NSMutableAttributedString withName:model.userLogin surname:nil size:16.0];
+    else
+        self.title.attributedText = [NSMutableAttributedString withName:model.userName surname:model.userSurname size:16.0];
+    
     self.subtitle.text = model.message ? model.message : @"";
     self.activity.text = [model.date readableMessageTimestampString];
 

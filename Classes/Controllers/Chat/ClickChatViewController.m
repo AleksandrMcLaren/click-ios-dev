@@ -8,12 +8,14 @@
 
 #import "ClickChatViewController.h"
 #import "CKApplicationModel.h"
+#import "MLChatBarAvaViewController.h"
 
 @interface ClickChatViewController ()
 
 @property (nonatomic, strong) CKChatModel *chat;
 @property (nonatomic, strong) MLChatMessage *lastMessage;
 @property (nonatomic, strong) NSMutableArray *messages;
+@property (nonatomic, strong) MLChatBarAvaViewController *avaVC;
 
 @end
 
@@ -26,7 +28,6 @@
     if(self)
     {
         self.chat = chat;
-        self.title = ((self.chat.dialog.userName && self.chat.dialog.userName.length) ? self.chat.dialog.userName : self.chat.dialog.userLogin);
         self.messages = [[NSMutableArray alloc] init];
 
         __weak typeof(self.chat) _weakChat = self.chat;
@@ -36,12 +37,14 @@
                 [_weakChat send:text Video:nil Picture:nil Audio:nil];
         };
         
-        __weak typeof(self) _weakSelf = self;
-        self.reloadMessages = ^{
-           
-           // if(_weakSelf)
-           //     [_weakChat loadMessages];
-        };
+//        __weak typeof(self) _weakSelf = self;
+//        self.reloadMessages = ^{
+//           
+//           // if(_weakSelf)
+//           //     [_weakChat loadMessages];
+//        };
+        
+        [self createNavigationAvatarView];
     }
     
     return self;
@@ -111,26 +114,28 @@
         {
             [_weakSelf endRefreshing];
             
-            // нужно обновлять список сообщений
-            // проверка, что пришли не те же сообщения
-            BOOL changedMessage = NO;
-            
-            for(NSInteger i = 0; i < _weakSelf.messages.count; i++)
-            {
-                MLChatMessage *message = _weakSelf.messages[i];
-                Message *msg = msgs[i];
+            if(_weakSelf.messages.count)
+            {   // нужно обновлять список сообщений
+                // проверка, что пришли не те же сообщения
+                BOOL changedMessage = NO;
                 
-                if(![message.ident isEqualToString:msg.id] ||
-                   message.status != (int)msg.status)
+                for(NSInteger i = 0; i < _weakSelf.messages.count; i++)
                 {
-                    changedMessage = YES;
-                    break;
+                    MLChatMessage *message = _weakSelf.messages[i];
+                    Message *msg = msgs[i];
+                    
+                    if(![message.ident isEqualToString:msg.id] ||
+                       message.status != (int)msg.status)
+                    {
+                        changedMessage = YES;
+                        break;
+                    }
                 }
+                
+                if(!changedMessage)
+                    return;
             }
-            
-            if(!changedMessage)
-                return;
-            
+
             BOOL animated = !_weakSelf.messages.count;
             
             [_weakSelf createMessages:msgs];
@@ -170,7 +175,7 @@
     
     if(!self.lastMessage || self.lastMessage.isOwner != message.isOwner)
     {
-        message.showAvatar = YES;
+        message.showAvatar = NO; // аватар показываем в групповых чатах
         message.showBalloonTail = YES;
     }
 
@@ -197,6 +202,21 @@
     self.lastMessage = message;
     
     return message;
+}
+
+- (void)createNavigationAvatarView
+{
+    NSString *avatarUrl = [NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, self.chat.dialog.userAvatarId];
+    NSString *name = ((self.chat.dialog.userName && self.chat.dialog.userName.length) ? self.chat.dialog.userName : self.chat.dialog.userLogin);
+    
+    CGSize textSize = [name boundingRectWithSize:CGSizeMake(190, CGFLOAT_MAX)
+                                               options:NSStringDrawingUsesLineFragmentOrigin
+                                            attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]}
+                                               context:nil].size;
+    
+    self.avaVC = [[MLChatBarAvaViewController alloc] initWithAvatarUrl:avatarUrl name:name];
+    self.avaVC.view.frame = CGRectMake(0, 0, 40 + 5 + textSize.width, 40);
+    self.navigationItem.titleView = self.avaVC.view;
 }
 
 @end

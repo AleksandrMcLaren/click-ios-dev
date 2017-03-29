@@ -52,6 +52,7 @@
 		1FA1EEDA1E7A6C5B00771790 /* voice@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA1EEBA1E7A6C5B00771790 /* voice@3x.png */; };
 		1FA1EEDE1E7A6CC500771790 /* pbg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA1EEDC1E7A6CC500771790 /* pbg@2x.png */; };
 		1FA1EEDF1E7A6CC500771790 /* pbg@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA1EEDD1E7A6CC500771790 /* pbg@3x.png */; };
+		1FA9D0D71E8A729E005CF573 /* MLChatBarAvaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA9D0D61E8A729E005CF573 /* MLChatBarAvaViewController.m */; };
 		1FC42B571E62F1C300586FD3 /* MLChatMenuAttachViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC42B561E62F1C300586FD3 /* MLChatMenuAttachViewController.m */; };
 		1FC42B951E63201500586FD3 /* MLChatMenuButtonViewConrtoller.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC42B941E63201500586FD3 /* MLChatMenuButtonViewConrtoller.m */; };
 		1FC6CFAF1E83C3F90084FC84 /* SDWebImageDownloader+Completion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC6CFAE1E83C3F90084FC84 /* SDWebImageDownloader+Completion.m */; };
@@ -315,6 +316,8 @@
 		1FA1EEBA1E7A6C5B00771790 /* voice@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "voice@3x.png"; sourceTree = "<group>"; };
 		1FA1EEDC1E7A6CC500771790 /* pbg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pbg@2x.png"; sourceTree = "<group>"; };
 		1FA1EEDD1E7A6CC500771790 /* pbg@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pbg@3x.png"; sourceTree = "<group>"; };
+		1FA9D0D51E8A729E005CF573 /* MLChatBarAvaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatBarAvaViewController.h; sourceTree = "<group>"; };
+		1FA9D0D61E8A729E005CF573 /* MLChatBarAvaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatBarAvaViewController.m; sourceTree = "<group>"; };
 		1FC42B551E62F1C300586FD3 /* MLChatMenuAttachViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatMenuAttachViewController.h; sourceTree = "<group>"; };
 		1FC42B561E62F1C300586FD3 /* MLChatMenuAttachViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatMenuAttachViewController.m; sourceTree = "<group>"; };
 		1FC42B931E63201500586FD3 /* MLChatMenuButtonViewConrtoller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLChatMenuButtonViewConrtoller.h; sourceTree = "<group>"; };
@@ -869,6 +872,8 @@
 				1FD8EF6F1E5223CC0082AFFD /* MLChatBaloonView.m */,
 				1FD8EF701E5223CC0082AFFD /* MLChatStatusViewController.h */,
 				1FD8EF711E5223CC0082AFFD /* MLChatStatusViewController.m */,
+				1FA9D0D51E8A729E005CF573 /* MLChatBarAvaViewController.h */,
+				1FA9D0D61E8A729E005CF573 /* MLChatBarAvaViewController.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1949,6 +1954,7 @@
 				78BEA9401CAAA47D004E85DB /* NSString+URLParser.m in Sources */,
 				78BEA9941CAE5E04004E85DB /* CKUserAvatarView.m in Sources */,
 				7812508C1CB6C74F00D3BFBB /* CKDialogChatModel.m in Sources */,
+				1FA9D0D71E8A729E005CF573 /* MLChatBarAvaViewController.m in Sources */,
 				3DCFBEC51E02E71600BC2FC8 /* NSObject+JSON.m in Sources */,
 				3DACB0FB1DE57DD4004284D9 /* Image.m in Sources */,
 				3D3AECBD1DE4923D00F745BE /* MapView.m in Sources */,

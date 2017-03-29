@@ -53,8 +53,12 @@
         return [obj1.date compare:obj2.date];
     }];
     
-    [CKDialogModel updateDialog:_dialog withMessage:[self.messages lastObject]];
-    [self clearCounter];
+    self.messages = result;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [CKDialogModel clearCounter:_dialog];
+        [self clearCounter:result];
+    });
     
     return result.copy;
 }
@@ -114,26 +118,24 @@
 
 }
 
--(void)clearCounter{
-    NSMutableArray* ids = [NSMutableArray new];
+-(void)clearCounter:(NSArray *)messages
+{
+    NSMutableArray* ms = [NSMutableArray new];
     
-    for (Message* message in self.messages) {
+    for (Message* message in messages) {
         
-        if ((message.status != CKMessageStatusRead) && (!message.isOwner)){
-            [ids addObject:message.id];
-        }
+        if ((message.status != CKMessageStatusRead) && (!message.isOwner))
+            [ms addObject:message];
     }
     
-    if (ids.count) {
+    if (ms.count) {
         
         [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead
-                                                       messagesIdents:ids
+                                                       messagesIdents:[ms valueForKeyPath:@"id"]
                                                              callback:^(NSDictionary *result){
             
         }];
     }
-    
-    [CKDialogModel clearCounter:_dialog];
 }
 
 - (BOOL)messageMatch:(Message*)message{

@@ -107,7 +107,6 @@
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss"];
-        dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
         
         model.birthDate =  [sourceDict[@"birthdate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil : [dateFormatter dateFromString:sourceDict[@"birthdate"]];
         model.registeredDate =  [sourceDict[@"registereddate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil :[dateFormatter dateFromString:sourceDict[@"registereddate"]];
@@ -281,9 +280,7 @@
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss"];
-    dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
-    
-  
+
     dictionary[@"birthdate"] = self.birthDate ? [dateFormatter stringFromDate:self.birthDate] : @"0001-01-01T00:00:00";
     dictionary[@"registereddate"] = self.registeredDate ? [dateFormatter stringFromDate:self.registeredDate] : @"0001-01-01T00:00:00";
     dictionary[@"statusdate"] = self.statusDate ? [dateFormatter stringFromDate:self.statusDate] : @"0001-01-01T00:00:00";

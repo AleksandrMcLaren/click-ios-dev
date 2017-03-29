@@ -14,6 +14,8 @@
 @property (nonatomic, strong) UIImageView *imView;
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) NSString *currentImageUrl;
+@property (nonatomic, strong) NSString *imageUrl;
+@property (nonatomic, strong) NSString *nameText;
 
 @end
 
@@ -68,11 +70,17 @@
     }
 }
 
-- (void)setMessage:(MLChatMessage *)message
+- (void)setImageUrl:(NSString *)imageUrl name:(NSString *)name
 {
-    _message = message;
+    self.imageUrl = imageUrl;
+    self.nameText = name;
+    
+    [self updateContent];
+}
 
-    if(self.message.avatarUrl && self.message.avatarUrl.length)
+- (void)updateContent
+{
+    if(self.imageUrl && self.imageUrl.length)
     {
         [self loadImage];
         [self hideNameLabel];
@@ -93,8 +101,8 @@
 
 - (void)showNameLabel
 {
-    if(self.message.userLogin && self.message.userLogin.length)
-        self.nameLabel.text = [[self.message.userLogin substringToIndex:1] uppercaseString];
+    if(self.nameText && self.nameText.length)
+        self.nameLabel.text = [[self.nameText substringToIndex:1] uppercaseString];
     else
         self.nameLabel.text = nil;
 
@@ -115,15 +123,15 @@
 {
     self.imView.hidden = NO;
     
-    if(self.currentImageUrl && [self.currentImageUrl isEqualToString:self.message.avatarUrl])
+    if(self.currentImageUrl && [self.currentImageUrl isEqualToString:self.imageUrl])
     {
         return;
     }
     
-    self.currentImageUrl = self.message.avatarUrl;
+    self.currentImageUrl = self.imageUrl;
     
     __weak typeof(self) _weakSelf = self;
-    [[SDWebImageDownloader sharedDownloader] imageWithURL:self.message.avatarUrl
+    [[SDWebImageDownloader sharedDownloader] imageWithURL:self.imageUrl
                                                completion:^(UIImage *image, BOOL isCache) {
                                                    
                                                    if(_weakSelf)

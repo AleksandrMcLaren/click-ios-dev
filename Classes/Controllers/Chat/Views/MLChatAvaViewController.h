@@ -10,8 +10,8 @@
 
 @interface MLChatAvaViewController : UIViewController
 
-@property (nonatomic, strong) MLChatMessage *message;
-
 @property (nonatomic, readonly) CGFloat diameter;
+
+- (void)setImageUrl:(NSString *)imageUrl name:(NSString *)name;
 
 @end

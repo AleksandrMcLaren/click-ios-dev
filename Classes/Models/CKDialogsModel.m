@@ -26,7 +26,6 @@
     }
     else {
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
 //        [dateFormatter setDateFormat:@"YYYY-MM-DDThh:mm:ss"];
         [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSSSZZZZZ"];
         model.date = [dateFormatter dateFromString:dict[@"date"]];
@@ -90,6 +89,7 @@
 
 + (void)clearCounter:(CKDialogModel *)dialog{
     dialog.messagesUnread = 0;
+    
     [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
         BOOL success =  [db executeUpdate:@"update dialogs set msgunread = 0 where entryid =?", dialog.dialogId];
         if (!success) {

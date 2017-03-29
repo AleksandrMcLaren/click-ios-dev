@@ -27,6 +27,7 @@
         [self.contentView addSubview:_subtitle];
         
         _activity = [UILabel labelWithText:@"5 минут" font:[UIFont systemFontOfSize: 14.0] textColor:CKClickProfileGrayColor textAlignment:NSTextAlignmentRight];
+        _activity.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.contentView addSubview:_activity];
         
         _unreadCount = [UILabel labelWithText:@"0" font:[UIFont systemFontOfSize: 14.0] textColor:[UIColor whiteColor] textAlignment:NSTextAlignmentCenter];
@@ -41,16 +42,16 @@
             make.left.equalTo(self.contentView.left).offset(16);
             make.centerY.equalTo(self.contentView.centerY);
         }];
+
+        [_activity makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView.top).offset(12);
+            make.right.equalTo(self.contentView.right).offset(-8);
+        }];
         
         [_title makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_avatar.right).offset(8);
             make.top.equalTo(self.contentView.top).offset(12);
-            make.right.greaterThanOrEqualTo(_activity.left).offset(16);
-        }];
-        
-        [_activity makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView.top).offset(12);
-            make.right.equalTo(self.contentView.right).offset(-8);
+            make.right.lessThanOrEqualTo(_activity.left).offset(-5);
         }];
         
         [_unreadCount makeConstraints:^(MASConstraintMaker *make) {
