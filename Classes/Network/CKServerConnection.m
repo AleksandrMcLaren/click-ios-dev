@@ -8,6 +8,7 @@
 
 #import "CKServerConnection.h"
 #import <SAMKeychain/SAMKeychain.h>
+#import "CKUserServerConnection.h"
 
 #define CONNECTION_OPEN_CALLBACK_IDENTIFIER @"CONNECTION_OPEN_CALLBACK_IDENTIFIER"
 
@@ -237,6 +238,9 @@
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket
 {
     NSLog(@"didOpen %@", webSocket.url);
+    
+    [[CKUserServerConnection sharedInstance] setUserStatus:@1];
+    
     _isConnected = YES;
     _isConnecting = NO;
     NSMutableArray *newQueue = [NSMutableArray new];
