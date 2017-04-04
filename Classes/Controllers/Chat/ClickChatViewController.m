@@ -224,7 +224,7 @@
                                                options:NSStringDrawingUsesLineFragmentOrigin
                                             attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]}
                                                context:nil].size;
-    CGFloat avaNameWidth = 40 + 7 + nameSize.width;
+    CGFloat allWidth = 40 + 7 + nameSize.width;
     
     // не в сети
     CGFloat minWidth = 135.f;
@@ -238,11 +238,11 @@
         minWidth = 40 + 7 + textSize.width;
     }
     
-    if(avaNameWidth < minWidth)
-        avaNameWidth = minWidth;
+    if(allWidth < minWidth)
+        allWidth = minWidth;
     
     self.avaVC = [[MLChatBarAvaViewController alloc] init];
-    self.avaVC.view.frame = CGRectMake(0, 0, avaNameWidth, 40);
+    self.avaVC.view.frame = CGRectMake(0, 0, allWidth, 40);
     self.avaVC.avatarUrl = avatarUrl;
     self.avaVC.titleText = name;
     
