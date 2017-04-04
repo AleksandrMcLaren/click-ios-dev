@@ -41,7 +41,7 @@
     else if (deltaMinutes < (24 * 60))
     {
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
+        //dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTF"];
         [dateFormatter setDateFormat:@"HH:mm"];
         return [dateFormatter stringFromDate:self];
     }

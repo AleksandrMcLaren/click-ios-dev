@@ -128,17 +128,22 @@
         [cont addObjectsFromArray:[_phoneContacts allValues]];
         _fullContacts = cont;
         [[CKMessageServerConnection sharedInstance] addFriends:[self contactPhoneList] callback:^(CKStatusCode status) {
-            [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithAllFriends] callback:^(NSDictionary *result) {
-                for (NSDictionary *i in result[@"result"]){
-                    [self saveUser:i];
-                }
-                [self reloadUserList];
-            }];
+            
+            [self updateUserList];
         }];
         
     }];
 }
 
+- (void)updateUserList
+{
+    [[CKMessageServerConnection sharedInstance] getUserListWithFilter:[CKUserFilterModel filterWithAllFriends] callback:^(NSDictionary *result) {
+        for (NSDictionary *i in result[@"result"]){
+            [self saveUser:i];
+        }
+        [self reloadUserList];
+    }];
+}
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];

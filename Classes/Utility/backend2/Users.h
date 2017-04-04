@@ -26,5 +26,7 @@
 - (void) run;
 - (void) saveUserWithDialog:(NSDictionary*)dialog;
 - (void) reloadUserList;
+- (void)updateUserList;
+
 @end
 

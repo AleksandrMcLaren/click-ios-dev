@@ -15,7 +15,7 @@
 + (NSString *)fullname;
 + (NSString *)initials;
 + (NSString *)picture;
-+ (NSString *)status;
+//+ (NSString *)status;
 + (NSString *)loginMethod;
 
 + (NSInteger)keepMedia;

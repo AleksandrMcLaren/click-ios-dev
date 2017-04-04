@@ -116,6 +116,10 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    // при выходе из чата обновляем список пользователей
+    // только для обновления user.statusDate для бара в даилоге
+    [[Users sharedInstance] updateUserList];
+     
     [self loadRecents];
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
 }

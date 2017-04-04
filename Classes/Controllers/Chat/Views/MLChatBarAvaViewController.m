@@ -12,24 +12,31 @@
 @interface MLChatBarAvaViewController ()
 
 @property (nonatomic, strong) MLChatAvaViewController *avaVC;
-@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *subtitleLabel;
+@property (nonatomic, strong) UIView *onlineView;
 
 @end
 
 @implementation MLChatBarAvaViewController
 
-- (id)initWithAvatarUrl:(NSString *)avatarUrl name:(NSString *)name
+- (id)init
 {
     self = [super init];
     
     if(self)
     {
         self.avaVC = [[MLChatAvaViewController alloc] init];
-        [self.avaVC setImageUrl:avatarUrl name:name];
         
-        self.nameLabel = [[UILabel alloc] init];
-        self.nameLabel.font = [UIFont systemFontOfSize:16];
-        self.nameLabel.text = name;
+        self.titleLabel = [[UILabel alloc] init];
+        self.titleLabel.font = [UIFont systemFontOfSize:16];
+        
+        self.subtitleLabel = [[UILabel alloc] init];
+        self.subtitleLabel.font = [UIFont systemFontOfSize:10];
+        self.subtitleLabel.textColor = [UIColor grayColor];
+        
+        self.onlineView = [[UIView alloc] init];
+        self.onlineView.backgroundColor = [UIColor greenColor];
     }
     
     return self;
@@ -40,7 +47,9 @@
     [super viewDidLoad];
     
     [self.view addSubview:self.avaVC.view];
-    [self.view addSubview:self.nameLabel];
+    [self.view addSubview:self.titleLabel];
+    [self.view addSubview:self.subtitleLabel];
+    [self.view addSubview:self.onlineView];
 }
 
 - (void)viewDidLayoutSubviews
@@ -51,7 +60,53 @@
     
     self.avaVC.view.frame = CGRectMake(0, (boundsSize.height - self.avaVC.diameter) / 2, self.avaVC.diameter, self.avaVC.diameter);
     
-    self.nameLabel.frame = CGRectMake(self.avaVC.diameter + 5, (boundsSize.height - self.nameLabel.font.lineHeight) / 2, boundsSize.width - (self.avaVC.diameter + 5), self.nameLabel.font.lineHeight);
+    if(!self.onlineView.hidden)
+    {
+        self.titleLabel.frame = CGRectMake(self.avaVC.diameter + 7, boundsSize.height / 2 - self.titleLabel.font.lineHeight + 3, boundsSize.width - (self.avaVC.diameter + 5), self.titleLabel.font.lineHeight);
+        
+        self.subtitleLabel.frame = CGRectMake(self.avaVC.diameter + 15, boundsSize.height / 2 + 4, boundsSize.width - (self.avaVC.diameter + 15), self.subtitleLabel.font.lineHeight);
+
+        self.onlineView.frame = CGRectMake(self.avaVC.diameter + 7, self.subtitleLabel.frame.origin.y + 4, 5, 5);
+        self.onlineView.layer.cornerRadius = self.onlineView.frame.size.width / 2;
+    }
+    else if(self.subtitleLabel.text && self.subtitleLabel.text.length)
+    {
+        self.titleLabel.frame = CGRectMake(self.avaVC.diameter + 7, boundsSize.height / 2 - self.titleLabel.font.lineHeight + 3, boundsSize.width - (self.avaVC.diameter + 5), self.titleLabel.font.lineHeight);
+        
+        self.subtitleLabel.frame = CGRectMake(self.avaVC.diameter + 7, boundsSize.height / 2 + 4, boundsSize.width - (self.avaVC.diameter + 5), self.subtitleLabel.font.lineHeight);
+    }
+    else
+    {
+        self.titleLabel.frame = CGRectMake(self.avaVC.diameter + 7, (boundsSize.height - self.titleLabel.font.lineHeight) / 2, boundsSize.width - (self.avaVC.diameter + 5), self.titleLabel.font.lineHeight);
+    }
+}
+
+- (void)setAvatarUrl:(NSString *)avatarUrl
+{
+    _avatarUrl = avatarUrl;
+    [self.avaVC setImageUrl:self.avatarUrl name:self.titleText];
+}
+
+- (void)setTitleText:(NSString *)titleText
+{
+    _titleText = titleText;
+    [self.avaVC setImageUrl:self.avatarUrl name:self.titleText];
+    self.titleLabel.text = self.titleText;
+    [self.view setNeedsLayout];
+}
+
+- (void)setSubtitleText:(NSString *)subtitleText
+{
+    _subtitleText = subtitleText;
+    self.subtitleLabel.text = self.subtitleText;
+    [self.view setNeedsLayout];
+}
+
+- (void)setOnline:(BOOL)online
+{
+    _online = online;
+    self.onlineView.hidden = !self.online;
+    [self.view setNeedsLayout];
 }
 
 @end

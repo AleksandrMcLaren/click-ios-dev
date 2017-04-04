@@ -34,7 +34,7 @@
 
 
 - (NSString *)picture				{	return self.avatarURLString /*FUSER_PICTURE*/;								}
-- (NSString *)status				{	return [NSString stringWithFormat:@"%ld", self.status] /*FUSER_STATUS*/;								}
+//- (NSString *)status				{	return [NSString stringWithFormat:@"%ld", self.status] /*FUSER_STATUS*/;								}
 - (NSString *)loginMethod			{	return LOGIN_PHONE /*FUSER_LOGINMETHOD*/;							}
 
 - (NSInteger)keepMedia				{	return KEEPMEDIA_FOREVER /*FUSER_KEEPMEDIA*/;			}

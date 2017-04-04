@@ -25,6 +25,19 @@
     return _dateFormatter;
 }
 
++ (NSDateFormatter *)formatterDate_yyyy_MM_dd
+{
+    static dispatch_once_t once;
+    static NSDateFormatter *_dateFormatter;
+    dispatch_once(&once, ^{
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        _dateFormatter.calendar = [NSCalendar currentCalendar];
+        _dateFormatter.dateFormat = @"dd.MM.yyyy";
+    });
+    
+    return _dateFormatter;
+}
+
 #pragma mark - Text size
 
 + (CGSize)textSizeLabel:(UILabel *)label withWidth:(CGFloat)width

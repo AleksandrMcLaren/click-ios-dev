@@ -10,6 +10,10 @@
 
 @interface MLChatBarAvaViewController : UIViewController
 
-- (id)initWithAvatarUrl:(NSString *)avatarUrl name:(NSString *)name;
+@property (nonatomic, strong) NSString *avatarUrl;
+@property (nonatomic, strong) NSString *titleText;
+@property (nonatomic, strong) NSString *subtitleText;
+
+@property (nonatomic) BOOL online;
 
 @end

@@ -11,6 +11,7 @@
 @interface MLChatLib : NSObject
 
 + (NSDateFormatter *)formatterDate_HH_mm;
++ (NSDateFormatter *)formatterDate_yyyy_MM_dd;
 
 + (CGSize)textSizeLabel:(UILabel *)label withWidth:(CGFloat)width;
 

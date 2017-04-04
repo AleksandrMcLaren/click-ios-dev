@@ -32,7 +32,7 @@
 #define		DEFAULT_TAB							0
 #define		VIDEO_LENGTH						5
 #define		AUDIO_LENGTH						5
-#define		INSERT_MESSAGES						10
+#define		INSERT_MESSAGES						1000
 #define		PASSWORD_LENGTH						20
 #define		DOWNLOAD_TIMEOUT					300
 //---------------------------------------------------------------------------------
