@@ -270,6 +270,13 @@
     }];
 }
 
+- (void)setAllIncomingMessagesStatusReadWithUserId:(NSString *)userId callback:(CKServerConnectionExecuted)callback
+{
+    [self sendData:@{@"action":@"dialog.setstatusall", @"options":@{@"status":@(CKMessageStatusRead), @"userid":userId}} completion:^(NSDictionary *result) {
+        callback(result);
+    }];
+}
+
 - (void)clearhistory:(CKDialogModel*)dialog callback:(CKServerConnectionExecuted)callback
 {
     [self sendData:@{@"action":@"dialog.clearhistory", @"options":@{@"dialogtype":@(dialog.type), @"entryid": dialog.dialogId, @"userid":dialog.userId}} completion:^(NSDictionary *result) {

@@ -55,11 +55,6 @@
     
     self.messages = result;
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [CKDialogModel clearCounter:_dialog];
-        [self clearCounter:result];
-    });
-    
     return result.copy;
 }
 
@@ -120,22 +115,32 @@
 
 -(void)clearCounter:(NSArray *)messages
 {
-    NSMutableArray* ms = [NSMutableArray new];
+    [[CKMessageServerConnection sharedInstance] setAllIncomingMessagesStatusReadWithUserId:self.dialog.userId
+                                                                                  callback:^(NSDictionary *result){
+                                                                                      
+                                                                                  }];
+
+    /*
+    BOOL updateStatusIncomingMessage = NO;
     
     for (Message* message in messages) {
         
         if ((message.status != CKMessageStatusRead) && (!message.isOwner))
-            [ms addObject:message];
+        {
+            updateStatusIncomingMessage = YES;
+            break;
+        }
     }
     
-    if (ms.count) {
+    if (updateStatusIncomingMessage) {
         
-        [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusRead
-                                                       messagesIdents:[ms valueForKeyPath:@"id"]
-                                                             callback:^(NSDictionary *result){
+        [[CKMessageServerConnection sharedInstance] setAllIncomingMessagesStatusReadWithUserId:self.dialog.userId
+                                                                                      callback:^(NSDictionary *result){
             
         }];
     }
+     */
+    
 }
 
 - (BOOL)messageMatch:(Message*)message{

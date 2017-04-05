@@ -45,6 +45,7 @@
 - (void)cleanallHistory:(CKServerConnectionExecuted)callback;
 - (void) getUserClasters: (NSNumber *)status withFriendStatus: (NSNumber *)isfriend withCountry: (NSNumber *)country withCity: (NSNumber *)city withSex: (NSString *)sex withMinage: (NSNumber *)minage andMaxAge: (NSNumber *)maxage withMask: (NSNumber *)mask withBottomLeftLatitude:(NSNumber *)bottomLeftLatitude withBottomLeftLongtitude: (NSNumber *) bottomLeftLongtitude withtopCoordinate: (NSNumber *)topRightLatitude withTopRigthLongtitude:(NSNumber *)topRightLongtitde withCallback: (CKServerConnectionExecuted)callback;
 - (void)setMessagesStatus:(CKMessageStatus)status messagesIdents:(NSArray *)messagesIdents  callback:(CKServerConnectionExecuted)callback;
+- (void)setAllIncomingMessagesStatusReadWithUserId:(NSString *)userId callback:(CKServerConnectionExecuted)callback;
 - (void)clearhistory:(CKDialogModel*)dialog callback:(CKServerConnectionExecuted)callback;
 
 @property (nonatomic, strong) NSMutableDictionary *messageModelCache;
