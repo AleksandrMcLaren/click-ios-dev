@@ -101,6 +101,13 @@ static CGFloat keyboardLastHeight = 224.f;
     });
 }
 
+- (void)insertTopMessages:(NSArray *)messages
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.messageVC insertTopMessages:messages];
+    });
+}
+
 - (void)addMessage:(MLChatMessage *)message
 {
     dispatch_async(dispatch_get_main_queue(), ^{

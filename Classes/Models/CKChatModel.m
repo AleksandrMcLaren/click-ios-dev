@@ -179,6 +179,8 @@
 -(void)recivedMesages:(NSArray*)messages
               success:(void (^)(NSArray *messages))success
 {
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    
     for (NSDictionary *dictionary in messages){
         
         Message* message = [Message fromCacheWithId:dictionary[@"id"]];
@@ -189,10 +191,14 @@
             message = [Message modelWithDictionary:dictionary];
 
         [self saveMessage:message];
+        [result addObject:message];
     }
-    
+
     if(success)
-        success([self getMessages]);
+        success(result);
+    
+//    if(success)
+//        success([self getMessages]);
 }
 
 -(void)saveMessage:(Message*)message{

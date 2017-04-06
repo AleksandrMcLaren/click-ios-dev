@@ -17,6 +17,38 @@
             endingLineNumber = "631"
             landmarkName = "-actionBack"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[ChatView actionBack]"
+                  moduleName = "click"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/aleksandr/Documents/projects/work/click-ios-dev/Classes/Screens/01_Chat/ChatView.m"
+                  timestampString = "513181105.046048"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "633"
+                  endingLineNumber = "633"
+                  offsetFromSymbolStart = "72">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[ChatView actionBack]"
+                  moduleName = "click"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/aleksandr/Documents/projects/work/click-ios-dev/Classes/Screens/01_Chat/ChatView.m"
+                  timestampString = "513181105.048252"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "633"
+                  endingLineNumber = "633"
+                  offsetFromSymbolStart = "96">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -32,22 +64,6 @@
             startingLineNumber = "60"
             endingLineNumber = "60"
             landmarkName = "-initWithUser:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Classes/Models/CKGroupChatModel.m"
-            timestampString = "512984806.576748"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
-            landmarkName = "-loadMessagesWithSuccess:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

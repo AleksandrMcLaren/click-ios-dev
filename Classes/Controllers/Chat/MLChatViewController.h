@@ -14,6 +14,7 @@
 - (id)init;
 
 - (void)reloadMessages:(NSArray <MLChatMessage *> *)messages animated:(BOOL)animated;
+- (void)insertTopMessages:(NSArray *)messages;
 - (void)addMessage:(MLChatMessage *)message;
 
 - (void)beginRefreshing;

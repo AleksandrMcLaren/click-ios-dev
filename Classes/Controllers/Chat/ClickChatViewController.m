@@ -18,6 +18,8 @@
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (nonatomic, strong) MLChatBarAvaViewController *avaVC;
 
+@property (nonatomic) NSInteger page;
+
 @end
 
 @implementation ClickChatViewController
@@ -30,7 +32,8 @@
     {
         self.chat = chat;
         self.messages = [[NSMutableArray alloc] init];
-
+        self.page = 1;
+        
         __weak typeof(self.chat) _weakChat = self.chat;
         self.sendMessage = ^(NSString *text){
             
@@ -38,12 +41,12 @@
                 [_weakChat send:text Video:nil Picture:nil Audio:nil];
         };
         
-//        __weak typeof(self) _weakSelf = self;
-//        self.reloadMessages = ^{
-//           
-//           // if(_weakSelf)
-//           //     [_weakChat loadMessages];
-//        };
+        __weak typeof(self) _weakSelf = self;
+        self.reloadMessages = ^{
+           
+            if(_weakSelf)
+                [_weakSelf loadPrevMessages];
+        };
         
         [self createBarAvatarView];
     }
@@ -91,19 +94,26 @@
 
 - (void)reloadData
 {
-    NSArray *messages = [self.chat getMessages];
+    NSMutableArray *messages = [[self.chat getMessages] mutableCopy];
     
+    if(messages.count > INSERT_MESSAGES)
+    {
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(INSERT_MESSAGES, messages.count - INSERT_MESSAGES)];
+        [messages removeObjectsAtIndexes:indexSet];
+    }
+         
     if(messages.count)
     {
+        self.page = 1;
         [self createMessages:messages];
         [self reloadMessages:self.messages animated:NO];
     }
     else
     {
-        [self beginRefreshing];
+       // [self beginRefreshing];
     }
 
-    [self loadMessages];
+   // [self loadMessages];
 }
 
 - (void)loadMessages
@@ -144,6 +154,39 @@
         }
     }];
 }
+
+- (void)loadPrevMessages
+{
+    self.page++;
+    
+    [self.chat loadMessagesWithPage:self.page
+                            success:^(NSArray *messages) {
+                                
+                                if(!messages || !messages.count)
+                                {
+                                    [self insertTopMessages:@[]];
+                                    return;
+                                }
+                                
+                                self.lastMessage = nil;
+                                
+                                NSMutableArray *topMessages = [[NSMutableArray alloc] init];
+                                
+                                for(NSInteger i = messages.count - 1; i > -1; i--)
+                                {
+                                    Message *msg = messages[i];
+                                    MLChatMessage *message = [self createFromMessage:msg];
+                                    [topMessages addObject:message];
+                                }
+                                
+                                NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, topMessages.count)];
+                                [self.messages insertObjects:topMessages atIndexes:indexSet];
+                                self.lastMessage = self.messages.lastObject;
+                                
+                                [self insertTopMessages:topMessages];
+                            }];
+}
+
 - (void)createMessages:(NSArray *)inMessages
 {
     self.lastMessage = nil;

@@ -44,6 +44,25 @@
     }];
 }
 
+-(void)loadMessagesWithPage:(NSInteger)page
+                    success:(void (^)(NSArray *messages))success
+{
+    [[CKMessageServerConnection sharedInstance] getDialogWithUser:self.dialog.userId page:page pageSize:INSERT_MESSAGES callback:^(NSDictionary *result) {
+        
+        [self recivedMesages:result[@"result"]
+                     success:^(NSArray *messages) {
+                         
+                         if(success)
+                             success(messages);
+                     }];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [CKDialogModel clearCounter:self.dialog];
+            [self clearCounter:nil];
+        });
+    }];
+}
+
 - (void)messageReceived:(NSNotification *)notif
 {
     Message *message = [Message modelWithDictionary:notif.userInfo];

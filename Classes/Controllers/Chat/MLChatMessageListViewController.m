@@ -28,9 +28,6 @@
     {
         self.heightCellAtIndexPath = [[NSMutableDictionary alloc] init];
         self.messages = [[NSMutableArray alloc] init];
-        
-        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                     action:@selector(tapped)];
     }
     
     return self;
@@ -48,7 +45,16 @@
     self.tableView.backgroundColor = [UIColor clearColor];
     [self.tableView registerClass:MLChatTableViewCell.class forCellReuseIdentifier:@"Cell"];
 
+    self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
     [self.view addGestureRecognizer:self.tapRecognizer];
+    
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self
+                            action:@selector(reloadData)
+                  forControlEvents:UIControlEventValueChanged];
+    
+   // [self beginRefreshing];
+   // [self reloadData];
 }
 
 - (void)viewDidLayoutSubviews
@@ -114,12 +120,77 @@
     addMessage();
 }
 
+- (void)insertTopMessages:(NSArray *)messages
+{
+    [self.refreshControl endRefreshing];
+   
+    if(!messages || !messages.count)
+        return;
+
+    NSMutableArray *paths = [[NSMutableArray alloc] init];
+    
+    for(NSInteger i = 0; i < messages.count; i++)
+    {
+        NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
+        [paths addObject:path];
+    }
+
+    CGFloat initialOffset = self.tableView.contentOffset.y;
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, messages.count)];
+    NSIndexPath *topIndexPath = [NSIndexPath indexPathForRow:messages.count inSection:0];
+    
+    [self.messages insertObjects:messages atIndexes:indexSet];
+    [self.tableView reloadData];
+    
+    [self.tableView scrollToRowAtIndexPath:topIndexPath
+                          atScrollPosition:UITableViewScrollPositionTop
+                                  animated:NO];
+    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + initialOffset);
+    
+    return;
+    
+    
+    
+    
+    
+   // [self.tableView beginUpdates];
+    
+    CGSize beforeContentSize = self.tableView.contentSize;
+    
+    [UIView setAnimationsEnabled:NO];
+    [self.tableView beginUpdates];
+    
+    [self.messages insertObjects:messages atIndexes:indexSet];
+    [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationNone];
+
+    [self.tableView endUpdates];
+    [UIView setAnimationsEnabled:YES];
+    
+   // [self.tableView reloadData];
+   
+    CGSize afterContentSize = self.tableView.contentSize;
+    CGFloat diff = self.tableView.contentSize.height - beforeContentSize.height;
+    
+    CGPoint afterContentOffset = self.tableView.contentOffset;
+    CGPoint newContentOffset = CGPointMake(afterContentOffset.x, afterContentOffset.y + afterContentSize.height - beforeContentSize.height);
+    //self.tableView.contentOffset = newContentOffset;
+    
+    [self.tableView setContentOffset:CGPointMake(0, self.tableView.contentOffset.y - diff) animated:NO];
+    
+//    [self.tableView insertRowsAtIndexPaths:paths
+//                              withRowAnimation:UITableViewRowAnimationNone];
+//    [self.tableView scrollToRowAtIndexPath:topIndexPath
+//                          atScrollPosition:UITableViewScrollPositionBottom
+//                                  animated:YES];
+   // [self.tableView endUpdates];
+}
+
 - (void)beginRefreshing
 {
-    if(self.refreshControl)
-        return;
+//    if(self.refreshControl)
+//        return;
     
-    self.refreshControl = [[UIRefreshControl alloc] init];
+    
     [self.refreshControl layoutIfNeeded];
     [self.refreshControl beginRefreshing];
     
@@ -140,8 +211,8 @@
     
     self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + self.refreshControl.frame.size.height);
     
-    [self.refreshControl endRefreshing];
-    self.refreshControl = nil;
+//    [self.refreshControl endRefreshing];
+//    self.refreshControl = nil;
 }
 
 #pragma mark - tableView contentOffset
