@@ -82,6 +82,7 @@
     [[CKMessageServerConnection sharedInstance] uploadAttachements:self.attachements completion:^(NSDictionary *result) {
         
         self.attachements = @[];
+        
         [[CKMessageServerConnection sharedInstance] sendMessage:message.text
                                                    attachements:result[@"uuids"]
                                                          toUser:_userId
@@ -96,12 +97,35 @@
                                                                
                                                                if(message.updatedIdentifier)
                                                                    message.updatedIdentifier();
-    
+                                                               
+                                                               if(message.updatedStatus)
+                                                                   message.updatedStatus();
+                                                               
                                                                [CKDialogModel updateDialog:self.dialog withMessage:message];
                                                                
-                                                           }else{
-                                                                [ProgressHUD showError:@"Message sending failed."];
+                                                           } else {
+                                                               
+                                                               //[ProgressHUD showError:@"Message sending failed."];
+                                                               
+                                                               message.status = CKMessageStatusNotSent;
+                                                               [message save];
+                                                               
+                                                               if(message.updatedStatus)
+                                                                   message.updatedStatus();
+                                                               
+                                                               [CKDialogModel updateDialog:self.dialog withMessage:message];
                                                            }
+                                                           
+                                                       } failure:^{
+                                                           
+                                                           message.status = CKMessageStatusNotSent;
+                                                           [message save];
+                                                           
+                                                           if(message.updatedStatus)
+                                                               message.updatedStatus();
+                                                           
+                                                           [CKDialogModel updateDialog:self.dialog withMessage:message];
+
         }];
     }];
 }
@@ -115,6 +139,7 @@
     Message *message = [MessageSent new];
     message.dialogType = CKDialogTypeChat;
     message.dialogIdentifier = self.dialog.userId;
+    message.dialogId = self.dialog.userId;
     return message;
 }
 

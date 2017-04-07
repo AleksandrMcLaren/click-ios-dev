@@ -19,7 +19,7 @@
 #import "CKLoginCodeViewController.h"
 #import "CKOperationsProtocol.h"
 #import "ChatView.h"
-#import "KCChatViewController.h"
+#import "CKChatViewController.h"
 
 
 @interface CKMapViewController()
@@ -32,7 +32,7 @@
 {
     UIViewController *_currentController;
     UITabBarController *_tabBarController;
-    CKChatsViewController *_chatsViewController;
+    CKChatViewController *_chatsViewController;
 }
 
 - (void)replaceCurrentController:(UIViewController *)newController
@@ -184,7 +184,7 @@
 
 - (void)startChat:(CKChatModel *)chat{
 
-    KCChatViewController *chatVC = [[KCChatViewController alloc] initWithChat:chat];
+    CKChatViewController *chatVC = [[CKChatViewController alloc] initWithChat:chat];
     chatVC.hidesBottomBarWhenPushed = YES;
     _tabBarController.selectedIndex = 0;
     [_chatsViewController.navigationController popToRootViewControllerAnimated:NO];

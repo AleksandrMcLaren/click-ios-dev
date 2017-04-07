@@ -76,6 +76,7 @@
     self.userid = [NSString stringWithFormat:@"%@", dict[@"userid"]];
     self.userlogin = [NSString stringWithFormat:@"%@", dict[@"userlogin"]];
     self.useravatar = [NSString stringWithFormat:@"%@", dict[@"useravatar"]];
+    self.dialogId = [NSString stringWithFormat:@"%@", dict[@"dialogid"]];
     
     NSMutableArray *attachements = [NSMutableArray new];
     
@@ -216,6 +217,7 @@
     dictionary[@"userid"] = self.userid ;
     dictionary[@"userlogin"] = self.userlogin;
     dictionary[@"useravatar"] = self.useravatar;
+    dictionary[@"dialogid"] = self.dialogId;
     
 //    NSMutableArray *attachements = [NSMutableArray new];
     

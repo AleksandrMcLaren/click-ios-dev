@@ -6,12 +6,12 @@
 //  Copyright © 2017 Click. All rights reserved.
 //
 
-#import "KCChatViewController.h"
+#import "CKChatViewController.h"
 #import "CKApplicationModel.h"
 #import "MLChatBarAvaViewController.h"
-#import "MLChatLib.h"
+#import "MLChatBarAvaViewController+CKConfigureForChat.h"
 
-@interface KCChatViewController ()
+@interface CKChatViewController ()
 
 @property (nonatomic, strong) CKChatModel *chat;
 @property (nonatomic, strong) MLChatMessage *lastMessage;
@@ -22,7 +22,7 @@
 
 @end
 
-@implementation KCChatViewController
+@implementation CKChatViewController
 
 - (id)initWithChat:(CKChatModel *)chat
 {
@@ -53,13 +53,14 @@
 - (void)addSubscribes
 {
     __weak typeof(self.chat) _weakChat = self.chat;
+    __weak typeof(self) _weakSelf = self;
+    
     self.sendMessage = ^(NSString *text){
         
         if(_weakChat)
             [_weakChat send:text Video:nil Picture:nil Audio:nil];
     };
     
-    __weak typeof(self) _weakSelf = self;
     self.reloadMessages = ^{
         
         if(_weakSelf)
@@ -255,64 +256,8 @@
 
 - (void)createBarAvatarView
 {
-    NSString *avatarUrl = [NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, self.chat.dialog.userAvatarId];
-    NSString *name = ((self.chat.dialog.userName && self.chat.dialog.userName.length) ? self.chat.dialog.userName : self.chat.dialog.userLogin);
-    NSString *date = nil;
-    NSString *onlineText = @"В сети";
-    
-    CKUser *user = [[Users sharedInstance] userWithId:self.chat.dialog.userId];
-
-    if(user && user.statusDate)
-    {
-        date = [NSString stringWithFormat:@"%@ в %@", [[MLChatLib formatterDate_yyyy_MM_dd] stringFromDate:user.statusDate], [[MLChatLib formatterDate_HH_mm] stringFromDate:user.statusDate]];
-    }
-
-    CGSize nameSize = [name boundingRectWithSize:CGSizeMake(180, CGFLOAT_MAX)
-                                               options:NSStringDrawingUsesLineFragmentOrigin
-                                            attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]}
-                                               context:nil].size;
-    CGFloat allWidth = 40 + 7 + nameSize.width;
-    CGFloat minWidth = 0;
-    
-    if(user.status == 1)
-    {   // в сети
-        CGSize textSize = [onlineText boundingRectWithSize:CGSizeMake(180, CGFLOAT_MAX)
-                                                   options:NSStringDrawingUsesLineFragmentOrigin
-                                                attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10]}
-                                                   context:nil].size;
-        minWidth = 40 + 7 + textSize.width;
-    }
-    else
-    {
-        if(date)
-        {   // не в сети
-            minWidth = 135.f;
-        }
-        else
-        {   // никогда не был в сети
-            minWidth = 40 + 7 + 20;
-        }
-    }
-    
-    if(allWidth < minWidth)
-        allWidth = minWidth;
-    
     self.avaVC = [[MLChatBarAvaViewController alloc] init];
-    self.avaVC.view.frame = CGRectMake(0, 0, allWidth, 40);
-    self.avaVC.avatarUrl = avatarUrl;
-    self.avaVC.titleText = name;
-    
-    if(user.status == 1)
-    {
-        self.avaVC.online = YES;
-        self.avaVC.subtitleText = onlineText;
-    }
-    else
-    {
-        self.avaVC.online = NO;
-        self.avaVC.subtitleText = date;
-    }
-
+    [self.avaVC configureForChat:self.chat];
     self.navigationItem.titleView = self.avaVC.view;
 }
 

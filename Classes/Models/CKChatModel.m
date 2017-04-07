@@ -37,7 +37,6 @@
     return self;
 }
 
-//fetch from local
 - (NSArray *)getMessages
 {
     __block NSMutableArray *result = [NSMutableArray new];
@@ -119,28 +118,6 @@
                                                                                   callback:^(NSDictionary *result){
                                                                                       
                                                                                   }];
-
-    /*
-    BOOL updateStatusIncomingMessage = NO;
-    
-    for (Message* message in messages) {
-        
-        if ((message.status != CKMessageStatusRead) && (!message.isOwner))
-        {
-            updateStatusIncomingMessage = YES;
-            break;
-        }
-    }
-    
-    if (updateStatusIncomingMessage) {
-        
-        [[CKMessageServerConnection sharedInstance] setAllIncomingMessagesStatusReadWithUserId:self.dialog.userId
-                                                                                      callback:^(NSDictionary *result){
-            
-        }];
-    }
-     */
-    
 }
 
 - (BOOL)messageMatch:(Message*)message{
@@ -165,6 +142,11 @@
 
 //fetch from server
 - (void)loadMessagesWithSuccess:(void (^)(NSArray *messages))success
+{
+}
+
+-(void)loadMessagesWithPage:(NSInteger)page
+                    success:(void (^)(NSArray *messages))success
 {
 }
 
@@ -204,6 +186,63 @@
 
 -(void)saveMessage:(Message*)message{
     [message save];
+}
+
+#pragma mark - 
+
++ (void)sentNotSentMessages
+{
+    NSString *query = [NSString stringWithFormat:@"select * from messages where status = %ld", (long)CKMessageStatusNotSent];
+    
+    __block NSMutableArray *result = [NSMutableArray new];
+    [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {
+        FMResultSet *data = [db executeQuery:query];
+        while ([data next]){
+            NSDictionary* resultDictionary = [data resultDictionary];
+            Message *model = [Message modelWithDictionary:[resultDictionary prepared]];
+            [result addObject:model];
+        }
+    }];
+    
+    if(result.count)
+    {
+        [result sortUsingComparator:^NSComparisonResult(Message *obj1, Message *obj2) {
+            return [obj1.date compare:obj2.date];
+        }];
+        
+        for(Message *msg in result)
+        {
+            [CKChatModel uploadMessage:msg];
+        }
+    }
+}
+
++ (void)uploadMessage:(Message *)message
+{
+    [[CKMessageServerConnection sharedInstance] sendMessage:message.text
+                                               attachements:nil
+                                                     toUser:message.dialogId
+                                                   callback:^(NSDictionary *result) {
+                                                       
+                                                       if (result.socketMessageStatus == S_OK) {
+                                                           NSDictionary* dictionary = result[@"result"];
+                                                           Message *messageRecived = [Message modelWithDictionary:dictionary];
+                                                           [message updateWithMessage:messageRecived];
+                                                           [CKMessageServerConnection sharedInstance].messageModelCache[message.id] = message;
+                                                           [message save];
+                                                           
+                                                           if(message.updatedIdentifier)
+                                                               message.updatedIdentifier();
+                                                           
+                                                           if(message.updatedStatus)
+                                                               message.updatedStatus();
+                                                           
+                                                       }
+                                                       
+                                                   } failure:^{
+                                                       
+                                                   }];
+    
 }
 
 @end

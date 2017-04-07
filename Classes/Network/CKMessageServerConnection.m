@@ -74,6 +74,10 @@
     if (self = [super init]) {
         self.messageModelCache = [NSMutableDictionary new];
         self.attachmentModelCache = [NSMutableDictionary new];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [CKChatModel sentNotSentMessages];
+        });
     }
     return self;
 }
@@ -137,9 +141,14 @@
     }];
 }
 
-- (void)sendMessage:(NSString *)message attachements:(NSArray *)attachements toUser:(NSString *)user callback:(CKServerConnectionExecuted)callback {
-    [self sendData:@{@"action":@"dialog.send", @"options":@{@"userlist":@[user], @"entryid":@"00000000-0000-0000-0000-000000000000", @"message":message, @"type":@(0), @"dialogtype":@(0), @"attach":attachements?attachements:@[]}} completion:^(NSDictionary *result) {
-        callback(result);
+- (void)sendMessage:(NSString *)message attachements:(NSArray *)attachements toUser:(NSString *)user callback:(CKServerConnectionExecuted)callback failure:(void (^)())failure{
+    [self sendData:@{@"action":@"dialog.send", @"options":@{@"userlist":@[user], @"entryid":@"00000000-0000-0000-0000-000000000000", @"message":message, @"type":@(0), @"dialogtype":@(0), @"attach":attachements?attachements:@[]}}
+        completion:^(NSDictionary *result) {
+            callback(result);
+        } failure:^{
+            
+            if(failure)
+                failure();
     }];
 }
 

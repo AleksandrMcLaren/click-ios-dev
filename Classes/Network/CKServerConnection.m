@@ -35,6 +35,7 @@
     {
         _callbacks = [NSMutableDictionary new];
         _udid = [CKServerConnection getUniqueDeviceIdentifierAsString];
+        _queue = [NSMutableArray new];
         self.queueReceiveMessage = dispatch_queue_create("queueReceiveMessage", DISPATCH_QUEUE_SERIAL);
     }
     return self;
@@ -117,9 +118,6 @@
     }
     _connection = [[SRWebSocket alloc] initWithURL:url];
     _connection.delegate = self;
-//    if (!_queue) {
-        _queue = [NSMutableArray new];
-//    }
     _isConnecting = YES;
     [_connection open];
 
@@ -147,6 +145,11 @@
 //}
 
 - (void)sendData:(NSDictionary *)data completion:(CKServerConnectionExecuted)completion
+{
+    [self sendData:data completion:completion failure:nil];
+}
+
+- (void)sendData:(NSDictionary *)data completion:(CKServerConnectionExecuted)completion failure:(void (^)())failure
 {
     if (!_connection)
     {
@@ -181,15 +184,25 @@
 
     
     if(_connection.readyState == SR_CONNECTING) {
+       
         [_queue addObject:sendString];
+        
+        if(failure)
+            failure();
+        
     } else if(_connection.readyState == SR_CLOSED) {
         [self connect];
         [_queue addObject:sendString];
+        
+        if(failure)
+            failure();
+        
     } else {
         [_connection send:sendString];
     }
     
 }
+
 
 - (void)processIncomingEvent:(NSDictionary *)eventData
 {

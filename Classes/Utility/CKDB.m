@@ -176,6 +176,7 @@ static void myLow(sqlite3_context *context, int argc, sqlite3_value **argv)
         date  TEXT, \
         dialogstate INTEGER, \
         dialogtype INTEGER, \
+        dialogid TEXT, \
         entryid  TEXT, \
         id TEXT, \
         lat NUMERIC, \

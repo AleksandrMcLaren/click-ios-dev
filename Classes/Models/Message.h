@@ -13,7 +13,8 @@ typedef NS_ENUM(NSInteger, CKMessageStatus)
 {
     CKMessageStatusSent,
     CKMessageStatusDelivered,
-    CKMessageStatusRead
+    CKMessageStatusRead,
+    CKMessageStatusNotSent
 };
 
 typedef enum CKMessageType
@@ -33,7 +34,7 @@ typedef enum CKMessageType
 @property (nonatomic, strong) NSString *message;
 @property (nonatomic, strong) NSArray *attachements;
 @property (nonatomic, assign) CLLocationCoordinate2D location;
-@property (nonatomic, strong) NSString *toUserID;
+@property (nonatomic, strong) NSString *dialogId;
 @property (nonatomic, strong) NSString *userid;
 @property (nonatomic, strong) NSString *userlogin;
 @property (nonatomic, strong) NSString *useravatar;

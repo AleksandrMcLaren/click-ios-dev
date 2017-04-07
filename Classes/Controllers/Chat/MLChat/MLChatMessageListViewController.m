@@ -52,9 +52,14 @@
     [self.refreshControl addTarget:self
                             action:@selector(reloadData)
                   forControlEvents:UIControlEventValueChanged];
-    
-    [self beginRefreshing];
+
     [self reloadData];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        
+        if(!self.messages.count)
+            [self beginRefreshing];
+    });
 }
 
 - (void)viewDidLayoutSubviews

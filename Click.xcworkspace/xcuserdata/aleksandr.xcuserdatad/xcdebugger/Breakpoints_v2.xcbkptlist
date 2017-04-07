@@ -26,7 +26,7 @@
                   moduleName = "click"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/aleksandr/Documents/projects/work/click-ios-dev/Classes/Screens/01_Chat/ChatView.m"
-                  timestampString = "513248299.76883"
+                  timestampString = "513266789.711867"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "633"
@@ -41,7 +41,7 @@
                   moduleName = "click"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/aleksandr/Documents/projects/work/click-ios-dev/Classes/Screens/01_Chat/ChatView.m"
-                  timestampString = "513248299.771056"
+                  timestampString = "513266789.714278"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "633"
@@ -64,6 +64,22 @@
             startingLineNumber = "60"
             endingLineNumber = "60"
             landmarkName = "-initWithUser:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Classes/Network/CKServerConnection.m"
+            timestampString = "513266596.785339"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "-connectWithCallback:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

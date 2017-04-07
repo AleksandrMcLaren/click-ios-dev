@@ -38,7 +38,7 @@
 - (void)getDialogWithId:(NSString *)dialogId page:(NSInteger)page pageSize:(NSInteger)pageSize callback:(CKServerConnectionExecuted)callback;
 - (void)getDialogWithUser:(NSString *)userId page:(NSInteger)page pageSize:(NSInteger)pageSize callback:(CKServerConnectionExecuted)callback;
 - (void)getDialogWithGroup:(NSString *)groupId page:(NSInteger)page pageSize:(NSInteger)pageSize callback:(CKServerConnectionExecuted)callback;
-- (void)sendMessage:(NSString *)message attachements:(NSArray *)attachements toUser:(NSString *)user callback:(CKServerConnectionExecuted)callback;
+- (void)sendMessage:(NSString *)message attachements:(NSArray *)attachements toUser:(NSString *)user callback:(CKServerConnectionExecuted)callback failure:(void (^)())failure;
 - (void)sendMessage:(NSString *)message toGroup:(NSString *)group dialogType:(CKDialogType)dialogType callback:(CKServerConnectionExecuted)callback;
 - (void)createGroupChatWithName:(NSString *)title avatar:(NSString *)avatar description:(NSString *)description users:(NSArray *)userlist callback:(CKServerConnectionExecuted)callback;
 - (void)uploadAttachements:(NSArray<CKAttachModel *>*)attachements completion:(CKServerConnectionExecuted)callback;

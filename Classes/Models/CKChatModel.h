@@ -42,4 +42,6 @@ typedef void (^CKChatModelFetchedMessages)(NSArray* messages);
 -(void)recivedMesages:(NSArray*)messages
               success:(void (^)(NSArray *messages))success;
 
++ (void)sentNotSentMessages;
+
 @end
