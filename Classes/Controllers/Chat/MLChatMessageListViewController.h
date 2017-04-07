@@ -20,9 +20,6 @@
 - (void)insertTopMessages:(NSArray *)messages;
 - (void)addMessage:(MLChatMessage *)message;
 
-- (void)beginRefreshing;
-- (void)endRefreshing;
-
 @end
 
 

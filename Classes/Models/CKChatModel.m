@@ -194,15 +194,17 @@
         [result addObject:message];
     }
 
+    [result sortUsingComparator:^NSComparisonResult(Message *obj1, Message *obj2) {
+        return [obj1.date compare:obj2.date];
+    }];
+    
     if(success)
         success(result);
-    
-//    if(success)
-//        success([self getMessages]);
 }
 
 -(void)saveMessage:(Message*)message{
     [message save];
 }
+
 @end
 

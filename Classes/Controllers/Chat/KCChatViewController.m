@@ -1,17 +1,17 @@
 //
-//  ClickChatViewController.m
+//  KCChatViewController.m
 //  click
 //
 //  Created by Александр on 16.03.17.
 //  Copyright © 2017 Click. All rights reserved.
 //
 
-#import "ClickChatViewController.h"
+#import "KCChatViewController.h"
 #import "CKApplicationModel.h"
 #import "MLChatBarAvaViewController.h"
 #import "MLChatLib.h"
 
-@interface ClickChatViewController ()
+@interface KCChatViewController ()
 
 @property (nonatomic, strong) CKChatModel *chat;
 @property (nonatomic, strong) MLChatMessage *lastMessage;
@@ -22,7 +22,7 @@
 
 @end
 
-@implementation ClickChatViewController
+@implementation KCChatViewController
 
 - (id)initWithChat:(CKChatModel *)chat
 {
@@ -34,32 +34,11 @@
         self.messages = [[NSMutableArray alloc] init];
         self.page = 1;
         
-        __weak typeof(self.chat) _weakChat = self.chat;
-        self.sendMessage = ^(NSString *text){
-            
-            if(_weakChat)
-                [_weakChat send:text Video:nil Picture:nil Audio:nil];
-        };
-        
-        __weak typeof(self) _weakSelf = self;
-        self.reloadMessages = ^{
-           
-            if(_weakSelf)
-                [_weakSelf loadPrevMessages];
-        };
-        
+        [self addSubscribes];
         [self createBarAvatarView];
     }
     
     return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-
-    [self addBackendSubscribes];
-    [self reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -71,9 +50,27 @@
 
 #pragma mark -
 
-- (void)addBackendSubscribes
+- (void)addSubscribes
 {
+    __weak typeof(self.chat) _weakChat = self.chat;
+    self.sendMessage = ^(NSString *text){
+        
+        if(_weakChat)
+            [_weakChat send:text Video:nil Picture:nil Audio:nil];
+    };
+    
     __weak typeof(self) _weakSelf = self;
+    self.reloadMessages = ^{
+        
+        if(_weakSelf)
+        {
+            if(_weakChat.messages.count)
+                [_weakSelf loadPrevMessages];
+            else
+                [_weakSelf reloadData];
+        }
+    };
+    
     [self.chat.messageDidChanged subscribeNext:^(Message *msg) {
         
         if(_weakSelf)
@@ -89,48 +86,50 @@
             }
         }
     }];
-
 }
 
 - (void)reloadData
 {
+    /*
+     *  Нужно поставить сообщения из базы,
+     *  затем обновить с сервера на редкий случай если пользователь был в чате на другом устройстве
+     */
+    
     NSMutableArray *messages = [[self.chat getMessages] mutableCopy];
     
     if(messages.count > INSERT_MESSAGES)
     {
-        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(INSERT_MESSAGES, messages.count - INSERT_MESSAGES)];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, messages.count - INSERT_MESSAGES)];
         [messages removeObjectsAtIndexes:indexSet];
     }
          
     if(messages.count)
     {
-        self.page = 1;
         [self createMessages:messages];
         [self reloadMessages:self.messages animated:NO];
     }
-    else
-    {
-       // [self beginRefreshing];
-    }
 
-   // [self loadMessages];
+    [self loadMessages];
 }
 
 - (void)loadMessages
 {
+    /*
+     *  Загрузка последних сообщений
+     */
+    
+    self.page = 1;
+    
     __weak typeof(self) _weakSelf = self;
     [self.chat loadMessagesWithSuccess:^(NSArray *msgs) {
         
         if(_weakSelf)
         {
-            [_weakSelf endRefreshing];
-            
             if(_weakSelf.messages.count)
-            {   // нужно обновлять список сообщений для переотправленных
-                // проверка, что пришли не те же сообщения что и в БД
+            {   // проверка на то что пришли не те же сообщения что и в БД
                 BOOL changedMessage = NO;
                 
-                for(NSInteger i = 0; i < _weakSelf.messages.count; i++)
+                for(NSInteger i = 0; i < _weakSelf.messages.count && i < msgs.count; i++)
                 {
                     MLChatMessage *message = _weakSelf.messages[i];
                     Message *msg = msgs[i];
@@ -157,10 +156,14 @@
 
 - (void)loadPrevMessages
 {
-    self.page++;
+    /*
+     *  Загрузка предыдущих сообщений постранично
+     */
     
-    [self.chat loadMessagesWithPage:self.page
+    [self.chat loadMessagesWithPage:self.page + 1
                             success:^(NSArray *messages) {
+                                
+                                self.page++;
                                 
                                 if(!messages || !messages.count)
                                 {
@@ -172,9 +175,8 @@
                                 
                                 NSMutableArray *topMessages = [[NSMutableArray alloc] init];
                                 
-                                for(NSInteger i = messages.count - 1; i > -1; i--)
+                                for(Message *msg in messages)
                                 {
-                                    Message *msg = messages[i];
                                     MLChatMessage *message = [self createFromMessage:msg];
                                     [topMessages addObject:message];
                                 }
@@ -187,6 +189,8 @@
                             }];
 }
 
+#pragma mark - Message
+
 - (void)createMessages:(NSArray *)inMessages
 {
     self.lastMessage = nil;
@@ -198,8 +202,6 @@
         [self.messages addObject:message];
     }
 }
-
-#pragma mark - Message
 
 - (MLChatMessage *)createFromMessage:(Message *)msg
 {
@@ -249,6 +251,8 @@
     return message;
 }
 
+#pragma mark - Bar
+
 - (void)createBarAvatarView
 {
     NSString *avatarUrl = [NSString stringWithFormat:@"%@%@", CK_URL_AVATAR, self.chat.dialog.userAvatarId];
@@ -268,9 +272,7 @@
                                             attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]}
                                                context:nil].size;
     CGFloat allWidth = 40 + 7 + nameSize.width;
-    
-    // не в сети
-    CGFloat minWidth = 135.f;
+    CGFloat minWidth = 0;
     
     if(user.status == 1)
     {   // в сети
@@ -279,6 +281,17 @@
                                                 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10]}
                                                    context:nil].size;
         minWidth = 40 + 7 + textSize.width;
+    }
+    else
+    {
+        if(date)
+        {   // не в сети
+            minWidth = 135.f;
+        }
+        else
+        {   // никогда не был в сети
+            minWidth = 40 + 7 + 20;
+        }
     }
     
     if(allWidth < minWidth)

@@ -17,8 +17,6 @@
 - (void)insertTopMessages:(NSArray *)messages;
 - (void)addMessage:(MLChatMessage *)message;
 
-- (void)beginRefreshing;
-- (void)endRefreshing;
 
 @property (copy) void (^sendMessage)(NSString *text);
 @property (copy) void (^reloadMessages)();

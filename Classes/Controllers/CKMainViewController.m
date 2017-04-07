@@ -19,7 +19,7 @@
 #import "CKLoginCodeViewController.h"
 #import "CKOperationsProtocol.h"
 #import "ChatView.h"
-#import "ClickChatViewController.h"
+#import "KCChatViewController.h"
 
 
 @interface CKMapViewController()
@@ -184,7 +184,7 @@
 
 - (void)startChat:(CKChatModel *)chat{
 
-    ClickChatViewController *chatVC = [[ClickChatViewController alloc] initWithChat:chat];
+    KCChatViewController *chatVC = [[KCChatViewController alloc] initWithChat:chat];
     chatVC.hidesBottomBarWhenPushed = YES;
     _tabBarController.selectedIndex = 0;
     [_chatsViewController.navigationController popToRootViewControllerAnimated:NO];

@@ -123,20 +123,6 @@ static CGFloat keyboardLastHeight = 224.f;
     });
 }
 
-- (void)beginRefreshing
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.messageVC beginRefreshing];
-    });
-}
-
-- (void)endRefreshing
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.messageVC endRefreshing];
-    });
-}
-
 #pragma mark - NSNotification
 
 - (void)keyboardWillChangeFrame:(NSNotification *)notification

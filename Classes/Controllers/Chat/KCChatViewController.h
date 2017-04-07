@@ -1,5 +1,5 @@
 //
-//  ClickChatViewController.h
+//  KCChatViewController.h
 //  click
 //
 //  Created by Александр on 16.03.17.
@@ -9,7 +9,7 @@
 #import "MLChatViewController.h"
 #import "CKChatModel.h"
 
-@interface ClickChatViewController : MLChatViewController
+@interface KCChatViewController : MLChatViewController
 
 - (id)initWithChat:(CKChatModel *)chat;
 
