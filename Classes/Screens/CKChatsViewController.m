@@ -159,13 +159,20 @@
 
 - (void)loadRecents
 {
-    __unused NSString *text = _searchBar.text;
-
     NSMutableArray *broadcasts = [NSMutableArray new];
     NSMutableArray *groupchats = [NSMutableArray new];
     NSMutableArray *personalchats = [NSMutableArray new];
     for (CKDialogModel *i in [[CKDialogsModel sharedInstance] dialogs])
     {
+        if(_searchBar.text && _searchBar.text.length)
+        {
+            NSString *text = [_searchBar.text lowercaseString];
+            NSString *fullText = [[NSString stringWithFormat:@"%@ %@ %@", i.userName, i.userSurname, i.userLogin] lowercaseString];
+            
+            if([fullText rangeOfString:text].location == NSNotFound)
+                continue;
+        }
+        
         switch (i.type)
         {
             case 0:

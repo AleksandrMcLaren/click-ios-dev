@@ -21,7 +21,7 @@
 - (CKUser*)userWithId:(NSString*)userId;
 
 
-- (void) addNewContactToFriends;
+- (void) addNewContactToFriends:(void(^)())completion;
 - (void) checkUserProfile: (NSString *)newFriendPhone;
 - (void) run;
 - (void) saveUserWithDialog:(NSDictionary*)dialog;

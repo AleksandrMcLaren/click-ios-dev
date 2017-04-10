@@ -246,7 +246,7 @@
     return [_phoneContacts allKeys];
 }
 
-- (void) addNewContactToFriends
+- (void) addNewContactToFriends:(void(^)())completion
 {
     [self fetchContactsWithCompletion:^(NSMutableArray *arr) {
         
@@ -256,10 +256,14 @@
             d[i.phoneNumber] = i;
         }
         _phoneContacts = d;
+        
+        NSMutableArray *cont = [NSMutableArray new];
+        [cont addObjectsFromArray:[_phoneContacts allValues]];
+        _fullContacts = cont;
+        
+        if(completion)
+            completion();
     }];
-    NSMutableArray *cont = [NSMutableArray new];
-    [cont addObjectsFromArray:[_phoneContacts allValues]];
-    _fullContacts = cont;
 }
 
 - (void) checkUserProfile: (NSString *)newFriendPhone

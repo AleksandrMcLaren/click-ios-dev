@@ -12,11 +12,16 @@
 #import "CKCache.h"
 #import "CKFriendProfileController.h"
 #import "CKContactWrapper.h"
+#import "CKChatsViewController.h"
 
+@import MessageUI;
+
+@interface CKContactsViewController () <MFMessageComposeViewControllerDelegate, UISearchBarDelegate>
+
+@end
 
 @implementation CKContactsViewController
 {
-    NSMutableArray *_contacts;
     NSArray *_phoneContacts;
     NSArray *_fullContacts;
     
@@ -26,6 +31,9 @@
     BOOL deletedWrongPerson;
     
     NSArray *_sections;
+    
+    UISearchBar *_searchBar;
+    CGFloat _keyboardHeight;
 }
 
 - (instancetype)init
@@ -34,13 +42,24 @@
     {
         self.title = @"Контакты";
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add)];
-        _phoneContacts = [[Users sharedInstance] fullContacts]; //[[CKApplicationModel sharedInstance] phoneContacts];
     }
     return self;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLoad
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardFrameChanged:)
+                                                 name:UIKeyboardWillChangeFrameNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateScreenState)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:[UIApplication sharedApplication]];
     deletedWrongPerson = false;
     errorAdding = false;
     errorHandling = 0;
@@ -48,35 +67,102 @@
     self.tableView.backgroundColor = CKClickLightGrayColor;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    self.refreshControl.tintColor = [UIColor darkGrayColor];
-    [self.refreshControl addTarget:self
-                            action:@selector(reloadData)
-                  forControlEvents:UIControlEventValueChanged];
-    [self reloadData];
+//    self.refreshControl = [[UIRefreshControl alloc] init];
+//    self.refreshControl.tintColor = [UIColor darkGrayColor];
+//    [self.refreshControl addTarget:self
+//                            action:@selector(reloadData)
+//                  forControlEvents:UIControlEventValueChanged];
+    
+    _searchBar = [[UISearchBar alloc] init];
+    _searchBar.showsCancelButton = NO;
+    _searchBar.translucent = YES;
+    _searchBar.barTintColor = [UIColor colorFromHexString:@"#f5f4f3"];
+    _searchBar.delegate = self;
+    _searchBar.returnKeyType = UIReturnKeyDone;
+    _searchBar.backgroundImage = [CKChatsViewController imageFromColor:CKClickLightGrayColor];
+    _searchBar.frame = CGRectMake(0, 0, self.view.bounds.size.width, 64);
+    _searchBar.placeholder = @"Поиск";
+    
+    UIView *searchBarBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 45)];
+    [searchBarBackground addSubview:_searchBar];
+    
+    [_searchBar makeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(_searchBar.superview.width);
+        make.height.equalTo(_searchBar.superview.height).offset(-1);
+        make.top.equalTo(0);
+        make.left.equalTo(0);
+    }];
+    
+    self.tableView.tableHeaderView = searchBarBackground;
 }
 
-//- (void)applicationDidEnterBackground:(UIApplication *)application
-//{
-//    UIApplicationState state = [application applicationState];
-//    if (state == UIApplicationStateInactive) {
-//        NSLog(@"Sent to background by locking screen");
-//    } else if (state == UIApplicationStateBackground) {
-//        NSLog(@"Sent to background by home button/switching to other app");
-//    }
-//}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    
+    __weak typeof(self) weakSelf = self;
+    [[Users sharedInstance] addNewContactToFriends:^{
+        
+        if(weakSelf)
+            [weakSelf reloadData];
+    }];
+}
 
+- (void)keyboardFrameChanged:(NSNotification *)notification
+{
+    CGRect keyboardRect = [self.view.window convertRect:[[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue] toView:self.view];
+    keyboardRect = CGRectIntersection(keyboardRect, self.view.bounds);
+    CGFloat keyboardHeight = CGRectIntersection(keyboardRect, self.view.bounds).size.height;
+    CGFloat bottomOffset = CGRectGetHeight(self.tabBarController.tabBar.frame);
+    
+    self.tableView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.superview.bounds.size.height - keyboardHeight + (keyboardHeight ? bottomOffset : 0));
+}
 
 - (void)reloadData
 {
-    _contacts = [NSMutableArray array];
-    _fullContacts = [[Users sharedInstance] fullContacts];
-    //    NSMutableArray *fc = [NSMutableArray new];
-    //    [fc addObjectsFromArray:_fullContacts];
+    NSMutableArray* sections = [NSMutableArray array];
     
-    // fill with friends
+    NSMutableArray *tmpFullContacts = [NSMutableArray new];
+    [tmpFullContacts  addObjectsFromArray:[[Users sharedInstance] fullContacts]];
     NSMutableArray *unsortedFriends = [NSMutableArray new];
     [unsortedFriends addObjectsFromArray:[[Users sharedInstance] users]];
+    
+    if(_searchBar.text && _searchBar.text.length)
+    {
+        NSMutableArray *needsRemoveObjects = [[NSMutableArray alloc] init];
+        NSString *text = [_searchBar.text lowercaseString];
+        
+        for (CKPhoneContact *p in tmpFullContacts)
+        {
+            NSString *fullText = [[NSString stringWithFormat:@"%@ %@", p.fullname, p.phoneNumber] lowercaseString];
+            
+            if([fullText rangeOfString:text].location == NSNotFound)
+                [needsRemoveObjects addObject:p];
+        }
+        
+        if(needsRemoveObjects.count)
+        {
+            [tmpFullContacts removeObjectsInArray:needsRemoveObjects];
+            [needsRemoveObjects removeAllObjects];
+        }
+        
+        for (CKUser *i in unsortedFriends)
+        {
+            NSString *fullText = [[NSString stringWithFormat:@"%@ %@ %@ %@", i.name, i.surname, i.login, i.id] lowercaseString];
+            
+            if([fullText rangeOfString:text].location == NSNotFound)
+                [needsRemoveObjects addObject:i];
+        }
+        
+        if(needsRemoveObjects.count)
+        {
+            [unsortedFriends removeObjectsInArray:needsRemoveObjects];
+        }
+    }
+    
+    _fullContacts = tmpFullContacts;
+    NSMutableArray *tmpPhoneContacts = [_fullContacts mutableCopy];
+    
     for (CKUser *i in unsortedFriends)
     {
         for (CKPhoneContact *p in _fullContacts)
@@ -85,19 +171,26 @@
             {
                 i.name = p.name;
                 i.surname = p.surname;
+                [tmpPhoneContacts removeObject:p];
                 break;
             }
         }
     }
+
     NSArray *sortedFriends = [unsortedFriends sortedArrayUsingComparator:^NSComparisonResult(CKUser *obj1, CKUser *obj2) {
         NSString *str1 = obj1.surname.length?obj1.surname:obj1.name;
         NSString *str2 = obj2.surname.length?obj2.surname:obj2.name;
         return [str1 compare:str2 options: NSCaseInsensitiveSearch];
         
     }];
-    NSMutableArray* sections = [NSMutableArray array];
     
     [sections addObject:@{@"title":@"friends", @"arr":sortedFriends}];
+
+    _phoneContacts = [tmpPhoneContacts sortedArrayUsingComparator:^NSComparisonResult(CKUser *obj1, CKUser *obj2) {
+        NSString *str1 = obj1.surname.length?obj1.surname:obj1.name;
+        NSString *str2 = obj2.surname.length?obj2.surname:obj2.name;
+        return [str1 compare:str2 options: NSCaseInsensitiveSearch];
+    }];
     
     for(CKPhoneContact *phoneItem in _phoneContacts) {
         NSString *username = phoneItem.fullname;
@@ -174,13 +267,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 1) {
+    if (indexPath.section != 0) {
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
-    CKFriendProfileController *controller = [[CKFriendProfileController alloc] initWithUser:_sections[0][@"arr"][indexPath.row]];
-    controller.wentFromTheMap = false;
-    
-    [self.navigationController pushViewController:controller animated:YES];
+    else
+    {
+        CKFriendProfileController *controller = [[CKFriendProfileController alloc] initWithUser:_sections[0][@"arr"][indexPath.row]];
+        controller.wentFromTheMap = false;
+        [self.navigationController pushViewController:controller animated:YES];
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -238,42 +333,70 @@
         CKPhoneContact *contact = (CKPhoneContact *)[arr objectAtIndex:indexPath.row];
         NSAttributedString *s = [NSMutableAttributedString withName:contact.name surname:contact.surname size:16.0];
         cell.textLabel.attributedText = s;
+        
+        cell.inviteButton.tag = indexPath.section;
+        [cell.inviteButton addTarget:self
+                              action: @selector(inviteContact:)
+                    forControlEvents:UIControlEventTouchUpInside];
+        
         return cell;
     }
     return nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
-    [[Users sharedInstance] addNewContactToFriends];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateScreenState)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:[UIApplication sharedApplication]];
-}
-
 - (void)updateScreenState
 {
-    [[Users sharedInstance] addNewContactToFriends];
+    __weak typeof(self) weakSelf = self;
+    [[Users sharedInstance] addNewContactToFriends:^{
+        
+        if(weakSelf)
+            [weakSelf reloadData];
+    }];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [[Users sharedInstance] addNewContactToFriends];
-}
 
 -(void) viewWillDisappear:(BOOL)animated
 {
     //[super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_searchBar resignFirstResponder];
 }
 
-- (void) invite:(UIButton *)invite
+- (void) inviteContact: (UIButton *) sender
 {
+    UIButton *button = (UIButton*)sender;
+    NSInteger index = button.tag;
     
+    CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
+    
+    CKPhoneContact *contact = (CKPhoneContact *)[_sections[index][@"arr"] objectAtIndex:indexPath.row];
+    if (![MFMessageComposeViewController canSendText]) {
+
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Ошибка!"
+                                                                       message:@"Сервисы сообщений не доступны!"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Понятно" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {}];
+        [alert addAction:defaultAction];
+    }
+    else
+    {
+        MFMessageComposeViewController* composeVC = [[MFMessageComposeViewController alloc] init];
+        composeVC.messageComposeDelegate = self;
+        
+        composeVC.recipients = @[contact.phoneNumber];
+        composeVC.body = @"Я пользуюсь отличной программой для общения'Click'. Присоединяйся, друг!";
+        
+        [self presentViewController:composeVC animated:YES completion:nil];
+    }
 }
 
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult)result {
+
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (void) contactViewController:(CNContactViewController *)viewController didCompleteWithContact:(CNContact *)contact
 {
@@ -414,7 +537,33 @@
     
 }
 
+#pragma mark - UISearchBarDelegate
 
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    [self reloadData];
+}
 
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar_
+{
+    [_searchBar setShowsCancelButton:YES animated:YES];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar_
+{
+    [_searchBar setShowsCancelButton:NO animated:YES];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar_
+{
+    _searchBar.text = @"";
+    [_searchBar resignFirstResponder];
+    [self reloadData];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar_
+{
+    [_searchBar resignFirstResponder];
+}
 
 @end

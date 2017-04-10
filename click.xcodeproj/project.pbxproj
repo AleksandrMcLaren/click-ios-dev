@@ -68,6 +68,7 @@
 		1FEEBEAD1E979E590026CFE2 /* MLChatBarAvaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FEEBE9E1E979E590026CFE2 /* MLChatBarAvaViewController.m */; };
 		1FEEBEAE1E979E590026CFE2 /* MLChatStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FEEBEA01E979E590026CFE2 /* MLChatStatusViewController.m */; };
 		1FEEBEB11E97A00E0026CFE2 /* CKChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FEEBEB01E97A00E0026CFE2 /* CKChatViewController.m */; };
+		1FEEBEB71E9B69930026CFE2 /* CKContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FEEBEB61E9B69920026CFE2 /* CKContactsViewController.m */; };
 		3D1A36551DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */; };
 		3D1A36581DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A36571DB21AFD000A8CB7 /* UIAlertController+CKSocketMessage.m */; };
 		3D1A365A1DB2220F000A8CB7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1A36591DB2220F000A8CB7 /* Launch Screen.storyboard */; };
@@ -229,7 +230,6 @@
 		78B524BF1C9DD29500502AA4 /* CKProfileHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524BE1C9DD29500502AA4 /* CKProfileHeaderView.m */; };
 		78B524C51C9FA41100502AA4 /* CKCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524C41C9FA41100502AA4 /* CKCache.m */; };
 		78B524C81C9FE35D00502AA4 /* CKChatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524C71C9FE35D00502AA4 /* CKChatsViewController.m */; };
-		78B524CB1C9FE3AE00502AA4 /* CKContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524CA1C9FE3AE00502AA4 /* CKContactsViewController.m */; };
 		78B524CE1C9FE3CD00502AA4 /* CKMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524CD1C9FE3CD00502AA4 /* CKMapViewController.m */; };
 		78B524D11C9FE3F500502AA4 /* CKBlogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524D01C9FE3F500502AA4 /* CKBlogViewController.m */; };
 		78B524D41C9FE40B00502AA4 /* CKSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B524D31C9FE40B00502AA4 /* CKSettingsViewController.m */; };
@@ -349,6 +349,8 @@
 		1FEEBEA01E979E590026CFE2 /* MLChatStatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLChatStatusViewController.m; sourceTree = "<group>"; };
 		1FEEBEAF1E97A00E0026CFE2 /* CKChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKChatViewController.h; sourceTree = "<group>"; };
 		1FEEBEB01E97A00E0026CFE2 /* CKChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKChatViewController.m; sourceTree = "<group>"; };
+		1FEEBEB51E9B69920026CFE2 /* CKContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKContactsViewController.h; sourceTree = "<group>"; };
+		1FEEBEB61E9B69920026CFE2 /* CKContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContactsViewController.m; sourceTree = "<group>"; };
 		243A3A1CA18A192D40BBE62C /* Pods-click.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-click.release.xcconfig"; path = "Pods/Target Support Files/Pods-click/Pods-click.release.xcconfig"; sourceTree = "<group>"; };
 		3D1A36531DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+CKSocketMessage.h"; sourceTree = "<group>"; };
 		3D1A36541DB2110A000A8CB7 /* NSDictionary+CKSocketMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CKSocketMessage.m"; sourceTree = "<group>"; };
@@ -631,8 +633,6 @@
 		78B524C41C9FA41100502AA4 /* CKCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKCache.m; sourceTree = "<group>"; };
 		78B524C61C9FE35D00502AA4 /* CKChatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CKChatsViewController.h; path = ../CKChatsViewController.h; sourceTree = "<group>"; };
 		78B524C71C9FE35D00502AA4 /* CKChatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CKChatsViewController.m; path = ../CKChatsViewController.m; sourceTree = "<group>"; };
-		78B524C91C9FE3AE00502AA4 /* CKContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKContactsViewController.h; sourceTree = "<group>"; };
-		78B524CA1C9FE3AE00502AA4 /* CKContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKContactsViewController.m; sourceTree = "<group>"; };
 		78B524CC1C9FE3CD00502AA4 /* CKMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKMapViewController.h; sourceTree = "<group>"; };
 		78B524CD1C9FE3CD00502AA4 /* CKMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKMapViewController.m; sourceTree = "<group>"; };
 		78B524CF1C9FE3F500502AA4 /* CKBlogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKBlogViewController.h; sourceTree = "<group>"; };
@@ -1339,6 +1339,8 @@
 				3DC5D9D21DDF6106005823ED /* Tabs */,
 				D82EB8A01DCB6BD7008E9035 /* CKFiltersForMapViewController.h */,
 				D82EB8A11DCB6BD7008E9035 /* CKFiltersForMapViewController.m */,
+				1FEEBEB51E9B69920026CFE2 /* CKContactsViewController.h */,
+				1FEEBEB61E9B69920026CFE2 /* CKContactsViewController.m */,
 				78BEA91B1CA44751004E85DB /* CKCitySelectionController.h */,
 				78BEA91C1CA44751004E85DB /* CKCitySelectionController.m */,
 				78B524B41C9B2D0300502AA4 /* CKHistoryRestoreController.h */,
@@ -1357,8 +1359,6 @@
 				78B524BB1C9DCE8C00502AA4 /* CKUserProfileController.m */,
 				78B524BD1C9DD29500502AA4 /* CKProfileHeaderView.h */,
 				78B524BE1C9DD29500502AA4 /* CKProfileHeaderView.m */,
-				78B524C91C9FE3AE00502AA4 /* CKContactsViewController.h */,
-				78B524CA1C9FE3AE00502AA4 /* CKContactsViewController.m */,
 				78B524CC1C9FE3CD00502AA4 /* CKMapViewController.h */,
 				78B524CD1C9FE3CD00502AA4 /* CKMapViewController.m */,
 				D82EB8A31DCB6C50008E9035 /* CKCustomPointAnnotation.h */,
@@ -1960,6 +1960,7 @@
 				D83E83911DDC1871003D9F81 /* CKContactWrapper.m in Sources */,
 				1FEEBEA61E979E590026CFE2 /* MLChatLib.m in Sources */,
 				784FE8561C8E7476006469D5 /* AppDelegate.m in Sources */,
+				1FEEBEB71E9B69930026CFE2 /* CKContactsViewController.m in Sources */,
 				D82EB8AE1DCB6CD0008E9035 /* CKClustepPinAnnotation.m in Sources */,
 				1FEEBEB11E97A00E0026CFE2 /* CKChatViewController.m in Sources */,
 				1FEEBE801E9798670026CFE2 /* MLChatBarAvaViewController+CKConfigureForChat.m in Sources */,
@@ -1992,7 +1993,6 @@
 				782AFFF51D09843D00802097 /* CKAttachMenu.m in Sources */,
 				1FEEBEA41E979E590026CFE2 /* MLChatMenuAttachViewController.m in Sources */,
 				3DCDBE391DC6F406001CA851 /* NSString+Verify.m in Sources */,
-				78B524CB1C9FE3AE00502AA4 /* CKContactsViewController.m in Sources */,
 				7831EDAA1C9000E900319191 /* CKWelcomeViewController.m in Sources */,
 				7831EDD21C90CFDC00319191 /* CKCountryCell.m in Sources */,
 				3D3AED1F1DE49D3800F745BE /* Recent.m in Sources */,

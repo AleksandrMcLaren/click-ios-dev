@@ -192,7 +192,7 @@
 
 + (void)sentNotSentMessages
 {
-    NSString *query = [NSString stringWithFormat:@"select * from messages where status = %ld", (long)CKMessageStatusNotSent];
+    NSString *query = [NSString stringWithFormat:@"select * from messages where owner = 1 and status = %ld", (long)CKMessageStatusNotSent];
     
     __block NSMutableArray *result = [NSMutableArray new];
     [[CKDB sharedInstance].queue inDatabase:^(FMDatabase *db) {

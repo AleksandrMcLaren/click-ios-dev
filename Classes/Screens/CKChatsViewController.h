@@ -14,4 +14,6 @@
 
 @property (nonatomic, strong) UITableView *tableView;
 
++ (UIImage *)imageFromColor:(UIColor *)color;
+
 @end
