@@ -126,7 +126,7 @@
         
         if(_weakSelf)
         {
-            if(_weakSelf.messages.count)
+            if(_weakSelf.messages.count && _weakSelf.messages.count == msgs.count)
             {   // проверка на то что пришли не те же сообщения что и в БД
                 BOOL changedMessage = NO;
                 

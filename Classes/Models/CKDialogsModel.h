@@ -61,6 +61,7 @@
 
 - (void)run;
 - (void)loadDialogList;
+- (void)reloadDialogList;
 - (void)saveDialogsWithDictionary:(NSDictionary*)result;
 
 - (CKDialogModel*)getWithUser:(CKUser*)user;

@@ -444,10 +444,13 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if ((lastCell == nil) || [lastCell isUtilityButtonsHidden]){
+    if ((lastCell == nil) || [lastCell isUtilityButtonsHidden])
+    {
         CKDialogModel* dialog = [self dialogWithIndexPath:indexPath];
         [[CKApplicationModel sharedInstance] restartRecentChat:dialog];
-    }else [lastCell hideUtilityButtonsAnimated:YES];
+    }
+    else
+        [lastCell hideUtilityButtonsAnimated:YES];
 }
 
 -(CKDialogModel*)dialogWithIndexPath:(NSIndexPath *)indexPath{

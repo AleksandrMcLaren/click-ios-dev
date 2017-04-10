@@ -36,12 +36,12 @@
                          if(success)
                              success(messages);
                      }];
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            [CKDialogModel clearCounter:self.dialog];
-            [self clearCounter:nil];
-        });
     }];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [CKDialogModel clearCounter:self.dialog];
+        [self clearCounter:nil];
+    });
 }
 
 -(void)loadMessagesWithPage:(NSInteger)page
@@ -78,7 +78,8 @@
 - (void)sendMessage:(Message *)message
 {
     [super sendMessage:message];
-
+    [CKDialogModel updateDialog:self.dialog withMessage:message];
+    
     [[CKMessageServerConnection sharedInstance] uploadAttachements:self.attachements completion:^(NSDictionary *result) {
         
         self.attachements = @[];
@@ -100,9 +101,7 @@
                                                                
                                                                if(message.updatedStatus)
                                                                    message.updatedStatus();
-                                                               
-                                                               [CKDialogModel updateDialog:self.dialog withMessage:message];
-                                                               
+
                                                            } else {
                                                                
                                                                //[ProgressHUD showError:@"Message sending failed."];
@@ -112,8 +111,6 @@
                                                                
                                                                if(message.updatedStatus)
                                                                    message.updatedStatus();
-                                                               
-                                                               [CKDialogModel updateDialog:self.dialog withMessage:message];
                                                            }
                                                            
                                                        } failure:^{
@@ -123,9 +120,6 @@
                                                            
                                                            if(message.updatedStatus)
                                                                message.updatedStatus();
-                                                           
-                                                           [CKDialogModel updateDialog:self.dialog withMessage:message];
-
         }];
     }];
 }

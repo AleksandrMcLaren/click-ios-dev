@@ -110,9 +110,12 @@
         
         [CATransaction setCompletionBlock:^{
             
-            [weakSelf.tableView scrollToRowAtIndexPath:rowPath
-                                  atScrollPosition:UITableViewScrollPositionTop
-                                          animated:YES];
+            if(weakSelf)
+            {
+                [weakSelf.tableView scrollToRowAtIndexPath:rowPath
+                                          atScrollPosition:UITableViewScrollPositionTop
+                                                  animated:YES];
+            }
         }];
 
         [weakSelf.tableView beginUpdates];

@@ -574,7 +574,7 @@
 }
 
 -(void)messageResived:(NSNotification *)notification{
-    [[CKDialogsModel sharedInstance] loadDialogList];
+    
     Message* message = [Message modelWithDictionary:notification.userInfo];
     
     if (_currentChat && [_currentChat messageMatch:message]) {
@@ -582,6 +582,10 @@
         message.status = CKMessageStatusRead;
         [message save];
 
+        [CKDialogModel clearCounter:_currentChat.dialog];
+        [CKDialogModel updateDialog:_currentChat.dialog withMessage:message];
+        [[CKDialogsModel sharedInstance] reloadDialogList];
+        
         _currentChat.lastMessage = message;
         
     }else{
@@ -619,6 +623,7 @@
                                                    messagesIdents:@[message.id]
                                                          callback:^(NSDictionary *result){
                                                              
+                                                             [[CKDialogsModel sharedInstance] loadDialogList];
                                                          }];
 }
 
