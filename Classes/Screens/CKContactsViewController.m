@@ -67,11 +67,11 @@
     self.tableView.backgroundColor = CKClickLightGrayColor;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-//    self.refreshControl = [[UIRefreshControl alloc] init];
-//    self.refreshControl.tintColor = [UIColor darkGrayColor];
-//    [self.refreshControl addTarget:self
-//                            action:@selector(reloadData)
-//                  forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.tintColor = [UIColor darkGrayColor];
+    [self.refreshControl addTarget:self
+                            action:@selector(reloadData)
+                  forControlEvents:UIControlEventValueChanged];
     
     _searchBar = [[UISearchBar alloc] init];
     _searchBar.showsCancelButton = NO;

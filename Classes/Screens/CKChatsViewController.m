@@ -105,6 +105,11 @@
     self.tableView.bounces = YES;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tableView.backgroundColor = CKClickLightGrayColor;
+    self.tableView.refreshControl = [[UIRefreshControl alloc] init];
+    self.tableView.refreshControl.tintColor = [UIColor darkGrayColor];
+    [self.tableView.refreshControl addTarget:self
+                                      action:@selector(loadRecents)
+                            forControlEvents:UIControlEventValueChanged];
     
     [self.view addSubview:self.tableView];
     
@@ -193,6 +198,7 @@
     _personalchats = personalchats;
     
     [self refreshTableView];
+    [self.tableView.refreshControl endRefreshing];
 }
 
 #pragma mark - Refresh methods
