@@ -84,17 +84,66 @@
     [self.refreshControl endRefreshing];
     
     [self.messages removeAllObjects];
+    
+    if(!messages || !messages.count)
+        return;
+    
     [self.messages addObjectsFromArray:messages];
     [self.tableView reloadData];
     
-    if(self.messages.count)
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
+                          atScrollPosition:UITableViewScrollPositionBottom
+                                  animated:animated];
+    
+    return;
+
+/*
+    if(animated || messages.count < 15)
     {
+        [self.messages addObjectsFromArray:messages];
+        [self.tableView reloadData];
+
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
                               atScrollPosition:UITableViewScrollPositionBottom
                                       animated:animated];
     }
-}
+    else
+    {
+        NSMutableArray *rr = [[NSMutableArray alloc] initWithArray:messages];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(rr.count - 16, 15)];
 
+        [self.messages addObjectsFromArray:[rr objectsAtIndexes:indexSet]];
+        [self.tableView reloadData];
+        
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
+                              atScrollPosition:UITableViewScrollPositionBottom
+                                      animated:animated];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [rr removeObjectsAtIndexes:indexSet];
+            
+            NSMutableArray *paths = [[NSMutableArray alloc] init];
+            
+            for(NSInteger i = 0; i < rr.count; i++)
+            {
+                NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
+                [paths addObject:path];
+            }
+
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, rr.count)];
+
+            [self.messages insertObjects:rr atIndexes:indexSet];
+            [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationNone];
+            
+//            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.messages.count - 1 inSection:0]
+//                                  atScrollPosition:UITableViewScrollPositionBottom
+//                                          animated:animated];
+        });
+    }
+ */
+}
+/*
 - (void)addMessage:(MLChatMessage *)message
 {
     __weak typeof(self) weakSelf = self;
@@ -128,6 +177,90 @@
     };
     
     addMessage();
+}
+*/
+
+- (void)addMessage:(MLChatMessage *)message
+{
+    __weak typeof(self) weakSelf = self;
+    
+    void (^addMessage)() = ^() {
+        
+        if(!weakSelf)
+            return;
+        
+        NSIndexPath *rowPath = [NSIndexPath indexPathForRow:weakSelf.messages.count inSection:0];
+        
+        [CATransaction begin];
+        
+        [CATransaction setCompletionBlock:^{
+            
+            if(weakSelf)
+            {
+                [weakSelf.tableView scrollToRowAtIndexPath:rowPath
+                                          atScrollPosition:UITableViewScrollPositionTop
+                                                  animated:YES];
+            }
+        }];
+        
+        [weakSelf.tableView beginUpdates];
+        [weakSelf.messages addObject:message];
+        [weakSelf.tableView insertRowsAtIndexPaths:@[rowPath]
+                                  withRowAnimation:UITableViewRowAnimationNone];
+        [weakSelf.tableView endUpdates];
+        
+        [CATransaction commit];
+    };
+    
+    if(self.messages.count)
+    {
+        MLChatMessage *lastMessage = self.messages.lastObject;
+        
+        if([message.date laterDate:lastMessage.date] == message.date)
+        {
+            addMessage();
+        }
+        else
+        {   // было отправлено исходящее сообщение до того как пришло входящее с ранней датой
+            // вставим входящее сообщение в нужное место
+            BOOL messageAdded = NO;
+            NSArray *reversedMessages = [[self.messages reverseObjectEnumerator] allObjects];
+            
+            for(MLChatMessage *posiblePrevMessage in reversedMessages)
+            {
+                if([message.date laterDate:posiblePrevMessage.date] == message.date)
+                {
+                    NSInteger index = [self.messages indexOfObject:posiblePrevMessage];
+                    NSIndexPath *rowPath = [NSIndexPath indexPathForRow:++index inSection:0];
+                    
+                    [weakSelf.tableView beginUpdates];
+                    [weakSelf.messages insertObject:message atIndex:index];
+                    [weakSelf.tableView insertRowsAtIndexPaths:@[rowPath]
+                                              withRowAnimation:UITableViewRowAnimationAutomatic];
+                    [weakSelf.tableView endUpdates];
+                    
+                    messageAdded = YES;
+                    break;
+                }
+            }
+            
+            if(!messageAdded)
+            {
+                NSInteger index = 0;
+                NSIndexPath *rowPath = [NSIndexPath indexPathForRow:index inSection:0];
+                
+                [weakSelf.tableView beginUpdates];
+                [weakSelf.messages insertObject:message atIndex:index];
+                [weakSelf.tableView insertRowsAtIndexPaths:@[rowPath]
+                                          withRowAnimation:UITableViewRowAnimationAutomatic];
+                [weakSelf.tableView endUpdates];
+            }
+        }
+    }
+    else
+    {
+        addMessage();
+    }
 }
 
 - (void)insertTopMessages:(NSArray *)messages

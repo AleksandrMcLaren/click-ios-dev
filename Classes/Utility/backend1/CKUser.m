@@ -107,7 +107,9 @@
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss"];
-        
+        // TODO i
+        //NSString *dd = sourceDict[@"statusdate"];
+        //NSDate *d = [dateFormatter dateFromString:dd];
         model.birthDate =  [sourceDict[@"birthdate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil : [dateFormatter dateFromString:sourceDict[@"birthdate"]];
         model.registeredDate =  [sourceDict[@"registereddate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil :[dateFormatter dateFromString:sourceDict[@"registereddate"]];
         model.statusDate =  [sourceDict[@"statusdate"] isEqualToString:@"0001-01-01T00:00:00"] ? nil :[dateFormatter dateFromString:sourceDict[@"statusdate"]];

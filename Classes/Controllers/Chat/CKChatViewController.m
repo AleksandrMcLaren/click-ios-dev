@@ -93,7 +93,7 @@
 {
     /*
      *  Нужно поставить сообщения из базы,
-     *  затем обновить с сервера на редкий случай если пользователь был в чате на другом устройстве
+     *  затем обновить с сообщения сервера
      */
     
     NSMutableArray *messages = [[self.chat getMessages] mutableCopy];
@@ -111,6 +111,12 @@
     }
 
     [self loadMessages];
+    
+    // сбосим счетчики
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [CKDialogModel clearCounter:self.chat.dialog];
+        [self.chat clearCounter:nil];
+    });
 }
 
 - (void)loadMessages
@@ -124,33 +130,49 @@
     __weak typeof(self) _weakSelf = self;
     [self.chat loadMessagesWithSuccess:^(NSArray *msgs) {
         
-        if(_weakSelf)
+        if(_weakSelf && msgs && msgs.count)
         {
-            if(_weakSelf.messages.count && _weakSelf.messages.count == msgs.count)
-            {   // проверка на то что пришли не те же сообщения что и в БД
-                BOOL changedMessage = NO;
+            if(_weakSelf.messages.count)
+            {   // сообщения уже есть, обновим статусы и добавим те которых нет в диалоге
+                NSMutableArray *missedMsgs = [[NSMutableArray alloc] init];
                 
-                for(NSInteger i = 0; i < _weakSelf.messages.count && i < msgs.count; i++)
+                for(NSInteger i = 0; i < msgs.count; i++)
                 {
-                    MLChatMessage *message = _weakSelf.messages[i];
                     Message *msg = msgs[i];
+                    NSPredicate *pred = [NSPredicate predicateWithFormat:@"ident = %@", msg.id];
+                    MLChatMessage *existMessage = [_weakSelf.messages filteredArrayUsingPredicate:pred].firstObject;
                     
-                    if(![message.ident isEqualToString:msg.id] ||
-                       message.status != (int)msg.status)
+                    if(existMessage)
                     {
-                        changedMessage = YES;
-                        break;
+                        if((NSInteger)msg.status != existMessage.status)
+                        {
+                            existMessage.status = (NSInteger)msg.status;
+                            
+                            if(existMessage.updatedStatus)
+                                existMessage.updatedStatus(msg.status);
+                        }
+                    }
+                    else
+                    {
+                        [missedMsgs addObject:msg];
                     }
                 }
                 
-                if(!changedMessage)
-                    return;
+                if(missedMsgs.count)
+                {
+                    for(Message *msg in missedMsgs)
+                    {
+                        MLChatMessage *message = [self createFromMessage:msg];
+                        [_weakSelf.messages addObject:message];
+                        [_weakSelf addMessage:message];
+                    }
+                }
             }
-
-            BOOL animated = !_weakSelf.messages.count;
-            
-            [_weakSelf createMessages:msgs];
-            [_weakSelf reloadMessages:_weakSelf.messages animated:animated];
+            else
+            {   // все сообщения новые
+                [_weakSelf createMessages:msgs];
+                [_weakSelf reloadMessages:_weakSelf.messages animated:YES];
+            }
         }
     }];
 }
@@ -168,7 +190,7 @@
                                 
                                 if(!messages || !messages.count)
                                 {
-                                    [self insertTopMessages:@[]];
+                                    [self insertTopMessages:nil];
                                     return;
                                 }
                                 

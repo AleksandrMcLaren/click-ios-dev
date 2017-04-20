@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString *mlchat_message_needs_resend = @"mlchat_message_needs_resend";
-
 typedef NS_ENUM(NSInteger, MLChatMessageStatus)
 {
     MLChatMessageStatusSent,

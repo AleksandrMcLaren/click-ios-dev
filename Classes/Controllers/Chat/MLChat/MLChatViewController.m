@@ -59,10 +59,6 @@ static CGFloat keyboardLastHeight = 224.f;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillChangeFrame:)
                                                  name:UIKeyboardWillChangeFrameNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(resendMessage:)
-                                                 name:mlchat_message_needs_resend
-                                               object:nil];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"pbg"]];
 
@@ -112,14 +108,6 @@ static CGFloat keyboardLastHeight = 224.f;
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.messageVC addMessage:message];
-    });
-}
-
-- (void)resendMessage:(NSNotification *)notification
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        MLChatMessage *message = notification.object;
-        self.sendMessage(message.text);
     });
 }
 

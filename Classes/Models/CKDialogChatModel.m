@@ -37,11 +37,6 @@
                              success(messages);
                      }];
     }];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [CKDialogModel clearCounter:self.dialog];
-        [self clearCounter:nil];
-    });
 }
 
 -(void)loadMessagesWithPage:(NSInteger)page

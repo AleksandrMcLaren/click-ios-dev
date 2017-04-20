@@ -13,7 +13,6 @@
 
 @property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 
 @end
 
@@ -30,8 +29,6 @@
         self.timeLabel.font = [UIFont systemFontOfSize:12];
         
         self.imageView = [[UIImageView alloc] init];
-        
-        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
     }
     
     return self;
@@ -48,7 +45,6 @@
 
     [self.view addSubview:self.timeLabel];
     [self.view addSubview:self.imageView];
-    [self.view addGestureRecognizer:self.tapRecognizer];
 }
 
 - (void)viewDidLayoutSubviews
@@ -113,8 +109,7 @@
     {
         self.imageView.image = nil;
         self.imageView.hidden = YES;
-        self.tapRecognizer.enabled = NO;
-        
+
         return;
     }
     
@@ -124,34 +119,20 @@
     {
         case MLChatMessageStatusSent:
             self.imageView.image = [MLChatStatusViewController imageSent];
-            self.tapRecognizer.enabled = NO;
             break;
         case MLChatMessageStatusDelivered:
             self.imageView.image = [MLChatStatusViewController imageDelivered];
-            self.tapRecognizer.enabled = NO;
             break;
         case MLChatMessageStatusRead:
             self.imageView.image = [MLChatStatusViewController imageRead];
-            self.tapRecognizer.enabled = NO;
             break;
         case MLChatMessageStatusNotSent:
             self.imageView.image = [MLChatStatusViewController imageResent];
-            self.tapRecognizer.enabled = YES;
             break;
         default:
             self.imageView.image = nil;
-            self.tapRecognizer.enabled = NO;
             break;
     }
-}
-
-#pragma mark - Actions
-
-- (void)tapped
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:mlchat_message_needs_resend
-                                                        object:self.message
-                                                      userInfo:nil];
 }
 
 #pragma mark - Images

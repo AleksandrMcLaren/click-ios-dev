@@ -9,6 +9,7 @@
 #import "CKServerConnection.h"
 #import <SAMKeychain/SAMKeychain.h>
 #import "CKUserServerConnection.h"
+#import "Reachability.h"
 
 #define CONNECTION_OPEN_CALLBACK_IDENTIFIER @"CONNECTION_OPEN_CALLBACK_IDENTIFIER"
 
@@ -16,6 +17,7 @@
 
 @property (nonatomic, strong, readonly) NSString* entryPoint;
 @property (nonatomic, strong) dispatch_queue_t queueReceiveMessage;
+@property (nonatomic, strong) Reachability* internetReachable;
 
 @end
 
@@ -37,6 +39,8 @@
         _udid = [CKServerConnection getUniqueDeviceIdentifierAsString];
         _queue = [NSMutableArray new];
         self.queueReceiveMessage = dispatch_queue_create("queueReceiveMessage", DISPATCH_QUEUE_SERIAL);
+        
+        [self createConnectByChangeInternetReachable];
     }
     return self;
 }
@@ -65,9 +69,23 @@
     return strApplicationUUID;
 }
 
+- (void)createConnectByChangeInternetReachable
+{
+    self.internetReachable = [Reachability reachabilityForInternetConnection];
+    
+    __weak typeof(self) _weakSelf = self;
+    self.internetReachable.reachableBlock = ^(Reachability *reachability) {
+        
+        if(_weakSelf && !_weakSelf.isConnected)
+            [_weakSelf connect];
+    };
+    
+    [self.internetReachable startNotifier];
+}
+
 - (void)connect
 {
-    [self connect:self.entryPoint callback:nil] ;
+    [self connect:self.entryPoint callback:nil];
 }
 
 - (void)connectWithCallback:(CKServerConnectionExecuted)callback{
