@@ -622,7 +622,7 @@
     [[CKMessageServerConnection sharedInstance] setMessagesStatus:message.status
                                                    messagesIdents:@[message.id]
                                                          callback:^(NSDictionary *result){
-                                                             
+                                                             NSLog(@"--- setMessagesStatus");
                                                              [[CKDialogsModel sharedInstance] loadDialogList];
                                                          }];
 }

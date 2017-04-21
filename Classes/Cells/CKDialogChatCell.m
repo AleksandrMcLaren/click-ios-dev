@@ -48,8 +48,7 @@
     
     self.subtitle.text = model.message ? model.message : @"";
     self.activity.text = [model.date readableMessageTimestampString];
-    NSLog(@"model.messagesUnread = %lu", (unsigned long)model.messagesUnread);
-    
+
     if (model.messagesUnread == 0)
     {
         self.title.textColor = [UIColor blackColor];

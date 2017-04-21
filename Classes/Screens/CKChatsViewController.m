@@ -63,20 +63,18 @@
     [self loadRecents];
 }
 
-+ (UIImage *)imageFromColor:(UIColor *)color {
-    CGRect rect = CGRectMake(0, 0, 1, 1);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
-}
-
+//- (void)dealloc
+//{
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//}
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(applicationDidBecomeActive)
+//                                                 name:UIApplicationDidBecomeActiveNotification
+//                                               object:nil];
     
     self.view.backgroundColor = CKClickLightGrayColor;
     
@@ -121,13 +119,23 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    // при выходе из чата обновляем список пользователей
+
     // только для обновления user.statusDate для бара в даилоге
     [[Users sharedInstance] updateUserList];
-     
+    
     [self loadRecents];
-    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
 }
+
+//- (void)applicationDidBecomeActive
+//{
+//    // только для обновления user.statusDate для бара в даилоге
+////    [[Users sharedInstance] updateUserList];
+////    
+////    [self loadRecents];
+////    
+////    [[CKDialogsModel sharedInstance] loadDialogList];
+////    [[CKDialogsModel sharedInstance] reloadDialogList];
+//}
 
 -(void)makeConstraints{
     CGFloat topOffset = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame) + CGRectGetHeight(self.navigationController.navigationBar.frame);
@@ -498,5 +506,17 @@
     [_searchBar resignFirstResponder];
 }
 
+#pragma mark -
+
++ (UIImage *)imageFromColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0, 0, 1, 1);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
 
 @end

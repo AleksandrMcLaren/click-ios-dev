@@ -94,6 +94,8 @@
     }];
     
     self.tableView.tableHeaderView = searchBarBackground;
+    
+    [self reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated

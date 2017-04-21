@@ -112,11 +112,13 @@
 
 }
 
--(void)clearCounter:(NSArray *)messages
+-(void)clearCounterWithSuccess:(void (^)())success
 {
     [[CKMessageServerConnection sharedInstance] setAllIncomingMessagesStatusReadWithUserId:self.dialog.userId
                                                                                   callback:^(NSDictionary *result){
                                                                                       
+                                                                                      if(success)
+                                                                                          success();
                                                                                   }];
 }
 
@@ -162,9 +164,9 @@
               success:(void (^)(NSArray *messages))success
 {
     NSMutableArray *result = [[NSMutableArray alloc] init];
-    
+
     for (NSDictionary *dictionary in messages){
-        
+
         Message* message = [Message fromCacheWithId:dictionary[@"id"]];
         
         if(message)
@@ -182,6 +184,28 @@
     
     if(success)
         success(result);
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        
+        /*
+         *  Сервер почему то присылает Отправленные сообщение со статусом Доставленно
+         *  сгенерируем события о доставке
+         */
+        
+        NSPredicate *pred = [NSPredicate predicateWithFormat:@"self.isOwner = NO AND (self.status = %d OR self.status = %d)", CKMessageStatusSent, CKMessageStatusDelivered];
+        NSArray *onlySentMessages = [result filteredArrayUsingPredicate:pred];
+        
+        if(onlySentMessages.count)
+        {
+            NSArray *idents = [onlySentMessages valueForKey:@"id"];
+
+            [[CKMessageServerConnection sharedInstance] setMessagesStatus:CKMessageStatusDelivered
+                                                           messagesIdents:idents
+                                                                 callback:^(NSDictionary *result){
+                                                                    
+                                                                 }];
+        }
+    });
 }
 
 -(void)saveMessage:(Message*)message{

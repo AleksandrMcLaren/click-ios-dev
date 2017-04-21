@@ -195,8 +195,18 @@
 - (void)run
 {
     _dialogs = [NSMutableArray new];
-    [self loadDialogList];
+
     [self reloadDialogList];
+    [self loadDialogList];
+
+    if(self.dialogs.count)
+    {
+        for(CKDialogModel *dialog in self.dialogs)
+        {
+            CKDialogChatModel *chat = [[CKDialogChatModel alloc] initWithDialog:dialog];
+            [chat loadMessagesWithSuccess:nil];
+        }
+    }
 }
 
 - (void)reloadDialogList
@@ -216,6 +226,7 @@
 }
 
 -(void)loadDialogList{
+    
     [[CKMessageServerConnection sharedInstance] getDialogListWithCallback:^(NSDictionary *result) {
         if ([result socketMessageStatus] == S_OK) {
             [self saveDialogsWithDictionary:result];

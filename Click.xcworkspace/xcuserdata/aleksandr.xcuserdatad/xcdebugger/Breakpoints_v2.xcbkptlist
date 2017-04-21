@@ -26,12 +26,12 @@
                   moduleName = "click"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/aleksandr/Documents/projects/work/click-ios-dev/Classes/Screens/01_Chat/ChatView.m"
-                  timestampString = "514390239.974066"
+                  timestampString = "514476096.884641"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "633"
                   endingLineNumber = "633"
-                  offsetFromSymbolStart = "72">
+                  offsetFromSymbolStart = "55">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -41,12 +41,12 @@
                   moduleName = "click"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/aleksandr/Documents/projects/work/click-ios-dev/Classes/Screens/01_Chat/ChatView.m"
-                  timestampString = "514390239.976395"
+                  timestampString = "514476096.887061"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "633"
                   endingLineNumber = "633"
-                  offsetFromSymbolStart = "96">
+                  offsetFromSymbolStart = "72">
                </Location>
             </Locations>
          </BreakpointContent>

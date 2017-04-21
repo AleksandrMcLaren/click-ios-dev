@@ -33,7 +33,7 @@ typedef void (^CKChatModelFetchedMessages)(NSArray* messages);
 -(void)loadMessagesWithPage:(NSInteger)page
                     success:(void (^)(NSArray *messages))success;
 
--(void)clearCounter:(NSArray *)messages;
+-(void)clearCounterWithSuccess:(void (^)())success;
 
 - (BOOL)messageMatch:(Message*)message;
 

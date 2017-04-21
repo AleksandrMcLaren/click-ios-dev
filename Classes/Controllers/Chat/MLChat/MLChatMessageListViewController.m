@@ -212,7 +212,11 @@
         [CATransaction commit];
     };
     
-    if(self.messages.count)
+    if(!self.messages.count)
+    {
+        addMessage();
+    }
+    else
     {
         MLChatMessage *lastMessage = self.messages.lastObject;
         
@@ -236,7 +240,7 @@
                     [weakSelf.tableView beginUpdates];
                     [weakSelf.messages insertObject:message atIndex:index];
                     [weakSelf.tableView insertRowsAtIndexPaths:@[rowPath]
-                                              withRowAnimation:UITableViewRowAnimationAutomatic];
+                                              withRowAnimation:UITableViewRowAnimationFade];
                     [weakSelf.tableView endUpdates];
                     
                     messageAdded = YES;
@@ -252,14 +256,10 @@
                 [weakSelf.tableView beginUpdates];
                 [weakSelf.messages insertObject:message atIndex:index];
                 [weakSelf.tableView insertRowsAtIndexPaths:@[rowPath]
-                                          withRowAnimation:UITableViewRowAnimationAutomatic];
+                                          withRowAnimation:UITableViewRowAnimationFade];
                 [weakSelf.tableView endUpdates];
             }
         }
-    }
-    else
-    {
-        addMessage();
     }
 }
 

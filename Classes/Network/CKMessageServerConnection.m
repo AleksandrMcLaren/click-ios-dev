@@ -246,6 +246,7 @@
     }
     else if ([action isEqualToString:@"onmessagestatus"])
     {
+       // NSLog(@"updateStatusWithDictionary\n");
         [Message updateStatusWithDictionary:eventData];
     }
 }

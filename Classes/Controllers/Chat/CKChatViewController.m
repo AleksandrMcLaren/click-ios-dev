@@ -108,14 +108,20 @@
     {
         [self createMessages:messages];
         [self reloadMessages:self.messages animated:NO];
+        
+        // сначала отметим прочитанными, при получении списка сообщений идет работа со статусами
+        [self.chat clearCounterWithSuccess:^{
+            [self loadMessages];
+        }];
     }
-
-    [self loadMessages];
+    else
+    {
+        [self loadMessages];
+    }
     
     // сбосим счетчики
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [CKDialogModel clearCounter:self.chat.dialog];
-        [self.chat clearCounter:nil];
     });
 }
 
@@ -130,7 +136,7 @@
     __weak typeof(self) _weakSelf = self;
     [self.chat loadMessagesWithSuccess:^(NSArray *msgs) {
         
-        if(_weakSelf && msgs && msgs.count)
+        if(_weakSelf)
         {
             if(_weakSelf.messages.count)
             {   // сообщения уже есть, обновим статусы и добавим те которых нет в диалоге
@@ -170,8 +176,17 @@
             }
             else
             {   // все сообщения новые
-                [_weakSelf createMessages:msgs];
-                [_weakSelf reloadMessages:_weakSelf.messages animated:YES];
+                if(msgs.count)
+                {
+                    [_weakSelf createMessages:msgs];
+                    [_weakSelf reloadMessages:_weakSelf.messages animated:YES];
+                }
+                else
+                {   // пусть крутилка покрутится
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                        [_weakSelf reloadMessages:_weakSelf.messages animated:YES];
+                    });
+                }
             }
         }
     }];

@@ -5,10 +5,12 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "${CURRENT_DIR}"
 
 # вводим то же имя, которое в настройах проекта выбрано в Build Settings в разделе Code Signing Identity
-CODE_SIGN_IDENTITY="iPhone Developer"
+CODE_SIGN_IDENTITY="iPhone Distribution: Anatoly Mityaev (635Y86FJPH)"
+#CODE_SIGN_IDENTITY="Automatic"
 
 # имя provision profile, которое в настройках проекта
-PROVISION="Automatic"
+PROVISION="16267b4d-93d3-4ae4-ab27-2c39e379367d"
+#PROVISION="Automatic"
 
 # схема, которую собираем
 SCHEME="click"
@@ -44,7 +46,11 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-xcrun -sdk iphoneos PackageApplication -v "${BUILDDIR}/Release-iphoneos/${SCHEME}.app" -o ${IPA}
+#xcrun -sdk iphoneos PackageApplication -v "${BUILDDIR}/Release-iphoneos/${SCHEME}.app" -o ${IPA}
+mkdir ./Payload
+cp -R "${BUILDDIR}/Release-iphoneos/${SCHEME}.app" ./Payload
+zip -qyr ${IPA} ./Payload
+rm -r ./Payload
 if [ $? != 0 ]; then
     echo "Packaging failed"
     exit 2
